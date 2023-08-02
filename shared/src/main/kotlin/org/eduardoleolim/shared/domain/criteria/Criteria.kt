@@ -1,6 +1,6 @@
 package org.eduardoleolim.shared.domain.criteria
 
-class Criteria(
+open class Criteria(
     val andFilters: Filters,
     val orFilters: Filters,
     val order: Order,
