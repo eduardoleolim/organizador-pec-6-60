@@ -10,3 +10,7 @@ application {
   // Define the main class for the application.
   mainClass = 'org.eduardoleolim.app.AppKt'
 }
+
+kotlin {
+  jvmToolchain(17)
+}
