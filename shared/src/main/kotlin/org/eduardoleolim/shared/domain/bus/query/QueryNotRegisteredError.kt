@@ -1,4 +1,6 @@
 package org.eduardoleolim.shared.domain.bus.query
 
-class QueryNotRegisteredError(query: Class<out Query>) :
-    Exception(String.format("The query <%s> hasn't a query handler associated", query.toString()))
+import kotlin.reflect.KClass
+
+class QueryNotRegisteredError(query: KClass<out Query>) :
+    Exception("The query ${query.simpleName} hasn't a query handler associated")

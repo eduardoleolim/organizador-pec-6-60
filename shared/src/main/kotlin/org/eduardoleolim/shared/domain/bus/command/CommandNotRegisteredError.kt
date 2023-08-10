@@ -1,4 +1,6 @@
 package org.eduardoleolim.shared.domain.bus.command
 
-class CommandNotRegisteredError(command: Class<out Command>) :
-    Exception(String.format("The command <%s> hasn't a command handler associated", command.toString()))
+import kotlin.reflect.KClass
+
+class CommandNotRegisteredError(command: KClass<out Command>) :
+    Exception("The command ${command.simpleName} hasn't a command handler associated")
