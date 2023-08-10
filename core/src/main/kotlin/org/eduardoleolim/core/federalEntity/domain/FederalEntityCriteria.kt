@@ -10,4 +10,12 @@ object FederalEntityCriteria {
         1,
         null
     )
+
+    fun keyCodeCriteria(keyCode: String) = Criteria(
+        Filters(listOf(Filter(FilterField("keyCode"), FilterOperator.EQUAL, FilterValue(keyCode)))),
+        Filters.none(),
+        Order.none(),
+        1,
+        null
+    )
 }
