@@ -3,7 +3,7 @@ package org.eduardoleolim.shared.domain.criteria
 open class Criteria(
     val andFilters: Filters,
     val orFilters: Filters,
-    val order: Order,
+    val orders: Orders,
     val limit: Int?,
     val offset: Int?,
     val isOrCriteria: Boolean = false
@@ -12,11 +12,13 @@ open class Criteria(
 
     fun hasOrFilters() = orFilters.filters.isNotEmpty()
 
+    fun hasOrders() = orders.orders.isNotEmpty()
+
     fun serialize() = String.format(
         "%s~~%s~~%s~~%s~~%s~~%s",
         andFilters.serialize(),
         orFilters.serialize(),
-        order.serialize(),
+        orders.serialize(),
         limit ?: 0,
         offset ?: 0,
         isOrCriteria
