@@ -1,9 +1,11 @@
 plugins {
   id 'org.eduardoleolim.kotlin-application-conventions'
+  id 'org.jetbrains.compose' version '1.4.3'
 }
 
 dependencies {
   implementation project(':core')
+  implementation compose.desktop.currentOs
 }
 
 application {
