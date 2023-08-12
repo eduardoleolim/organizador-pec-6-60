@@ -1,12 +1,16 @@
 package org.eduardoleolim.core.federalEntity.application.update
 
+import org.eduardoleolim.core.federalEntity.domain.FederalEntityAlreadyExists
 import org.eduardoleolim.core.federalEntity.domain.FederalEntityCriteria
 import org.eduardoleolim.core.federalEntity.domain.FederalEntityNotFound
 import org.eduardoleolim.core.federalEntity.domain.FederalEntityRepository
 
 class FederalEntityUpdater(private val repository: FederalEntityRepository) {
     fun update(id: String, keyCode: String, name: String) {
-        val federalEntity = search(id)
+        val federalEntity = search(id) ?: throw FederalEntityNotFound(id)
+
+        if (existsAnotherWithSameKeyCode(id, keyCode))
+            throw FederalEntityAlreadyExists(keyCode)
 
         federalEntity.apply {
             changeKeyCode(keyCode)
@@ -17,6 +21,11 @@ class FederalEntityUpdater(private val repository: FederalEntityRepository) {
     }
 
     private fun search(id: String) = FederalEntityCriteria.idCriteria(id).let {
-        repository.matching(it).firstOrNull() ?: throw FederalEntityNotFound(id)
+        repository.matching(it).firstOrNull()
     }
+
+    private fun existsAnotherWithSameKeyCode(id: String, keyCode: String) =
+        FederalEntityCriteria.anotherKeyCodeCriteria(id, keyCode).let {
+            repository.count(it) > 0
+        }
 }
