@@ -16,10 +16,11 @@ interface FederalEntity : Entity<FederalEntity> {
     val updatedAt: LocalDateTime?
 }
 
-object FederalEntities : Table<FederalEntity>("federalEntity") {
+class FederalEntities(alias: String? = null) : Table<FederalEntity>("federalEntity", alias) {
     val id = uuid("federalEntityId").primaryKey().bindTo { it.id }
     val keyCode = varchar("keyCode").bindTo { it.keyCode }
     val name = varchar("name").bindTo { it.name }
     val createdAt = datetime("createdAt").bindTo { it.createdAt }
     val updatedAt = datetime("updatedAt").bindTo { it.updatedAt }
+    override fun aliased(alias: String) = FederalEntities(alias)
 }

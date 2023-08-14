@@ -11,9 +11,11 @@ import java.time.ZoneId
 import java.util.*
 
 class KtormFederalEntityRepository(private val database: Database) : FederalEntityRepository {
+    private val federalEntities = FederalEntities("f")
+
     override fun matching(criteria: Criteria): List<FederalEntity> {
-        return KtormFederalEntitiesCriteriaParser.select(database, criteria).map {
-            FederalEntities.createEntity(it)
+        return KtormFederalEntitiesCriteriaParser.select(database, federalEntities, criteria).map {
+            federalEntities.createEntity(it)
         }.map {
             FederalEntity.from(
                 it.id.toString(),
@@ -28,7 +30,7 @@ class KtormFederalEntityRepository(private val database: Database) : FederalEnti
     }
 
     override fun count(criteria: Criteria): Int {
-        return KtormFederalEntitiesCriteriaParser.count(database, criteria)
+        return KtormFederalEntitiesCriteriaParser.count(database, federalEntities, criteria)
             .rowSet.apply {
                 next()
             }.getInt(1)
@@ -36,7 +38,7 @@ class KtormFederalEntityRepository(private val database: Database) : FederalEnti
 
 
     override fun save(federalEntity: FederalEntity) {
-        database.from(FederalEntities).select().where(FederalEntities.id eq federalEntity.id()).let {
+        database.from(federalEntities).select().where(federalEntities.id eq federalEntity.id()).let {
             if (it.rowSet.size() > 0) {
                 this.update(federalEntity)
             } else {
@@ -46,7 +48,7 @@ class KtormFederalEntityRepository(private val database: Database) : FederalEnti
     }
 
     private fun insert(federalEntity: FederalEntity) {
-        database.insert(FederalEntities) {
+        database.insert(federalEntities) {
             set(it.id, federalEntity.id())
             set(it.keyCode, federalEntity.keyCode())
             set(it.name, federalEntity.name())
@@ -58,7 +60,7 @@ class KtormFederalEntityRepository(private val database: Database) : FederalEnti
     }
 
     private fun update(federalEntity: FederalEntity) {
-        database.update(FederalEntities) {
+        database.update(federalEntities) {
             set(it.keyCode, federalEntity.keyCode())
             set(it.name, federalEntity.name())
             federalEntity.updatedAt()?.let { date ->
@@ -71,7 +73,7 @@ class KtormFederalEntityRepository(private val database: Database) : FederalEnti
     }
 
     override fun delete(federalEntityId: FederalEntityId) {
-        database.delete(FederalEntities) {
+        database.delete(federalEntities) {
             it.id eq federalEntityId.value
         }
     }

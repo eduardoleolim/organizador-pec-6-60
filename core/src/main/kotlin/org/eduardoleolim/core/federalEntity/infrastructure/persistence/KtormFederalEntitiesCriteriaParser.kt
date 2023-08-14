@@ -11,71 +11,70 @@ import java.time.Instant
 import java.time.LocalDateTime
 
 object KtormFederalEntitiesCriteriaParser {
-    fun select(database: Database, criteria: Criteria): Query {
-        return database.from(FederalEntities).select().let {
-            addOrdersToQuery(it, criteria)
+    fun select(database: Database, federalEntities: FederalEntities, criteria: Criteria): Query {
+        return database.from(federalEntities).select().let {
+            addOrdersToQuery(it, federalEntities, criteria)
         }.let {
-            addConditionsToQuery(it, criteria)
+            addConditionsToQuery(it, federalEntities, criteria)
         }.limit(criteria.offset, criteria.limit)
     }
 
-    fun count(database: Database, criteria: Criteria): Query {
-        return database.from(FederalEntities).select(count()).let {
-            addConditionsToQuery(it, criteria)
+    fun count(database: Database, federalEntities: FederalEntities, criteria: Criteria): Query {
+        return database.from(federalEntities).select(count()).let {
+            addConditionsToQuery(it, federalEntities, criteria)
         }.limit(criteria.offset, criteria.limit)
     }
 
-    private fun addOrdersToQuery(
-        query: Query,
-        criteria: Criteria
-    ): Query {
+    private fun addOrdersToQuery(query: Query, federalEntities: FederalEntities, criteria: Criteria): Query {
         if (!criteria.hasOrders())
             return query
 
-        return query.orderBy(criteria.orders.orders.mapNotNull(::parseOrder))
+        return query.orderBy(criteria.orders.orders.mapNotNull {
+            parseOrder(federalEntities, it)
+        })
     }
 
-    private fun parseOrder(order: Order): OrderByExpression? {
+    private fun parseOrder(federalEntities: FederalEntities, order: Order): OrderByExpression? {
         val orderBy = order.orderBy.value
         val orderType = order.orderType
 
         return when (orderBy) {
             "id" -> {
                 when (orderType) {
-                    OrderType.ASC -> FederalEntities.id.asc()
-                    OrderType.DESC -> FederalEntities.id.desc()
+                    OrderType.ASC -> federalEntities.id.asc()
+                    OrderType.DESC -> federalEntities.id.desc()
                     OrderType.NONE -> null
                 }
             }
 
             "keyCode" -> {
                 when (orderType) {
-                    OrderType.ASC -> FederalEntities.keyCode.asc()
-                    OrderType.DESC -> FederalEntities.keyCode.desc()
+                    OrderType.ASC -> federalEntities.keyCode.asc()
+                    OrderType.DESC -> federalEntities.keyCode.desc()
                     OrderType.NONE -> null
                 }
             }
 
             "name" -> {
                 when (orderType) {
-                    OrderType.ASC -> FederalEntities.name.asc()
-                    OrderType.DESC -> FederalEntities.name.desc()
+                    OrderType.ASC -> federalEntities.name.asc()
+                    OrderType.DESC -> federalEntities.name.desc()
                     OrderType.NONE -> null
                 }
             }
 
             "createdAt" -> {
                 when (orderType) {
-                    OrderType.ASC -> FederalEntities.createdAt.asc()
-                    OrderType.DESC -> FederalEntities.createdAt.desc()
+                    OrderType.ASC -> federalEntities.createdAt.asc()
+                    OrderType.DESC -> federalEntities.createdAt.desc()
                     OrderType.NONE -> null
                 }
             }
 
             "updatedAt" -> {
                 when (orderType) {
-                    OrderType.ASC -> FederalEntities.updatedAt.asc()
-                    OrderType.DESC -> FederalEntities.updatedAt.desc()
+                    OrderType.ASC -> federalEntities.updatedAt.asc()
+                    OrderType.DESC -> federalEntities.updatedAt.desc()
                     OrderType.NONE -> null
                 }
             }
@@ -84,14 +83,15 @@ object KtormFederalEntitiesCriteriaParser {
         }
     }
 
-    private fun addConditionsToQuery(
-        query: Query,
-        criteria: Criteria
-    ): Query {
+    private fun addConditionsToQuery(query: Query, federalEntities: FederalEntities, criteria: Criteria): Query {
         if (criteria.hasAndFilters() && criteria.hasOrFilters()) {
             return query.where {
-                val andConditions = criteria.andFilters.filters.mapNotNull(::parseFilter)
-                val orConditions = criteria.orFilters.filters.mapNotNull(::parseFilter)
+                val andConditions = criteria.andFilters.filters.mapNotNull {
+                    parseFilter(federalEntities, it)
+                }
+                val orConditions = criteria.orFilters.filters.mapNotNull {
+                    parseFilter(federalEntities, it)
+                }
 
                 if (criteria.isOrCriteria) {
                     orConditions.reduce { a, b -> a or b } or andConditions.reduce { a, b -> a and b }
@@ -101,16 +101,20 @@ object KtormFederalEntitiesCriteriaParser {
             }
         } else if (criteria.hasAndFilters()) {
             return query.whereWithConditions {
-                it.addAll(criteria.andFilters.filters.mapNotNull(::parseFilter))
+                it.addAll(criteria.andFilters.filters.mapNotNull { filter ->
+                    parseFilter(federalEntities, filter)
+                })
             }
         } else {
             return query.whereWithConditions {
-                it.addAll(criteria.orFilters.filters.mapNotNull(::parseFilter))
+                it.addAll(criteria.orFilters.filters.mapNotNull { filter ->
+                    parseFilter(federalEntities, filter)
+                })
             }
         }
     }
 
-    private fun parseFilter(filter: Filter): ColumnDeclaring<Boolean>? {
+    private fun parseFilter(federalEntities: FederalEntities, filter: Filter): ColumnDeclaring<Boolean>? {
         val field = filter.field.value
         val value = filter.value.value
         val operator = filter.operator
@@ -118,52 +122,52 @@ object KtormFederalEntitiesCriteriaParser {
         return when (field) {
             "id" -> {
                 when (operator) {
-                    FilterOperator.EQUAL -> FederalEntities.id eq FederalEntityId.fromString(value).value
-                    FilterOperator.NOT_EQUAL -> FederalEntities.id notEq FederalEntityId.fromString(value).value
-                    FilterOperator.GT -> FederalEntities.id greater FederalEntityId.fromString(value).value
-                    FilterOperator.GTE -> FederalEntities.id greaterEq FederalEntityId.fromString(value).value
-                    FilterOperator.LT -> FederalEntities.id less FederalEntityId.fromString(value).value
-                    FilterOperator.LTE -> FederalEntities.id lessEq FederalEntityId.fromString(value).value
-                    FilterOperator.CONTAINS -> FederalEntities.id like "%${FederalEntityId.fromString(value).value}%"
-                    FilterOperator.NOT_CONTAINS -> FederalEntities.id notLike "%${FederalEntityId.fromString(value).value}%"
+                    FilterOperator.EQUAL -> federalEntities.id eq FederalEntityId.fromString(value).value
+                    FilterOperator.NOT_EQUAL -> federalEntities.id notEq FederalEntityId.fromString(value).value
+                    FilterOperator.GT -> federalEntities.id greater FederalEntityId.fromString(value).value
+                    FilterOperator.GTE -> federalEntities.id greaterEq FederalEntityId.fromString(value).value
+                    FilterOperator.LT -> federalEntities.id less FederalEntityId.fromString(value).value
+                    FilterOperator.LTE -> federalEntities.id lessEq FederalEntityId.fromString(value).value
+                    FilterOperator.CONTAINS -> federalEntities.id like "%${FederalEntityId.fromString(value).value}%"
+                    FilterOperator.NOT_CONTAINS -> federalEntities.id notLike "%${FederalEntityId.fromString(value).value}%"
                 }
             }
 
             "keyCode" -> {
                 when (operator) {
-                    FilterOperator.EQUAL -> FederalEntities.keyCode eq value
-                    FilterOperator.NOT_EQUAL -> FederalEntities.keyCode notEq value
-                    FilterOperator.GT -> FederalEntities.keyCode greater value
-                    FilterOperator.GTE -> FederalEntities.keyCode greaterEq value
-                    FilterOperator.LT -> FederalEntities.keyCode less value
-                    FilterOperator.LTE -> FederalEntities.keyCode lessEq value
-                    FilterOperator.CONTAINS -> FederalEntities.keyCode like "%$value%"
-                    FilterOperator.NOT_CONTAINS -> FederalEntities.keyCode notLike "%$value%"
+                    FilterOperator.EQUAL -> federalEntities.keyCode eq value
+                    FilterOperator.NOT_EQUAL -> federalEntities.keyCode notEq value
+                    FilterOperator.GT -> federalEntities.keyCode greater value
+                    FilterOperator.GTE -> federalEntities.keyCode greaterEq value
+                    FilterOperator.LT -> federalEntities.keyCode less value
+                    FilterOperator.LTE -> federalEntities.keyCode lessEq value
+                    FilterOperator.CONTAINS -> federalEntities.keyCode like "%$value%"
+                    FilterOperator.NOT_CONTAINS -> federalEntities.keyCode notLike "%$value%"
                 }
             }
 
             "name" -> {
                 when (operator) {
-                    FilterOperator.EQUAL -> FederalEntities.name eq value
-                    FilterOperator.NOT_EQUAL -> FederalEntities.name notEq value
-                    FilterOperator.GT -> FederalEntities.name greater value
-                    FilterOperator.GTE -> FederalEntities.name greaterEq value
-                    FilterOperator.LT -> FederalEntities.name less value
-                    FilterOperator.LTE -> FederalEntities.name lessEq value
-                    FilterOperator.CONTAINS -> FederalEntities.name like "%$value%"
-                    FilterOperator.NOT_CONTAINS -> FederalEntities.name notLike "%$value%"
+                    FilterOperator.EQUAL -> federalEntities.name eq value
+                    FilterOperator.NOT_EQUAL -> federalEntities.name notEq value
+                    FilterOperator.GT -> federalEntities.name greater value
+                    FilterOperator.GTE -> federalEntities.name greaterEq value
+                    FilterOperator.LT -> federalEntities.name less value
+                    FilterOperator.LTE -> federalEntities.name lessEq value
+                    FilterOperator.CONTAINS -> federalEntities.name like "%$value%"
+                    FilterOperator.NOT_CONTAINS -> federalEntities.name notLike "%$value%"
                 }
             }
 
             "createdAt" -> {
                 val date = LocalDateTime.from(Instant.parse(value))
                 when (operator) {
-                    FilterOperator.EQUAL -> FederalEntities.createdAt eq date
-                    FilterOperator.NOT_EQUAL -> FederalEntities.createdAt notEq date
-                    FilterOperator.GT -> FederalEntities.createdAt greater date
-                    FilterOperator.GTE -> FederalEntities.createdAt greaterEq date
-                    FilterOperator.LT -> FederalEntities.createdAt less date
-                    FilterOperator.LTE -> FederalEntities.createdAt lessEq date
+                    FilterOperator.EQUAL -> federalEntities.createdAt eq date
+                    FilterOperator.NOT_EQUAL -> federalEntities.createdAt notEq date
+                    FilterOperator.GT -> federalEntities.createdAt greater date
+                    FilterOperator.GTE -> federalEntities.createdAt greaterEq date
+                    FilterOperator.LT -> federalEntities.createdAt less date
+                    FilterOperator.LTE -> federalEntities.createdAt lessEq date
                     else -> null
                 }
             }
@@ -171,12 +175,12 @@ object KtormFederalEntitiesCriteriaParser {
             "updatedAt" -> {
                 val date = LocalDateTime.from(Instant.parse(value))
                 when (operator) {
-                    FilterOperator.EQUAL -> FederalEntities.updatedAt eq date
-                    FilterOperator.NOT_EQUAL -> FederalEntities.updatedAt notEq date
-                    FilterOperator.GT -> FederalEntities.updatedAt greater date
-                    FilterOperator.GTE -> FederalEntities.updatedAt greaterEq date
-                    FilterOperator.LT -> FederalEntities.updatedAt less date
-                    FilterOperator.LTE -> FederalEntities.updatedAt lessEq date
+                    FilterOperator.EQUAL -> federalEntities.updatedAt eq date
+                    FilterOperator.NOT_EQUAL -> federalEntities.updatedAt notEq date
+                    FilterOperator.GT -> federalEntities.updatedAt greater date
+                    FilterOperator.GTE -> federalEntities.updatedAt greaterEq date
+                    FilterOperator.LT -> federalEntities.updatedAt less date
+                    FilterOperator.LTE -> federalEntities.updatedAt lessEq date
                     else -> null
                 }
             }
