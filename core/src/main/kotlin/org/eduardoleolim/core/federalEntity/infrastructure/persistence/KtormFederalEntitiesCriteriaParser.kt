@@ -1,6 +1,5 @@
 package org.eduardoleolim.core.federalEntity.infrastructure.persistence
 
-import org.eduardoleolim.core.federalEntity.domain.FederalEntityId
 import org.eduardoleolim.core.shared.infrastructure.models.FederalEntities
 import org.eduardoleolim.shared.domain.criteria.*
 import org.ktorm.database.Database
@@ -122,14 +121,9 @@ object KtormFederalEntitiesCriteriaParser {
         return when (field) {
             "id" -> {
                 when (operator) {
-                    FilterOperator.EQUAL -> federalEntities.id eq FederalEntityId.fromString(value).value
-                    FilterOperator.NOT_EQUAL -> federalEntities.id notEq FederalEntityId.fromString(value).value
-                    FilterOperator.GT -> federalEntities.id greater FederalEntityId.fromString(value).value
-                    FilterOperator.GTE -> federalEntities.id greaterEq FederalEntityId.fromString(value).value
-                    FilterOperator.LT -> federalEntities.id less FederalEntityId.fromString(value).value
-                    FilterOperator.LTE -> federalEntities.id lessEq FederalEntityId.fromString(value).value
-                    FilterOperator.CONTAINS -> federalEntities.id like "%${FederalEntityId.fromString(value).value}%"
-                    FilterOperator.NOT_CONTAINS -> federalEntities.id notLike "%${FederalEntityId.fromString(value).value}%"
+                    FilterOperator.EQUAL -> federalEntities.id eq value
+                    FilterOperator.NOT_EQUAL -> federalEntities.id notEq value
+                    else -> null
                 }
             }
 

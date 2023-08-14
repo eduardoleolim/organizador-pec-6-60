@@ -19,7 +19,7 @@ class KtormFederalEntityRepository(private val database: Database) : FederalEnti
             federalEntities.createEntity(it)
         }.map {
             FederalEntity.from(
-                it.id.toString(),
+                it.id,
                 it.keyCode,
                 it.name,
                 Date.from(it.createdAt.atZone(ZoneId.systemDefault()).toInstant()),
@@ -50,7 +50,7 @@ class KtormFederalEntityRepository(private val database: Database) : FederalEnti
 
     private fun insert(federalEntity: FederalEntity) {
         database.insert(federalEntities) {
-            set(it.id, federalEntity.id())
+            set(it.id, federalEntity.id().toString())
             set(it.keyCode, federalEntity.keyCode())
             set(it.name, federalEntity.name())
             set(it.createdAt, federalEntity.createdAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
@@ -68,14 +68,14 @@ class KtormFederalEntityRepository(private val database: Database) : FederalEnti
                 set(it.updatedAt, date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
             }
             where {
-                it.id eq federalEntity.id()
+                it.id eq federalEntity.id().toString()
             }
         }
     }
 
     override fun delete(federalEntityId: FederalEntityId) {
         database.delete(federalEntities) {
-            it.id eq federalEntityId.value
+            it.id eq federalEntityId.value.toString()
         }
     }
 }
