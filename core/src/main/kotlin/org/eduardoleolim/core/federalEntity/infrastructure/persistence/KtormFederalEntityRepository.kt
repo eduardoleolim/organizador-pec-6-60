@@ -13,14 +13,14 @@ import java.util.*
 class KtormFederalEntityRepository(private val database: Database) : FederalEntityRepository {
     override fun matching(criteria: Criteria): List<FederalEntity> {
         return KtormFederalEntitiesCriteriaParser.select(database, criteria).map {
+            FederalEntities.createEntity(it)
+        }.map {
             FederalEntity.from(
-                it.getString(FederalEntities.id.name)!!,
-                it.getString(FederalEntities.keyCode.name)!!,
-                it.getString(FederalEntities.name.name)!!,
-                Date.from(
-                    it.getInstant(FederalEntities.createdAt.name)!!.atZone(ZoneId.systemDefault()).toInstant()
-                ),
-                it.getInstant(FederalEntities.updatedAt.name)?.let { date ->
+                it.id.toString(),
+                it.keyCode,
+                it.name,
+                Date.from(it.createdAt.atZone(ZoneId.systemDefault()).toInstant()),
+                it.updatedAt?.let { date ->
                     Date.from(date.atZone(ZoneId.systemDefault()).toInstant())
                 }
             )
@@ -50,16 +50,10 @@ class KtormFederalEntityRepository(private val database: Database) : FederalEnti
             set(it.id, federalEntity.id())
             set(it.keyCode, federalEntity.keyCode())
             set(it.name, federalEntity.name())
-            set(
-                it.createdAt, federalEntity.createdAt().toInstant()
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate()
-            )
-            set(
-                it.updatedAt, federalEntity.updatedAt()?.toInstant()
-                    ?.atZone(ZoneId.systemDefault())
-                    ?.toLocalDate()
-            )
+            set(it.createdAt, federalEntity.createdAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
+            federalEntity.updatedAt()?.let { date ->
+                set(it.updatedAt, date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
+            }
         }
     }
 
@@ -67,11 +61,9 @@ class KtormFederalEntityRepository(private val database: Database) : FederalEnti
         database.update(FederalEntities) {
             set(it.keyCode, federalEntity.keyCode())
             set(it.name, federalEntity.name())
-            set(
-                it.updatedAt, federalEntity.updatedAt()?.toInstant()
-                    ?.atZone(ZoneId.systemDefault())
-                    ?.toLocalDate()
-            )
+            federalEntity.updatedAt()?.let { date ->
+                set(it.updatedAt, date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
+            }
             where {
                 it.id eq federalEntity.id()
             }

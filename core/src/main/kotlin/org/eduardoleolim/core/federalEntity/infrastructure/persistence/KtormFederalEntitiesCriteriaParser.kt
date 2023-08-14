@@ -8,7 +8,7 @@ import org.ktorm.dsl.*
 import org.ktorm.expression.OrderByExpression
 import org.ktorm.schema.ColumnDeclaring
 import java.time.Instant
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 object KtormFederalEntitiesCriteriaParser {
     fun select(database: Database, criteria: Criteria): Query {
@@ -156,7 +156,7 @@ object KtormFederalEntitiesCriteriaParser {
             }
 
             "createdAt" -> {
-                val date = LocalDate.from(Instant.parse(value))
+                val date = LocalDateTime.from(Instant.parse(value))
                 when (operator) {
                     FilterOperator.EQUAL -> FederalEntities.createdAt eq date
                     FilterOperator.NOT_EQUAL -> FederalEntities.createdAt notEq date
@@ -169,7 +169,7 @@ object KtormFederalEntitiesCriteriaParser {
             }
 
             "updatedAt" -> {
-                val date = LocalDate.from(Instant.parse(value))
+                val date = LocalDateTime.from(Instant.parse(value))
                 when (operator) {
                     FilterOperator.EQUAL -> FederalEntities.updatedAt eq date
                     FilterOperator.NOT_EQUAL -> FederalEntities.updatedAt notEq date
