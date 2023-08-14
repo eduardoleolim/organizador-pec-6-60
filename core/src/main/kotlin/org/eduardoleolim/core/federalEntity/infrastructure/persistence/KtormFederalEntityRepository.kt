@@ -1,6 +1,7 @@
 package org.eduardoleolim.core.federalEntity.infrastructure.persistence
 
 import org.eduardoleolim.core.federalEntity.domain.FederalEntity
+import org.eduardoleolim.core.federalEntity.domain.FederalEntityCriteria
 import org.eduardoleolim.core.federalEntity.domain.FederalEntityId
 import org.eduardoleolim.core.federalEntity.domain.FederalEntityRepository
 import org.eduardoleolim.core.shared.infrastructure.models.FederalEntities
@@ -38,8 +39,8 @@ class KtormFederalEntityRepository(private val database: Database) : FederalEnti
 
 
     override fun save(federalEntity: FederalEntity) {
-        database.from(federalEntities).select().where(federalEntities.id eq federalEntity.id()).let {
-            if (it.rowSet.size() > 0) {
+        this.count(FederalEntityCriteria.idCriteria(federalEntity.id().toString())).let {
+            if (it > 0) {
                 this.update(federalEntity)
             } else {
                 this.insert(federalEntity)
