@@ -2,7 +2,7 @@ package org.eduardoleolim.core.federalEntity.domain
 
 import java.util.*
 
-data class FederalEntity private constructor(
+class FederalEntity private constructor(
     private val id: FederalEntityId,
     private var keyCode: FederalEntityKeyCode,
     private var name: FederalEntityName,
@@ -81,7 +81,7 @@ data class FederalEntityName(val value: String) {
     }
 
     private fun validate() {
-        if (value.isEmpty() || value.isBlank()) {
+        if (value.isBlank()) {
             throw InvalidFederalEntityNameError(value)
         }
     }
