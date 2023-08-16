@@ -47,6 +47,8 @@ class Municipality private constructor(
 
     fun name() = name.value
 
+    fun federalEntity() = federalEntity
+
     fun createdAt() = createdAt.value
 
     fun updatedAt() = updatedAt?.value

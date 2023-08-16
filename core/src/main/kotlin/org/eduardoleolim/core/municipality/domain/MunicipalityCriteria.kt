@@ -33,7 +33,7 @@ object MunicipalityCriteria {
     )
 
     fun federalEntityIdCriteria(federalEntityId: String) = Criteria(
-        Filters(listOf(Filter(FilterField("federalEntityId"), FilterOperator.EQUAL, FilterValue(federalEntityId)))),
+        Filters(listOf(Filter(FilterField("federalEntity.id"), FilterOperator.EQUAL, FilterValue(federalEntityId)))),
         Filters.none(),
         Orders.none(),
         1,
