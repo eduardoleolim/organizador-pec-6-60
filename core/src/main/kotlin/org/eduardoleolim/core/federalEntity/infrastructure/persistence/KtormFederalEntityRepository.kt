@@ -1,9 +1,6 @@
 package org.eduardoleolim.core.federalEntity.infrastructure.persistence
 
-import org.eduardoleolim.core.federalEntity.domain.FederalEntity
-import org.eduardoleolim.core.federalEntity.domain.FederalEntityCriteria
-import org.eduardoleolim.core.federalEntity.domain.FederalEntityId
-import org.eduardoleolim.core.federalEntity.domain.FederalEntityRepository
+import org.eduardoleolim.core.federalEntity.domain.*
 import org.eduardoleolim.core.shared.infrastructure.models.FederalEntities
 import org.eduardoleolim.shared.domain.criteria.Criteria
 import org.ktorm.database.Database
@@ -39,8 +36,8 @@ class KtormFederalEntityRepository(private val database: Database) : FederalEnti
 
 
     override fun save(federalEntity: FederalEntity) {
-        this.count(FederalEntityCriteria.idCriteria(federalEntity.id().toString())).let {
-            if (it > 0) {
+        this.count(FederalEntityCriteria.idCriteria(federalEntity.id().toString())).let { count ->
+            if (count > 0) {
                 this.update(federalEntity)
             } else {
                 this.insert(federalEntity)
@@ -74,8 +71,13 @@ class KtormFederalEntityRepository(private val database: Database) : FederalEnti
     }
 
     override fun delete(federalEntityId: FederalEntityId) {
-        database.delete(federalEntities) {
-            it.id eq federalEntityId.value.toString()
+        this.count(FederalEntityCriteria.idCriteria(federalEntityId.value.toString())).let { count ->
+            if (count == 0)
+                throw FederalEntityNotFound(federalEntityId.value.toString())
+
+            database.delete(federalEntities) {
+                it.id eq federalEntityId.toString()
+            }
         }
     }
 }
