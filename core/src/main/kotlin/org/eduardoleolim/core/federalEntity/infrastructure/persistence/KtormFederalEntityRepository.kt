@@ -59,11 +59,10 @@ class KtormFederalEntityRepository(private val database: Database) : FederalEnti
 
     private fun update(federalEntity: FederalEntity) {
         database.update(federalEntities) {
+            val updateAt = federalEntity.updatedAt() ?: Date()
             set(it.keyCode, federalEntity.keyCode())
             set(it.name, federalEntity.name())
-            federalEntity.updatedAt()?.let { date ->
-                set(it.updatedAt, date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
-            }
+            set(it.updatedAt, updateAt.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
             where {
                 it.id eq federalEntity.id().toString()
             }
