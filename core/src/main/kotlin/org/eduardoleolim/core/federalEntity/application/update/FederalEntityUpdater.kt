@@ -1,6 +1,6 @@
 package org.eduardoleolim.core.federalEntity.application.update
 
-import org.eduardoleolim.core.federalEntity.domain.FederalEntityAlreadyExists
+import org.eduardoleolim.core.federalEntity.domain.FederalEntityAlreadyExistsError
 import org.eduardoleolim.core.federalEntity.domain.FederalEntityCriteria
 import org.eduardoleolim.core.federalEntity.domain.FederalEntityNotFound
 import org.eduardoleolim.core.federalEntity.domain.FederalEntityRepository
@@ -10,7 +10,7 @@ class FederalEntityUpdater(private val repository: FederalEntityRepository) {
         val federalEntity = search(id) ?: throw FederalEntityNotFound(id)
 
         if (existsAnotherWithSameKeyCode(id, keyCode))
-            throw FederalEntityAlreadyExists(keyCode)
+            throw FederalEntityAlreadyExistsError(keyCode)
 
         federalEntity.apply {
             changeKeyCode(keyCode)
