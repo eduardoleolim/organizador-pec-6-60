@@ -13,7 +13,8 @@ import org.eduardoleolim.shared.domain.bus.command.CommandHandler
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 
-class KtormFederalEntityCommandHandlers(database: Database) : HashMap<KClass<Command>, CommandHandler<Command>>() {
+class KtormFederalEntityCommandHandlers(database: Database) :
+    HashMap<KClass<out Command>, CommandHandler<out Command>>() {
     private val federalEntityRepository: KtormFederalEntityRepository
 
     init {
@@ -27,7 +28,7 @@ class KtormFederalEntityCommandHandlers(database: Database) : HashMap<KClass<Com
         val commandHandler = CreateFederalEntityCommandHandler(creator)
 
         KtormCommandHandlerDecorator(database, commandHandler).let {
-            this[CreateFederalEntityCommand::class as KClass<Command>] = it as CommandHandler<Command>
+            this[CreateFederalEntityCommand::class] = it
         }
     }
 
@@ -36,7 +37,7 @@ class KtormFederalEntityCommandHandlers(database: Database) : HashMap<KClass<Com
         val commandHandler = UpdateFederalEntityCommandHandler(updater)
 
         KtormCommandHandlerDecorator(database, commandHandler).let {
-            this[UpdateFederalEntityCommand::class as KClass<Command>] = it as CommandHandler<Command>
+            this[UpdateFederalEntityCommand::class] = it
         }
     }
 }

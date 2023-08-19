@@ -6,9 +6,10 @@ import org.ktorm.database.Database
 import kotlin.reflect.KClass
 
 class KtormCommandBus(database: Database) : CommandBus {
-    private val commandHandlers: HashMap<KClass<Command>, CommandHandler<Command>> = HashMap()
+    private val commandHandlers: Map<KClass<out Command>, CommandHandler<out Command>>
 
     init {
+        this.commandHandlers = HashMap()
         commandHandlers.apply {
             putAll(KtormFederalEntityCommandHandlers(database))
         }
@@ -16,7 +17,11 @@ class KtormCommandBus(database: Database) : CommandBus {
 
     override fun dispatch(command: Command) {
         try {
-            commandHandlers[command::class]?.handle(command) ?: throw CommandNotRegisteredError(command::class)
+            commandHandlers[command::class]?.let {
+                @Suppress("UNCHECKED_CAST")
+                it as CommandHandler<Command>
+                it.handle(command)
+            } ?: throw CommandNotRegisteredError(command::class)
         } catch (e: Exception) {
             throw CommandHandlerExecutionError(e)
         }
