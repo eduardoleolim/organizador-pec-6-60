@@ -105,7 +105,7 @@ object KtormFederalEntitiesCriteriaParser {
                 })
             }
         } else {
-            return query.whereWithConditions {
+            return query.whereWithOrConditions {
                 it.addAll(criteria.orFilters.filters.mapNotNull { filter ->
                     parseFilter(federalEntities, filter)
                 })
