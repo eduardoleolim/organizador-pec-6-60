@@ -20,3 +20,5 @@ class InvalidMunicipalityNameError(val name: String) :
 class MunicipalityAlreadyExistsError(val keyCode: String) :
     MunicipalityErrors("The municipality with key code <$keyCode> already exists")
 
+class MunicipalityNotFoundError(val id: String) :
+    MunicipalityErrors("The municipality with id <$id> was not found")

@@ -1,22 +1,22 @@
 package org.eduardoleolim.core.municipality.domain
 
-import org.eduardoleolim.core.federalEntity.domain.FederalEntity
+import org.eduardoleolim.core.federalEntity.domain.FederalEntityId
 import java.util.*
 
 class Municipality private constructor(
     private val id: MunicipalityId,
     private var keyCode: MunicipalityKeyCode,
     private var name: MunicipalityName,
-    private var federalEntity: FederalEntity,
+    private var federalEntityId: FederalEntityId,
     private val createdAt: MunicipalityCreateDate,
     private var updatedAt: MunicipalityUpdateDate?
 ) {
     companion object {
-        fun create(keyCode: String, name: String, federalEntity: FederalEntity) = Municipality(
+        fun create(keyCode: String, name: String, federalEntityId: String) = Municipality(
             MunicipalityId.random(),
             MunicipalityKeyCode(keyCode),
             MunicipalityName(name),
-            federalEntity,
+            FederalEntityId.fromString(federalEntityId),
             MunicipalityCreateDate.now(),
             null
         )
@@ -25,14 +25,14 @@ class Municipality private constructor(
             id: String,
             keyCode: String,
             name: String,
-            federalEntity: FederalEntity,
+            federalEntityId: String,
             createdAt: Date,
             updatedAt: Date?
         ) = Municipality(
             MunicipalityId.fromString(id),
             MunicipalityKeyCode(keyCode),
             MunicipalityName(name),
-            federalEntity,
+            FederalEntityId.fromString(federalEntityId),
             MunicipalityCreateDate(createdAt),
             updatedAt?.let {
                 if (it.before(createdAt)) throw InvalidMunicipalityUpdateDateError(it, createdAt)
@@ -47,7 +47,7 @@ class Municipality private constructor(
 
     fun name() = name.value
 
-    fun federalEntity() = federalEntity
+    fun federalEntityId() = federalEntityId
 
     fun createdAt() = createdAt.value
 
@@ -63,8 +63,8 @@ class Municipality private constructor(
         this.updatedAt = MunicipalityUpdateDate.now()
     }
 
-    fun changeFederalEntity(federalEntity: FederalEntity) {
-        this.federalEntity = federalEntity
+    fun changeFederalEntity(federalEntityId: FederalEntityId) {
+        this.federalEntityId = federalEntityId
         this.updatedAt = MunicipalityUpdateDate.now()
     }
 }

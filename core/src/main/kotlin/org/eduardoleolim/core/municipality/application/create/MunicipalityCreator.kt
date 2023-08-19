@@ -1,6 +1,6 @@
 package org.eduardoleolim.core.municipality.application.create
 
-import org.eduardoleolim.core.federalEntity.domain.FederalEntityNotFound
+import org.eduardoleolim.core.federalEntity.domain.FederalEntityNotFoundError
 import org.eduardoleolim.core.federalEntity.infrastructure.persistence.KtormFederalEntityRepository
 import org.eduardoleolim.core.municipality.domain.Municipality
 import org.eduardoleolim.core.municipality.domain.MunicipalityAlreadyExistsError
@@ -15,9 +15,9 @@ class MunicipalityCreator(
         if (existsWithSameKeyCode(keyCode))
             throw MunicipalityAlreadyExistsError(keyCode)
 
-        val federalEntity = searchFederalEntity(federalEntityId) ?: throw FederalEntityNotFound(federalEntityId)
+        if (!existsFederalEntity(federalEntityId)) throw FederalEntityNotFoundError(federalEntityId)
 
-        Municipality.create(keyCode, name, federalEntity).let {
+        Municipality.create(keyCode, name, federalEntityId).let {
             municipalityRepository.save(it)
         }
     }
@@ -26,7 +26,7 @@ class MunicipalityCreator(
         federalEntityRepository.count(it) > 0
     }
 
-    private fun searchFederalEntity(federalEntityId: String) = MunicipalityCriteria.idCriteria(federalEntityId).let {
-        federalEntityRepository.matching(it).firstOrNull()
+    private fun existsFederalEntity(federalEntityId: String) = MunicipalityCriteria.idCriteria(federalEntityId).let {
+        federalEntityRepository.count(it) > 0
     }
 }
