@@ -31,4 +31,20 @@ object FederalEntityCriteria {
         1,
         null
     )
+
+    fun searchCriteria(search: String? = null, orders: List<Order>? = null, limit: Int? = null, offset: Int? = null) =
+        Criteria(
+            Filters.none(),
+            Filters(
+                search?.let {
+                    listOf(
+                        Filter(FilterField("keyCode"), FilterOperator.CONTAINS, FilterValue(it)),
+                        Filter(FilterField("name"), FilterOperator.CONTAINS, FilterValue(it))
+                    )
+                } ?: emptyList()
+            ),
+            Orders(orders ?: listOf(Order.asc("keyCode"))),
+            limit,
+            offset
+        )
 }

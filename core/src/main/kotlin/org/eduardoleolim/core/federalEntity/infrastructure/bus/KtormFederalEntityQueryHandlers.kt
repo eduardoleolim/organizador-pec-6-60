@@ -3,6 +3,8 @@ package org.eduardoleolim.core.federalEntity.infrastructure.bus
 import org.eduardoleolim.core.federalEntity.application.search.FederalEntitySearcher
 import org.eduardoleolim.core.federalEntity.application.searchById.SearchFederalEntityByIdQuery
 import org.eduardoleolim.core.federalEntity.application.searchById.SearchFederalEntityByIdQueryHandler
+import org.eduardoleolim.core.federalEntity.application.searchByTerm.SearchFederalEntitiesByTermQuery
+import org.eduardoleolim.core.federalEntity.application.searchByTerm.SearchFederalEntitiesByTermQueryHandler
 import org.eduardoleolim.core.federalEntity.infrastructure.persistence.KtormFederalEntityRepository
 import org.eduardoleolim.shared.domain.bus.query.Query
 import org.eduardoleolim.shared.domain.bus.query.QueryHandler
@@ -20,5 +22,6 @@ class KtormFederalEntityQueryHandlers(database: Database) :
         searcher = FederalEntitySearcher(federalEntityRepository)
 
         this[SearchFederalEntityByIdQuery::class] = SearchFederalEntityByIdQueryHandler(searcher)
+        this[SearchFederalEntitiesByTermQuery::class] = SearchFederalEntitiesByTermQueryHandler(searcher)
     }
 }
