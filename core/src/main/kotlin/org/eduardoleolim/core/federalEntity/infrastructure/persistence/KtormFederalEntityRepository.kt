@@ -51,9 +51,6 @@ class KtormFederalEntityRepository(private val database: Database) : FederalEnti
             set(it.keyCode, federalEntity.keyCode())
             set(it.name, federalEntity.name())
             set(it.createdAt, federalEntity.createdAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
-            federalEntity.updatedAt()?.let { date ->
-                set(it.updatedAt, date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
-            }
         }
     }
 
@@ -72,7 +69,7 @@ class KtormFederalEntityRepository(private val database: Database) : FederalEnti
     override fun delete(federalEntityId: FederalEntityId) {
         this.count(FederalEntityCriteria.idCriteria(federalEntityId.value.toString())).let { count ->
             if (count == 0)
-                throw FederalEntityNotFound(federalEntityId.value.toString())
+                throw FederalEntityNotFoundError(federalEntityId.value.toString())
 
             database.delete(federalEntities) {
                 it.id eq federalEntityId.toString()
