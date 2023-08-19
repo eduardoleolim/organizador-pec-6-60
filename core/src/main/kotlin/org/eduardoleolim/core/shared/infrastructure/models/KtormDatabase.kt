@@ -5,11 +5,13 @@ import org.ktorm.support.sqlite.SQLiteDialect
 import org.sqlite.SQLiteDataSource
 
 object KtormDatabase {
-    fun init(databasePath: String): Database {
-        val dataSource = SQLiteDataSource()
-        dataSource.url = databasePath
-        dataSource.setEnforceForeignKeys(true)
-
-        return Database.connect(dataSource, SQLiteDialect())
+    fun init(databasePath: String, isReadOnly: Boolean = false): Database {
+        SQLiteDataSource().apply {
+            url = databasePath
+            setEnforceForeignKeys(true)
+            setReadOnly(isReadOnly)
+        }.let {
+            return Database.connect(it, SQLiteDialect())
+        }
     }
 }
