@@ -1,5 +1,6 @@
 package org.eduardoleolim.core.municipality.application.create
 
+import org.eduardoleolim.core.federalEntity.domain.FederalEntityCriteria
 import org.eduardoleolim.core.federalEntity.domain.FederalEntityNotFoundError
 import org.eduardoleolim.core.federalEntity.domain.FederalEntityRepository
 import org.eduardoleolim.core.municipality.domain.Municipality
@@ -23,10 +24,10 @@ class MunicipalityCreator(
     }
 
     private fun existsWithSameKeyCode(keyCode: String) = MunicipalityCriteria.keyCodeCriteria(keyCode).let {
-        federalEntityRepository.count(it) > 0
+        municipalityRepository.count(it) > 0
     }
 
-    private fun existsFederalEntity(federalEntityId: String) = MunicipalityCriteria.idCriteria(federalEntityId).let {
+    private fun existsFederalEntity(federalEntityId: String) = FederalEntityCriteria.idCriteria(federalEntityId).let {
         federalEntityRepository.count(it) > 0
     }
 }
