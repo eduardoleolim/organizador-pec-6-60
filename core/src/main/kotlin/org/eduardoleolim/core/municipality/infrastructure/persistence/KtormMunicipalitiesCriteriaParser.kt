@@ -32,8 +32,8 @@ object KtormMunicipalitiesCriteriaParser {
         federalEntities: FederalEntities,
         criteria: Criteria
     ): Query {
-        return database.from(federalEntities)
-            .innerJoin(federalEntities, on = municipalities.federalEntityId eq federalEntities.id)
+        return database.from(municipalities)
+            .innerJoin(federalEntities, municipalities.federalEntityId eq federalEntities.id)
             .select(count()).let {
                 addConditionsToQuery(it, municipalities, federalEntities, criteria)
             }.limit(criteria.offset, criteria.limit)
