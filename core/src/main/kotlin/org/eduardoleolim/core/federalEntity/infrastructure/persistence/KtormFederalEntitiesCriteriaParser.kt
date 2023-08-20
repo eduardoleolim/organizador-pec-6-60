@@ -83,6 +83,9 @@ object KtormFederalEntitiesCriteriaParser {
     }
 
     private fun addConditionsToQuery(query: Query, federalEntities: FederalEntities, criteria: Criteria): Query {
+        if (!criteria.hasAndFilters() && !criteria.hasOrFilters())
+            return query
+
         if (criteria.hasAndFilters() && criteria.hasOrFilters()) {
             return query.where {
                 val andConditions = criteria.andFilters.filters.mapNotNull {
@@ -98,18 +101,20 @@ object KtormFederalEntitiesCriteriaParser {
                     orConditions.reduce { a, b -> a or b } and andConditions.reduce { a, b -> a and b }
                 }
             }
-        } else if (criteria.hasAndFilters()) {
+        }
+
+        if (criteria.hasAndFilters()) {
             return query.whereWithConditions {
                 it.addAll(criteria.andFilters.filters.mapNotNull { filter ->
                     parseFilter(federalEntities, filter)
                 })
             }
-        } else {
-            return query.whereWithOrConditions {
-                it.addAll(criteria.orFilters.filters.mapNotNull { filter ->
-                    parseFilter(federalEntities, filter)
-                })
-            }
+        }
+
+        return query.whereWithOrConditions {
+            it.addAll(criteria.orFilters.filters.mapNotNull { filter ->
+                parseFilter(federalEntities, filter)
+            })
         }
     }
 
