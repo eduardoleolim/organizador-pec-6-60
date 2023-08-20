@@ -50,6 +50,7 @@ class KtormMunicipalityRepository(private val database: Database) : Municipality
     private fun insert(municipality: Municipality) {
         database.insert(municipalities) {
             set(it.id, municipality.id().toString())
+            set(it.keyCode, municipality.keyCode())
             set(it.name, municipality.name())
             set(it.federalEntityId, municipality.federalEntityId().toString())
             set(it.createdAt, municipality.createdAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
@@ -58,6 +59,7 @@ class KtormMunicipalityRepository(private val database: Database) : Municipality
 
     private fun update(municipality: Municipality) {
         database.update(municipalities) {
+            set(it.keyCode, municipality.keyCode())
             set(it.name, municipality.name())
             set(it.federalEntityId, municipality.federalEntityId().toString())
             set(it.updatedAt, municipality.updatedAt()?.toInstant()?.atZone(ZoneId.systemDefault())?.toLocalDateTime())
