@@ -16,6 +16,6 @@ class FederalEntityDeleter(private val repository: FederalEntityRepository) {
     }
 
     private fun exists(id: String) = FederalEntityCriteria.idCriteria(id).let {
-        repository.matching(it).isNotEmpty()
+        repository.count(it) > 0
     }
 }
