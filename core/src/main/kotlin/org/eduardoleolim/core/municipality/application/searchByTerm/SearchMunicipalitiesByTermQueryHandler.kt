@@ -16,15 +16,18 @@ class SearchMunicipalitiesByTermQueryHandler(
     private val cache = mutableMapOf<String, FederalEntity>()
 
     override fun handle(query: SearchMunicipalitiesByTermQuery): MunicipalitiesResponse {
-        val municipalities = searchMunicipalities(query.search(), query.orders(), query.limit(), query.offset())
+        try {
+            val municipalities = searchMunicipalities(query.search(), query.orders(), query.limit(), query.offset())
 
-        return municipalities.map { municipality ->
-            searchFederalEntity(municipality.federalEntityId().toString()).let { federalEntity ->
+            return municipalities.map { municipality ->
+                val federalEntity = searchFederalEntity(municipality.federalEntityId().toString())
+
                 MunicipalityResponse.fromAggregate(municipality, federalEntity)
+            }.let {
+                MunicipalitiesResponse(it)
             }
-        }.let {
+        } finally {
             cache.clear()
-            MunicipalitiesResponse(it)
         }
     }
 
