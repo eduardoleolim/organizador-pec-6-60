@@ -7,9 +7,9 @@ import org.eduardoleolim.core.federalEntity.domain.FederalEntityRepository
 
 class FederalEntityUpdater(private val repository: FederalEntityRepository) {
     fun update(id: String, keyCode: String, name: String) {
-        val federalEntity = search(id) ?: throw FederalEntityNotFoundError(id)
+        val federalEntity = searchFederalEntity(id) ?: throw FederalEntityNotFoundError(id)
 
-        if (existsAnotherWithSameKeyCode(id, keyCode))
+        if (existsAnotherSameKeyCode(id, keyCode))
             throw FederalEntityAlreadyExistsError(keyCode)
 
         federalEntity.apply {
@@ -20,11 +20,11 @@ class FederalEntityUpdater(private val repository: FederalEntityRepository) {
         }
     }
 
-    private fun search(id: String) = FederalEntityCriteria.idCriteria(id).let {
+    private fun searchFederalEntity(id: String) = FederalEntityCriteria.idCriteria(id).let {
         repository.matching(it).firstOrNull()
     }
 
-    private fun existsAnotherWithSameKeyCode(id: String, keyCode: String) =
+    private fun existsAnotherSameKeyCode(id: String, keyCode: String) =
         FederalEntityCriteria.anotherKeyCodeCriteria(id, keyCode).let {
             repository.count(it) > 0
         }
