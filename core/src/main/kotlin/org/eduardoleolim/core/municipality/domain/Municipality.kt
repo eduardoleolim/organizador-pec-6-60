@@ -63,8 +63,8 @@ class Municipality private constructor(
         this.updatedAt = MunicipalityUpdateDate.now()
     }
 
-    fun changeFederalEntity(federalEntityId: FederalEntityId) {
-        this.federalEntityId = federalEntityId
+    fun changeFederalEntityId(federalEntityId: String) {
+        this.federalEntityId = FederalEntityId.fromString(federalEntityId)
         this.updatedAt = MunicipalityUpdateDate.now()
     }
 }
