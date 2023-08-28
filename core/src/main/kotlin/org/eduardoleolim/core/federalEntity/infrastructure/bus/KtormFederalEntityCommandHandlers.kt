@@ -22,35 +22,30 @@ class KtormFederalEntityCommandHandlers(database: Database) :
 
     init {
         federalEntityRepository = KtormFederalEntityRepository(database)
-        createCommandHandler(database)
-        updateCommandHandler(database)
-        deleteCommandHandler(database)
+
+        this[CreateFederalEntityCommand::class] = createCommandHandler(database)
+        this[UpdateFederalEntityCommand::class] = updateCommandHandler(database)
+        this[DeleteFederalEntityCommand::class] = deleteCommandHandler(database)
     }
 
-    private fun createCommandHandler(database: Database) {
+    private fun createCommandHandler(database: Database): CommandHandler<out Command> {
         val creator = FederalEntityCreator(federalEntityRepository)
         val commandHandler = CreateFederalEntityCommandHandler(creator)
 
-        KtormCommandHandlerDecorator(database, commandHandler).let {
-            this[CreateFederalEntityCommand::class] = it
-        }
+        return KtormCommandHandlerDecorator(database, commandHandler)
     }
 
-    private fun updateCommandHandler(database: Database) {
+    private fun updateCommandHandler(database: Database): CommandHandler<out Command> {
         val updater = FederalEntityUpdater(federalEntityRepository)
         val commandHandler = UpdateFederalEntityCommandHandler(updater)
 
-        KtormCommandHandlerDecorator(database, commandHandler).let {
-            this[UpdateFederalEntityCommand::class] = it
-        }
+        return KtormCommandHandlerDecorator(database, commandHandler)
     }
 
-    private fun deleteCommandHandler(database: Database) {
+    private fun deleteCommandHandler(database: Database): CommandHandler<out Command> {
         val deleter = FederalEntityDeleter(federalEntityRepository)
         val commandHandler = DeleteFederalEntityCommandHandler(deleter)
 
-        KtormCommandHandlerDecorator(database, commandHandler).let {
-            this[DeleteFederalEntityCommand::class] = it
-        }
+        return KtormCommandHandlerDecorator(database, commandHandler)
     }
 }

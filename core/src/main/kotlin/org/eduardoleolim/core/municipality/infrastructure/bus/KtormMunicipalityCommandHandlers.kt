@@ -4,6 +4,9 @@ import org.eduardoleolim.core.federalEntity.infrastructure.persistence.KtormFede
 import org.eduardoleolim.core.municipality.application.create.CreateMunicipalityCommand
 import org.eduardoleolim.core.municipality.application.create.CreateMunicipalityCommandHandler
 import org.eduardoleolim.core.municipality.application.create.MunicipalityCreator
+import org.eduardoleolim.core.municipality.application.update.MunicipalityUpdater
+import org.eduardoleolim.core.municipality.application.update.UpdateMunicipalityCommand
+import org.eduardoleolim.core.municipality.application.update.UpdateMunicipalityCommandHandler
 import org.eduardoleolim.core.municipality.infrastructure.persistence.KtormMunicipalityRepository
 import org.eduardoleolim.core.shared.infrastructure.bus.KtormCommandHandlerDecorator
 import org.eduardoleolim.shared.domain.bus.command.Command
@@ -20,15 +23,21 @@ class KtormMunicipalityCommandHandlers(database: Database) :
         municipalityRepository = KtormMunicipalityRepository(database)
         federalEntityRepository = KtormFederalEntityRepository(database)
 
-        createCommandHandler(database)
+        this[CreateMunicipalityCommand::class] = createCommandHandler(database)
+        this[UpdateMunicipalityCommand::class] = updateCommandHandler(database)
     }
 
-    private fun createCommandHandler(database: Database) {
+    private fun createCommandHandler(database: Database): CommandHandler<out Command> {
         val creator = MunicipalityCreator(municipalityRepository, federalEntityRepository)
         val commandHandler = CreateMunicipalityCommandHandler(creator)
 
-        KtormCommandHandlerDecorator(database, commandHandler).let {
-            this[CreateMunicipalityCommand::class] = it
-        }
+        return KtormCommandHandlerDecorator(database, commandHandler)
+    }
+
+    private fun updateCommandHandler(database: Database): CommandHandler<out Command> {
+        val updater = MunicipalityUpdater(municipalityRepository, federalEntityRepository)
+        val commandHandler = UpdateMunicipalityCommandHandler(updater)
+
+        return KtormCommandHandlerDecorator(database, commandHandler)
     }
 }
