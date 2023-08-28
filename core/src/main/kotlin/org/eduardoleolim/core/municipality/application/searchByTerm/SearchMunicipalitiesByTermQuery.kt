@@ -12,13 +12,23 @@ class SearchMunicipalitiesByTermQuery(
     private val federalEntityId = federalEntityId?.trim()
     private val search = search?.trim()
 
-    fun federalEntityId() = federalEntityId
+    fun federalEntityId(): String? {
+        return federalEntityId
+    }
 
-    fun search() = search
+    fun search(): String? {
+        return search
+    }
 
-    fun orders() = orders
+    fun orders(): Array<HashMap<String, String>>? {
+        return orders
+    }
 
-    fun limit() = limit
+    fun limit(): Int? {
+        return limit
+    }
 
-    fun offset() = offset
+    fun offset(): Int? {
+        return offset
+    }
 }
