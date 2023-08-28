@@ -6,6 +6,7 @@ import org.eduardoleolim.core.federalEntity.domain.FederalEntityCriteria
 import org.eduardoleolim.core.municipality.application.MunicipalitiesResponse
 import org.eduardoleolim.core.municipality.application.MunicipalityResponse
 import org.eduardoleolim.core.municipality.application.search.MunicipalitySearcher
+import org.eduardoleolim.core.municipality.domain.MunicipalityCriteria
 import org.eduardoleolim.shared.domain.bus.query.QueryHandler
 import org.eduardoleolim.shared.domain.criteria.Order
 
@@ -17,7 +18,13 @@ class SearchMunicipalitiesByTermQueryHandler(
 
     override fun handle(query: SearchMunicipalitiesByTermQuery): MunicipalitiesResponse {
         try {
-            val municipalities = searchMunicipalities(query.search(), query.orders(), query.limit(), query.offset())
+            val municipalities = searchMunicipalities(
+                query.federalEntityId(),
+                query.search(),
+                query.orders(),
+                query.limit(),
+                query.offset()
+            )
 
             return municipalities.map { municipality ->
                 val federalEntity = searchFederalEntity(municipality.federalEntityId().toString())
@@ -32,11 +39,13 @@ class SearchMunicipalitiesByTermQueryHandler(
     }
 
     private fun searchMunicipalities(
+        federalEntityId: String? = null,
         search: String? = null,
         orders: Array<HashMap<String, String>>? = null,
         limit: Int? = null,
         offset: Int? = null
-    ) = FederalEntityCriteria.searchCriteria(
+    ) = MunicipalityCriteria.searchCriteria(
+        federalEntityId = federalEntityId,
         search = search,
         orders = orders?.map { Order.fromValues(it["orderBy"], it["orderType"]) }?.toMutableList(),
         limit = limit,

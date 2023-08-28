@@ -39,4 +39,33 @@ object MunicipalityCriteria {
         1,
         null
     )
+
+    fun searchCriteria(
+        federalEntityId: String? = null,
+        search: String? = null,
+        orders: List<Order>? = null,
+        limit: Int? = null,
+        offset: Int? = null
+    ) = Criteria(
+        Filters(
+            federalEntityId?.let {
+                listOf(
+                    Filter(FilterField("federalEntity.id"), FilterOperator.EQUAL, FilterValue(it))
+                )
+            } ?: emptyList()
+        ),
+        Filters(
+            search?.let {
+                listOf(
+                    Filter(FilterField("keyCode"), FilterOperator.CONTAINS, FilterValue(it)),
+                    Filter(FilterField("name"), FilterOperator.CONTAINS, FilterValue(it)),
+                    Filter(FilterField("federalEntity.keyCode"), FilterOperator.CONTAINS, FilterValue(it)),
+                    Filter(FilterField("federalEntity.name"), FilterOperator.CONTAINS, FilterValue(it))
+                )
+            } ?: emptyList()
+        ),
+        Orders(orders ?: listOf(Order.asc("keyCode"))),
+        limit,
+        offset
+    )
 }
