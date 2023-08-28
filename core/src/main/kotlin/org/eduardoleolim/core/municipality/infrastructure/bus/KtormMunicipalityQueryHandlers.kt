@@ -3,6 +3,8 @@ package org.eduardoleolim.core.municipality.infrastructure.bus
 import org.eduardoleolim.core.federalEntity.application.search.FederalEntitySearcher
 import org.eduardoleolim.core.federalEntity.infrastructure.persistence.KtormFederalEntityRepository
 import org.eduardoleolim.core.municipality.application.search.MunicipalitySearcher
+import org.eduardoleolim.core.municipality.application.searchById.SearchMunicipalityByIdQuery
+import org.eduardoleolim.core.municipality.application.searchById.SearchMunicipalityByIdQueryHandler
 import org.eduardoleolim.core.municipality.application.searchByTerm.SearchMunicipalitiesByTermQuery
 import org.eduardoleolim.core.municipality.application.searchByTerm.SearchMunicipalitiesByTermQueryHandler
 import org.eduardoleolim.core.municipality.infrastructure.persistence.KtormMunicipalityRepository
@@ -27,5 +29,7 @@ class KtormMunicipalityQueryHandlers(database: Database) :
 
         this[SearchMunicipalitiesByTermQuery::class] =
             SearchMunicipalitiesByTermQueryHandler(municipalitySearcher, federalEntitySearcher)
+        this[SearchMunicipalityByIdQuery::class] =
+            SearchMunicipalityByIdQueryHandler(municipalitySearcher, federalEntitySearcher)
     }
 }
