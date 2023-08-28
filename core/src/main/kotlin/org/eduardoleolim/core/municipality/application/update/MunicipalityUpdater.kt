@@ -25,8 +25,7 @@ class MunicipalityUpdater(
             changeKeyCode(keyCode)
             changeName(name)
             changeFederalEntityId(federalEntityId)
-        }.let {
-            municipalityRepository.save(it)
+            municipalityRepository.save(this)
         }
     }
 

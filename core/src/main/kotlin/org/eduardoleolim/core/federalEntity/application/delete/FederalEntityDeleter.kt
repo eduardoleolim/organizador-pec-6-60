@@ -10,9 +10,7 @@ class FederalEntityDeleter(private val repository: FederalEntityRepository) {
         if (!exists(id))
             throw FederalEntityNotFoundError(id)
 
-        FederalEntityId.fromString(id).let {
-            repository.delete(it)
-        }
+        repository.delete(FederalEntityId.fromString(id))
     }
 
     private fun exists(id: String) = FederalEntityCriteria.idCriteria(id).let {
