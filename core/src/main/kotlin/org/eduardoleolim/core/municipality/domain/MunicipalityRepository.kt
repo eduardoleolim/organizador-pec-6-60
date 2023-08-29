@@ -9,5 +9,5 @@ interface MunicipalityRepository {
 
     fun save(municipality: Municipality)
 
-    fun delete(municipalityId: MunicipalityId)
+    fun delete(municipalityId: String)
 }

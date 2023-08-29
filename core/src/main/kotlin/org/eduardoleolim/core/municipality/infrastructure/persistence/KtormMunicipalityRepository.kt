@@ -1,6 +1,9 @@
 package org.eduardoleolim.core.municipality.infrastructure.persistence
 
-import org.eduardoleolim.core.municipality.domain.*
+import org.eduardoleolim.core.municipality.domain.Municipality
+import org.eduardoleolim.core.municipality.domain.MunicipalityCriteria
+import org.eduardoleolim.core.municipality.domain.MunicipalityNotFoundError
+import org.eduardoleolim.core.municipality.domain.MunicipalityRepository
 import org.eduardoleolim.core.shared.infrastructure.models.FederalEntities
 import org.eduardoleolim.core.shared.infrastructure.models.Municipalities
 import org.eduardoleolim.shared.domain.criteria.Criteria
@@ -69,13 +72,13 @@ class KtormMunicipalityRepository(private val database: Database) : Municipality
         }
     }
 
-    override fun delete(municipalityId: MunicipalityId) {
-        this.count(MunicipalityCriteria.idCriteria(municipalityId.value.toString())).let { count ->
+    override fun delete(municipalityId: String) {
+        this.count(MunicipalityCriteria.idCriteria(municipalityId)).let { count ->
             if (count == 0)
-                throw MunicipalityNotFoundError(municipalityId.value.toString())
+                throw MunicipalityNotFoundError(municipalityId)
 
             database.delete(municipalities) {
-                it.id eq municipalityId.value.toString()
+                it.id eq municipalityId
             }
         }
     }
