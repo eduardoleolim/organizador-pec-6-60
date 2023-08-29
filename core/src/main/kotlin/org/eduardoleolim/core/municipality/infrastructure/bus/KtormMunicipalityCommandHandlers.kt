@@ -4,6 +4,9 @@ import org.eduardoleolim.core.federalEntity.infrastructure.persistence.KtormFede
 import org.eduardoleolim.core.municipality.application.create.CreateMunicipalityCommand
 import org.eduardoleolim.core.municipality.application.create.CreateMunicipalityCommandHandler
 import org.eduardoleolim.core.municipality.application.create.MunicipalityCreator
+import org.eduardoleolim.core.municipality.application.delete.DeleteMunicipalityCommand
+import org.eduardoleolim.core.municipality.application.delete.DeleteMunicipalityCommandHandler
+import org.eduardoleolim.core.municipality.application.delete.MunicipalityDeleter
 import org.eduardoleolim.core.municipality.application.update.MunicipalityUpdater
 import org.eduardoleolim.core.municipality.application.update.UpdateMunicipalityCommand
 import org.eduardoleolim.core.municipality.application.update.UpdateMunicipalityCommandHandler
@@ -25,6 +28,7 @@ class KtormMunicipalityCommandHandlers(database: Database) :
 
         this[CreateMunicipalityCommand::class] = createCommandHandler(database)
         this[UpdateMunicipalityCommand::class] = updateCommandHandler(database)
+        this[DeleteMunicipalityCommand::class] = deleteCommandHandler(database)
     }
 
     private fun createCommandHandler(database: Database): CommandHandler<out Command> {
@@ -37,6 +41,13 @@ class KtormMunicipalityCommandHandlers(database: Database) :
     private fun updateCommandHandler(database: Database): CommandHandler<out Command> {
         val updater = MunicipalityUpdater(municipalityRepository, federalEntityRepository)
         val commandHandler = UpdateMunicipalityCommandHandler(updater)
+
+        return KtormCommandHandlerDecorator(database, commandHandler)
+    }
+
+    private fun deleteCommandHandler(database: Database): CommandHandler<out Command> {
+        val deleter = MunicipalityDeleter(municipalityRepository)
+        val commandHandler = DeleteMunicipalityCommandHandler(deleter)
 
         return KtormCommandHandlerDecorator(database, commandHandler)
     }
