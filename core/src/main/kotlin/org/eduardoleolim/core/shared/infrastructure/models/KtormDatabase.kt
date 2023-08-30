@@ -10,8 +10,7 @@ object KtormDatabase {
             url = databasePath
             setEnforceForeignKeys(true)
             setReadOnly(isReadOnly)
-        }.let {
-            return Database.connect(it, SQLiteDialect())
+            return Database.connect(this, SQLiteDialect())
         }
     }
 }

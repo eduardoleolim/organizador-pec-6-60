@@ -20,5 +20,6 @@ class FederalEntities(alias: String? = null) : Table<FederalEntity>("federalEnti
     val name = varchar("name").bindTo { it.name }
     val createdAt = datetime("createdAt").bindTo { it.createdAt }
     val updatedAt = datetime("updatedAt").bindTo { it.updatedAt }
+
     override fun aliased(alias: String) = FederalEntities(alias)
 }
