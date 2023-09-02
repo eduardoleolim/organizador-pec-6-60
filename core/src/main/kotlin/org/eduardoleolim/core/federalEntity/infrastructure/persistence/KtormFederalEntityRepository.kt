@@ -4,7 +4,11 @@ import org.eduardoleolim.core.federalEntity.domain.*
 import org.eduardoleolim.core.shared.infrastructure.models.FederalEntities
 import org.eduardoleolim.shared.domain.criteria.Criteria
 import org.ktorm.database.Database
-import org.ktorm.dsl.*
+import org.ktorm.dsl.delete
+import org.ktorm.dsl.eq
+import org.ktorm.dsl.map
+import org.ktorm.support.sqlite.insertOrUpdate
+import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
 
@@ -36,32 +40,19 @@ class KtormFederalEntityRepository(private val database: Database) : FederalEnti
 
 
     override fun save(federalEntity: FederalEntity) {
-        this.count(FederalEntityCriteria.idCriteria(federalEntity.id().toString())).let { count ->
-            if (count > 0) {
-                this.update(federalEntity)
-            } else {
-                this.insert(federalEntity)
-            }
-        }
-    }
-
-    private fun insert(federalEntity: FederalEntity) {
-        database.insert(federalEntities) {
+        database.insertOrUpdate(federalEntities) {
             set(it.id, federalEntity.id().toString())
             set(it.keyCode, federalEntity.keyCode())
             set(it.name, federalEntity.name())
             set(it.createdAt, federalEntity.createdAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
-        }
-    }
-
-    private fun update(federalEntity: FederalEntity) {
-        database.update(federalEntities) {
-            val updateAt = federalEntity.updatedAt() ?: Date()
-            set(it.keyCode, federalEntity.keyCode())
-            set(it.name, federalEntity.name())
-            set(it.updatedAt, updateAt.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
-            where {
-                it.id eq federalEntity.id().toString()
+            onConflict(it.id) {
+                set(it.keyCode, federalEntity.keyCode())
+                set(it.name, federalEntity.name())
+                set(
+                    it.updatedAt,
+                    federalEntity.updatedAt()?.toInstant()?.atZone(ZoneId.systemDefault())?.toLocalDateTime()
+                        ?: LocalDateTime.now()
+                )
             }
         }
     }
