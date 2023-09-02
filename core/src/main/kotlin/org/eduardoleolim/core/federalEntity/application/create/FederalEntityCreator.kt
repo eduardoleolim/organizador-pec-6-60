@@ -10,7 +10,6 @@ class FederalEntityCreator(private val repository: FederalEntityRepository) {
         if (exists(keyCode))
             throw FederalEntityAlreadyExistsError(keyCode)
 
-
         FederalEntity.create(keyCode, name).let {
             repository.save(it)
         }
