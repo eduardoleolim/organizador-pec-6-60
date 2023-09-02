@@ -8,7 +8,11 @@ import org.eduardoleolim.core.shared.infrastructure.models.FederalEntities
 import org.eduardoleolim.core.shared.infrastructure.models.Municipalities
 import org.eduardoleolim.shared.domain.criteria.Criteria
 import org.ktorm.database.Database
-import org.ktorm.dsl.*
+import org.ktorm.dsl.delete
+import org.ktorm.dsl.eq
+import org.ktorm.dsl.map
+import org.ktorm.support.sqlite.insertOrUpdate
+import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
 
@@ -41,33 +45,21 @@ class KtormMunicipalityRepository(private val database: Database) : Municipality
     }
 
     override fun save(municipality: Municipality) {
-        this.count(MunicipalityCriteria.idCriteria(municipality.id().toString())).let { count ->
-            if (count > 0) {
-                this.update(municipality)
-            } else {
-                this.insert(municipality)
-            }
-        }
-    }
-
-    private fun insert(municipality: Municipality) {
-        database.insert(municipalities) {
+        database.insertOrUpdate(municipalities) {
             set(it.id, municipality.id().toString())
             set(it.keyCode, municipality.keyCode())
             set(it.name, municipality.name())
             set(it.federalEntityId, municipality.federalEntityId().toString())
             set(it.createdAt, municipality.createdAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
-        }
-    }
-
-    private fun update(municipality: Municipality) {
-        database.update(municipalities) {
-            set(it.keyCode, municipality.keyCode())
-            set(it.name, municipality.name())
-            set(it.federalEntityId, municipality.federalEntityId().toString())
-            set(it.updatedAt, municipality.updatedAt()?.toInstant()?.atZone(ZoneId.systemDefault())?.toLocalDateTime())
-            where {
-                it.id eq municipality.id().toString()
+            onConflict(it.id) {
+                set(it.keyCode, municipality.keyCode())
+                set(it.name, municipality.name())
+                set(it.federalEntityId, municipality.federalEntityId().toString())
+                set(
+                    it.updatedAt,
+                    municipality.updatedAt()?.toInstant()?.atZone(ZoneId.systemDefault())?.toLocalDateTime()
+                        ?: LocalDateTime.now()
+                )
             }
         }
     }
