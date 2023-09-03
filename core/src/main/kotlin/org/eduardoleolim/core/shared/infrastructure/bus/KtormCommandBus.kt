@@ -1,6 +1,7 @@
 package org.eduardoleolim.core.shared.infrastructure.bus
 
 import org.eduardoleolim.core.federalEntity.infrastructure.bus.KtormFederalEntityCommandHandlers
+import org.eduardoleolim.core.instrumentType.infrastructure.bus.KtormInstrumentTypeCommandHandlers
 import org.eduardoleolim.core.municipality.infrastructure.bus.KtormMunicipalityCommandHandlers
 import org.eduardoleolim.shared.domain.bus.command.*
 import org.ktorm.database.Database
@@ -13,6 +14,7 @@ class KtormCommandBus(database: Database) : CommandBus {
         this.commandHandlers = HashMap()
         commandHandlers.apply {
             putAll(KtormFederalEntityCommandHandlers(database))
+            putAll(KtormInstrumentTypeCommandHandlers(database))
             putAll(KtormMunicipalityCommandHandlers(database))
         }
     }
