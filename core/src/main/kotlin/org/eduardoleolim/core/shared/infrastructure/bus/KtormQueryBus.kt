@@ -1,6 +1,7 @@
 package org.eduardoleolim.core.shared.infrastructure.bus
 
 import org.eduardoleolim.core.federalEntity.infrastructure.bus.KtormFederalEntityQueryHandlers
+import org.eduardoleolim.core.instrumentType.infrastructure.bus.KtormInstrumentTypeQueryHandlers
 import org.eduardoleolim.core.municipality.infrastructure.bus.KtormMunicipalityQueryHandlers
 import org.eduardoleolim.shared.domain.bus.query.*
 import org.ktorm.database.Database
@@ -13,6 +14,7 @@ class KtormQueryBus(private val database: Database) : QueryBus {
         queryHandlers = HashMap()
         queryHandlers.apply {
             putAll(KtormFederalEntityQueryHandlers(database))
+            putAll(KtormInstrumentTypeQueryHandlers(database))
             putAll(KtormMunicipalityQueryHandlers(database))
         }
     }

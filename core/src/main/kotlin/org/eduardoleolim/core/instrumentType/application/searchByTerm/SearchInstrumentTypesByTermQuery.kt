@@ -3,7 +3,7 @@ package org.eduardoleolim.core.instrumentType.application.searchByTerm
 import org.eduardoleolim.shared.domain.bus.query.Query
 
 
-class SearchInstrumentTypeByTermQuery(
+class SearchInstrumentTypesByTermQuery(
     search: String? = null,
     private val orders: Array<HashMap<String, String>>? = null,
     private val limit: Int? = null,

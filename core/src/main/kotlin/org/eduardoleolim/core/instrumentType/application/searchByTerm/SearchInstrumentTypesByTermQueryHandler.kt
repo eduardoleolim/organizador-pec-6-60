@@ -6,9 +6,9 @@ import org.eduardoleolim.core.instrumentType.domain.InstrumentTypeCriteria
 import org.eduardoleolim.shared.domain.bus.query.QueryHandler
 import org.eduardoleolim.shared.domain.criteria.Order
 
-class SearchInstrumentTypeByTermQueryHandler(private val searcher: InstrumentTypeSearcher) :
-    QueryHandler<SearchInstrumentTypeByTermQuery, InstrumentTypesResponse> {
-    override fun handle(query: SearchInstrumentTypeByTermQuery): InstrumentTypesResponse {
+class SearchInstrumentTypesByTermQueryHandler(private val searcher: InstrumentTypeSearcher) :
+    QueryHandler<SearchInstrumentTypesByTermQuery, InstrumentTypesResponse> {
+    override fun handle(query: SearchInstrumentTypesByTermQuery): InstrumentTypesResponse {
         val instrumentTypes = searchInstrumentTypes(query.search(), query.orders(), query.limit(), query.offset())
 
         return InstrumentTypesResponse.fromAggregate(instrumentTypes)
