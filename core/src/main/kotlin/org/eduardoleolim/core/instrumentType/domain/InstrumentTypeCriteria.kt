@@ -18,4 +18,17 @@ object InstrumentTypeCriteria {
         1,
         null
     )
+
+    fun searchCriteria(search: String? = null, orders: List<Order>? = null, limit: Int? = null, offset: Int? = null) =
+        Criteria(
+            Filters.none(),
+            Filters(
+                search?.let {
+                    listOf(Filter(FilterField("name"), FilterOperator.CONTAINS, FilterValue(it)))
+                } ?: emptyList()
+            ),
+            Orders(orders ?: listOf(Order.asc("name"))),
+            limit,
+            offset
+        )
 }
