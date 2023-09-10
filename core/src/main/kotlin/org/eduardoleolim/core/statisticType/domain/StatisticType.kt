@@ -13,6 +13,13 @@ class StatisticType private constructor(
 ) {
     init {
         instrumentTypeIds = instrumentTypeIds.distinct().toMutableList()
+        validate()
+    }
+
+    private fun validate() {
+        if (instrumentTypeIds.isEmpty()) {
+            throw NotEnoughInstrumentTypesError()
+        }
     }
 
     companion object {
@@ -78,11 +85,24 @@ class StatisticType private constructor(
     }
 
     fun removeInstrumentTypeId(id: String) {
+        if (instrumentTypeIds.size == 1 && instrumentTypeIds.first().toString() == id)
+            throw NotEnoughInstrumentTypesError()
+
         if (instrumentTypeIds.removeIf { it.value.toString() == id }) {
             this.updatedAt = StatisticTypeUpdateDate.now()
         }
     }
 
+    fun changeInstrumentTypeIds(instrumentTypeIds: List<String>) {
+        instrumentTypeIds.distinct().let {
+            if (it.isEmpty())
+                throw NotEnoughInstrumentTypesError()
+
+            this.instrumentTypeIds.clear()
+            this.instrumentTypeIds.addAll(it.map(InstrumentTypeId::fromString))
+            this.updatedAt = StatisticTypeUpdateDate.now()
+        }
+    }
 }
 
 data class StatisticTypeId(val value: UUID) {
