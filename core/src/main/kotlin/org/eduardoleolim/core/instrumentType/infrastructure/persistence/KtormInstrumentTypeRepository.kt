@@ -41,28 +41,35 @@ class KtormInstrumentTypeRepository(private val database: Database) : Instrument
     }
 
     override fun save(instrumentType: InstrumentType) {
-        database.insertOrUpdate(instrumentTypes) {
-            set(it.id, instrumentType.id().toString())
-            set(it.name, instrumentType.name())
-            set(it.createdAt, instrumentType.createdAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
-            onConflict(it.id) {
+        database.useTransaction {
+            database.insertOrUpdate(instrumentTypes) {
+                set(it.id, instrumentType.id().toString())
                 set(it.name, instrumentType.name())
                 set(
-                    it.updatedAt,
-                    instrumentType.updatedAt()?.toInstant()?.atZone(ZoneId.systemDefault())?.toLocalDateTime()
-                        ?: LocalDateTime.now()
+                    it.createdAt,
+                    instrumentType.createdAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
                 )
+                onConflict(it.id) {
+                    set(it.name, instrumentType.name())
+                    set(
+                        it.updatedAt,
+                        instrumentType.updatedAt()?.toInstant()?.atZone(ZoneId.systemDefault())?.toLocalDateTime()
+                            ?: LocalDateTime.now()
+                    )
+                }
             }
         }
     }
 
     override fun delete(instrumentTypeId: String) {
-        count(InstrumentTypeCriteria.idCriteria(instrumentTypeId)).let { count ->
-            if (count == 0)
-                throw InstrumentTypeNotFoundError(instrumentTypeId)
+        database.useTransaction {
+            count(InstrumentTypeCriteria.idCriteria(instrumentTypeId)).let { count ->
+                if (count == 0)
+                    throw InstrumentTypeNotFoundError(instrumentTypeId)
 
-            database.delete(instrumentTypes) {
-                it.id eq instrumentTypeId
+                database.delete(instrumentTypes) {
+                    it.id eq instrumentTypeId
+                }
             }
         }
     }

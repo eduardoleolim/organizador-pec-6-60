@@ -45,32 +45,36 @@ class KtormMunicipalityRepository(private val database: Database) : Municipality
     }
 
     override fun save(municipality: Municipality) {
-        database.insertOrUpdate(municipalities) {
-            set(it.id, municipality.id().toString())
-            set(it.keyCode, municipality.keyCode())
-            set(it.name, municipality.name())
-            set(it.federalEntityId, municipality.federalEntityId().toString())
-            set(it.createdAt, municipality.createdAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
-            onConflict(it.id) {
+        database.useTransaction {
+            database.insertOrUpdate(municipalities) {
+                set(it.id, municipality.id().toString())
                 set(it.keyCode, municipality.keyCode())
                 set(it.name, municipality.name())
                 set(it.federalEntityId, municipality.federalEntityId().toString())
-                set(
-                    it.updatedAt,
-                    municipality.updatedAt()?.toInstant()?.atZone(ZoneId.systemDefault())?.toLocalDateTime()
-                        ?: LocalDateTime.now()
-                )
+                set(it.createdAt, municipality.createdAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
+                onConflict(it.id) {
+                    set(it.keyCode, municipality.keyCode())
+                    set(it.name, municipality.name())
+                    set(it.federalEntityId, municipality.federalEntityId().toString())
+                    set(
+                        it.updatedAt,
+                        municipality.updatedAt()?.toInstant()?.atZone(ZoneId.systemDefault())?.toLocalDateTime()
+                            ?: LocalDateTime.now()
+                    )
+                }
             }
         }
     }
 
     override fun delete(municipalityId: String) {
-        this.count(MunicipalityCriteria.idCriteria(municipalityId)).let { count ->
-            if (count == 0)
-                throw MunicipalityNotFoundError(municipalityId)
+        database.useTransaction {
+            count(MunicipalityCriteria.idCriteria(municipalityId)).let { count ->
+                if (count == 0)
+                    throw MunicipalityNotFoundError(municipalityId)
 
-            database.delete(municipalities) {
-                it.id eq municipalityId
+                database.delete(municipalities) {
+                    it.id eq municipalityId
+                }
             }
         }
     }

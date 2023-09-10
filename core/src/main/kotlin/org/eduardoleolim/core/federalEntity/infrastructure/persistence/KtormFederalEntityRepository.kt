@@ -40,30 +40,37 @@ class KtormFederalEntityRepository(private val database: Database) : FederalEnti
 
 
     override fun save(federalEntity: FederalEntity) {
-        database.insertOrUpdate(federalEntities) {
-            set(it.id, federalEntity.id().toString())
-            set(it.keyCode, federalEntity.keyCode())
-            set(it.name, federalEntity.name())
-            set(it.createdAt, federalEntity.createdAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
-            onConflict(it.id) {
+        database.useTransaction {
+            database.insertOrUpdate(federalEntities) {
+                set(it.id, federalEntity.id().toString())
                 set(it.keyCode, federalEntity.keyCode())
                 set(it.name, federalEntity.name())
                 set(
-                    it.updatedAt,
-                    federalEntity.updatedAt()?.toInstant()?.atZone(ZoneId.systemDefault())?.toLocalDateTime()
-                        ?: LocalDateTime.now()
+                    it.createdAt,
+                    federalEntity.createdAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
                 )
+                onConflict(it.id) {
+                    set(it.keyCode, federalEntity.keyCode())
+                    set(it.name, federalEntity.name())
+                    set(
+                        it.updatedAt,
+                        federalEntity.updatedAt()?.toInstant()?.atZone(ZoneId.systemDefault())?.toLocalDateTime()
+                            ?: LocalDateTime.now()
+                    )
+                }
             }
         }
     }
 
     override fun delete(federalEntityId: FederalEntityId) {
-        this.count(FederalEntityCriteria.idCriteria(federalEntityId.value.toString())).let { count ->
-            if (count == 0)
-                throw FederalEntityNotFoundError(federalEntityId.value.toString())
+        database.useTransaction {
+            count(FederalEntityCriteria.idCriteria(federalEntityId.value.toString())).let { count ->
+                if (count == 0)
+                    throw FederalEntityNotFoundError(federalEntityId.value.toString())
 
-            database.delete(federalEntities) {
-                it.id eq federalEntityId.toString()
+                database.delete(federalEntities) {
+                    it.id eq federalEntityId.toString()
+                }
             }
         }
     }
