@@ -17,5 +17,10 @@ class InvalidStatisticTypeNameError(val name: String) :
 class InvalidStatisticTypeUpdateDateError(val updatedAt: Date, val createdAt: Date) :
     StatisticTypeError("The update date <$updatedAt> is not valid because it is before the create date <$createdAt>")
 
+class StatisticTypeNotFoundError(val id: String) :
+    StatisticTypeError("The statistic type with id <$id> was not found")
+
 class StatisticTypeAlreadyExistsError(val keyCode: String) :
     StatisticTypeError("The statistic type with key code <$keyCode> already exists")
+
+class NotEnoughInstrumentTypesError : StatisticTypeError("The statistic type must have at least one instrument type")
