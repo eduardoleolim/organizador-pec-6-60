@@ -60,7 +60,7 @@ class StatisticType private constructor(
 
     fun instrumentTypeIds() = instrumentTypeIds.toList()
 
-    fun cratedAt() = createdAt.value
+    fun createdAt() = createdAt.value
 
     fun updatedAt() = updatedAt?.value
 
