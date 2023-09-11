@@ -1,4 +1,4 @@
-package org.eduardoleolim.app
+package org.eduardoleolim.app.utils
 
 class ArgsUtils {
     companion object {
