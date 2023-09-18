@@ -1,5 +1,6 @@
 plugins {
   id 'org.eduardoleolim.kotlin-application-conventions'
+  id 'org.beryx.jlink' version '2.26.0'
   id 'org.jetbrains.compose' version '1.4.3'
 }
 
@@ -10,6 +11,10 @@ dependencies {
   implementation "org.jetbrains.compose.material3:material3-desktop:1.4.3"
 }
 
+ext {
+  moduleName = 'org.eduardoleolim.organizadorpec660'
+}
+
 application {
   // Define the main class for the application.
   mainClass = 'org.eduardoleolim.app.AppKt'
@@ -17,4 +22,15 @@ application {
 
 kotlin {
   jvmToolchain(17)
+}
+
+jlink {
+  moduleName = project.moduleName
+  mergedModuleName = "${project.moduleName}.merged.module"
+  forceMerge("sqlite")
+  launcher {
+    name = 'OrganizadorPec660'
+    args = ['--database={{BIN_DIR}}/../database/organizador-pec-660.db']
+  }
+  options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
 }
