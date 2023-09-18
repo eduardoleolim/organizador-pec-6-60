@@ -1,3 +1,5 @@
+import tasks.AddModuleInfoTask
+
 plugins {
   id 'org.eduardoleolim.kotlin-application-conventions'
   id 'org.beryx.jlink' version '2.26.0'
@@ -15,13 +17,13 @@ ext {
   moduleName = 'org.eduardoleolim.organizadorpec660'
 }
 
+kotlin {
+  jvmToolchain(17)
+}
+
 application {
   // Define the main class for the application.
   mainClass = 'org.eduardoleolim.app.AppKt'
-}
-
-kotlin {
-  jvmToolchain(17)
 }
 
 jlink {
@@ -34,3 +36,12 @@ jlink {
   }
   options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
 }
+
+tasks.register('addModuleInfo', AddModuleInfoTask) {
+  moduleName = project.moduleName
+  jarPath = jlink.jlinkBasePath.get() + '/jlinkJars/app.jar'
+  classpath = files(file(jlink.jlinkBasePath.get() + '/jlinkJars'))
+  multiRelease = '17'
+}
+
+prepareModulesDir.finalizedBy addModuleInfo
