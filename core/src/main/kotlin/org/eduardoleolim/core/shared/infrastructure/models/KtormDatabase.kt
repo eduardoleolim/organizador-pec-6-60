@@ -34,7 +34,6 @@ class SqliteKtormDatabase(private val databasePath: String) {
         val stream = classLoader.getResourceAsStream("database/schema.sql")!!
         val content = stream.bufferedReader().readText()
 
-        Class.forName("org.sqlite.JDBC")
         val connection = DriverManager.getConnection("jdbc:sqlite:$databasePath")
         connection.use { conn ->
             val statements = content.split(";").dropLastWhile { it.isBlank() }

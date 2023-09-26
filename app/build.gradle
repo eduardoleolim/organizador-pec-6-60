@@ -28,8 +28,19 @@ application {
 
 jlink {
   moduleName = project.moduleName
+
   mergedModuleName = "${project.moduleName}.merged.module"
   forceMerge("sqlite")
+  mergedModule {
+    requires transitive 'java.desktop'
+    requires transitive 'java.sql'
+    uses 'java.sql.Driver'
+    provides 'java.sql.Driver' with 'org.sqlite.JDBC'
+
+    uses 'kotlin.reflect.jvm.internal.impl.resolve.ExternalOverridabilityCondition'
+    uses 'kotlin.reflect.jvm.internal.impl.util.ModuleVisibilityHelper'
+  }
+
   launcher {
     name = 'OrganizadorPec660'
     args = ['--database={{BIN_DIR}}/../database/organizador-pec-660.db']
