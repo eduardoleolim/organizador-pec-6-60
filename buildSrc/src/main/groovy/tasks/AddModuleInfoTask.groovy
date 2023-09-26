@@ -8,6 +8,9 @@ import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
 
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
+
 abstract class AddModuleInfoTask extends DefaultTask {
     @Input
     abstract Property<String> getModuleName()
@@ -21,31 +24,64 @@ abstract class AddModuleInfoTask extends DefaultTask {
     @Input
     abstract Property<FileCollection> getClasspath()
 
+    @Input
+    abstract Property<Boolean> getReplace()
+
     AddModuleInfoTask() {
         group = 'custom'
         description = 'Add module-info.java to jar file'
 
         moduleName.convention('org.module.name')
-        jarPath.convention('build/libs/app.jar')
+        jarPath.convention(project.tasks.jar.archiveFile.get().toString())
         classpath.convention(project.files(project.file(".")))
         multiRelease.convention(null)
+        replace.convention(true)
     }
 
     @TaskAction
     def addModuleInfo() {
-        def jarFile = new File(jarPath.get())
+        this.getTemporaryDir().mkdirs()
+
+        def originalJarFile = new File(jarPath.get())
+        def tempJarFile = new File(this.getTemporaryDir(), originalJarFile.name)
+        Files.copy(originalJarFile.toPath(), tempJarFile.toPath(), StandardCopyOption.REPLACE_EXISTING)
+
         def modulepath = classpath.get().join(File.pathSeparator)
 
-        def moduleInfoFile = createModuleInfo(moduleName.get(), jarFile, modulepath)
-        def moduleClassFile = compileModuleInfo(moduleName.get(), moduleInfoFile, jarFile, modulepath)
-        addModuleInfoToJar(moduleClassFile, jarFile)
+        if (this.replace.get()) {
+            removeModuleInfo(tempJarFile)
+        }
+
+        def moduleInfoFile = createModuleInfo(moduleName.get(), tempJarFile, modulepath)
+        def moduleClassFile = compileModuleInfo(moduleName.get(), moduleInfoFile, tempJarFile, modulepath)
+        addModuleInfoToJar(moduleClassFile, tempJarFile)
+
+        Files.copy(tempJarFile.toPath(), originalJarFile.toPath(), StandardCopyOption.REPLACE_EXISTING)
+        this.getTemporaryDir().deleteDir()
+    }
+
+    def removeModuleInfo(File jarFile) {
+        def command = new ArrayList<String>(['jar', '-xf', jarFile.absolutePath].toList())
+
+        executeCommandLine(command, jarFile.parentFile)
+
+        jarFile.delete()
+
+        def moduleInfoFile = new File(jarFile.parentFile, "module-info.class")
+        if (moduleInfoFile.exists()) {
+            moduleInfoFile.delete()
+        }
+
+        def createJarCommand = new ArrayList<String>(['jar', '-cf', jarFile.absolutePath, '.'].toList())
+
+        executeCommandLine(createJarCommand, jarFile.parentFile)
     }
 
     def createModuleInfo(String moduleName, File jarFile, String modulepath) {
         def directory = jarFile.parentFile
         def multiRelease = this.multiRelease.get()
 
-        def listCommand = new ArrayList<String>(['jdeps', '--module-path', modulepath, '--generate-module-info', directory.absolutePath, jarPath.get()].toList())
+        def listCommand = new ArrayList<String>(['jdeps', '--module-path', modulepath, '--generate-module-info', directory.absolutePath, jarFile.absolutePath].toList())
         if (multiRelease != null) {
             listCommand.add(1, '--multi-release')
             listCommand.add(2, multiRelease)
@@ -75,7 +111,7 @@ abstract class AddModuleInfoTask extends DefaultTask {
     def compileModuleInfo(String moduleName, File moduleInfo, File jarFile, String modulepath) {
         def directory = jarFile.parentFile
 
-        def listCommand = new ArrayList<String>(['javac', '-d', directory.absolutePath, '--module-path', modulepath, '--patch-module', moduleName + "=" + jarPath.get(), moduleInfo.absolutePath].toList())
+        def listCommand = new ArrayList<String>(['javac', '-d', directory.absolutePath, '--module-path', modulepath, '--patch-module', moduleName + "=" + jarFile.absolutePath, moduleInfo.absolutePath].toList())
 
         executeCommandLine(listCommand)
 
@@ -100,7 +136,7 @@ abstract class AddModuleInfoTask extends DefaultTask {
         moduleInfoClass.delete()
     }
 
-    def executeCommandLine(List<String> command) {
+    def executeCommandLine(List<String> command, File directory = project.projectDir) {
         if (command == null || command.isEmpty()) {
             throw new GradleException("Command is null or empty")
         }
@@ -113,6 +149,7 @@ abstract class AddModuleInfoTask extends DefaultTask {
         }
 
         def processBuilder = new ProcessBuilder(command)
+        processBuilder.directory(directory)
         def process = processBuilder.start()
         def exitCode = process.waitFor()
 
