@@ -1,4 +1,4 @@
-package org.eduardoleolim.shared.domain.criteria
+package org.eduardoleolim.organizadorpec660.shared.domain.criteria
 
 open class Criteria(
     val andFilters: Filters,

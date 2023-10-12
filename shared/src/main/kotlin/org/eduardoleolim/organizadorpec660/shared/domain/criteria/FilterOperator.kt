@@ -1,6 +1,6 @@
-package org.eduardoleolim.shared.domain.criteria
+package org.eduardoleolim.organizadorpec660.shared.domain.criteria
 
-import org.eduardoleolim.shared.domain.InvalidArgumentError
+import org.eduardoleolim.organizadorpec660.shared.domain.InvalidArgumentError
 
 enum class FilterOperator(val value: String) {
     EQUAL("="),

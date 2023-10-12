@@ -1,4 +1,4 @@
-package org.eduardoleolim.shared.domain.bus.command
+package org.eduardoleolim.organizadorpec660.shared.domain.bus.command
 
 import kotlin.reflect.KClass
 

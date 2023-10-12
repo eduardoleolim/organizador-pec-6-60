@@ -1,4 +1,4 @@
-package org.eduardoleolim.shared.domain.criteria
+package org.eduardoleolim.organizadorpec660.shared.domain.criteria
 
 class Filters(val filters: List<Filter>) {
     fun serialize() = filters.joinToString(separator = "^", transform = Filter::serialize)

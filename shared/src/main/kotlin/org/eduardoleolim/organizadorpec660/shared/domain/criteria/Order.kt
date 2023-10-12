@@ -1,4 +1,4 @@
-package org.eduardoleolim.shared.domain.criteria
+package org.eduardoleolim.organizadorpec660.shared.domain.criteria
 
 class Order(val orderBy: OrderBy, val orderType: OrderType) {
     fun hasOrder() = !orderType.isNone()

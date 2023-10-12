@@ -1,4 +1,4 @@
-package org.eduardoleolim.shared.domain.criteria
+package org.eduardoleolim.organizadorpec660.shared.domain.criteria
 
 class Orders(val orders: List<Order>) {
     fun serialize() = orders.joinToString(separator = "^", transform = Order::serialize)

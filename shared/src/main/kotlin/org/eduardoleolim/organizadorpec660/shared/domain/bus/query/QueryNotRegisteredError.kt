@@ -1,4 +1,4 @@
-package org.eduardoleolim.shared.domain.bus.query
+package org.eduardoleolim.organizadorpec660.shared.domain.bus.query
 
 import kotlin.reflect.KClass
 

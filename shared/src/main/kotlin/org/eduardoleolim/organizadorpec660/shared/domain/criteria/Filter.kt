@@ -1,6 +1,6 @@
-package org.eduardoleolim.shared.domain.criteria
+package org.eduardoleolim.organizadorpec660.shared.domain.criteria
 
-import org.eduardoleolim.shared.domain.InvalidArgumentError
+import org.eduardoleolim.organizadorpec660.shared.domain.InvalidArgumentError
 
 class Filter(val field: FilterField, val operator: FilterOperator, val value: FilterValue) {
     fun serialize() = String.format("%s.%s.%s", field.value, operator.value, value.value)
