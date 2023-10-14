@@ -4,6 +4,17 @@ plugins {
 
 dependencies {
   api project(':shared')
+  api 'org.ktorm:ktorm-core:3.6.0'
+  api 'org.ktorm:ktorm-support-sqlite:3.6.0'
+  api 'org.xerial:sqlite-jdbc:3.42.0.0'
+}
+
+ext {
+  moduleName = 'org.eduardoleolim.organizadorpec660.core'
+}
+
+compileJava {
+  options.compilerArgs.addAll(['--patch-module', "${project.moduleName}=${sourceSets.main.output.asPath}"])
 }
 
 kotlin {
