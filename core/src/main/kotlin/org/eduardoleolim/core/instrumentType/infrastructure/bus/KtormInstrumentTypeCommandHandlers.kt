@@ -11,8 +11,8 @@ import org.eduardoleolim.core.instrumentType.application.update.UpdateInstrument
 import org.eduardoleolim.core.instrumentType.application.update.UpdateInstrumentTypeCommandHandler
 import org.eduardoleolim.core.instrumentType.infrastructure.persistence.KtormInstrumentTypeRepository
 import org.eduardoleolim.core.shared.infrastructure.bus.KtormCommandHandlerDecorator
-import org.eduardoleolim.shared.domain.bus.command.Command
-import org.eduardoleolim.shared.domain.bus.command.CommandHandler
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.Command
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandHandler
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 

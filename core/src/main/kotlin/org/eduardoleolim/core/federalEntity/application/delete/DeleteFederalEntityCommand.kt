@@ -1,6 +1,6 @@
 package org.eduardoleolim.core.federalEntity.application.delete
 
-import org.eduardoleolim.shared.domain.bus.command.Command
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.Command
 
 class DeleteFederalEntityCommand(federalEntityId: String) : Command {
     private val federalEntityId: String = federalEntityId.trim()

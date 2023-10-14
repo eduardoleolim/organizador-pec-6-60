@@ -1,6 +1,6 @@
 package org.eduardoleolim.core.instrumentType.application.update
 
-import org.eduardoleolim.shared.domain.bus.command.Command
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.Command
 
 class UpdateInstrumentTypeCommand(id: String, name: String) : Command {
     private val id: String = id.trim()

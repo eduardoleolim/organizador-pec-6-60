@@ -6,9 +6,9 @@ import org.eduardoleolim.core.federalEntity.application.searchById.SearchFederal
 import org.eduardoleolim.core.federalEntity.application.searchByTerm.SearchFederalEntitiesByTermQuery
 import org.eduardoleolim.core.federalEntity.application.searchByTerm.SearchFederalEntitiesByTermQueryHandler
 import org.eduardoleolim.core.federalEntity.infrastructure.persistence.KtormFederalEntityRepository
-import org.eduardoleolim.shared.domain.bus.query.Query
-import org.eduardoleolim.shared.domain.bus.query.QueryHandler
-import org.eduardoleolim.shared.domain.bus.query.Response
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Query
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryHandler
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Response
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 

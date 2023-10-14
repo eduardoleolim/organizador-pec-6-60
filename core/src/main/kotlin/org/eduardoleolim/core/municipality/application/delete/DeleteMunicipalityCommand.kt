@@ -1,6 +1,6 @@
 package org.eduardoleolim.core.municipality.application.delete
 
-import org.eduardoleolim.shared.domain.bus.command.Command
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.Command
 
 class DeleteMunicipalityCommand(municipalityId: String) : Command {
     private val municipalityId: String = municipalityId.trim()

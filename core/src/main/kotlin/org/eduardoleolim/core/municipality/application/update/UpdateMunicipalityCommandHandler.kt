@@ -1,6 +1,6 @@
 package org.eduardoleolim.core.municipality.application.update
 
-import org.eduardoleolim.shared.domain.bus.command.CommandHandler
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandHandler
 
 class UpdateMunicipalityCommandHandler(private val updater: MunicipalityUpdater) :
     CommandHandler<UpdateMunicipalityCommand> {

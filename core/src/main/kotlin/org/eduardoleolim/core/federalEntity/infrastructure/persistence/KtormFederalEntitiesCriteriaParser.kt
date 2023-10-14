@@ -1,7 +1,7 @@
 package org.eduardoleolim.core.federalEntity.infrastructure.persistence
 
 import org.eduardoleolim.core.shared.infrastructure.models.FederalEntities
-import org.eduardoleolim.shared.domain.criteria.*
+import org.eduardoleolim.organizadorpec660.shared.domain.criteria.*
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
 import org.ktorm.expression.OrderByExpression

@@ -1,10 +1,10 @@
 package org.eduardoleolim.core.federalEntity.infrastructure.persistence
 
 import org.eduardoleolim.core.federalEntity.domain.FederalEntity
-import org.eduardoleolim.shared.domain.criteria.Criteria
-import org.eduardoleolim.shared.domain.criteria.Filter
-import org.eduardoleolim.shared.domain.criteria.FilterOperator
-import org.eduardoleolim.shared.domain.criteria.OrderType
+import org.eduardoleolim.organizadorpec660.shared.domain.criteria.Criteria
+import org.eduardoleolim.organizadorpec660.shared.domain.criteria.Filter
+import org.eduardoleolim.organizadorpec660.shared.domain.criteria.FilterOperator
+import org.eduardoleolim.organizadorpec660.shared.domain.criteria.OrderType
 import java.time.Instant
 import java.util.*
 
@@ -134,7 +134,10 @@ object InMemoryFederalEntitiesCriteriaParser {
         }
     }
 
-    fun applyOrders(records: List<FederalEntity>, criteria: Criteria): List<FederalEntity> {
+    fun applyOrders(
+        records: List<FederalEntity>,
+        criteria: org.eduardoleolim.organizadorpec660.shared.domain.criteria.Criteria
+    ): List<FederalEntity> {
         if (!criteria.hasOrders())
             return records
 

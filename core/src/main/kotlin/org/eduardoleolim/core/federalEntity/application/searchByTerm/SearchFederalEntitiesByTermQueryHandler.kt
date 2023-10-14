@@ -3,8 +3,8 @@ package org.eduardoleolim.core.federalEntity.application.searchByTerm
 import org.eduardoleolim.core.federalEntity.application.FederalEntitiesResponse
 import org.eduardoleolim.core.federalEntity.application.search.FederalEntitySearcher
 import org.eduardoleolim.core.federalEntity.domain.FederalEntityCriteria
-import org.eduardoleolim.shared.domain.bus.query.QueryHandler
-import org.eduardoleolim.shared.domain.criteria.Order
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryHandler
+import org.eduardoleolim.organizadorpec660.shared.domain.criteria.Order
 
 class SearchFederalEntitiesByTermQueryHandler(private val searcher: FederalEntitySearcher) :
     QueryHandler<SearchFederalEntitiesByTermQuery, FederalEntitiesResponse> {

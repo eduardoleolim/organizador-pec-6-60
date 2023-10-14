@@ -2,7 +2,7 @@ package org.eduardoleolim.core.federalEntity.infrastructure.persistence
 
 import org.eduardoleolim.core.federalEntity.domain.*
 import org.eduardoleolim.core.shared.infrastructure.models.FederalEntities
-import org.eduardoleolim.shared.domain.criteria.Criteria
+import org.eduardoleolim.organizadorpec660.shared.domain.criteria.Criteria
 import org.ktorm.database.Database
 import org.ktorm.dsl.delete
 import org.ktorm.dsl.eq

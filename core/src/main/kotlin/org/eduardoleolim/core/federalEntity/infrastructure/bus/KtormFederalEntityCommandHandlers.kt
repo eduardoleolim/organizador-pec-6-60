@@ -11,8 +11,8 @@ import org.eduardoleolim.core.federalEntity.application.update.UpdateFederalEnti
 import org.eduardoleolim.core.federalEntity.application.update.UpdateFederalEntityCommandHandler
 import org.eduardoleolim.core.federalEntity.infrastructure.persistence.KtormFederalEntityRepository
 import org.eduardoleolim.core.shared.infrastructure.bus.KtormCommandHandlerDecorator
-import org.eduardoleolim.shared.domain.bus.command.Command
-import org.eduardoleolim.shared.domain.bus.command.CommandHandler
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.Command
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandHandler
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 

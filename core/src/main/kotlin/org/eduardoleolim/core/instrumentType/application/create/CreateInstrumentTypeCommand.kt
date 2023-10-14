@@ -1,6 +1,6 @@
 package org.eduardoleolim.core.instrumentType.application.create
 
-import org.eduardoleolim.shared.domain.bus.command.Command
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.Command
 
 class CreateInstrumentTypeCommand(nombre: String) : Command {
     private val nombre = nombre.trim()

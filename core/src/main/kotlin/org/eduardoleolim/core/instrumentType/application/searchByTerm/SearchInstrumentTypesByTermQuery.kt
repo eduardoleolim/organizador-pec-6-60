@@ -1,6 +1,6 @@
 package org.eduardoleolim.core.instrumentType.application.searchByTerm
 
-import org.eduardoleolim.shared.domain.bus.query.Query
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Query
 
 
 class SearchInstrumentTypesByTermQuery(

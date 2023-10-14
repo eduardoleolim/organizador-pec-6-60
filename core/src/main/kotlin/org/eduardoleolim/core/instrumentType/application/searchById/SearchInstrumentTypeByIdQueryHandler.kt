@@ -4,7 +4,7 @@ import org.eduardoleolim.core.instrumentType.application.InstrumentTypeResponse
 import org.eduardoleolim.core.instrumentType.application.search.InstrumentTypeSearcher
 import org.eduardoleolim.core.instrumentType.domain.InstrumentTypeCriteria
 import org.eduardoleolim.core.instrumentType.domain.InstrumentTypeNotFoundError
-import org.eduardoleolim.shared.domain.bus.query.QueryHandler
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryHandler
 
 class SearchInstrumentTypeByIdQueryHandler(private val searcher: InstrumentTypeSearcher) :
     QueryHandler<SearchInstrumentTypeByIdQuery, InstrumentTypeResponse> {

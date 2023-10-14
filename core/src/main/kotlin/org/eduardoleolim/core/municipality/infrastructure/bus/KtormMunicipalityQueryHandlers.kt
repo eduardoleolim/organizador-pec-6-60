@@ -8,9 +8,9 @@ import org.eduardoleolim.core.municipality.application.searchById.SearchMunicipa
 import org.eduardoleolim.core.municipality.application.searchByTerm.SearchMunicipalitiesByTermQuery
 import org.eduardoleolim.core.municipality.application.searchByTerm.SearchMunicipalitiesByTermQueryHandler
 import org.eduardoleolim.core.municipality.infrastructure.persistence.KtormMunicipalityRepository
-import org.eduardoleolim.shared.domain.bus.query.Query
-import org.eduardoleolim.shared.domain.bus.query.QueryHandler
-import org.eduardoleolim.shared.domain.bus.query.Response
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Query
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryHandler
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Response
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 

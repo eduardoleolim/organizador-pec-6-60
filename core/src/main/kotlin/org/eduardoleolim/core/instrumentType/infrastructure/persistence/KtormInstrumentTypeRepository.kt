@@ -5,7 +5,7 @@ import org.eduardoleolim.core.instrumentType.domain.InstrumentTypeCriteria
 import org.eduardoleolim.core.instrumentType.domain.InstrumentTypeNotFoundError
 import org.eduardoleolim.core.instrumentType.domain.InstrumentTypeRepository
 import org.eduardoleolim.core.shared.infrastructure.models.InstrumentTypes
-import org.eduardoleolim.shared.domain.criteria.Criteria
+import org.eduardoleolim.organizadorpec660.shared.domain.criteria.Criteria
 import org.ktorm.database.Database
 import org.ktorm.dsl.delete
 import org.ktorm.dsl.eq

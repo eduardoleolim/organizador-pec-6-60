@@ -3,8 +3,8 @@ package org.eduardoleolim.core.instrumentType.application.searchByTerm
 import org.eduardoleolim.core.instrumentType.application.InstrumentTypesResponse
 import org.eduardoleolim.core.instrumentType.application.search.InstrumentTypeSearcher
 import org.eduardoleolim.core.instrumentType.domain.InstrumentTypeCriteria
-import org.eduardoleolim.shared.domain.bus.query.QueryHandler
-import org.eduardoleolim.shared.domain.criteria.Order
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryHandler
+import org.eduardoleolim.organizadorpec660.shared.domain.criteria.Order
 
 class SearchInstrumentTypesByTermQueryHandler(private val searcher: InstrumentTypeSearcher) :
     QueryHandler<SearchInstrumentTypesByTermQuery, InstrumentTypesResponse> {

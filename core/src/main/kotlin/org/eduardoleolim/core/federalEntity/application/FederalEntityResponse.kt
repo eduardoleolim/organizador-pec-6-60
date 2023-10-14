@@ -1,7 +1,7 @@
 package org.eduardoleolim.core.federalEntity.application
 
 import org.eduardoleolim.core.federalEntity.domain.FederalEntity
-import org.eduardoleolim.shared.domain.bus.query.Response
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Response
 import java.util.*
 
 class FederalEntityResponse(

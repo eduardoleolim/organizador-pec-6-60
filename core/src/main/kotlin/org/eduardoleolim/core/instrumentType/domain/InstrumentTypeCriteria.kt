@@ -1,6 +1,6 @@
 package org.eduardoleolim.core.instrumentType.domain
 
-import org.eduardoleolim.shared.domain.criteria.*
+import org.eduardoleolim.organizadorpec660.shared.domain.criteria.*
 
 object InstrumentTypeCriteria {
     fun idCriteria(id: String) = Criteria(

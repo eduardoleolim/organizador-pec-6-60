@@ -6,7 +6,7 @@ import org.eduardoleolim.core.municipality.domain.MunicipalityNotFoundError
 import org.eduardoleolim.core.municipality.domain.MunicipalityRepository
 import org.eduardoleolim.core.shared.infrastructure.models.FederalEntities
 import org.eduardoleolim.core.shared.infrastructure.models.Municipalities
-import org.eduardoleolim.shared.domain.criteria.Criteria
+import org.eduardoleolim.organizadorpec660.shared.domain.criteria.Criteria
 import org.ktorm.database.Database
 import org.ktorm.dsl.delete
 import org.ktorm.dsl.eq
