@@ -1,7 +1,7 @@
 package org.eduardoleolim.core.federalEntity.application
 
-import org.eduardoleolim.core.federalEntity.application.create.FederalEntityCreator
 import org.eduardoleolim.core.federalEntity.infrastructure.persistence.InMemoryFederalEntityRepository
+import org.eduardoleolim.organizadorpec660.core.federalEntity.application.create.FederalEntityCreator
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance

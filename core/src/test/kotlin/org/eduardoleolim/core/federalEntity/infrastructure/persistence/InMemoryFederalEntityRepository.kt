@@ -1,8 +1,8 @@
 package org.eduardoleolim.core.federalEntity.infrastructure.persistence
 
-import org.eduardoleolim.core.federalEntity.domain.FederalEntity
-import org.eduardoleolim.core.federalEntity.domain.FederalEntityId
-import org.eduardoleolim.core.federalEntity.domain.FederalEntityRepository
+import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntity
+import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityId
+import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityRepository
 import org.eduardoleolim.organizadorpec660.shared.domain.criteria.Criteria
 import java.util.*
 
@@ -21,7 +21,7 @@ class InMemoryFederalEntityRepository : FederalEntityRepository {
         }
     }
 
-    override fun count(criteria: org.eduardoleolim.organizadorpec660.shared.domain.criteria.Criteria): Int {
+    override fun count(criteria: Criteria): Int {
         InMemoryFederalEntitiesCriteriaParser.apply {
             return records.values.toList().let {
                 applyFilters(it, criteria)
