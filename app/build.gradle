@@ -2,15 +2,14 @@ import tasks.AddModuleInfoTask
 
 plugins {
   id 'org.eduardoleolim.kotlin-application-conventions'
-  id 'org.beryx.jlink' version '2.26.0'
-  id 'org.jetbrains.compose' version '1.4.3'
+  id 'org.beryx.jlink' version '3.0.1'
+  id 'org.jetbrains.compose' version '1.5.10-rc02'
 }
 
 dependencies {
   implementation project(':core')
   implementation compose.desktop.currentOs
-  implementation 'org.jetbrains.compose.material:material-icons-extended-desktop:1.4.3'
-  implementation "org.jetbrains.compose.material3:material3-desktop:1.4.3"
+  implementation 'org.jetbrains.compose.material3:material3-desktop:1.5.10-rc02'
 }
 
 ext {
