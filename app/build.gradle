@@ -6,6 +6,8 @@ plugins {
   id 'org.jetbrains.compose' version '1.5.10-rc02'
 }
 
+description = 'Organizador de formatos PEC-6-60'
+
 dependencies {
   implementation project(':core')
   implementation compose.desktop.currentOs
@@ -13,7 +15,7 @@ dependencies {
 }
 
 ext {
-  moduleName = 'org.eduardoleolim.organizadorpec660'
+  moduleName = 'org.eduardoleolim.organizadorpec660.app'
 }
 
 kotlin {
@@ -22,20 +24,17 @@ kotlin {
 
 application {
   // Define the main class for the application.
-  mainClass = 'org.eduardoleolim.app.AppKt'
+  mainClass = 'org.eduardoleolim.organizadorpec660.app.AppKt'
 }
 
 jlink {
   moduleName = project.moduleName
-
   mergedModuleName = "${project.moduleName}.merged.module"
-  forceMerge("sqlite")
-  mergedModule {
-    requires transitive 'java.desktop'
-    requires transitive 'java.sql'
-    uses 'java.sql.Driver'
-    provides 'java.sql.Driver' with 'org.sqlite.JDBC'
 
+  forceMerge("sqlite")
+  addExtraDependencies("kotlin")
+
+  mergedModule {
     uses 'kotlin.reflect.jvm.internal.impl.resolve.ExternalOverridabilityCondition'
     uses 'kotlin.reflect.jvm.internal.impl.util.ModuleVisibilityHelper'
   }
