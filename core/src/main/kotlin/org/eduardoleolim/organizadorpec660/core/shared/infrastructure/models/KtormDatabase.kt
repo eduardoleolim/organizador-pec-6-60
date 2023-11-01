@@ -31,19 +31,19 @@ class SqliteKtormDatabase(private val databasePath: String) {
         File(databasePath).parentFile.mkdirs()
 
         val classLoader = Thread.currentThread().contextClassLoader
-        val stream = classLoader.getResourceAsStream("database/schema.sql")!!
-        val content = stream.bufferedReader().readText()
+        classLoader.getResourceAsStream("database/schema.sql")?.let { stream ->
+            val schema = stream.bufferedReader().readText()
+            val connection = DriverManager.getConnection("jdbc:sqlite:$databasePath")
+            connection.use { conn ->
+                val statements = schema.split(";").dropLastWhile { it.isBlank() }
+                val statement = conn.createStatement()
 
-        val connection = DriverManager.getConnection("jdbc:sqlite:$databasePath")
-        connection.use { conn ->
-            val statements = content.split(";").dropLastWhile { it.isBlank() }
-            val statement = conn.createStatement()
+                for (sql in statements) {
+                    statement.execute(sql)
+                }
 
-            for (sql in statements) {
-                statement.execute(sql)
+                statement.close()
             }
-
-            statement.close()
-        }
+        } ?: throw Exception("Database schema not found")
     }
 }
