@@ -13,7 +13,7 @@ class SqliteKtormDatabase(private val databasePath: String) {
         }
     }
 
-    fun init(isReadOnly: Boolean = false): Database {
+    fun connect(isReadOnly: Boolean = false): Database {
         SQLiteDataSource().apply {
             url = "jdbc:sqlite:$databasePath"
             setEnforceForeignKeys(true)
