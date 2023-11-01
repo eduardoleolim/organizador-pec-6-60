@@ -1,14 +1,14 @@
-package org.eduardoleolim.app
+package org.eduardoleolim.organizadorpec660.app
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.ui.window.application
-import org.eduardoleolim.app.utils.ArgsUtils
-import org.eduardoleolim.app.views.MainWindow
-import org.eduardoleolim.core.shared.infrastructure.bus.KtormCommandBus
-import org.eduardoleolim.core.shared.infrastructure.bus.KtormQueryBus
-import org.eduardoleolim.core.shared.infrastructure.models.SqliteKtormDatabase
-import org.eduardoleolim.shared.domain.bus.command.CommandBus
-import org.eduardoleolim.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.app.utils.ArgsUtils
+import org.eduardoleolim.organizadorpec660.app.views.MainWindow
+import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.bus.KtormCommandBus
+import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.bus.KtormQueryBus
+import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.SqliteKtormDatabase
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
 
 class App(private val commandBus: CommandBus, private val queryBus: QueryBus) {
     fun start() = application {

@@ -1,4 +1,4 @@
-package org.eduardoleolim.app.views
+package org.eduardoleolim.organizadorpec660.app.views
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -7,11 +7,10 @@ import androidx.compose.foundation.gestures.onDrag
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.window.WindowDraggableArea
-import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.Icons.Default
+import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Maximize
-import androidx.compose.material.icons.filled.Minimize
-import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -23,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.WindowState
-
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -120,7 +118,7 @@ fun MainWindow(
                                     onClick = onMinimizeRequest
                                 ) {
                                     Icon(
-                                        imageVector = Icons.Default.Minimize,
+                                        imageVector = Default.Add,
                                         contentDescription = "Minimize",
                                         tint = Color.White
                                     )
@@ -130,9 +128,9 @@ fun MainWindow(
                                     onClick = onMaximizeRestoreRequest
                                 ) {
                                     val icon = if (windowState.placement == WindowPlacement.Maximized) {
-                                        Icons.Default.Restore
+                                        Default.AccountBox
                                     } else {
-                                        Icons.Default.Maximize
+                                        Default.Close
                                     }
                                     Icon(
                                         imageVector = icon,
@@ -145,7 +143,7 @@ fun MainWindow(
                                     onClick = { onCloseRequest() }
                                 ) {
                                     Icon(
-                                        imageVector = Icons.Default.Close,
+                                        imageVector = Default.Close,
                                         contentDescription = null,
                                         tint = Color.White
                                     )
