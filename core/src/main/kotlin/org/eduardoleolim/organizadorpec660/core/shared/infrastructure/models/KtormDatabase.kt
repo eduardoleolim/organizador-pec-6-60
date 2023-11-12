@@ -4,46 +4,47 @@ import org.ktorm.database.Database
 import org.ktorm.support.sqlite.SQLiteDialect
 import org.sqlite.SQLiteDataSource
 import java.io.File
-import java.sql.DriverManager
 
-class SqliteKtormDatabase(private val databasePath: String) {
-    init {
-        if (!existsDatabase(databasePath)) {
-            createDatabase(databasePath)
-        }
-    }
 
-    fun connect(isReadOnly: Boolean = false): Database {
+object SqliteKtormDatabase {
+    fun connect(databasePath: String, isReadOnly: Boolean = false): Database {
+        val file = File(databasePath)
+        val existsFile = file.exists()
+
+        if (!existsFile)
+            file.parentFile.mkdirs()
+
         SQLiteDataSource().apply {
             url = "jdbc:sqlite:$databasePath"
             setEnforceForeignKeys(true)
             setReadOnly(isReadOnly)
-            return Database.connect(this, SQLiteDialect())
+            return Database.connect(this, SQLiteDialect()).apply {
+                if (existsFile)
+                    return this
+
+                try {
+                    createDatabase(this)
+                } catch (e: Exception) {
+                    file.delete()
+                    throw e
+                }
+            }
         }
     }
 
-    private fun existsDatabase(databasePath: String): Boolean {
-        val file = File(databasePath)
-        return file.exists()
-    }
-
-    private fun createDatabase(databasePath: String) {
-        File(databasePath).parentFile.mkdirs()
-
+    private fun createDatabase(database: Database) {
         val classLoader = Thread.currentThread().contextClassLoader
-        classLoader.getResourceAsStream("database/schema.sql")?.let { stream ->
-            val schema = stream.bufferedReader().readText()
-            val connection = DriverManager.getConnection("jdbc:sqlite:$databasePath")
-            connection.use { conn ->
-                val statements = schema.split(";").dropLastWhile { it.isBlank() }
-                val statement = conn.createStatement()
+        val schemaStream = classLoader.getResourceAsStream("database/schema.sql")
+            ?: throw Exception("Database schema not found")
 
-                for (sql in statements) {
-                    statement.execute(sql)
-                }
+        val schema = schemaStream.bufferedReader().use { it.readText() }
+        val queries = schema.split(";").map { it.trim() }.filter { it.isNotEmpty() }
 
-                statement.close()
+        database.useTransaction { transaction ->
+            transaction.connection.createStatement().use { statement ->
+                queries.forEach { statement.addBatch(it) }
+                statement.executeBatch()
             }
-        } ?: throw Exception("Database schema not found")
+        }
     }
 }
