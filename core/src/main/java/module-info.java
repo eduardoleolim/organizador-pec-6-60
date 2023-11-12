@@ -5,6 +5,8 @@ module org.eduardoleolim.organizadorpec660.core {
     requires org.eduardoleolim.organizadorpec660.shared;
     requires org.xerial.sqlitejdbc;
 
+    opens database;
+
     exports org.eduardoleolim.organizadorpec660.core.federalEntity.application;
     exports org.eduardoleolim.organizadorpec660.core.federalEntity.application.create;
     exports org.eduardoleolim.organizadorpec660.core.federalEntity.application.delete;
