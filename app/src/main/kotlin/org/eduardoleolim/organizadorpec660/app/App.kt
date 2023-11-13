@@ -15,8 +15,8 @@ class App(private val commandBus: CommandBus, private val queryBus: QueryBus) {
         MainWindow(
             title = "Organizador PEC-6-60",
             onCloseRequest = ::exitApplication,
-            minHeight = 400,
-            minWidth = 600,
+            minHeight = 600,
+            minWidth = 800,
         ) {
             Row {
 
