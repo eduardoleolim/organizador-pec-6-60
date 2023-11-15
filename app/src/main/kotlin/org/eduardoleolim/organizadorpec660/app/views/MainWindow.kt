@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.FrameWindowScope
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.WindowState
@@ -24,7 +25,7 @@ fun MainWindow(
     colorScheme: ColorScheme = MaterialTheme.colorScheme,
     shapes: Shapes = MaterialTheme.shapes,
     typography: Typography = MaterialTheme.typography,
-    content: @Composable () -> Unit
+    content: @Composable (FrameWindowScope.() -> Unit)
 ) {
     val windowState by remember { mutableStateOf(WindowState()) }
     var surfaceModifier by remember { mutableStateOf(Modifier.fillMaxSize()) }
@@ -37,7 +38,10 @@ fun MainWindow(
         undecorated = true,
         transparent = true
     ) {
-        window.minimumSize = Dimension(minWidth, minHeight)
+        window.apply {
+            minimumSize = Dimension(minWidth, minHeight)
+            maximizedBounds = calculateWorkArea(window)
+        }
 
         when (windowState.placement) {
             WindowPlacement.Floating -> {
@@ -48,19 +52,6 @@ fun MainWindow(
             WindowPlacement.Maximized -> {
                 window.isResizable = false
                 surfaceModifier = Modifier.fillMaxSize().padding(0.dp)
-
-                val graphicConfiguration =
-                    currentGraphicDevice(window)?.defaultConfiguration ?: window.graphicsConfiguration
-                val screenInsets = Toolkit.getDefaultToolkit().getScreenInsets(graphicConfiguration)
-
-                window.maximizedBounds = graphicConfiguration?.let {
-                    Rectangle(
-                        it.bounds.x + screenInsets.left,
-                        it.bounds.y + screenInsets.top,
-                        it.bounds.width - screenInsets.left - screenInsets.right,
-                        it.bounds.height - screenInsets.top - screenInsets.bottom
-                    )
-                }
             }
 
             WindowPlacement.Fullscreen -> {
@@ -75,7 +66,9 @@ fun MainWindow(
             typography = typography
         ) {
             Surface(
-                modifier = surfaceModifier
+                modifier = surfaceModifier,
+                color = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.onSurface
             ) {
                 content()
             }
@@ -83,7 +76,21 @@ fun MainWindow(
     }
 }
 
-fun currentGraphicDevice(frame: JFrame): GraphicsDevice? {
+private fun calculateWorkArea(frame: JFrame): Rectangle {
+    val graphicConfiguration = currentGraphicDevice(frame)?.defaultConfiguration ?: frame.graphicsConfiguration
+    val screenInsets = Toolkit.getDefaultToolkit().getScreenInsets(graphicConfiguration)
+
+    return graphicConfiguration.let {
+        Rectangle(
+            it.bounds.x + screenInsets.left,
+            it.bounds.y + screenInsets.top,
+            it.bounds.width - screenInsets.left - screenInsets.right,
+            it.bounds.height - screenInsets.top - screenInsets.bottom
+        )
+    }
+}
+
+private fun currentGraphicDevice(frame: JFrame): GraphicsDevice? {
     val centerPoint = Point(frame.location.x + frame.width / 2, frame.location.y + frame.height / 2)
 
     return GraphicsEnvironment.getLocalGraphicsEnvironment().screenDevices.firstOrNull {
