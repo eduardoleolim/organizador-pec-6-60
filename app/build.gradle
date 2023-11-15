@@ -3,7 +3,7 @@ import tasks.AddModuleInfoTask
 plugins {
   id 'org.eduardoleolim.kotlin-application-conventions'
   id 'org.beryx.jlink' version '3.0.1'
-  id 'org.jetbrains.compose' version '1.5.10-rc02'
+  id 'org.jetbrains.compose' version '1.5.10'
 }
 
 description = 'Organizador de formatos PEC-6-60'
@@ -11,7 +11,8 @@ description = 'Organizador de formatos PEC-6-60'
 dependencies {
   implementation project(':core')
   implementation compose.desktop.currentOs
-  implementation 'org.jetbrains.compose.material3:material3-desktop:1.5.10-rc02'
+  implementation compose.materialIconsExtended
+  implementation compose.material3
 }
 
 ext {
