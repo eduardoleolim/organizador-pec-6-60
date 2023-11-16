@@ -7,6 +7,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.FrameWindowScope
 import androidx.compose.ui.window.Window
@@ -18,7 +19,8 @@ import javax.swing.JFrame
 @Composable
 fun MainWindow(
     title: String = "Untitled",
-    onCloseRequest: () -> Unit,
+    icon: Painter? = null,
+    onCloseRequest: () -> Unit = {},
     resizable: Boolean = true,
     minHeight: Int = 0,
     minWidth: Int = 0,
@@ -34,6 +36,7 @@ fun MainWindow(
         onCloseRequest = onCloseRequest,
         state = windowState,
         title = title,
+        icon = icon,
         resizable = resizable,
         undecorated = true,
         transparent = true
