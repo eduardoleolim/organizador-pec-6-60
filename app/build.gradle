@@ -10,7 +10,9 @@ description = 'Organizador de formatos PEC-6-60'
 
 dependencies {
   implementation project(':core')
-  implementation compose.desktop.currentOs
+  implementation(compose.desktop.currentOs) {
+    exclude group: 'org.jetbrains.compose.material'
+  }
   implementation compose.materialIconsExtended
   implementation compose.material3
 }
