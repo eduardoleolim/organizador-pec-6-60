@@ -10,26 +10,20 @@ class InMemoryFederalEntityRepository : FederalEntityRepository {
     val records: MutableMap<UUID, FederalEntity> = mutableMapOf()
 
     override fun matching(criteria: Criteria): List<FederalEntity> {
-        InMemoryFederalEntitiesCriteriaParser.apply {
-            return records.values.toList().let {
-                applyFilters(it, criteria)
-            }.let {
-                applyOrders(it, criteria)
-            }.let {
-                applyPagination(it, criteria.limit, criteria.offset)
-            }
+        return InMemoryFederalEntitiesCriteriaParser.run {
+            records.values.toMutableList()
+                .run { applyFilters(this, criteria) }
+                .run { applyOrders(this, criteria) }
+                .run { applyPagination(this, criteria.limit, criteria.offset) }
         }
     }
 
     override fun count(criteria: Criteria): Int {
-        InMemoryFederalEntitiesCriteriaParser.apply {
-            return records.values.toList().let {
-                applyFilters(it, criteria)
-            }.let {
-                applyOrders(it, criteria)
-            }.let {
-                applyPagination(it, criteria.limit, criteria.offset)
-            }.size
+        return InMemoryFederalEntitiesCriteriaParser.run {
+            records.values.toList()
+                .run { applyFilters(this, criteria) }
+                .run { applyOrders(this, criteria) }
+                .run { applyPagination(this, criteria.limit, criteria.offset) }.size
         }
     }
 

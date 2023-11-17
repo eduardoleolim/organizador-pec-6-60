@@ -10,58 +10,16 @@ import java.util.*
 
 object InMemoryFederalEntitiesCriteriaParser {
     fun applyFilters(records: List<FederalEntity>, criteria: Criteria): List<FederalEntity> {
-        return records.mapNotNull { record ->
-            // Apply no filters
-            if (!criteria.hasOrFilters() && !criteria.hasAndFilters()) {
-                return@mapNotNull record
-            }
+        return records.filter { record ->
+            val orFilterPassed = criteria.orFilters.filters.any { filterPassed(record, it) == true }
+            val andFilterPassed = criteria.andFilters.filters.all { filterPassed(record, it) == true }
 
-            // If there is no AND filters, then there is OR filters
-            if (!criteria.hasAndFilters()) {
-                criteria.orFilters.filters.mapNotNull { filter ->
-                    filterPassed(record, filter)
-                }.let {
-                    if (it.contains(true)) {
-                        return@mapNotNull record
-                    } else {
-                        return@mapNotNull null
-                    }
-                }
-            }
-
-            // Apply AND filters
-            if (!criteria.hasOrFilters()) {
-                criteria.andFilters.filters.mapNotNull { filter ->
-                    filterPassed(record, filter)
-                }.let {
-                    if (it.contains(false)) {
-                        return@mapNotNull null
-                    } else {
-                        return@mapNotNull record
-                    }
-                }
-            }
-
-            // Apply both kinds of filters
-            val andResults = !criteria.andFilters.filters.mapNotNull { filter ->
-                filterPassed(record, filter)
-            }.contains(false)
-            val orResults = criteria.orFilters.filters.mapNotNull { filter ->
-                filterPassed(record, filter)
-            }.contains(true)
-
-            if (criteria.isOrCriteria) {
-                if (orResults || andResults) {
-                    return@mapNotNull record
-                } else {
-                    return@mapNotNull null
-                }
-            } else {
-                if (orResults && andResults) {
-                    return@mapNotNull record
-                } else {
-                    return@mapNotNull null
-                }
+            when {
+                !criteria.hasAndFilters() && !criteria.hasOrFilters() -> true
+                !criteria.hasAndFilters() -> orFilterPassed
+                !criteria.hasOrFilters() -> andFilterPassed
+                criteria.isOrCriteria -> orFilterPassed || andFilterPassed
+                else -> orFilterPassed && andFilterPassed
             }
         }
     }
@@ -136,63 +94,23 @@ object InMemoryFederalEntitiesCriteriaParser {
 
     fun applyOrders(
         records: List<FederalEntity>,
-        criteria: org.eduardoleolim.organizadorpec660.shared.domain.criteria.Criteria
+        criteria: Criteria
     ): List<FederalEntity> {
-        if (!criteria.hasOrders())
-            return records
+        return criteria.orders.orders.fold(records) { list, order ->
+            val orderBy = order.orderBy.value
+            val orderType = order.orderType
 
-        var orderedRecords = records
-
-        criteria.orders.orders.forEach {
-            val orderBy = it.orderBy.value
-            val orderType = it.orderType
-
-            orderedRecords = when (orderBy) {
-                "id" -> {
-                    when (orderType) {
-                        OrderType.ASC -> orderedRecords.sortedBy { record -> record.id() }
-                        OrderType.DESC -> orderedRecords.sortedByDescending { record -> record.id() }
-                        else -> orderedRecords
-                    }
+            list.sortedWith(compareBy {
+                when (orderBy) {
+                    "id" -> it.id()
+                    "keyCode" -> it.keyCode()
+                    "name" -> it.name()
+                    "createdAt" -> it.createdAt()
+                    "updatedAt" -> it.updatedAt()
+                    else -> null
                 }
-
-                "keyCode" -> {
-                    when (orderType) {
-                        OrderType.ASC -> orderedRecords.sortedBy { record -> record.keyCode() }
-                        OrderType.DESC -> orderedRecords.sortedByDescending { record -> record.keyCode() }
-                        else -> orderedRecords
-                    }
-                }
-
-                "name" -> {
-                    when (orderType) {
-                        OrderType.ASC -> orderedRecords.sortedBy { record -> record.name() }
-                        OrderType.DESC -> orderedRecords.sortedByDescending { record -> record.name() }
-                        else -> orderedRecords
-                    }
-                }
-
-                "createdAt" -> {
-                    when (orderType) {
-                        OrderType.ASC -> orderedRecords.sortedBy { record -> record.createdAt() }
-                        OrderType.DESC -> orderedRecords.sortedByDescending { record -> record.createdAt() }
-                        else -> orderedRecords
-                    }
-                }
-
-                "updatedAt" -> {
-                    when (orderType) {
-                        OrderType.ASC -> orderedRecords.sortedBy { record -> record.updatedAt() }
-                        OrderType.DESC -> orderedRecords.sortedByDescending { record -> record.updatedAt() }
-                        else -> orderedRecords
-                    }
-                }
-
-                else -> orderedRecords
-            }
+            }).let { if (orderType == OrderType.DESC) it.reversed() else it }
         }
-
-        return records
     }
 
     fun applyPagination(records: List<FederalEntity>, limit: Int?, offset: Int?): List<FederalEntity> {
