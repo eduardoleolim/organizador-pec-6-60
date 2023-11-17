@@ -15,7 +15,8 @@ class FederalEntityUpdater(private val repository: FederalEntityRepository) {
         federalEntity.apply {
             changeKeyCode(keyCode)
             changeName(name)
-            repository.save(this)
+        }.let {
+            repository.save(it)
         }
     }
 

@@ -10,7 +10,8 @@ class InstrumentTypeUpdater(private val repository: InstrumentTypeRepository) {
 
         instrumentType.apply {
             changeName(name)
-            repository.save(this)
+        }.let {
+            repository.save(it)
         }
     }
 
