@@ -4,12 +4,8 @@ on: push
 
 jobs:
   build:
-    name: 🛠️ Build
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
+    name: 🛠️ Build and 🧪 Test
+    runs-on: ubuntu-latest
 
     steps:
       - name: 👍 Checkout
