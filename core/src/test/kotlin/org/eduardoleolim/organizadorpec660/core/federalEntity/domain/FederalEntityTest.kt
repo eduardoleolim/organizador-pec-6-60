@@ -10,7 +10,7 @@ class FederalEntityTest {
         try {
             FederalEntityName(name)
             assert(false)
-        } catch (e: Exception) {
+        } catch (e: InvalidFederalEntityNameError) {
             assert(e.message == "The name <$name> is not a valid federal entity name")
         }
     }
@@ -21,7 +21,7 @@ class FederalEntityTest {
         try {
             FederalEntityName(name)
             assert(false)
-        } catch (e: Exception) {
+        } catch (e: InvalidFederalEntityNameError) {
             assert(e.message == "The name <$name> is not a valid federal entity name")
         }
     }
@@ -32,7 +32,7 @@ class FederalEntityTest {
         try {
             FederalEntityName(name)
             assert(true)
-        } catch (e: Exception) {
+        } catch (e: InvalidFederalEntityNameError) {
             assert(false)
         }
     }
@@ -43,7 +43,7 @@ class FederalEntityTest {
         try {
             FederalEntityKeyCode(keyCode)
             assert(false)
-        } catch (e: Exception) {
+        } catch (e: InvalidFederalEntityKeyCodeError) {
             assert(e.message == "The key code <$keyCode> is not a valid federal entity key code")
         }
     }
@@ -54,7 +54,7 @@ class FederalEntityTest {
         try {
             FederalEntityKeyCode(keyCode)
             assert(false)
-        } catch (e: Exception) {
+        } catch (e: InvalidFederalEntityKeyCodeError) {
             assert(e.message == "The key code <$keyCode> is not a valid federal entity key code")
         }
     }
@@ -65,7 +65,7 @@ class FederalEntityTest {
         try {
             FederalEntityKeyCode(keyCode)
             assert(false)
-        } catch (e: Exception) {
+        } catch (e: InvalidFederalEntityKeyCodeError) {
             assert(e.message == "The key code <$keyCode> is not a valid federal entity key code")
         }
     }
@@ -76,7 +76,7 @@ class FederalEntityTest {
         try {
             FederalEntityKeyCode(keyCode)
             assert(false)
-        } catch (e: Exception) {
+        } catch (e: InvalidFederalEntityKeyCodeError) {
             assert(e.message == "The key code <$keyCode> is not a valid federal entity key code")
         }
     }
@@ -87,7 +87,7 @@ class FederalEntityTest {
         try {
             FederalEntityKeyCode(keyCode)
             assert(false)
-        } catch (e: Exception) {
+        } catch (e: InvalidFederalEntityKeyCodeError) {
             assert(e.message == "The key code <$keyCode> is not a valid federal entity key code")
         }
     }
@@ -98,7 +98,7 @@ class FederalEntityTest {
         try {
             FederalEntityKeyCode(keyCode)
             assert(false)
-        } catch (e: Exception) {
+        } catch (e: InvalidFederalEntityKeyCodeError) {
             assert(e.message == "The key code <$keyCode> is not a valid federal entity key code")
         }
     }
@@ -109,7 +109,7 @@ class FederalEntityTest {
         try {
             FederalEntityKeyCode(keyCode)
             assert(true)
-        } catch (e: Exception) {
+        } catch (e: InvalidFederalEntityKeyCodeError) {
             assert(e.message == "The key code <$keyCode> is not a valid federal entity key code")
         }
     }
@@ -120,7 +120,7 @@ class FederalEntityTest {
         try {
             FederalEntityId.fromString(id)
             assert(false)
-        } catch (e: Exception) {
+        } catch (e: InvalidFederalEntityIdError) {
             assert(e.message == "The id <$id> is not a valid federal entity id")
         }
     }
@@ -131,7 +131,7 @@ class FederalEntityTest {
         try {
             FederalEntityId.fromString(id)
             assert(false)
-        } catch (e: Exception) {
+        } catch (e: InvalidFederalEntityIdError) {
             assert(e.message == "The id <$id> is not a valid federal entity id")
         }
     }
@@ -142,7 +142,7 @@ class FederalEntityTest {
         try {
             FederalEntityId.fromString(id)
             assert(true)
-        } catch (e: Exception) {
+        } catch (e: InvalidFederalEntityIdError) {
             assert(e.message == "The id <$id> is not a valid federal entity id")
         }
     }
@@ -153,7 +153,7 @@ class FederalEntityTest {
         try {
             FederalEntityId.fromString(id)
             assert(false)
-        } catch (e: Exception) {
+        } catch (e: InvalidFederalEntityIdError) {
             assert(e.message == "The id <$id> is not a valid federal entity id")
         }
     }
@@ -172,7 +172,7 @@ class FederalEntityTest {
                 updatedAt.value
             )
             assert(false)
-        } catch (e: Exception) {
+        } catch (e: InvalidFederalEntityUpdateDateError) {
             assert(e.message == "The update date <${updatedAt.value}> is not valid because it is before the create date <${createdAt.value}>")
         }
     }
