@@ -1,5 +1,5 @@
+import org.eduardoleolim.tasks.addmoduleinfo.AddModuleInfoTask
 import org.gradle.internal.os.OperatingSystem
-import tasks.AddModuleInfoTask
 
 plugins {
   id 'org.eduardoleolim.kotlin-application-conventions'

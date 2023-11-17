@@ -1,4 +1,4 @@
-package tasks
+package org.eduardoleolim.tasks.addmoduleinfo
 
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.DefaultTask
