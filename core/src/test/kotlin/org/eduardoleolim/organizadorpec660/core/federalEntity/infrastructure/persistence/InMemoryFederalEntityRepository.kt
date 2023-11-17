@@ -1,4 +1,4 @@
-package org.eduardoleolim.core.federalEntity.infrastructure.persistence
+package org.eduardoleolim.organizadorpec660.core.federalEntity.infrastructure.persistence
 
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntity
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityId
