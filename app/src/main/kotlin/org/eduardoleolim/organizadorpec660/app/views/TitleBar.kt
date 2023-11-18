@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.awt.ComposeWindow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
@@ -32,6 +33,7 @@ fun WindowScope.TitleBar(
     onCloseRequest: () -> Unit
 ) {
     var placement by remember { mutableStateOf(composeWindow.placement) }
+    var isCloseButtonHovered by remember { mutableStateOf(false) }
 
     if (placement == WindowPlacement.Fullscreen)
         return
@@ -77,7 +79,6 @@ fun WindowScope.TitleBar(
             )
 
             Row {
-                var isCloseButtonHovered by remember { mutableStateOf(false) }
                 val buttonModifier = Modifier.size(50.dp, 40.dp).padding(0.dp)
                 val iconModifier = Modifier.size(20.dp)
                 val maximizedIcon = if (placement == WindowPlacement.Maximized) {
@@ -91,8 +92,8 @@ fun WindowScope.TitleBar(
                 )
                 val closeButtonColors = if (isCloseButtonHovered) {
                     IconButtonDefaults.filledIconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.error,
-                        contentColor = MaterialTheme.colorScheme.onError
+                        containerColor = Color.Red,
+                        contentColor = Color.White
                     )
                 } else {
                     buttonColors
