@@ -1,5 +1,6 @@
 package org.eduardoleolim.organizadorpec660.app.views
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,7 +25,9 @@ fun MainWindow(
     resizable: Boolean = true,
     minHeight: Int = 0,
     minWidth: Int = 0,
-    colorScheme: ColorScheme = MaterialTheme.colorScheme,
+    isDarkTheme: Boolean? = null,
+    lightColorScheme: ColorScheme = MaterialTheme.colorScheme,
+    darkColorScheme: ColorScheme = MaterialTheme.colorScheme,
     shapes: Shapes = MaterialTheme.shapes,
     typography: Typography = MaterialTheme.typography,
     content: @Composable (FrameWindowScope.() -> Unit)
@@ -41,6 +44,11 @@ fun MainWindow(
         undecorated = true,
         transparent = true
     ) {
+        val colorScheme = when (isDarkTheme ?: isSystemInDarkTheme()) {
+            true -> darkColorScheme
+            false -> lightColorScheme
+        }
+
         window.apply {
             minimumSize = Dimension(minWidth, minHeight)
             maximizedBounds = calculateWorkArea(window)

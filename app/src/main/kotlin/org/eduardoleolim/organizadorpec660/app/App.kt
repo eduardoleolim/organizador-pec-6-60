@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.window.application
 import org.eduardoleolim.organizadorpec660.app.utils.ArgsUtils
+import org.eduardoleolim.organizadorpec660.app.views.DarkColors
 import org.eduardoleolim.organizadorpec660.app.views.LightColors
 import org.eduardoleolim.organizadorpec660.app.views.MainWindow
 import org.eduardoleolim.organizadorpec660.app.views.TitleBar
@@ -19,7 +20,9 @@ class App(private val commandBus: CommandBus, private val queryBus: QueryBus) {
             title = "Organizador PEC-6-60",
             icon = painterResource("assets/icon.ico"),
             onCloseRequest = ::exitApplication,
-            colorScheme = LightColors,
+            isDarkTheme = false,
+            lightColorScheme = LightColors,
+            darkColorScheme = DarkColors,
             minHeight = 600,
             minWidth = 800,
         ) {
