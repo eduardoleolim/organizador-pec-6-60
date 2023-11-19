@@ -5,7 +5,6 @@ import org.ktorm.support.sqlite.SQLiteDialect
 import org.sqlite.SQLiteDataSource
 import java.io.File
 
-
 object SqliteKtormDatabase {
     fun connect(databasePath: String, isReadOnly: Boolean = false): Database {
         val file = File(databasePath)
@@ -14,20 +13,19 @@ object SqliteKtormDatabase {
         if (!existsFile)
             file.parentFile.mkdirs()
 
-        SQLiteDataSource().apply {
+        val dataSource = SQLiteDataSource().apply {
             url = "jdbc:sqlite:$databasePath"
             setEnforceForeignKeys(true)
             setReadOnly(isReadOnly)
-            return Database.connect(this, SQLiteDialect()).apply {
-                if (existsFile)
-                    return this
+        }
 
-                try {
+        return Database.connect(dataSource, SQLiteDialect()).apply {
+            try {
+                if (!existsFile)
                     createDatabase(this)
-                } catch (e: Exception) {
-                    file.delete()
-                    throw e
-                }
+            } catch (e: Exception) {
+                file.delete()
+                throw e
             }
         }
     }
