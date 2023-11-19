@@ -1,4 +1,4 @@
-package org.eduardoleolim.organizadorpec660.app.views
+package org.eduardoleolim.organizadorpec660.app.main.window
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -39,12 +39,14 @@ fun WindowScope.TitleBar(
         return
 
     val onMaximizeRestoreRequest = {
-        placement = if (placement == WindowPlacement.Maximized) {
-            WindowPlacement.Floating
-        } else {
-            WindowPlacement.Maximized
+        if (composeWindow.isResizable) {
+            placement = if (placement == WindowPlacement.Maximized) {
+                WindowPlacement.Floating
+            } else {
+                WindowPlacement.Maximized
+            }
+            composeWindow.placement = placement
         }
-        composeWindow.placement = placement
     }
 
     val onMinimizeRequest = {
@@ -112,17 +114,19 @@ fun WindowScope.TitleBar(
                     )
                 }
 
-                FilledIconButton(
-                    onClick = onMaximizeRestoreRequest,
-                    modifier = buttonModifier,
-                    shape = RectangleShape,
-                    colors = buttonColors
-                ) {
-                    Icon(
-                        imageVector = maximizedIcon,
-                        modifier = iconModifier,
-                        contentDescription = "Maximize/Restore"
-                    )
+                if (composeWindow.isResizable || placement != WindowPlacement.Floating) {
+                    FilledIconButton(
+                        onClick = onMaximizeRestoreRequest,
+                        modifier = buttonModifier,
+                        shape = RectangleShape,
+                        colors = buttonColors
+                    ) {
+                        Icon(
+                            imageVector = maximizedIcon,
+                            modifier = iconModifier,
+                            contentDescription = "Maximize/Restore"
+                        )
+                    }
                 }
 
                 FilledIconButton(

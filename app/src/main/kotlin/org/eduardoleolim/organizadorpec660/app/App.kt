@@ -3,11 +3,11 @@ package org.eduardoleolim.organizadorpec660.app
 import androidx.compose.foundation.layout.Column
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.window.application
-import org.eduardoleolim.organizadorpec660.app.utils.ArgsUtils
-import org.eduardoleolim.organizadorpec660.app.views.DarkColors
-import org.eduardoleolim.organizadorpec660.app.views.LightColors
-import org.eduardoleolim.organizadorpec660.app.views.MainWindow
-import org.eduardoleolim.organizadorpec660.app.views.TitleBar
+import org.eduardoleolim.organizadorpec660.app.main.window.MainWindow
+import org.eduardoleolim.organizadorpec660.app.main.window.TitleBar
+import org.eduardoleolim.organizadorpec660.app.shared.theme.DarkColors
+import org.eduardoleolim.organizadorpec660.app.shared.theme.LightColors
+import org.eduardoleolim.organizadorpec660.app.shared.utils.ArgsParser
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.bus.KtormCommandBus
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.bus.KtormQueryBus
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.SqliteKtormDatabase
@@ -35,7 +35,7 @@ class App(private val commandBus: CommandBus, private val queryBus: QueryBus) {
 
 fun main(args: Array<String>) {
     try {
-        val databasePath = ArgsUtils.getDatabasePath(args) ?: throw Exception("Database path not found")
+        val databasePath = ArgsParser.getDatabasePath(args) ?: throw Exception("Database path not found")
         val commandBus = KtormCommandBus(SqliteKtormDatabase.connect(databasePath))
         val queryBus = KtormQueryBus(SqliteKtormDatabase.connect(databasePath, true))
 

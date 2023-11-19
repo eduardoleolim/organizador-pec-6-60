@@ -1,4 +1,4 @@
-package org.eduardoleolim.organizadorpec660.app.views
+package org.eduardoleolim.organizadorpec660.app.main.window
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize

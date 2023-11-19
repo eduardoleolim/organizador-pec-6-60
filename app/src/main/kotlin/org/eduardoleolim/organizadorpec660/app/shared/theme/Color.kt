@@ -1,4 +1,4 @@
-package org.eduardoleolim.organizadorpec660.app.views
+package org.eduardoleolim.organizadorpec660.app.shared.theme
 
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
