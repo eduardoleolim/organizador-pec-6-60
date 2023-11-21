@@ -1,9 +1,11 @@
 package org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models
 
 import org.ktorm.database.Database
+import org.ktorm.dsl.insert
 import org.ktorm.support.sqlite.SQLiteDialect
 import org.sqlite.SQLiteDataSource
 import java.io.File
+import java.util.*
 
 object SqliteKtormDatabase {
     fun connect(databasePath: String, isReadOnly: Boolean = false): Database {
@@ -42,6 +44,34 @@ object SqliteKtormDatabase {
             transaction.connection.createStatement().use { statement ->
                 queries.forEach { statement.addBatch(it) }
                 statement.executeBatch()
+            }
+
+            val adminRoleId = UUID.randomUUID().toString()
+            val adminRoleName = "ADMINISTRADOR"
+
+            val adminUserId = UUID.randomUUID().toString()
+            val adminUserName = "Administrador"
+            val adminCredentialsEmail = "admin@localhost"
+            val adminCredentialsUsername = "admin"
+            val adminCredentialsPassword = "admin"
+
+            database.insert(Roles()) {
+                set(it.id, adminRoleId)
+                set(it.name, adminRoleName)
+            }
+
+            database.insert(Users()) {
+                set(it.id, adminUserId)
+                set(it.firstname, adminUserName)
+                set(it.lastname, adminUserName)
+                set(it.roleId, adminRoleId)
+            }
+
+            database.insert(Credentials()) {
+                set(it.email, adminCredentialsEmail)
+                set(it.username, adminCredentialsUsername)
+                set(it.password, adminCredentialsPassword)
+                set(it.userId, adminUserId)
             }
         }
     }

@@ -1,6 +1,6 @@
 -- Sqlite3 sqlite schema for the application
 
-CREATE TABLE IF NOT EXISTS federalEntity
+create TABLE IF NOT EXISTS federalEntity
 (
     federalEntityId TEXT    NOT NULL,
     keyCode         TEXT    NOT NULL,
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS federalEntity
     CONSTRAINT keyCode_Unq UNIQUE (keyCode)
 );
 
-CREATE TABLE IF NOT EXISTS municipality
+create TABLE IF NOT EXISTS municipality
 (
     municipalityId  TEXT    NOT NULL,
     keyCode         TEXT    NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS municipality
     CONSTRAINT federalEntityId_Fk FOREIGN KEY (federalEntityId) REFERENCES federalEntity (federalEntityId)
 );
 
-CREATE TABLE IF NOT EXISTS instrumentType
+create TABLE IF NOT EXISTS instrumentType
 (
     instrumentTypeId TEXT    NOT NULL,
     name             TEXT    NOT NULL,
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS instrumentType
     CONSTRAINT instrumentType_Pk PRIMARY KEY (instrumentTypeId)
 );
 
-CREATE TABLE IF NOT EXISTS statisticType
+create TABLE IF NOT EXISTS statisticType
 (
     statisticTypeId TEXT    NOT NULL,
     keyCode         TEXT    NOT NULL,
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS statisticType
     CONSTRAINT keyCode_Unq UNIQUE (keyCode)
 );
 
-CREATE TABLE IF NOT EXISTS statisticType_instrumentType
+create TABLE IF NOT EXISTS statisticType_instrumentType
 (
     statisticTypeId  TEXT NOT NULL,
     instrumentTypeId TEXT NOT NULL,
@@ -58,14 +58,14 @@ CREATE TABLE IF NOT EXISTS statisticType_instrumentType
     CONSTRAINT idInstrumentType_Fk FOREIGN KEY (instrumentTypeId) REFERENCES instrumentType (instrumentTypeId)
 );
 
-CREATE TABLE IF NOT EXISTS instrument
+create TABLE IF NOT EXISTS instrument
 (
     instrumentId     TEXT    NOT NULL,
     statisticYear    INTEGER NOT NULL,
     statisticMonth   INTEGER NOT NULL,
     consecutive      TEXT    NOT NULL,
     saved            INTEGER NOT NULL,
-    data             BLOB    NOT NULL,
+    buffer           BLOB    NOT NULL,
     createdAt        INTEGER NOT NULL,
     updatedAt        INTEGER,
     instrumentTypeId TEXT    NOT NULL,
@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS instrument
     CONSTRAINT municipalityId_Fk FOREIGN KEY (municipalityId) REFERENCES municipality (municipalityId)
 );
 
-CREATE TABLE IF NOT EXISTS role
+create TABLE IF NOT EXISTS role
 (
     roleId TEXT NOT NULL,
     name   TEXT NOT NULL,
@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS role
     CONSTRAINT roleId_Pk PRIMARY KEY (roleId)
 );
 
-CREATE TABLE IF NOT EXISTS user
+create TABLE IF NOT EXISTS user
 (
     userId    TEXT NOT NULL,
     firstname TEXT NOT NULL,
@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS user
     CONSTRAINT roleId_Fk FOREIGN KEY (roleId) REFERENCES role (roleId)
 );
 
-CREATE TABLE IF NOT EXISTS credentials
+create TABLE IF NOT EXISTS credentials
 (
     userId   TEXT NOT NULL,
     email    TEXT NOT NULL,
