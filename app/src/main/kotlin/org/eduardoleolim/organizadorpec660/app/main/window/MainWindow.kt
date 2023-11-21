@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.FrameWindowScope
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPlacement
-import androidx.compose.ui.window.WindowState
+import androidx.compose.ui.window.rememberWindowState
 import java.awt.*
 import javax.swing.JFrame
 
@@ -32,7 +32,7 @@ fun MainWindow(
     typography: Typography = MaterialTheme.typography,
     content: @Composable (FrameWindowScope.() -> Unit)
 ) {
-    val windowState by remember { mutableStateOf(WindowState()) }
+    val windowState = rememberWindowState()
     var surfaceModifier by remember { mutableStateOf(Modifier.fillMaxSize()) }
 
     Window(

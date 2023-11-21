@@ -3,6 +3,7 @@ package org.eduardoleolim.organizadorpec660.app
 import androidx.compose.foundation.layout.Column
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.window.application
+import org.eduardoleolim.organizadorpec660.app.main.router.Router
 import org.eduardoleolim.organizadorpec660.app.main.window.MainWindow
 import org.eduardoleolim.organizadorpec660.app.main.window.TitleBar
 import org.eduardoleolim.organizadorpec660.app.shared.theme.DarkColors
@@ -28,6 +29,7 @@ class App(private val commandBus: CommandBus, private val queryBus: QueryBus) {
         ) {
             Column {
                 TitleBar(window, ::exitApplication)
+                Router(window, commandBus, queryBus)
             }
         }
     }
