@@ -8,8 +8,7 @@ import org.ktorm.database.Database
 class KtormCommandHandlerDecorator<T : Command>(
     private val database: Database,
     private val commandHandler: CommandHandler<T>
-) :
-    CommandHandler<T> {
+) : CommandHandler<T> {
     override fun handle(command: T) {
         try {
             database.useTransaction {
