@@ -1,6 +1,9 @@
 package org.eduardoleolim.organizadorpec660.core.federalEntity.infrastructure.persistence
 
-import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.*
+import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntity
+import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityCriteria
+import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityNotFoundError
+import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityRepository
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.FederalEntities
 import org.eduardoleolim.organizadorpec660.shared.domain.criteria.Criteria
 import org.ktorm.database.Database
@@ -62,11 +65,11 @@ class KtormFederalEntityRepository(private val database: Database) : FederalEnti
         }
     }
 
-    override fun delete(federalEntityId: FederalEntityId) {
+    override fun delete(federalEntityId: String) {
         database.useTransaction {
-            count(FederalEntityCriteria.idCriteria(federalEntityId.value.toString())).let { count ->
+            count(FederalEntityCriteria.idCriteria(federalEntityId)).let { count ->
                 if (count == 0)
-                    throw FederalEntityNotFoundError(federalEntityId.value.toString())
+                    throw FederalEntityNotFoundError(federalEntityId)
 
                 database.delete(federalEntities) {
                     it.id eq federalEntityId.toString()

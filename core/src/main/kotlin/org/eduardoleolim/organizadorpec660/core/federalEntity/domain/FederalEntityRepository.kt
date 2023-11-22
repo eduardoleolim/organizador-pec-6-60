@@ -9,5 +9,5 @@ interface FederalEntityRepository {
 
     fun save(federalEntity: FederalEntity)
 
-    fun delete(federalEntityId: FederalEntityId)
+    fun delete(federalEntityId: String)
 }

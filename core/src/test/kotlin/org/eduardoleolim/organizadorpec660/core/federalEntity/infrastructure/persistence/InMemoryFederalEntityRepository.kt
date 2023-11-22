@@ -1,13 +1,11 @@
 package org.eduardoleolim.organizadorpec660.core.federalEntity.infrastructure.persistence
 
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntity
-import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityId
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityRepository
 import org.eduardoleolim.organizadorpec660.shared.domain.criteria.Criteria
-import java.util.*
 
 class InMemoryFederalEntityRepository : FederalEntityRepository {
-    val records: MutableMap<UUID, FederalEntity> = mutableMapOf()
+    val records: MutableMap<String, FederalEntity> = mutableMapOf()
 
     override fun matching(criteria: Criteria): List<FederalEntity> {
         return InMemoryFederalEntitiesCriteriaParser.run {
@@ -28,10 +26,10 @@ class InMemoryFederalEntityRepository : FederalEntityRepository {
     }
 
     override fun save(federalEntity: FederalEntity) {
-        records[federalEntity.id()] = federalEntity
+        records[federalEntity.id().toString()] = federalEntity
     }
 
-    override fun delete(federalEntityId: FederalEntityId) {
-        records.remove(federalEntityId.value)
+    override fun delete(federalEntityId: String) {
+        records.remove(federalEntityId)
     }
 }
