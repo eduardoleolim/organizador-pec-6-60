@@ -4,5 +4,3 @@ sealed class AuthError(override val message: String, override val cause: Throwab
     RuntimeException(message, cause)
 
 class InvalidAuthCredentialsError : AuthError("Credentials are not valid")
-
-class AuthNotFoundError : AuthError("User not found")
