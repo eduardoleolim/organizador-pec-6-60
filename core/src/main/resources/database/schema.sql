@@ -94,6 +94,8 @@ create TABLE IF NOT EXISTS user
     firstname TEXT NOT NULL,
     lastname  TEXT,
     roleId    TEXT NOT NULL,
+    createdAt INTEGER NOT NULL,
+    updatedAt INTEGER,
 
     CONSTRAINT user_Pk PRIMARY KEY (userId),
     CONSTRAINT roleId_Fk FOREIGN KEY (roleId) REFERENCES role (roleId)
