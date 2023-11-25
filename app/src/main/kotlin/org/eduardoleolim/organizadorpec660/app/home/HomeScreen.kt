@@ -8,11 +8,13 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import org.eduardoleolim.organizadorpec660.core.auth.application.AuthUserResponse
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
 
 class HomeScreen(
     private val window: ComposeWindow,
+    private val user: AuthUserResponse,
     private val commandBus: CommandBus,
     private val queryBus: QueryBus
 ) : Screen {

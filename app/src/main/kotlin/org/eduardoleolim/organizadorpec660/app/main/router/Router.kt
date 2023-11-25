@@ -16,7 +16,7 @@ fun Router(window: ComposeWindow, commandBus: CommandBus, queryBus: QueryBus) {
             AuthScreen(window, commandBus, queryBus)
         }
         register<MainProvider.HomeScreen> {
-            HomeScreen(window, commandBus, queryBus)
+            HomeScreen(window, it.user, commandBus, queryBus)
         }
     }
 
