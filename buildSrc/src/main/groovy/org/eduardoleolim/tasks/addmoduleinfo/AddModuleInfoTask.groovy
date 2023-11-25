@@ -102,7 +102,7 @@ abstract class AddModuleInfoTask extends DefaultTask {
         }
 
         def content = moduleInfoFile.text
-        content = content.replaceFirst("module\\s+[^\\s]+\\s+\\{", "module $moduleName {")
+        content = content.replaceFirst("module\\s+[^\\s]+\\s+\\{", "open module $moduleName {")
         moduleInfoFile.write content
 
         return moduleInfoFile
