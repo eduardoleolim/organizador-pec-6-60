@@ -7,6 +7,8 @@ module org.eduardoleolim.organizadorpec660.core {
 
     opens database;
 
+    exports org.eduardoleolim.organizadorpec660.core.auth.application;
+    exports org.eduardoleolim.organizadorpec660.core.auth.application.authenticate;
     exports org.eduardoleolim.organizadorpec660.core.federalEntity.application;
     exports org.eduardoleolim.organizadorpec660.core.federalEntity.application.create;
     exports org.eduardoleolim.organizadorpec660.core.federalEntity.application.delete;
