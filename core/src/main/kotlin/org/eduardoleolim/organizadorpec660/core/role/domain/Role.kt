@@ -3,8 +3,8 @@ package org.eduardoleolim.organizadorpec660.core.role.domain
 import java.util.*
 
 class Role private constructor(
-    val id: RoleId,
-    val name: RoleName
+    private val id: RoleId,
+    private val name: RoleName
 ) {
     companion object {
         fun from(id: String, name: String) = Role(
