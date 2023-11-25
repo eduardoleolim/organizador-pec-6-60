@@ -1,4 +1,4 @@
-package org.eduardoleolim.organizadorpec660.app
+package org.eduardoleolim.organizadorpec660.app.main
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.ui.res.painterResource
@@ -8,10 +8,6 @@ import org.eduardoleolim.organizadorpec660.app.main.window.MainWindow
 import org.eduardoleolim.organizadorpec660.app.main.window.TitleBar
 import org.eduardoleolim.organizadorpec660.app.shared.theme.DarkColors
 import org.eduardoleolim.organizadorpec660.app.shared.theme.LightColors
-import org.eduardoleolim.organizadorpec660.app.shared.utils.ArgsParser
-import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.bus.KtormCommandBus
-import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.bus.KtormQueryBus
-import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.SqliteKtormDatabase
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
 
@@ -32,17 +28,5 @@ class App(private val commandBus: CommandBus, private val queryBus: QueryBus) {
                 Router(window, commandBus, queryBus)
             }
         }
-    }
-}
-
-fun main(args: Array<String>) {
-    try {
-        val databasePath = ArgsParser.getDatabasePath(args) ?: throw Exception("Database path not found")
-        val commandBus = KtormCommandBus(SqliteKtormDatabase.connect(databasePath))
-        val queryBus = KtormQueryBus(SqliteKtormDatabase.connect(databasePath, true))
-
-        App(commandBus, queryBus).start()
-    } catch (e: Exception) {
-        println(e.message)
     }
 }

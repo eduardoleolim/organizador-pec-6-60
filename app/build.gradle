@@ -29,7 +29,7 @@ kotlin {
 
 application {
   // Define the main class for the application.
-  mainClass = 'org.eduardoleolim.organizadorpec660.app.AppKt'
+  mainClass = 'org.eduardoleolim.organizadorpec660.app.MainKt'
   applicationDefaultJvmArgs += ['-Dfile.encoding=UTF-8']
 }
 
