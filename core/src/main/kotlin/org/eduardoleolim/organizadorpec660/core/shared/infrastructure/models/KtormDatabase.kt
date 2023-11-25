@@ -5,6 +5,7 @@ import org.ktorm.dsl.insert
 import org.ktorm.support.sqlite.SQLiteDialect
 import org.sqlite.SQLiteDataSource
 import java.io.File
+import java.time.LocalDateTime
 import java.util.*
 
 object SqliteKtormDatabase {
@@ -47,30 +48,25 @@ object SqliteKtormDatabase {
             }
 
             val adminRoleId = UUID.randomUUID().toString()
-            val adminRoleName = "ADMINISTRADOR"
-
             val adminUserId = UUID.randomUUID().toString()
-            val adminUserName = "Administrador"
-            val adminCredentialsEmail = "admin@localhost"
-            val adminCredentialsUsername = "admin"
-            val adminCredentialsPassword = "admin"
 
             database.insert(Roles()) {
                 set(it.id, adminRoleId)
-                set(it.name, adminRoleName)
+                set(it.name, "ADMINISTRADOR")
             }
 
             database.insert(Users()) {
                 set(it.id, adminUserId)
-                set(it.firstname, adminUserName)
-                set(it.lastname, adminUserName)
+                set(it.firstname, "Administrador")
+                set(it.lastname, "Administrador")
                 set(it.roleId, adminRoleId)
+                set(it.createdAt, LocalDateTime.now())
             }
 
             database.insert(Credentials()) {
-                set(it.email, adminCredentialsEmail)
-                set(it.username, adminCredentialsUsername)
-                set(it.password, adminCredentialsPassword)
+                set(it.email, "admin@localhost")
+                set(it.username, "admin")
+                set(it.password, "admin")
                 set(it.userId, adminUserId)
             }
         }
