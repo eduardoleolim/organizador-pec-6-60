@@ -35,7 +35,9 @@ class Municipality private constructor(
             FederalEntityId.fromString(federalEntityId),
             MunicipalityCreateDate(createdAt),
             updatedAt?.let {
-                if (it.before(createdAt)) throw InvalidMunicipalityUpdateDateError(it, createdAt)
+                if (it.before(createdAt))
+                    throw InvalidMunicipalityUpdateDateError(it, createdAt)
+
                 MunicipalityUpdateDate(it)
             }
         )

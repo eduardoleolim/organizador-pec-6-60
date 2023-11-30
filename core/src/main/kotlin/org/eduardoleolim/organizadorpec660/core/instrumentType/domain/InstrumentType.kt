@@ -26,7 +26,9 @@ class InstrumentType private constructor(
             InstrumentTypeName(name),
             InstrumentTypeCreateDate(createdAt),
             updatedAt?.let {
-                if (it.before(createdAt)) throw InvalidInstrumentTypeUpdateDateError(it, createdAt)
+                if (it.before(createdAt))
+                    throw InvalidInstrumentTypeUpdateDateError(it, createdAt)
+
                 InstrumentTypeUpdateDate(it)
             }
         )

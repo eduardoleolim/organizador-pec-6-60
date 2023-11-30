@@ -24,7 +24,9 @@ class FederalEntity private constructor(
             FederalEntityName(name),
             FederalEntityCreateDate(createdAt),
             updatedAt?.let {
-                if (it.before(createdAt)) throw InvalidFederalEntityUpdateDateError(it, createdAt)
+                if (it.before(createdAt))
+                    throw InvalidFederalEntityUpdateDateError(it, createdAt)
+
                 FederalEntityUpdateDate(it)
             }
         )

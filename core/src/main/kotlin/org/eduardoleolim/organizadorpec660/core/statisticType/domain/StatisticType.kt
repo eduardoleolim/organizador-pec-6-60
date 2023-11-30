@@ -46,7 +46,9 @@ class StatisticType private constructor(
             instrumentTypeIds.map(InstrumentTypeId::fromString).toMutableList(),
             StatisticTypeCreateDate(createdAt),
             updatedAt?.let {
-                if (it.before(createdAt)) throw InvalidStatisticTypeUpdateDateError(it, createdAt)
+                if (it.before(createdAt))
+                    throw InvalidStatisticTypeUpdateDateError(it, createdAt)
+
                 StatisticTypeUpdateDate(it)
             }
         )
