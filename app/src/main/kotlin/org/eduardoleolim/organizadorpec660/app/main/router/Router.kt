@@ -13,7 +13,7 @@ import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
 fun Router(window: ComposeWindow, commandBus: CommandBus, queryBus: QueryBus) {
     ScreenRegistry {
         register<MainProvider.AuthScreen> {
-            AuthScreen(window, commandBus, queryBus)
+            AuthScreen(window, queryBus)
         }
         register<MainProvider.HomeScreen> {
             HomeScreen(window, it.user, commandBus, queryBus)

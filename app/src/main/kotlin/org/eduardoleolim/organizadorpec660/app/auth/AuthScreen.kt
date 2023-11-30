@@ -23,23 +23,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.WindowPlacement
 import cafe.adriel.voyager.core.model.rememberScreenModel
+import cafe.adriel.voyager.core.registry.ScreenRegistry
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
+import org.eduardoleolim.organizadorpec660.app.main.router.MainProvider
+import org.eduardoleolim.organizadorpec660.core.auth.domain.InvalidAuthCredentialsError
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
 import java.awt.Dimension
 
-class AuthScreen(
-    private val window: ComposeWindow,
-    private val commandBus: CommandBus,
-    private val queryBus: QueryBus
-) : Screen {
+class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryBus) : Screen {
     @Composable
     override fun Content() {
-        window.placement = WindowPlacement.Floating
-        window.isResizable = false
-        window.size = Dimension(800, 600)
+        val screenModel = rememberScreenModel { AuthScreenModel(queryBus) }
+        window.apply {
+            placement = WindowPlacement.Floating
+            isResizable = false
+            size = Dimension(800, 600)
+        }
 
         Row {
             Column(modifier = Modifier.fillMaxWidth(0.5f).fillMaxHeight()) {
@@ -55,17 +56,19 @@ class AuthScreen(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                LoginForm()
+                LoginForm(screenModel)
             }
         }
     }
 
     @Composable
-    private fun LoginForm() {
+    private fun LoginForm(screenModel: AuthScreenModel) {
         val navigator = LocalNavigator.currentOrThrow
-        val screenModel = rememberScreenModel { AuthScreenModel(navigator, commandBus, queryBus) }
         var username by remember { mutableStateOf("") }
         var password by remember { mutableStateOf("") }
+        var isUsernameError by remember { mutableStateOf(false) }
+        var isPasswordError by remember { mutableStateOf(false) }
+        var areInvalidCredentials by remember { mutableStateOf(false) }
         var passwordVisibility by remember { mutableStateOf(false) }
         val visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation()
         val trailingIcon = if (passwordVisibility) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
@@ -83,11 +86,28 @@ class AuthScreen(
             modifier = Modifier.padding(bottom = 20.dp)
         )
 
+        if (areInvalidCredentials) {
+            Text(
+                text = "Credenciales inválidas",
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(bottom = 20.dp)
+            )
+        }
+
         OutlinedTextField(
             value = username,
             onValueChange = { username = it },
             label = { Text("Usuario") },
-            maxLines = 1,
+            isError = isUsernameError || areInvalidCredentials,
+            supportingText = {
+                if (username.isEmpty() && isUsernameError) {
+                    Text(
+                        text = "Debes proporcionar el usuario",
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            },
+            singleLine = true,
             modifier = Modifier.fillMaxWidth(0.8f).padding(bottom = 20.dp)
         )
 
@@ -95,7 +115,16 @@ class AuthScreen(
             value = password,
             onValueChange = { password = it },
             label = { Text("Contraseña") },
-            maxLines = 1,
+            isError = isPasswordError || areInvalidCredentials,
+            supportingText = {
+                if (password.isEmpty() && isPasswordError) {
+                    Text(
+                        text = "Debes proporcionar la contraseña",
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            },
+            singleLine = true,
             modifier = Modifier.fillMaxWidth(0.8f).padding(bottom = 20.dp),
             visualTransformation = visualTransformation,
             trailingIcon = {
@@ -109,7 +138,25 @@ class AuthScreen(
         )
 
         Button(
-            onClick = { screenModel.login(username, password) },
+            onClick = {
+                screenModel.login(username, password).fold(
+                    onSuccess = {
+                        navigator.push(ScreenRegistry.get(MainProvider.HomeScreen(it)))
+                    },
+                    onFailure = { error ->
+                        when (error) {
+                            is InvalidAuthCredentialsError -> {
+                                areInvalidCredentials = true
+                            }
+
+                            is InvalidCredentialsException -> {
+                                isUsernameError = error.isUsernameInvalid
+                                isPasswordError = error.isPasswordInvalid
+                            }
+                        }
+                    }
+                )
+            },
             modifier = Modifier.fillMaxWidth(0.8f)
         ) {
             Text("Iniciar sesión")
