@@ -45,21 +45,19 @@ class KtormFederalEntityRepository(private val database: Database) : FederalEnti
     override fun save(federalEntity: FederalEntity) {
         database.useTransaction {
             database.insertOrUpdate(federalEntities) {
+                val createdAt = LocalDateTime.ofInstant(federalEntity.createdAt().toInstant(), ZoneId.systemDefault())
                 set(it.id, federalEntity.id().toString())
                 set(it.keyCode, federalEntity.keyCode())
                 set(it.name, federalEntity.name())
-                set(
-                    it.createdAt,
-                    federalEntity.createdAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
-                )
+                set(it.createdAt, createdAt)
+
                 onConflict(it.id) {
+                    val updatedAt = federalEntity.updatedAt()?.let { date ->
+                        LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault())
+                    } ?: LocalDateTime.now()
                     set(it.keyCode, federalEntity.keyCode())
                     set(it.name, federalEntity.name())
-                    set(
-                        it.updatedAt,
-                        federalEntity.updatedAt()?.toInstant()?.atZone(ZoneId.systemDefault())?.toLocalDateTime()
-                            ?: LocalDateTime.now()
-                    )
+                    set(it.updatedAt, updatedAt)
                 }
             }
         }

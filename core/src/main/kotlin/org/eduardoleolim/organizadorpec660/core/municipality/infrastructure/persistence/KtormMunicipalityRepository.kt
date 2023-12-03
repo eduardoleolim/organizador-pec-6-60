@@ -47,20 +47,21 @@ class KtormMunicipalityRepository(private val database: Database) : Municipality
     override fun save(municipality: Municipality) {
         database.useTransaction {
             database.insertOrUpdate(municipalities) {
+                val createdAt = LocalDateTime.ofInstant(municipality.createdAt().toInstant(), ZoneId.systemDefault())
                 set(it.id, municipality.id().toString())
                 set(it.keyCode, municipality.keyCode())
                 set(it.name, municipality.name())
                 set(it.federalEntityId, municipality.federalEntityId().toString())
-                set(it.createdAt, municipality.createdAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
+                set(it.createdAt, createdAt)
+
                 onConflict(it.id) {
+                    val updatedAt = municipality.updatedAt()?.let { date ->
+                        LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault())
+                    } ?: LocalDateTime.now()
                     set(it.keyCode, municipality.keyCode())
                     set(it.name, municipality.name())
                     set(it.federalEntityId, municipality.federalEntityId().toString())
-                    set(
-                        it.updatedAt,
-                        municipality.updatedAt()?.toInstant()?.atZone(ZoneId.systemDefault())?.toLocalDateTime()
-                            ?: LocalDateTime.now()
-                    )
+                    set(it.updatedAt, updatedAt)
                 }
             }
         }

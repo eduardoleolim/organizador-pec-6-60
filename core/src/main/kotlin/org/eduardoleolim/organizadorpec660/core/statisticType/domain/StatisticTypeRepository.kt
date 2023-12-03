@@ -9,5 +9,5 @@ interface StatisticTypeRepository {
 
     fun save(statisticType: StatisticType)
 
-    fun delete(statisticTypeId: StatisticTypeId)
+    fun delete(statisticTypeId: String)
 }

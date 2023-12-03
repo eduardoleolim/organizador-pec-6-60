@@ -55,20 +55,21 @@ class KtormUserRepository(private val database: Database) : UserRepository {
     override fun save(user: User) {
         database.useTransaction {
             database.insertOrUpdate(users) {
+                val createdAt = LocalDateTime.ofInstant(user.createdAt().toInstant(), ZoneId.systemDefault())
                 set(it.id, user.id().toString())
                 set(it.firstname, user.firstName())
                 set(it.lastname, user.lastName())
                 set(it.roleId, user.role().id().toString())
-                set(it.createdAt, user.createdAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
+                set(it.createdAt, createdAt)
+
                 onConflict(it.id) {
+                    val updatedAt = user.updatedAt()?.let { date ->
+                        LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault())
+                    } ?: LocalDateTime.now()
                     set(it.firstname, user.firstName())
                     set(it.lastname, user.lastName())
                     set(it.roleId, user.role().id().toString())
-                    set(
-                        it.updatedAt,
-                        user.updatedAt()?.toInstant()?.atZone(ZoneId.systemDefault())?.toLocalDateTime()
-                            ?: LocalDateTime.now()
-                    )
+                    set(it.updatedAt, updatedAt)
                 }
             }
 

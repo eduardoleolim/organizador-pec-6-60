@@ -43,19 +43,17 @@ class KtormInstrumentTypeRepository(private val database: Database) : Instrument
     override fun save(instrumentType: InstrumentType) {
         database.useTransaction {
             database.insertOrUpdate(instrumentTypes) {
+                val createdAt = LocalDateTime.ofInstant(instrumentType.createdAt().toInstant(), ZoneId.systemDefault())
                 set(it.id, instrumentType.id().toString())
                 set(it.name, instrumentType.name())
-                set(
-                    it.createdAt,
-                    instrumentType.createdAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
-                )
+                set(it.createdAt, createdAt)
+
                 onConflict(it.id) {
+                    val updatedAt = instrumentType.updatedAt()?.let { date ->
+                        LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault())
+                    } ?: LocalDateTime.now()
                     set(it.name, instrumentType.name())
-                    set(
-                        it.updatedAt,
-                        instrumentType.updatedAt()?.toInstant()?.atZone(ZoneId.systemDefault())?.toLocalDateTime()
-                            ?: LocalDateTime.now()
-                    )
+                    set(it.updatedAt, updatedAt)
                 }
             }
         }

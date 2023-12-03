@@ -3,7 +3,6 @@ package org.eduardoleolim.organizadorpec660.core.statisticType.infrastructure.pe
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.InstrumentTypesOfStatisticTypes
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.StatisticTypes
 import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticType
-import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeId
 import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeRepository
 import org.ktorm.database.Database
 import org.ktorm.dsl.batchInsert
@@ -28,21 +27,19 @@ class KtormStatisticTypeRepository(private val database: Database) : StatisticTy
     override fun save(statisticType: StatisticType) {
         database.useTransaction {
             database.insertOrUpdate(statisticTypes) {
+                val createdAt = LocalDateTime.ofInstant(statisticType.createdAt().toInstant(), ZoneId.systemDefault())
                 set(statisticTypes.id, statisticType.id().toString())
                 set(statisticTypes.keyCode, statisticType.keyCode())
                 set(statisticTypes.name, statisticType.name())
-                set(
-                    statisticTypes.createdAt,
-                    statisticType.createdAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
-                )
+                set(statisticTypes.createdAt, createdAt)
+
                 onConflict(statisticTypes.id) {
+                    val updatedAt = statisticType.updatedAt()?.let { date ->
+                        LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault())
+                    } ?: LocalDateTime.now()
                     set(statisticTypes.keyCode, statisticType.keyCode())
                     set(statisticTypes.name, statisticType.name())
-                    set(
-                        statisticTypes.updatedAt,
-                        statisticType.updatedAt()?.toInstant()?.atZone(ZoneId.systemDefault())?.toLocalDateTime()
-                            ?: LocalDateTime.now()
-                    )
+                    set(statisticTypes.updatedAt, updatedAt)
                 }
             }
 
@@ -61,14 +58,14 @@ class KtormStatisticTypeRepository(private val database: Database) : StatisticTy
         }
     }
 
-    override fun delete(statisticTypeId: StatisticTypeId) {
+    override fun delete(statisticTypeId: String) {
         database.useTransaction {
             database.delete(instrumentTypesOfStatisticTypes) {
-                it.statisticTypeId eq statisticTypeId.toString()
+                it.statisticTypeId eq statisticTypeId
             }
 
             database.delete(statisticTypes) {
-                it.id eq statisticTypeId.toString()
+                it.id eq statisticTypeId
             }
         }
     }
