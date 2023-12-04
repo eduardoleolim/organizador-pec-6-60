@@ -4,6 +4,8 @@ import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEnti
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityCriteria
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityNotFoundError
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityRepository
+import org.eduardoleolim.organizadorpec660.core.shared.domain.toDate
+import org.eduardoleolim.organizadorpec660.core.shared.domain.toLocalDateTime
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.FederalEntities
 import org.eduardoleolim.organizadorpec660.shared.domain.criteria.Criteria
 import org.ktorm.database.Database
@@ -12,52 +14,39 @@ import org.ktorm.dsl.eq
 import org.ktorm.dsl.map
 import org.ktorm.support.sqlite.insertOrUpdate
 import java.time.LocalDateTime
-import java.time.ZoneId
-import java.util.*
 
 class KtormFederalEntityRepository(private val database: Database) : FederalEntityRepository {
     private val federalEntities = FederalEntities("f")
 
     override fun matching(criteria: Criteria): List<FederalEntity> {
-        return KtormFederalEntitiesCriteriaParser.select(database, federalEntities, criteria).map {
-            federalEntities.createEntity(it)
-        }.map {
-            FederalEntity.from(
-                it.id,
-                it.keyCode,
-                it.name,
-                Date.from(it.createdAt.atZone(ZoneId.systemDefault()).toInstant()),
-                it.updatedAt?.let { date ->
-                    Date.from(date.atZone(ZoneId.systemDefault()).toInstant())
-                }
-            )
+        return KtormFederalEntitiesCriteriaParser.select(database, federalEntities, criteria).map { rowSet ->
+            federalEntities.createEntity(rowSet).let {
+                FederalEntity.from(it.id, it.keyCode, it.name, it.createdAt.toDate(), it.updatedAt?.toDate())
+            }
         }
     }
 
     override fun count(criteria: Criteria): Int {
         return KtormFederalEntitiesCriteriaParser.count(database, federalEntities, criteria)
-            .rowSet.apply {
-                next()
-            }.getInt(1)
+            .rowSet.let {
+                it.next()
+                it.getInt(1)
+            }
     }
 
 
     override fun save(federalEntity: FederalEntity) {
         database.useTransaction {
             database.insertOrUpdate(federalEntities) {
-                val createdAt = LocalDateTime.ofInstant(federalEntity.createdAt().toInstant(), ZoneId.systemDefault())
                 set(it.id, federalEntity.id().toString())
                 set(it.keyCode, federalEntity.keyCode())
                 set(it.name, federalEntity.name())
-                set(it.createdAt, createdAt)
+                set(it.createdAt, federalEntity.createdAt().toLocalDateTime())
 
                 onConflict(it.id) {
-                    val updatedAt = federalEntity.updatedAt()?.let { date ->
-                        LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault())
-                    } ?: LocalDateTime.now()
                     set(it.keyCode, federalEntity.keyCode())
                     set(it.name, federalEntity.name())
-                    set(it.updatedAt, updatedAt)
+                    set(it.updatedAt, federalEntity.updatedAt()?.toLocalDateTime() ?: LocalDateTime.now())
                 }
             }
         }
@@ -70,7 +59,7 @@ class KtormFederalEntityRepository(private val database: Database) : FederalEnti
                     throw FederalEntityNotFoundError(federalEntityId)
 
                 database.delete(federalEntities) {
-                    it.id eq federalEntityId.toString()
+                    it.id eq federalEntityId
                 }
             }
         }

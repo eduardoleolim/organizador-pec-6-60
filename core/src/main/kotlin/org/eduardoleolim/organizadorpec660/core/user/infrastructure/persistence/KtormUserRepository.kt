@@ -1,6 +1,8 @@
 package org.eduardoleolim.organizadorpec660.core.user.infrastructure.persistence
 
 import org.eduardoleolim.organizadorpec660.core.role.domain.Role
+import org.eduardoleolim.organizadorpec660.core.shared.domain.toDate
+import org.eduardoleolim.organizadorpec660.core.shared.domain.toLocalDateTime
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.Credentials
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.Roles
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.Users
@@ -15,8 +17,6 @@ import org.ktorm.dsl.eq
 import org.ktorm.dsl.map
 import org.ktorm.support.sqlite.insertOrUpdate
 import java.time.LocalDateTime
-import java.time.ZoneId
-import java.util.*
 
 class KtormUserRepository(private val database: Database) : UserRepository {
     private val users = Users("u")
@@ -37,10 +37,8 @@ class KtormUserRepository(private val database: Database) : UserRepository {
                 credentials.username,
                 credentials.password,
                 Role.from(role.id, role.name),
-                Date.from(user.createdAt.atZone(ZoneId.systemDefault()).toInstant()),
-                user.updatedAt?.let { date ->
-                    Date.from(date.atZone(ZoneId.systemDefault()).toInstant())
-                }
+                user.createdAt.toDate(),
+                user.updatedAt?.toDate()
             )
         }
     }
@@ -55,21 +53,17 @@ class KtormUserRepository(private val database: Database) : UserRepository {
     override fun save(user: User) {
         database.useTransaction {
             database.insertOrUpdate(users) {
-                val createdAt = LocalDateTime.ofInstant(user.createdAt().toInstant(), ZoneId.systemDefault())
                 set(it.id, user.id().toString())
                 set(it.firstname, user.firstName())
                 set(it.lastname, user.lastName())
                 set(it.roleId, user.role().id().toString())
-                set(it.createdAt, createdAt)
+                set(it.createdAt, user.createdAt().toLocalDateTime())
 
                 onConflict(it.id) {
-                    val updatedAt = user.updatedAt()?.let { date ->
-                        LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault())
-                    } ?: LocalDateTime.now()
                     set(it.firstname, user.firstName())
                     set(it.lastname, user.lastName())
                     set(it.roleId, user.role().id().toString())
-                    set(it.updatedAt, updatedAt)
+                    set(it.updatedAt, user.updatedAt()?.toLocalDateTime() ?: LocalDateTime.now())
                 }
             }
 
@@ -78,6 +72,7 @@ class KtormUserRepository(private val database: Database) : UserRepository {
                 set(it.email, user.email())
                 set(it.username, user.username())
                 set(it.password, user.password())
+
                 onConflict(it.userId) {
                     set(it.email, user.email())
                     set(it.username, user.username())
