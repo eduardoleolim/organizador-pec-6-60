@@ -4,19 +4,17 @@ import org.eduardoleolim.organizadorpec660.shared.domain.criteria.*
 
 object UserCriteria {
     fun idCriteria(id: String) = Criteria(
-        Filters(listOf(Filter(FilterField("id"), FilterOperator.EQUAL, FilterValue(id)))),
-        Filters.none(),
+        SingleFilter(Filter(FilterField("id"), FilterOperator.EQUAL, FilterValue(id))),
         Orders.none(),
         null,
         null
     )
 
     fun emailOrUsernameCriteria(emailOrUsername: String) = Criteria(
-        Filters.none(),
-        Filters(
+        OrFilters(
             listOf(
-                Filter(FilterField("email"), FilterOperator.EQUAL, FilterValue(emailOrUsername)),
-                Filter(FilterField("username"), FilterOperator.EQUAL, FilterValue(emailOrUsername))
+                SingleFilter(Filter(FilterField("email"), FilterOperator.EQUAL, FilterValue(emailOrUsername))),
+                SingleFilter(Filter(FilterField("username"), FilterOperator.EQUAL, FilterValue(emailOrUsername)))
             )
         ),
         Orders.none(),

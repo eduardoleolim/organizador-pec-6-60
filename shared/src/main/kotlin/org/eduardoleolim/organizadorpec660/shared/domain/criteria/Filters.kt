@@ -1,11 +1,48 @@
 package org.eduardoleolim.organizadorpec660.shared.domain.criteria
 
-class Filters(val filters: List<Filter>) {
-    fun serialize() = filters.joinToString(separator = "^", transform = Filter::serialize)
+enum class FiltersOperator {
+    AND,
+    OR
+}
 
-    companion object {
-        fun none() = Filters(emptyList())
+sealed class Filters {
+    abstract fun serialize(): String
 
-        fun fromValues(filters: Array<HashMap<String, String>>) = Filters(filters.map { Filter.fromValues(it) })
+    abstract fun isEmpty(): Boolean
+
+    abstract val isMultiple: Boolean
+}
+
+class EmptyFilters : Filters() {
+    override fun isEmpty() = true
+
+    override val isMultiple = false
+
+    override fun serialize(): String {
+        return ""
     }
 }
+
+class SingleFilter(val filter: Filter) : Filters() {
+    override fun isEmpty() = false
+
+    override val isMultiple = false
+
+    override fun serialize(): String {
+        return filter.serialize()
+    }
+}
+
+open class MultipleFilters(val filters: List<Filters>, val operator: FiltersOperator) : Filters() {
+    override fun isEmpty() = filters.isEmpty()
+
+    override val isMultiple = true
+
+    override fun serialize(): String {
+        return filters.joinToString(separator = "^") { it.serialize() }
+    }
+}
+
+class AndFilters(filters: List<Filters>) : MultipleFilters(filters, FiltersOperator.AND)
+
+class OrFilters(filters: List<Filters>) : MultipleFilters(filters, FiltersOperator.OR)

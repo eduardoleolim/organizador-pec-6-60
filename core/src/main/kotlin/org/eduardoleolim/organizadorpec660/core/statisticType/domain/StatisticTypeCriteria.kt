@@ -4,29 +4,26 @@ import org.eduardoleolim.organizadorpec660.shared.domain.criteria.*
 
 object StatisticTypeCriteria {
     fun idCriteria(id: String) = Criteria(
-        Filters(listOf(Filter(FilterField("id"), FilterOperator.EQUAL, FilterValue(id)))),
-        Filters.none(),
+        SingleFilter(Filter(FilterField("id"), FilterOperator.EQUAL, FilterValue(id))),
         Orders.none(),
         1,
         null
     )
 
     fun keyCodeCriteria(keyCode: String) = Criteria(
-        Filters(listOf(Filter(FilterField("keyCode"), FilterOperator.EQUAL, FilterValue(keyCode)))),
-        Filters.none(),
+        SingleFilter(Filter(FilterField("keyCode"), FilterOperator.EQUAL, FilterValue(keyCode))),
         Orders.none(),
         1,
         null
     )
 
     fun anotherSameKeyCodeCriteria(id: String, keyCode: String) = Criteria(
-        Filters(
+        AndFilters(
             listOf(
-                Filter(FilterField("id"), FilterOperator.NOT_EQUAL, FilterValue(id)),
-                Filter(FilterField("keyCode"), FilterOperator.EQUAL, FilterValue(keyCode))
+                SingleFilter(Filter(FilterField("id"), FilterOperator.NOT_EQUAL, FilterValue(id))),
+                SingleFilter(Filter(FilterField("keyCode"), FilterOperator.EQUAL, FilterValue(keyCode)))
             )
         ),
-        Filters.none(),
         Orders.none(),
         1,
         null

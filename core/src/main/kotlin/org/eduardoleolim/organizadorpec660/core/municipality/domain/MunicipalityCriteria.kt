@@ -4,37 +4,33 @@ import org.eduardoleolim.organizadorpec660.shared.domain.criteria.*
 
 object MunicipalityCriteria {
     fun idCriteria(id: String) = Criteria(
-        Filters(listOf(Filter(FilterField("id"), FilterOperator.EQUAL, FilterValue(id)))),
-        Filters.none(),
+        SingleFilter(Filter(FilterField("id"), FilterOperator.EQUAL, FilterValue(id))),
         Orders.none(),
         1,
         null
     )
 
     fun keyCodeCriteria(keyCode: String) = Criteria(
-        Filters(listOf(Filter(FilterField("keyCode"), FilterOperator.EQUAL, FilterValue(keyCode)))),
-        Filters.none(),
+        SingleFilter(Filter(FilterField("keyCode"), FilterOperator.EQUAL, FilterValue(keyCode))),
         Orders.none(),
         1,
         null
     )
 
     fun anotherKeyCodeCriteria(id: String, keyCode: String) = Criteria(
-        Filters(
+        AndFilters(
             listOf(
-                Filter(FilterField("id"), FilterOperator.NOT_EQUAL, FilterValue(id)),
-                Filter(FilterField("keyCode"), FilterOperator.EQUAL, FilterValue(keyCode))
+                SingleFilter(Filter(FilterField("id"), FilterOperator.NOT_EQUAL, FilterValue(id))),
+                SingleFilter(Filter(FilterField("keyCode"), FilterOperator.EQUAL, FilterValue(keyCode)))
             )
         ),
-        Filters.none(),
         Orders.none(),
         1,
         null
     )
 
     fun federalEntityIdCriteria(federalEntityId: String) = Criteria(
-        Filters(listOf(Filter(FilterField("federalEntity.id"), FilterOperator.EQUAL, FilterValue(federalEntityId)))),
-        Filters.none(),
+        SingleFilter(Filter(FilterField("federalEntity.id"), FilterOperator.EQUAL, FilterValue(federalEntityId))),
         Orders.none(),
         1,
         null
@@ -47,22 +43,34 @@ object MunicipalityCriteria {
         limit: Int? = null,
         offset: Int? = null
     ) = Criteria(
-        Filters(
-            federalEntityId?.let {
-                listOf(
-                    Filter(FilterField("federalEntity.id"), FilterOperator.EQUAL, FilterValue(it))
-                )
-            } ?: emptyList()
-        ),
-        Filters(
-            search?.let {
-                listOf(
-                    Filter(FilterField("keyCode"), FilterOperator.CONTAINS, FilterValue(it)),
-                    Filter(FilterField("name"), FilterOperator.CONTAINS, FilterValue(it)),
-                    Filter(FilterField("federalEntity.keyCode"), FilterOperator.CONTAINS, FilterValue(it)),
-                    Filter(FilterField("federalEntity.name"), FilterOperator.CONTAINS, FilterValue(it))
-                )
-            } ?: emptyList()
+        AndFilters(
+            listOf(
+                federalEntityId?.let {
+                    SingleFilter(Filter(FilterField("federalEntity.id"), FilterOperator.EQUAL, FilterValue(it)))
+                } ?: EmptyFilters(),
+                search?.let {
+                    OrFilters(
+                        listOf(
+                            SingleFilter(Filter(FilterField("keyCode"), FilterOperator.CONTAINS, FilterValue(it))),
+                            SingleFilter(Filter(FilterField("name"), FilterOperator.CONTAINS, FilterValue(it))),
+                            SingleFilter(
+                                Filter(
+                                    FilterField("federalEntity.keyCode"),
+                                    FilterOperator.CONTAINS,
+                                    FilterValue(it)
+                                )
+                            ),
+                            SingleFilter(
+                                Filter(
+                                    FilterField("federalEntity.name"),
+                                    FilterOperator.CONTAINS,
+                                    FilterValue(it)
+                                )
+                            )
+                        )
+                    )
+                } ?: EmptyFilters()
+            )
         ),
         Orders(orders ?: listOf(Order.asc("keyCode"))),
         limit,

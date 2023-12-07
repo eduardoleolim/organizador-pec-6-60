@@ -4,29 +4,26 @@ import org.eduardoleolim.organizadorpec660.shared.domain.criteria.*
 
 object FederalEntityCriteria {
     fun idCriteria(id: String) = Criteria(
-        Filters(listOf(Filter(FilterField("id"), FilterOperator.EQUAL, FilterValue(id)))),
-        Filters.none(),
+        SingleFilter(Filter(FilterField("id"), FilterOperator.EQUAL, FilterValue(id))),
         Orders.none(),
         1,
         null
     )
 
     fun keyCodeCriteria(keyCode: String) = Criteria(
-        Filters(listOf(Filter(FilterField("keyCode"), FilterOperator.EQUAL, FilterValue(keyCode)))),
-        Filters.none(),
+        SingleFilter(Filter(FilterField("keyCode"), FilterOperator.EQUAL, FilterValue(keyCode))),
         Orders.none(),
         1,
         null
     )
 
     fun anotherKeyCodeCriteria(id: String, keyCode: String) = Criteria(
-        Filters(
+        AndFilters(
             listOf(
-                Filter(FilterField("id"), FilterOperator.NOT_EQUAL, FilterValue(id)),
-                Filter(FilterField("keyCode"), FilterOperator.EQUAL, FilterValue(keyCode))
+                SingleFilter(Filter(FilterField("id"), FilterOperator.NOT_EQUAL, FilterValue(id))),
+                SingleFilter(Filter(FilterField("keyCode"), FilterOperator.EQUAL, FilterValue(keyCode)))
             )
         ),
-        Filters.none(),
         Orders.none(),
         1,
         null
@@ -34,15 +31,14 @@ object FederalEntityCriteria {
 
     fun searchCriteria(search: String? = null, orders: List<Order>? = null, limit: Int? = null, offset: Int? = null) =
         Criteria(
-            Filters.none(),
-            Filters(
-                search?.let {
+            search?.let {
+                OrFilters(
                     listOf(
-                        Filter(FilterField("keyCode"), FilterOperator.CONTAINS, FilterValue(it)),
-                        Filter(FilterField("name"), FilterOperator.CONTAINS, FilterValue(it))
+                        SingleFilter(Filter(FilterField("keyCode"), FilterOperator.CONTAINS, FilterValue(it))),
+                        SingleFilter(Filter(FilterField("name"), FilterOperator.CONTAINS, FilterValue(it)))
                     )
-                } ?: emptyList()
-            ),
+                )
+            } ?: EmptyFilters(),
             Orders(orders ?: listOf(Order.asc("keyCode"))),
             limit,
             offset

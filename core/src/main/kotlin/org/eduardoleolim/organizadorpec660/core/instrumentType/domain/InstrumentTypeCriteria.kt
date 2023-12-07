@@ -4,16 +4,14 @@ import org.eduardoleolim.organizadorpec660.shared.domain.criteria.*
 
 object InstrumentTypeCriteria {
     fun idCriteria(id: String) = Criteria(
-        Filters(listOf(Filter(FilterField("id"), FilterOperator.EQUAL, FilterValue(id)))),
-        Filters.none(),
+        SingleFilter(Filter(FilterField("id"), FilterOperator.EQUAL, FilterValue(id))),
         Orders.none(),
         1,
         null
     )
 
     fun nameCriteria(name: String) = Criteria(
-        Filters(listOf(Filter(FilterField("name"), FilterOperator.EQUAL, FilterValue(name)))),
-        Filters.none(),
+        SingleFilter(Filter(FilterField("name"), FilterOperator.EQUAL, FilterValue(name))),
         Orders.none(),
         1,
         null
@@ -21,12 +19,13 @@ object InstrumentTypeCriteria {
 
     fun searchCriteria(search: String? = null, orders: List<Order>? = null, limit: Int? = null, offset: Int? = null) =
         Criteria(
-            Filters.none(),
-            Filters(
-                search?.let {
-                    listOf(Filter(FilterField("name"), FilterOperator.CONTAINS, FilterValue(it)))
-                } ?: emptyList()
-            ),
+            search?.let {
+                OrFilters(
+                    listOf(
+                        SingleFilter(Filter(FilterField("name"), FilterOperator.CONTAINS, FilterValue(it)))
+                    )
+                )
+            } ?: EmptyFilters(),
             Orders(orders ?: listOf(Order.asc("name"))),
             limit,
             offset

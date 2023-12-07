@@ -1,26 +1,24 @@
 package org.eduardoleolim.organizadorpec660.shared.domain.criteria
 
 open class Criteria(
-    val andFilters: Filters,
-    val orFilters: Filters,
+    val filters: Filters,
     val orders: Orders,
     val limit: Int?,
-    val offset: Int?,
-    val isOrCriteria: Boolean = false
+    val offset: Int?
 ) {
-    fun hasAndFilters() = andFilters.filters.isNotEmpty()
-
-    fun hasOrFilters() = orFilters.filters.isNotEmpty()
+    fun hasFilters() = when (filters) {
+        is SingleFilter -> true
+        is MultipleFilters -> filters.filters.isNotEmpty()
+        is EmptyFilters -> false
+    }
 
     fun hasOrders() = orders.orders.isNotEmpty()
 
     fun serialize() = String.format(
-        "%s~~%s~~%s~~%s~~%s~~%s",
-        andFilters.serialize(),
-        orFilters.serialize(),
+        "%s~~%s~~%s~~%s",
+        filters.serialize(),
         orders.serialize(),
         limit ?: 0,
         offset ?: 0,
-        isOrCriteria
     )
 }
