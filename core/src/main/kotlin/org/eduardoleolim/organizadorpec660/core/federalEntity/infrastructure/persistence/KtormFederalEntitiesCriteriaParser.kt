@@ -5,6 +5,7 @@ import org.eduardoleolim.organizadorpec660.shared.domain.criteria.*
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
 import org.ktorm.expression.OrderByExpression
+import org.ktorm.schema.Column
 import org.ktorm.schema.ColumnDeclaring
 import java.time.Instant
 import java.time.LocalDateTime
@@ -38,83 +39,56 @@ object KtormFederalEntitiesCriteriaParser {
         val orderType = order.orderType
 
         return when (orderBy) {
-            "id" -> {
-                when (orderType) {
-                    OrderType.ASC -> federalEntities.id.asc()
-                    OrderType.DESC -> federalEntities.id.desc()
-                    OrderType.NONE -> null
-                }
-            }
-
-            "keyCode" -> {
-                when (orderType) {
-                    OrderType.ASC -> federalEntities.keyCode.asc()
-                    OrderType.DESC -> federalEntities.keyCode.desc()
-                    OrderType.NONE -> null
-                }
-            }
-
-            "name" -> {
-                when (orderType) {
-                    OrderType.ASC -> federalEntities.name.asc()
-                    OrderType.DESC -> federalEntities.name.desc()
-                    OrderType.NONE -> null
-                }
-            }
-
-            "createdAt" -> {
-                when (orderType) {
-                    OrderType.ASC -> federalEntities.createdAt.asc()
-                    OrderType.DESC -> federalEntities.createdAt.desc()
-                    OrderType.NONE -> null
-                }
-            }
-
-            "updatedAt" -> {
-                when (orderType) {
-                    OrderType.ASC -> federalEntities.updatedAt.asc()
-                    OrderType.DESC -> federalEntities.updatedAt.desc()
-                    OrderType.NONE -> null
-                }
-            }
-
+            "id" -> parseOrderType(orderType, federalEntities.id)
+            "keyCode" -> parseOrderType(orderType, federalEntities.keyCode)
+            "name" -> parseOrderType(orderType, federalEntities.name)
+            "createdAt" -> parseOrderType(orderType, federalEntities.createdAt)
+            "updatedAt" -> parseOrderType(orderType, federalEntities.updatedAt)
             else -> null
         }
     }
 
+    private fun parseOrderType(orderType: OrderType, column: Column<*>): OrderByExpression? {
+        return when (orderType) {
+            OrderType.ASC -> column.asc()
+            OrderType.DESC -> column.desc()
+            OrderType.NONE -> null
+        }
+    }
+
     private fun addConditionsToQuery(query: Query, federalEntities: FederalEntities, criteria: Criteria): Query {
-        if (!criteria.hasAndFilters() && !criteria.hasOrFilters())
-            return query
+        criteria.filters.let {
+            return when (it) {
+                is EmptyFilters -> query
+                is SingleFilter -> parseFilter(federalEntities, it.filter)?.let { conditions ->
+                    query.where(conditions)
+                } ?: query
 
-        if (criteria.hasAndFilters() && criteria.hasOrFilters()) {
-            return query.where {
-                val andConditions = criteria.andFilters.filters.mapNotNull {
-                    parseFilter(federalEntities, it)
-                }
-                val orConditions = criteria.orFilters.filters.mapNotNull {
-                    parseFilter(federalEntities, it)
-                }
+                is MultipleFilters -> parseMultipleFilters(federalEntities, it)?.let { conditions ->
+                    query.where(conditions)
+                } ?: query
+            }
+        }
+    }
 
-                if (criteria.isOrCriteria) {
-                    orConditions.reduce { a, b -> a or b } or andConditions.reduce { a, b -> a and b }
-                } else {
-                    orConditions.reduce { a, b -> a or b } and andConditions.reduce { a, b -> a and b }
-                }
+    private fun parseMultipleFilters(
+        federalEntities: FederalEntities,
+        filters: MultipleFilters
+    ): ColumnDeclaring<Boolean>? {
+        if (filters.isEmpty())
+            return null
+
+        val filterConditions = filters.filters.mapNotNull {
+            when (it) {
+                is SingleFilter -> parseFilter(federalEntities, it.filter)
+                is MultipleFilters -> parseMultipleFilters(federalEntities, it)
+                else -> null
             }
         }
 
-        if (criteria.hasAndFilters()) {
-            return query.whereWithConditions {
-                it.addAll(criteria.andFilters.filters.mapNotNull { filter ->
-                    parseFilter(federalEntities, filter)
-                })
-            }
-        }
-
-        return query.whereWithOrConditions {
-            it.addAll(criteria.orFilters.filters.mapNotNull { filter ->
-                parseFilter(federalEntities, filter)
-            })
+        return when (filters.operator) {
+            FiltersOperator.AND -> filterConditions.reduce { acc, columnDeclaring -> acc and columnDeclaring }
+            FiltersOperator.OR -> filterConditions.reduce { acc, columnDeclaring -> acc or columnDeclaring }
         }
     }
 

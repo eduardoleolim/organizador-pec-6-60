@@ -5,6 +5,7 @@ import org.eduardoleolim.organizadorpec660.shared.domain.criteria.*
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
 import org.ktorm.expression.OrderByExpression
+import org.ktorm.schema.Column
 import org.ktorm.schema.ColumnDeclaring
 import java.time.Instant
 import java.time.LocalDateTime
@@ -55,39 +56,19 @@ object KtormInstrumentTypesCriteriaParser {
         val orderType = order.orderType
 
         return when (orderBy) {
-            "id" -> {
-                when (orderType) {
-                    OrderType.ASC -> instrumentTypes.id.asc()
-                    OrderType.DESC -> instrumentTypes.id.desc()
-                    OrderType.NONE -> null
-                }
-            }
-
-            "name" -> {
-                when (orderType) {
-                    OrderType.ASC -> instrumentTypes.name.asc()
-                    OrderType.DESC -> instrumentTypes.name.desc()
-                    OrderType.NONE -> null
-                }
-            }
-
-            "createdAt" -> {
-                when (orderType) {
-                    OrderType.ASC -> instrumentTypes.createdAt.asc()
-                    OrderType.DESC -> instrumentTypes.createdAt.desc()
-                    OrderType.NONE -> null
-                }
-            }
-
-            "updatedAt" -> {
-                when (orderType) {
-                    OrderType.ASC -> instrumentTypes.updatedAt.asc()
-                    OrderType.DESC -> instrumentTypes.updatedAt.desc()
-                    OrderType.NONE -> null
-                }
-            }
-
+            "id" -> parseOrderType(orderType, instrumentTypes.id)
+            "name" -> parseOrderType(orderType, instrumentTypes.name)
+            "createdAt" -> parseOrderType(orderType, instrumentTypes.createdAt)
+            "updatedAt" -> parseOrderType(orderType, instrumentTypes.updatedAt)
             else -> null
+        }
+    }
+
+    private fun parseOrderType(orderType: OrderType, column: Column<*>): OrderByExpression? {
+        return when (orderType) {
+            OrderType.ASC -> column.asc()
+            OrderType.DESC -> column.desc()
+            OrderType.NONE -> null
         }
     }
 
@@ -96,38 +77,38 @@ object KtormInstrumentTypesCriteriaParser {
         instrumentTypes: InstrumentTypes,
         criteria: Criteria
     ): Query {
-        if (!criteria.hasAndFilters() && !criteria.hasOrFilters())
-            return query
+        criteria.filters.let {
+            return when (it) {
+                is EmptyFilters -> query
+                is SingleFilter -> parseFilter(instrumentTypes, it.filter)?.let { conditions ->
+                    query.where(conditions)
+                } ?: query
 
-        if (criteria.hasAndFilters() && criteria.hasOrFilters()) {
-            return query.where {
-                val andConditions = criteria.andFilters.filters.mapNotNull {
-                    parseFilter(instrumentTypes, it)
-                }
-                val orConditions = criteria.orFilters.filters.mapNotNull {
-                    parseFilter(instrumentTypes, it)
-                }
+                is MultipleFilters -> parseMultipleFilters(instrumentTypes, it)?.let { conditions ->
+                    query.where(conditions)
+                } ?: query
+            }
+        }
+    }
 
-                if (criteria.isOrCriteria) {
-                    orConditions.reduce { a, b -> a or b } or andConditions.reduce { a, b -> a and b }
-                } else {
-                    orConditions.reduce { a, b -> a or b } and andConditions.reduce { a, b -> a and b }
-                }
+    private fun parseMultipleFilters(
+        instrumentTypes: InstrumentTypes,
+        filters: MultipleFilters
+    ): ColumnDeclaring<Boolean>? {
+        if (filters.isEmpty())
+            return null
+
+        val conditions = filters.filters.mapNotNull {
+            when (it) {
+                is SingleFilter -> parseFilter(instrumentTypes, it.filter)
+                is MultipleFilters -> parseMultipleFilters(instrumentTypes, it)
+                else -> null
             }
         }
 
-        if (criteria.hasAndFilters()) {
-            return query.whereWithConditions {
-                it.addAll(criteria.andFilters.filters.mapNotNull { filter ->
-                    parseFilter(instrumentTypes, filter)
-                })
-            }
-        }
-
-        return query.whereWithOrConditions {
-            it.addAll(criteria.orFilters.filters.mapNotNull { filter ->
-                parseFilter(instrumentTypes, filter)
-            })
+        return when (filters.operator) {
+            FiltersOperator.AND -> conditions.reduce { acc, condition -> acc and condition }
+            FiltersOperator.OR -> conditions.reduce { acc, condition -> acc or condition }
         }
     }
 

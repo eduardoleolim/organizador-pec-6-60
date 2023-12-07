@@ -85,37 +85,41 @@ object KtormUsersCriteriaParser {
         roles: Roles,
         criteria: Criteria
     ): Query {
-        if (!criteria.hasAndFilters() && !criteria.hasOrFilters())
-            return query
+        criteria.filters.let {
+            return when (it) {
+                is EmptyFilters -> query
+                is SingleFilter -> parseFilter(users, credentials, roles, it.filter)?.let { conditions ->
+                    query.where(conditions)
+                } ?: query
 
-        if (criteria.hasAndFilters() && criteria.hasOrFilters()) {
-            val andConditions = criteria.andFilters.filters.mapNotNull {
-                parseFilter(users, credentials, roles, it)
+                is MultipleFilters -> parseMultipleFilters(users, credentials, roles, it)?.let { conditions ->
+                    query.where(conditions)
+                } ?: query
             }
+        }
+    }
 
-            val orConditions = criteria.orFilters.filters.mapNotNull {
-                parseFilter(users, credentials, roles, it)
-            }
+    private fun parseMultipleFilters(
+        users: Users,
+        credentials: Credentials,
+        roles: Roles,
+        filters: MultipleFilters
+    ): ColumnDeclaring<Boolean>? {
+        if (filters.isEmpty())
+            return null
 
-            if (criteria.isOrCriteria) {
-                orConditions.reduce { a, b -> a or b } or andConditions.reduce { a, b -> a and b }
-            } else {
-                orConditions.reduce { a, b -> a or b } and andConditions.reduce { a, b -> a and b }
+        val filterConditions = filters.filters.mapNotNull {
+            when (it) {
+                is SingleFilter -> parseFilter(users, credentials, roles, it.filter)
+                is MultipleFilters -> parseMultipleFilters(users, credentials, roles, it)
+                else -> null
             }
         }
 
-        if (criteria.hasAndFilters()) {
-            return query.whereWithConditions {
-                it.addAll(criteria.andFilters.filters.mapNotNull { filter ->
-                    parseFilter(users, credentials, roles, filter)
-                })
-            }
-        }
+        return when (filters.operator) {
+            FiltersOperator.AND -> filterConditions.reduce { acc, columnDeclaring -> acc and columnDeclaring }
 
-        return query.whereWithOrConditions {
-            it.addAll(criteria.orFilters.filters.mapNotNull { filter ->
-                parseFilter(users, credentials, roles, filter)
-            })
+            FiltersOperator.OR -> filterConditions.reduce { acc, columnDeclaring -> acc or columnDeclaring }
         }
     }
 
