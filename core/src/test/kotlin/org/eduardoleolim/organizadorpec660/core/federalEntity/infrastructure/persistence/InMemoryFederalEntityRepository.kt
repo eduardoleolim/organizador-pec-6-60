@@ -2,7 +2,7 @@ package org.eduardoleolim.organizadorpec660.core.federalEntity.infrastructure.pe
 
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntity
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityRepository
-import org.eduardoleolim.organizadorpec660.shared.domain.criteria.Criteria
+import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.Criteria
 
 class InMemoryFederalEntityRepository : FederalEntityRepository {
     val records: MutableMap<String, FederalEntity> = mutableMapOf()

@@ -1,26 +1,42 @@
 package org.eduardoleolim.organizadorpec660.core.federalEntity.infrastructure.persistence
 
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntity
-import org.eduardoleolim.organizadorpec660.shared.domain.criteria.Criteria
-import org.eduardoleolim.organizadorpec660.shared.domain.criteria.Filter
-import org.eduardoleolim.organizadorpec660.shared.domain.criteria.FilterOperator
-import org.eduardoleolim.organizadorpec660.shared.domain.criteria.OrderType
+import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.*
 import java.time.Instant
 import java.util.*
 
 object InMemoryFederalEntitiesCriteriaParser {
     fun applyFilters(records: List<FederalEntity>, criteria: Criteria): List<FederalEntity> {
         return records.filter { record ->
-            val orFilterPassed = criteria.orFilters.filters.any { filterPassed(record, it) == true }
-            val andFilterPassed = criteria.andFilters.filters.all { filterPassed(record, it) == true }
-
-            when {
-                !criteria.hasAndFilters() && !criteria.hasOrFilters() -> true
-                !criteria.hasAndFilters() -> orFilterPassed
-                !criteria.hasOrFilters() -> andFilterPassed
-                criteria.isOrCriteria -> orFilterPassed || andFilterPassed
-                else -> orFilterPassed && andFilterPassed
+            criteria.filters.let {
+                when (it) {
+                    is EmptyFilters -> true
+                    is SingleFilter -> filterPassed(record, it.filter) ?: true
+                    is MultipleFilters -> filtersPassed(record, it) ?: true
+                }
             }
+        }
+    }
+
+    private fun filtersPassed(record: FederalEntity, filters: MultipleFilters): Boolean? {
+        if (filters.isEmpty())
+            return null
+
+        val conditionResults = filters.filters.mapNotNull {
+            when (it) {
+                is SingleFilter -> filterPassed(record, it.filter)
+                is MultipleFilters -> filtersPassed(record, it)
+                else -> null
+            }
+        }
+
+        if (conditionResults.isEmpty())
+            return null
+
+        return when (filters.operator) {
+            FiltersOperator.AND -> conditionResults.all { it }
+            FiltersOperator.OR -> conditionResults.any { it }
+            else -> null
         }
     }
 
