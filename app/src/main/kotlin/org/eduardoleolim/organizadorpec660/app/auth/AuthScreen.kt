@@ -29,7 +29,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import org.eduardoleolim.organizadorpec660.app.main.router.MainProvider
 import org.eduardoleolim.organizadorpec660.core.auth.domain.InvalidAuthCredentialsError
-import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
 import java.awt.Dimension
 
 class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryBus) : Screen {

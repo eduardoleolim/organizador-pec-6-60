@@ -10,8 +10,8 @@ import org.eduardoleolim.organizadorpec660.app.home.HomeScreen
 import org.eduardoleolim.organizadorpec660.app.instrumentType.InstrumentTypeScreen
 import org.eduardoleolim.organizadorpec660.app.municipality.MunicipalityScreen
 import org.eduardoleolim.organizadorpec660.app.statisticType.StatisticTypeScreen
-import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
-import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
+import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
 
 @Composable
 fun Router(window: ComposeWindow, commandBus: CommandBus, queryBus: QueryBus) {

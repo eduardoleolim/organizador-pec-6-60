@@ -8,8 +8,8 @@ import org.eduardoleolim.organizadorpec660.app.main.window.MainWindow
 import org.eduardoleolim.organizadorpec660.app.main.window.TitleBar
 import org.eduardoleolim.organizadorpec660.app.shared.theme.DarkColors
 import org.eduardoleolim.organizadorpec660.app.shared.theme.LightColors
-import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
-import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
+import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
 
 class App(private val commandBus: CommandBus, private val queryBus: QueryBus) {
     fun start() = application {

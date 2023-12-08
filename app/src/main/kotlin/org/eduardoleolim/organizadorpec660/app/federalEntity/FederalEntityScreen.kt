@@ -9,8 +9,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
-import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
-import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
+import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
 
 class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus: CommandBus) : Screen {
     @Composable
