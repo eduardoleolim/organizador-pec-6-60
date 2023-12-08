@@ -36,8 +36,8 @@ application {
 }
 
 jlink {
-  moduleName = moduleName
-  mergedModuleName = "${moduleName}.merged.module"
+  moduleName = project.moduleName
+  mergedModuleName = "${project.moduleName}.merged.module"
 
   forceMerge("sqlite", "kotlinx-coroutines-core")
   addExtraDependencies("kotlin")
@@ -74,7 +74,7 @@ jlink {
 }
 
 tasks.register('addModuleInfo', AddModuleInfoTask) {
-  moduleName = moduleName
+  moduleName = project.moduleName
   jarPath = jlink.jlinkBasePath.get() + '/jlinkJars/app.jar'
   classpath = files(file(jlink.jlinkBasePath.get() + '/jlinkJars'))
   multiRelease = '17'
