@@ -4,11 +4,11 @@ import org.eduardoleolim.organizadorpec660.core.auth.application.authenticate.Au
 import org.eduardoleolim.organizadorpec660.core.auth.application.authenticate.AuthenticateUserQueryHandler
 import org.eduardoleolim.organizadorpec660.core.auth.application.authenticate.UserAuthenticator
 import org.eduardoleolim.organizadorpec660.core.auth.infrastructure.persistence.KtormAuthRepository
+import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.Query
+import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryHandler
+import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.Response
 import org.eduardoleolim.organizadorpec660.core.user.application.search.UserSearcher
 import org.eduardoleolim.organizadorpec660.core.user.infrastructure.persistence.KtormUserRepository
-import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Query
-import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryHandler
-import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Response
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 

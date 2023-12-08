@@ -3,7 +3,7 @@ package org.eduardoleolim.organizadorpec660.core.shared.infrastructure.bus
 import org.eduardoleolim.organizadorpec660.core.federalEntity.infrastructure.bus.KtormFederalEntityCommandHandlers
 import org.eduardoleolim.organizadorpec660.core.instrumentType.infrastructure.bus.KtormInstrumentTypeCommandHandlers
 import org.eduardoleolim.organizadorpec660.core.municipality.infrastructure.bus.KtormMunicipalityCommandHandlers
-import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.*
+import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.*
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 

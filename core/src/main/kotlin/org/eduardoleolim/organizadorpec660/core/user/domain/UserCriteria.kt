@@ -1,6 +1,6 @@
 package org.eduardoleolim.organizadorpec660.core.user.domain
 
-import org.eduardoleolim.organizadorpec660.shared.domain.criteria.*
+import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.*
 
 object UserCriteria {
     fun idCriteria(id: String) = Criteria(

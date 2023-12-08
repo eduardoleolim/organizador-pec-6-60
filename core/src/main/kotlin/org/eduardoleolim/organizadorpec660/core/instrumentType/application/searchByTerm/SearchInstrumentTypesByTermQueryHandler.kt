@@ -3,8 +3,8 @@ package org.eduardoleolim.organizadorpec660.core.instrumentType.application.sear
 import org.eduardoleolim.organizadorpec660.core.instrumentType.application.InstrumentTypesResponse
 import org.eduardoleolim.organizadorpec660.core.instrumentType.application.search.InstrumentTypeSearcher
 import org.eduardoleolim.organizadorpec660.core.instrumentType.domain.InstrumentTypeCriteria
-import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryHandler
-import org.eduardoleolim.organizadorpec660.shared.domain.criteria.Order
+import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryHandler
+import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.Order
 
 class SearchInstrumentTypesByTermQueryHandler(private val searcher: InstrumentTypeSearcher) :
     QueryHandler<SearchInstrumentTypesByTermQuery, InstrumentTypesResponse> {

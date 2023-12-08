@@ -4,10 +4,10 @@ import org.eduardoleolim.organizadorpec660.core.instrumentType.domain.Instrument
 import org.eduardoleolim.organizadorpec660.core.instrumentType.domain.InstrumentTypeCriteria
 import org.eduardoleolim.organizadorpec660.core.instrumentType.domain.InstrumentTypeNotFoundError
 import org.eduardoleolim.organizadorpec660.core.instrumentType.domain.InstrumentTypeRepository
+import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.Criteria
 import org.eduardoleolim.organizadorpec660.core.shared.domain.toDate
 import org.eduardoleolim.organizadorpec660.core.shared.domain.toLocalDateTime
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.InstrumentTypes
-import org.eduardoleolim.organizadorpec660.shared.domain.criteria.Criteria
 import org.ktorm.database.Database
 import org.ktorm.dsl.delete
 import org.ktorm.dsl.eq

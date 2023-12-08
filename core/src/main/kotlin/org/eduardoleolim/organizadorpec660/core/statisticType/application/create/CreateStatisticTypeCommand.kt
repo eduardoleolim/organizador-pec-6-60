@@ -1,6 +1,6 @@
 package org.eduardoleolim.organizadorpec660.core.statisticType.application.create
 
-import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.Command
+import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.Command
 
 class CreateStatisticTypeCommand(keyCode: String, name: String, instrumentTypeIds: List<String>) : Command {
     private val keyCode: String = keyCode.trim().uppercase()

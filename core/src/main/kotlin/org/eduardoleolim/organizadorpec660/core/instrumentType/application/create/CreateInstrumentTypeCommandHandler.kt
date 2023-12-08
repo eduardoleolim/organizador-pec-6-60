@@ -1,6 +1,6 @@
 package org.eduardoleolim.organizadorpec660.core.instrumentType.application.create
 
-import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandHandler
+import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandHandler
 
 class CreateInstrumentTypeCommandHandler(private val creator: InstrumentTypeCreator) :
     CommandHandler<CreateInstrumentTypeCommand> {

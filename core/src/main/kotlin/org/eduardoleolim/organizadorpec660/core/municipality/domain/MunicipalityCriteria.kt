@@ -1,6 +1,6 @@
 package org.eduardoleolim.organizadorpec660.core.municipality.domain
 
-import org.eduardoleolim.organizadorpec660.shared.domain.criteria.*
+import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.*
 
 object MunicipalityCriteria {
     fun idCriteria(id: String) = Criteria(

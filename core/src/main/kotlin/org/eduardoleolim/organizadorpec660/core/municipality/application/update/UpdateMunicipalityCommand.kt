@@ -1,6 +1,6 @@
 package org.eduardoleolim.organizadorpec660.core.municipality.application.update
 
-import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.Command
+import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.Command
 
 class UpdateMunicipalityCommand(municipalityId: String, name: String, keyCode: String, federalEntityId: String) :
     Command {

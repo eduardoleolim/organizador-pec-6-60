@@ -1,6 +1,6 @@
 package org.eduardoleolim.organizadorpec660.core.municipality.domain
 
-import org.eduardoleolim.organizadorpec660.shared.domain.criteria.Criteria
+import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.Criteria
 
 interface MunicipalityRepository {
     fun matching(criteria: Criteria): List<Municipality>

@@ -1,6 +1,6 @@
 package org.eduardoleolim.organizadorpec660.core.statisticType.domain
 
-import org.eduardoleolim.organizadorpec660.shared.domain.criteria.*
+import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.*
 
 object StatisticTypeCriteria {
     fun idCriteria(id: String) = Criteria(

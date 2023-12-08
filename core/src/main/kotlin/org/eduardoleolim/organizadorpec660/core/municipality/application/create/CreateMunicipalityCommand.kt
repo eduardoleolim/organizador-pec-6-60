@@ -1,6 +1,6 @@
 package org.eduardoleolim.organizadorpec660.core.municipality.application.create
 
-import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.Command
+import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.Command
 
 class CreateMunicipalityCommand(keyCode: String, name: String, federalEntityId: String) : Command {
     private val keyCode: String = keyCode.trim().uppercase()

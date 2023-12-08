@@ -1,11 +1,11 @@
 package org.eduardoleolim.organizadorpec660.core.statisticType.infrastructure.persistence
 
+import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.Criteria
 import org.eduardoleolim.organizadorpec660.core.shared.domain.toLocalDateTime
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.InstrumentTypesOfStatisticTypes
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.StatisticTypes
 import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticType
 import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeRepository
-import org.eduardoleolim.organizadorpec660.shared.domain.criteria.Criteria
 import org.ktorm.database.Database
 import org.ktorm.dsl.batchInsert
 import org.ktorm.dsl.delete

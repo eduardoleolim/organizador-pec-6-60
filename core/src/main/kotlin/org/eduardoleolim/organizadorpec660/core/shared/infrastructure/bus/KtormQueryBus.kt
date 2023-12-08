@@ -4,7 +4,7 @@ import org.eduardoleolim.organizadorpec660.core.auth.infrastructure.bus.KtormAut
 import org.eduardoleolim.organizadorpec660.core.federalEntity.infrastructure.bus.KtormFederalEntityQueryHandlers
 import org.eduardoleolim.organizadorpec660.core.instrumentType.infrastructure.bus.KtormInstrumentTypeQueryHandlers
 import org.eduardoleolim.organizadorpec660.core.municipality.infrastructure.bus.KtormMunicipalityQueryHandlers
-import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.*
+import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.*
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 

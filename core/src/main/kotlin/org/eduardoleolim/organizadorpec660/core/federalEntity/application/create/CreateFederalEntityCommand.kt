@@ -1,6 +1,6 @@
 package org.eduardoleolim.organizadorpec660.core.federalEntity.application.create
 
-import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.Command
+import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.Command
 
 class CreateFederalEntityCommand(keyCode: String, name: String) : Command {
     private val keyCode: String = keyCode.trim().uppercase()

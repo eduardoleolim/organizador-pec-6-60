@@ -10,9 +10,9 @@ import org.eduardoleolim.organizadorpec660.core.federalEntity.application.update
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.update.UpdateFederalEntityCommand
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.update.UpdateFederalEntityCommandHandler
 import org.eduardoleolim.organizadorpec660.core.federalEntity.infrastructure.persistence.KtormFederalEntityRepository
+import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.Command
+import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandHandler
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.bus.KtormCommandHandlerDecorator
-import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.Command
-import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandHandler
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 

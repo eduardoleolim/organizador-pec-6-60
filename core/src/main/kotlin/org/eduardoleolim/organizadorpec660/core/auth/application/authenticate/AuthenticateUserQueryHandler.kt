@@ -2,9 +2,9 @@ package org.eduardoleolim.organizadorpec660.core.auth.application.authenticate
 
 import org.eduardoleolim.organizadorpec660.core.auth.application.AuthUserResponse
 import org.eduardoleolim.organizadorpec660.core.auth.domain.InvalidAuthCredentialsError
+import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryHandler
 import org.eduardoleolim.organizadorpec660.core.user.application.search.UserSearcher
 import org.eduardoleolim.organizadorpec660.core.user.domain.UserCriteria
-import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryHandler
 
 class AuthenticateUserQueryHandler(private val authenticator: UserAuthenticator, private val searcher: UserSearcher) :
     QueryHandler<AuthenticateUserQuery, AuthUserResponse> {

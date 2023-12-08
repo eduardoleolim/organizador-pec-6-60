@@ -1,7 +1,7 @@
 package org.eduardoleolim.organizadorpec660.core.instrumentType.infrastructure.persistence
 
+import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.*
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.InstrumentTypes
-import org.eduardoleolim.organizadorpec660.shared.domain.criteria.*
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
 import org.ktorm.expression.OrderByExpression

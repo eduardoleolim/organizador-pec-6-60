@@ -2,7 +2,6 @@ module org.eduardoleolim.organizadorpec660.core {
     requires kotlin.stdlib;
     requires ktorm.core;
     requires ktorm.support.sqlite;
-    requires org.eduardoleolim.organizadorpec660.shared;
     requires org.xerial.sqlitejdbc;
 
     opens database;
@@ -32,4 +31,8 @@ module org.eduardoleolim.organizadorpec660.core {
     exports org.eduardoleolim.organizadorpec660.core.municipality.application.update;
     exports org.eduardoleolim.organizadorpec660.core.shared.infrastructure.bus;
     exports org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models;
+    exports org.eduardoleolim.organizadorpec660.core.shared.domain;
+    exports org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command;
+    exports org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query;
+    exports org.eduardoleolim.organizadorpec660.core.shared.domain.criteria;
 }

@@ -6,9 +6,9 @@ import org.eduardoleolim.organizadorpec660.core.instrumentType.application.searc
 import org.eduardoleolim.organizadorpec660.core.instrumentType.application.searchByTerm.SearchInstrumentTypesByTermQuery
 import org.eduardoleolim.organizadorpec660.core.instrumentType.application.searchByTerm.SearchInstrumentTypesByTermQueryHandler
 import org.eduardoleolim.organizadorpec660.core.instrumentType.infrastructure.persistence.KtormInstrumentTypeRepository
-import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Query
-import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryHandler
-import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Response
+import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.Query
+import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryHandler
+import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.Response
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 

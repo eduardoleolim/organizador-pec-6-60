@@ -7,8 +7,8 @@ import org.eduardoleolim.organizadorpec660.core.municipality.application.Municip
 import org.eduardoleolim.organizadorpec660.core.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorpec660.core.municipality.application.search.MunicipalitySearcher
 import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityCriteria
-import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryHandler
-import org.eduardoleolim.organizadorpec660.shared.domain.criteria.Order
+import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryHandler
+import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.Order
 
 class SearchMunicipalitiesByTermQueryHandler(
     private val municipalitySearcher: MunicipalitySearcher,

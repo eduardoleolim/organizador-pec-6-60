@@ -1,9 +1,9 @@
 package org.eduardoleolim.organizadorpec660.core.user.infrastructure.persistence
 
+import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.*
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.Credentials
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.Roles
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.Users
-import org.eduardoleolim.organizadorpec660.shared.domain.criteria.*
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
 import org.ktorm.expression.OrderByExpression

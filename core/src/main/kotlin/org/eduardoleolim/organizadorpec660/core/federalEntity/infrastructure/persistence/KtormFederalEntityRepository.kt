@@ -4,10 +4,10 @@ import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEnti
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityCriteria
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityNotFoundError
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityRepository
+import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.Criteria
 import org.eduardoleolim.organizadorpec660.core.shared.domain.toDate
 import org.eduardoleolim.organizadorpec660.core.shared.domain.toLocalDateTime
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.FederalEntities
-import org.eduardoleolim.organizadorpec660.shared.domain.criteria.Criteria
 import org.ktorm.database.Database
 import org.ktorm.dsl.delete
 import org.ktorm.dsl.eq

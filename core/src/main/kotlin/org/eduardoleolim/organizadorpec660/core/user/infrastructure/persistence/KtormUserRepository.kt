@@ -1,6 +1,7 @@
 package org.eduardoleolim.organizadorpec660.core.user.infrastructure.persistence
 
 import org.eduardoleolim.organizadorpec660.core.role.domain.Role
+import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.Criteria
 import org.eduardoleolim.organizadorpec660.core.shared.domain.toDate
 import org.eduardoleolim.organizadorpec660.core.shared.domain.toLocalDateTime
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.Credentials
@@ -10,7 +11,6 @@ import org.eduardoleolim.organizadorpec660.core.user.domain.User
 import org.eduardoleolim.organizadorpec660.core.user.domain.UserCriteria
 import org.eduardoleolim.organizadorpec660.core.user.domain.UserNotFoundError
 import org.eduardoleolim.organizadorpec660.core.user.domain.UserRepository
-import org.eduardoleolim.organizadorpec660.shared.domain.criteria.Criteria
 import org.ktorm.database.Database
 import org.ktorm.dsl.delete
 import org.ktorm.dsl.eq

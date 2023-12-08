@@ -1,6 +1,6 @@
 package org.eduardoleolim.organizadorpec660.core.federalEntity.domain
 
-import org.eduardoleolim.organizadorpec660.shared.domain.criteria.*
+import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.*
 
 object FederalEntityCriteria {
     fun idCriteria(id: String) = Criteria(

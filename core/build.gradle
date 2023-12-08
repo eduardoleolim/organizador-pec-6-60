@@ -9,7 +9,6 @@ ext {
 }
 
 dependencies {
-  api project(':shared')
   api "org.ktorm:ktorm-core:$ktormVersion"
   api "org.ktorm:ktorm-support-sqlite:$ktormVersion"
   api "org.xerial:sqlite-jdbc:$sqliteVersion"

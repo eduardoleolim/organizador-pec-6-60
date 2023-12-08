@@ -1,6 +1,6 @@
 package org.eduardoleolim.organizadorpec660.core.instrumentType.domain
 
-import org.eduardoleolim.organizadorpec660.shared.domain.criteria.Criteria
+import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.Criteria
 
 interface InstrumentTypeRepository {
     fun matching(criteria: Criteria): List<InstrumentType>

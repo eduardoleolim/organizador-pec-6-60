@@ -4,7 +4,7 @@ import org.eduardoleolim.organizadorpec660.core.federalEntity.application.Federa
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.search.FederalEntitySearcher
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityCriteria
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityNotFoundError
-import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryHandler
+import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryHandler
 
 class SearchFederalEntityByIdQueryHandler(private val searcher: FederalEntitySearcher) :
     QueryHandler<SearchFederalEntityByIdQuery, FederalEntityResponse> {
