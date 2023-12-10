@@ -19,16 +19,12 @@ jobs:
           tar -xzf jbrsdk-17.0.9.tar.gz -C /opt/jbrsdk-17.0.9 --strip-components=1
           export JAVA_HOME="/opt/jbrsdk-17.0.9"
           export PATH="$JAVA_HOME/bin:$PATH"
-          echo "JAVA_HOME: $JAVA_HOME"
-          java -version
-          javac -version
-          ls -la /opt/jbrsdk-17.0.9
 
       - name: 🔓 Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: 🛠️ Build with Gradle
-        run: ./gradlew build
+        run: java -version && javac -version && ./gradlew build
 
       - name: 🧪 Test
         run: ./gradlew test
