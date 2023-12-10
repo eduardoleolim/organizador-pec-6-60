@@ -37,6 +37,12 @@ kotlin {
   jvmToolchain(17)
 }
 
+compileKotlin {
+  compilerOptions {
+    freeCompilerArgs = ["-Xcontext-receivers=true"]
+  }
+}
+
 application {
   // Define the main class for the application.
   mainClass = 'org.eduardoleolim.organizadorpec660.app.MainKt'
