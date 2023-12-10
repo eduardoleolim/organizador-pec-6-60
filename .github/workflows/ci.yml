@@ -13,12 +13,16 @@ jobs:
 
       - name: 📦 Setup Jetbrains Runtime 17
         run: |
+          set -e
           curl -L https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-linux-x64-b1087.7.tar.gz -o jbrsdk-17.0.9.tar.gz
           mkdir /opt/jbrsdk-17.0.9
           tar -xzf jbrsdk-17.0.9.tar.gz -C /opt/jbrsdk-17.0.9 --strip-components=1
           export JAVA_HOME="/opt/jbrsdk-17.0.9"
           export PATH="$JAVA_HOME/bin:$PATH"
+          echo "JAVA_HOME: $JAVA_HOME"
           java -version
+          javac -version
+          ls -la /opt/jbrsdk-17.0.9
 
       - name: 🔓 Grant execute permission for gradlew
         run: chmod +x gradlew
