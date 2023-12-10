@@ -17,15 +17,20 @@ jobs:
           curl -L https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-linux-x64-b1087.7.tar.gz -o jbrsdk-17.0.9.tar.gz
           mkdir /opt/jbrsdk-17.0.9
           tar -xzf jbrsdk-17.0.9.tar.gz -C /opt/jbrsdk-17.0.9 --strip-components=1
-          export JAVA_HOME="/opt/jbrsdk-17.0.9"
-          export PATH="$JAVA_HOME/bin:$PATH"
-          echo $GITHUB_PATH
+          echo "export JAVA_HOME=/opt/jbrsdk-17.0.9" >> $GITHUB_ENV
+          echo "export PATH=\$JAVA_HOME/bin:\$PATH" >> $GITHUB_ENV
 
       - name: 🔓 Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: 🛠️ Build with Gradle
-        run: java -version && javac -version && ./gradlew build
+        run: |
+          set -e
+          source $GITHUB_ENV
+          ./gradlew build
 
       - name: 🧪 Test
-        run: ./gradlew test
+        run: |
+          set -e
+          source $GITHUB_ENV
+          ./gradlew test
