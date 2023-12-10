@@ -13,9 +13,10 @@ jobs:
 
       - name: 📦 Setup Jetbrains Runtime 17
         run: |
-          wget -O jetbrains-runtime.tar.gz https://cache-redirector.jetbrains.com/intellij-jbr/jbr-17.0.9-linux-x64-b1087.7.tar.gz
-          tar -xf jetbrains-runtime.tar.gz -C /opt/
-          export JAVA_HOME="/opt/jbr-17.0.9"
+          curl -L https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-linux-x64-b1087.7.tar.gz -o jbrsdk-17.0.9.tar.gz
+          mkdir /opt/jbrsdk-17.0.9
+          tar -xzf jbrsdk-17.0.9.tar.gz -C /opt/jbrsdk-17.0.9 --strip-components=1
+          export JAVA_HOME="/opt/jbrsdk-17.0.9"
           export PATH="$JAVA_HOME/bin:$PATH"
           java -version
 
