@@ -51,11 +51,12 @@ jlink {
   mergedModuleName = "${project.moduleName}.merged.module"
 
   forceMerge("sqlite", "kotlinx-coroutines-core")
-  addExtraDependencies("kotlin")
+  addExtraDependencies("kotlin", "slf4j")
 
   mergedModule {
     requires 'java.desktop'
     requires 'java.sql'
+    requires 'org.slf4j'
 
     uses 'kotlin.reflect.jvm.internal.impl.resolve.ExternalOverridabilityCondition'
     uses 'kotlin.reflect.jvm.internal.impl.util.ModuleVisibilityHelper'
