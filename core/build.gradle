@@ -17,10 +17,10 @@ dependencies {
   api "org.slf4j:slf4j-simple:$slf4jVersion"
 }
 
-compileJava {
-  options.compilerArgs.addAll(['--patch-module', "${moduleName}=${sourceSets.main.output.asPath}"])
-}
-
 kotlin {
   jvmToolchain(17)
+}
+
+compileJava {
+  options.compilerArgs += ['--patch-module', "${moduleName}=${sourceSets.main.output.asPath}"]
 }
