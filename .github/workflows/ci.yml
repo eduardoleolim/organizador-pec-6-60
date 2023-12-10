@@ -18,7 +18,6 @@ jobs:
           mkdir /opt/jbrsdk-17.0.9
           tar -xzf jbrsdk-17.0.9.tar.gz -C /opt/jbrsdk-17.0.9 --strip-components=1
           echo "export JAVA_HOME=/opt/jbrsdk-17.0.9" >> $GITHUB_ENV
-          echo "export PATH=\$JAVA_HOME/bin:\$PATH" >> $GITHUB_ENV
 
       - name: 🔓 Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -27,12 +26,13 @@ jobs:
         run: |
           set -e
           source $GITHUB_ENV
+          echo $PATH
+          javac -version
+          java -version
           ./gradlew build
 
       - name: 🧪 Test
         run: |
           set -e
           source $GITHUB_ENV
-          ls -la /opt/
-          javac -version
           ./gradlew test
