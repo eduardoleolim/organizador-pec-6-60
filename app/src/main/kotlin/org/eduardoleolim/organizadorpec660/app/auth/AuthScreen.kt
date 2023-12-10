@@ -21,7 +21,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.WindowPlacement
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.registry.ScreenRegistry
 import cafe.adriel.voyager.core.screen.Screen
@@ -36,10 +35,12 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
     @Composable
     override fun Content() {
         val screenModel = rememberScreenModel { AuthScreenModel(queryBus) }
-        window.apply {
-            placement = WindowPlacement.Floating
-            isResizable = false
-            size = Dimension(800, 600)
+
+        LaunchedEffect(window) {
+            window.apply {
+                isResizable = false
+                size = Dimension(800, 600)
+            }
         }
 
         Row {

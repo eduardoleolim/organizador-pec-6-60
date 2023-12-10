@@ -24,10 +24,15 @@ class HomeScreen(
 ) : Screen {
     @Composable
     override fun Content() {
-        window.isResizable = true
         val navigator = LocalNavigator.currentOrThrow
         val screenModel = rememberScreenModel { HomeScreenModel(navigator) }
         var selectedTab by remember { mutableStateOf(HomeScreenTab.ENTIDADES_FEDERATIVAS) }
+
+        LaunchedEffect(window) {
+            window.apply {
+                isResizable = true
+            }
+        }
 
         Row {
             NavigationRail(
