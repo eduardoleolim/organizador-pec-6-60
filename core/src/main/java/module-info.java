@@ -2,6 +2,7 @@ module org.eduardoleolim.organizadorpec660.core {
     requires kotlin.stdlib;
     requires ktorm.core;
     requires ktorm.support.sqlite;
+    requires org.slf4j.simple;
     requires org.xerial.sqlitejdbc;
 
     opens database;
