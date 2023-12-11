@@ -62,14 +62,14 @@ jobs:
         run: chmod +x gradlew
 
       - name: 🛠️ Build
-        run:
+        run: |
           $env:JAVA_HOME = "C:\jbrsdk-17.0.9"
-          && $env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
-          && ./gradlew build
+          $env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
+          ./gradlew build
 
       - name: 📦 Package
-        run:
+        run: |
           $env:JAVA_HOME = "C:\jbrsdk-17.0.9"
-          && $env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
-          && ./gradlew jpackage
-          && dir .\app\build\jpackage
+          $env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
+          ./gradlew jpackage
+          dir .\app\build\jpackage
