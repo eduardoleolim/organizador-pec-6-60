@@ -79,5 +79,6 @@ jobs:
 
       - name: 🔓 Grant execute permission for gradlew
         run:
-          chmod +x gradlew
+          export JAVA_HOME=${{ matrix.root }}
+          && chmod +x gradlew
           && java -version
