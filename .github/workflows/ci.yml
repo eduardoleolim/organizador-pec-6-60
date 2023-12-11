@@ -21,7 +21,7 @@ jobs:
 
       - name: 📦 Setup JBR SDK 17.0.9
         if: steps.jbrsdk.outputs.cache-hit != 'true'
-        run: |
+        run:
           curl -L https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-linux-x64-b1087.7.tar.gz -o jbrsdk-17.0.9.tar.gz
           && mkdir /opt/jbrsdk-17.0.9
           && tar -xzf jbrsdk-17.0.9.tar.gz -C /opt/jbrsdk-17.0.9 --strip-components=1
@@ -30,7 +30,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: 🛠️ Build with Gradle
-        run: |
+        run:
           export JAVA_HOME=/opt/jbrsdk-17.0.9
           && ./gradlew build
 
