@@ -91,4 +91,4 @@ jobs:
         run:
           ls ${{ matrix.root }}
           && export JAVA_HOME=${{ matrix.root }}
-          && java -version
+          && echo $JAVA_HOME
