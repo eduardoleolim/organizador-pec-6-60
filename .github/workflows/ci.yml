@@ -89,6 +89,6 @@ jobs:
       - name: 🛠️ Build in Linux and macOS
         if: matrix.os != 'windows-latest'
         run:
-          export JAVA_HOME=${{ matrix.root }}
-          && ls ${{ matrix.root }}
+          ls ${{ matrix.root }}
+          && export JAVA_HOME=${{ matrix.root }}
           && ./gradlew build
