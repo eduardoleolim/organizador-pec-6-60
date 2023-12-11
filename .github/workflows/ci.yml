@@ -15,8 +15,7 @@ jobs:
         id: jbrsdk
         uses: actions/cache@v2
         with:
-          path: |
-            /opt/jbrsdk-17.0.9
+          path: /opt/jbrsdk-17.0.9
           key: jbrsdk-17.0.9_${{ runner.os }}
 
       - name: 📦 Setup JBR SDK 17.0.9
@@ -35,43 +34,29 @@ jobs:
       - name: 🧪 Test
         run: export JAVA_HOME=/opt/jbrsdk-17.0.9 && ./gradlew test
 
-  publish:
-    name: 🚀 Publish
+  publish_windows:
+    name: 🚀 Publish - Windows
     # if: github.ref == 'refs/tags/v*'
     needs: build
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ ubuntu-latest, macos-latest, windows-latest ]
-        include:
-          - os: ubuntu-latest
-            url: 'https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-linux-x64-b1087.7.tar.gz'
-            root: '/opt/jbrsdk-17.0.9'
-          - os: macos-latest
-            url: 'https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-osx-aarch64-b1087.7.tar.gz'
-            root: '/Users/runner/jbrsdk-17.0.9'
-          - os: windows-latest
-            url: 'https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-windows-x64-b1087.7.tar.gz'
-            root: 'C:\jbrsdk-17.0.9'
+    runs-on: windows-latest
 
     steps:
       - name: 👍 Checkout
         uses: actions/checkout@v3
 
       - name: 💾 Cache JBR SDK 17.0.9
-        id: jbrsdk
+        id: jbrsdk-windows
         uses: actions/cache@v2
         with:
-          path: |
-            ${{ matrix.root }}
+          path: C:\jbrsdk-17.0.9
           key: jbrsdk-17.0.9_${{ runner.os }}
 
       - name: 📦 Setup JBR SDK 17.0.9
-        if: steps.jbrsdk.outputs.cache-hit != 'true'
+        if: steps.jbrsdk-windows.outputs.cache-hit != 'true'
         run: |
-          curl -L ${{ matrix.url }} -o jbrsdk-17.0.9.tar.gz
-          mkdir ${{ matrix.root }}
-          tar -xzvf jbrsdk-17.0.9.tar.gz -C "${{ matrix.root }}" --strip-components=1
+          curl -L https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-windows-x64-b1087.7.tar.gz -o jbrsdk-17.0.9.tar.gz
+          mkdir C:\jbrsdk-17.0.9
+          tar -xzvf jbrsdk-17.0.9.tar.gz -C C:\jbrsdk-17.0.9 --strip-components=1
 
       - name: 🔓 Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -79,14 +64,5 @@ jobs:
       - name: 🛠️ Build in Windows
         if: matrix.os == 'windows-latest'
         run: |
-          $env:JAVA_HOME = "${{ matrix.root }}"
-          dir "${{ matrix.root }}"
+          $env:JAVA_HOME = C:\jbrsdk-17.0.9
           java -version
-
-      - name: 🛠️ Build in Linux and macOS
-        if: matrix.os != 'windows-latest'
-        run: |
-          export JAVA_HOME=${{ matrix.root }}
-          ls -l ${{ matrix.root }}
-          java -version
-          javac -version
