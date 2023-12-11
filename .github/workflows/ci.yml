@@ -17,7 +17,7 @@ jobs:
         with:
           path: |
             /opt/jbrsdk-17.0.9
-          key: jbrsdk-17.0.9-${{ runner.os }}
+          key: jbrsdk-17.0.9_${{ runner.os }}
 
       - name: 📦 Setup JBR SDK 17.0.9
         if: steps.jbrsdk.outputs.cache-hit != 'true'
@@ -68,7 +68,7 @@ jobs:
         with:
           path: |
             ${{ matrix.root }}
-          key: jbrsdk-17.0.9-${{ runner.os }}
+          key: jbrsdk-17.0.9_${{ runner.os }}
 
       - name: 📦 Setup JBR SDK 17.0.9
         if: steps.jbrsdk.outputs.cache-hit != 'true'
@@ -79,6 +79,5 @@ jobs:
 
       - name: 🔓 Grant execute permission for gradlew
         run:
-          export JAVA_HOME=${{ matrix.root }}
-          && chmod +x gradlew
+          chmod +x gradlew
           && java -version
