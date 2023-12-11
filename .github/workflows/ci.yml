@@ -41,3 +41,42 @@ jobs:
           set -e
           export JAVA_HOME=/opt/jbrsdk-17.0.9
           ./gradlew test
+
+  publish:
+    name: 🚀 Publish
+    # if: github.ref == 'refs/tags/v*'
+    needs: build
+    runs-on: { { matrix.os } }
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        include:
+          - os: ubuntu-latest
+            url: https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-linux-x64-b1087.7.tar.gz
+            root: /opt/jbrsdk-17.0.9
+          - os: macos-latest
+            url: https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-osx-aarch64-b1087.7.tar.gz
+            root: /Library/Java/JavaVirtualMachines/jbrsdk-17.0.9
+          - os: windows-latest
+            url: https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-windows-x64-b1087.7.tar.gz
+            root: C:\jbrsdk-17.0.9
+
+    steps:
+      - name: 👍 Checkout
+        uses: actions/checkout@v3
+
+      - name: 💾 Cache JBR SDK 17.0.9
+        id: jbrsdk
+        uses: actions/cache@v2
+        with:
+          path: |
+            ${{ matrix.root }}
+          key: jbrsdk-17.0.9-${{ runner.os }}
+
+      - name: 📦 Setup JBR SDK 17.0.9
+        if: steps.jbrsdk.outputs.cache-hit != 'true'
+        run: |
+          set -e
+          curl -L ${{ matrix.url }} -o jbrsdk-17.0.9.tar.gz
+          mkdir ${{ matrix.root }}
+          tar -xzf jbrsdk-17.0.9.tar.gz -C ${{ matrix.root }} --strip-components=1
