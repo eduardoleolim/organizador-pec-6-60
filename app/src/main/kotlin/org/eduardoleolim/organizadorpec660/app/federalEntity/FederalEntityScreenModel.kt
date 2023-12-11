@@ -14,7 +14,8 @@ class FederalEntityScreenModel(private val queryBus: QueryBus, private val comma
         limit: Int? = null,
         offset: Int? = null
     ): List<FederalEntityResponse> {
-        return queryBus.ask<FederalEntitiesResponse>(SearchFederalEntitiesByTermQuery(search, orders, limit, offset))
-            .federalEntities()
+        return SearchFederalEntitiesByTermQuery(search, orders, limit, offset).let {
+            queryBus.ask<FederalEntitiesResponse>(it).federalEntities()
+        }
     }
 }
