@@ -56,12 +56,12 @@ jobs:
         run: |
           curl -L https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-windows-x64-b1087.7.tar.gz -o jbrsdk-17.0.9.tar.gz
           mkdir C:\jbrsdk-17.0.9
-          tar -xzvf jbrsdk-17.0.9.tar.gz -C C:\jbrsdk-17.0.9 --strip-components=1
+          tar -xzvf jbrsdk-17.0.9.tar.gz -C "C:\jbrsdk-17.0.9" --strip-components=1
 
       - name: 🔓 Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: 🛠️ Build in Windows
         run: |
-          $env:JAVA_HOME = C:\jbrsdk-17.0.9
+          $env:JAVA_HOME = "C:\jbrsdk-17.0.9"
           java -version
