@@ -84,6 +84,7 @@ jobs:
         if: matrix.os == 'windows-latest'
         run:
           $env:JAVA_HOME = "${{ matrix.root }}"
+          && dir .
           && $env:JAVA_HOME
           && javac -version
 
@@ -91,5 +92,6 @@ jobs:
         if: matrix.os != 'windows-latest'
         run:
           export JAVA_HOME=${{ matrix.root }}
+          && echo $PATH
           && echo $JAVA_HOME
           && javac -version
