@@ -40,24 +40,28 @@ abstract class AddModuleInfoTask extends DefaultTask {
 
     @TaskAction
     def addModuleInfo() {
-        this.getTemporaryDir().mkdirs()
+        try {
+            this.getTemporaryDir().mkdirs()
 
-        def originalJarFile = new File(jarPath.get())
-        def tempJarFile = new File(this.getTemporaryDir(), originalJarFile.name)
-        Files.copy(originalJarFile.toPath(), tempJarFile.toPath(), StandardCopyOption.REPLACE_EXISTING)
+            def originalJarFile = new File(jarPath.get())
+            def tempJarFile = new File(this.getTemporaryDir(), originalJarFile.name)
+            Files.copy(originalJarFile.toPath(), tempJarFile.toPath(), StandardCopyOption.REPLACE_EXISTING)
 
-        def modulepath = classpath.get().join(File.pathSeparator)
+            def modulepath = classpath.get().join(File.pathSeparator)
 
-        if (this.replace.get()) {
-            removeModuleInfo(tempJarFile)
+            if (this.replace.get()) {
+                removeModuleInfo(tempJarFile)
+            }
+
+            def moduleInfoFile = createModuleInfo(moduleName.get(), tempJarFile, modulepath)
+            def moduleClassFile = compileModuleInfo(moduleName.get(), moduleInfoFile, tempJarFile, modulepath)
+            addModuleInfoToJar(moduleClassFile, tempJarFile)
+
+            Files.copy(tempJarFile.toPath(), originalJarFile.toPath(), StandardCopyOption.REPLACE_EXISTING)
+            this.getTemporaryDir().deleteDir()
+        } catch (Exception e) {
+            throw new GradleException("Error adding module-info.java to jar file", e)
         }
-
-        def moduleInfoFile = createModuleInfo(moduleName.get(), tempJarFile, modulepath)
-        def moduleClassFile = compileModuleInfo(moduleName.get(), moduleInfoFile, tempJarFile, modulepath)
-        addModuleInfoToJar(moduleClassFile, tempJarFile)
-
-        Files.copy(tempJarFile.toPath(), originalJarFile.toPath(), StandardCopyOption.REPLACE_EXISTING)
-        this.getTemporaryDir().deleteDir()
     }
 
     def removeModuleInfo(File jarFile) {

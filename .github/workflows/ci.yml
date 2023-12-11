@@ -102,11 +102,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: 🛠️ Build
-        run: |
-          set -e
-          export JAVA_HOME=/opt/jbrsdk-17.0.9
-          java -version
-          ./gradlew build
+        run: export JAVA_HOME=/opt/jbrsdk-17.0.9 && ./gradlew build
 
       - name: 📦 Package
         run: |
