@@ -83,7 +83,7 @@ jobs:
       - name: 🛠️ Build in Windows
         if: matrix.os == 'windows-latest'
         run:
-          $env:JAVA_HOME = ${{ matrix.root }}
+          $env:JAVA_HOME = "${{ matrix.root }}"
           && ./gradlew build
 
       - name: 🛠️ Build in Linux and macOS
