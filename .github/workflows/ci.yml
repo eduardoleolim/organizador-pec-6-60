@@ -68,25 +68,25 @@ jobs:
 
       - name: 📦 Setup JBR SDK 17.0.9
         if: steps.jbrsdk.outputs.cache-hit != 'true'
-        run:
+        run: |
           curl -L ${{ matrix.url }} -o jbrsdk-17.0.9.tar.gz
-          && mkdir ${{ matrix.root }}
-          && tar -xzvf jbrsdk-17.0.9.tar.gz -C "${{ matrix.root }}" --strip-components=1
+          mkdir ${{ matrix.root }}
+          tar -xzvf jbrsdk-17.0.9.tar.gz -C "${{ matrix.root }}" --strip-components=1
 
       - name: 🔓 Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: 🛠️ Build in Windows
         if: matrix.os == 'windows-latest'
-        run:
+        run: |
           $env:JAVA_HOME = "${{ matrix.root }}"
-          && dir "${{ matrix.root }}"
-          && java -version
+          dir "${{ matrix.root }}"
+          java -version
 
       - name: 🛠️ Build in Linux and macOS
         if: matrix.os != 'windows-latest'
         run: |
-          set -e
           export JAVA_HOME=${{ matrix.root }}
           ls -l ${{ matrix.root }}
           java -version
+          javac -version
