@@ -78,6 +78,16 @@ jobs:
           && tar -xzf jbrsdk-17.0.9.tar.gz -C ${{ matrix.root }} --strip-components=1
 
       - name: 🔓 Grant execute permission for gradlew
-        run:
-          chmod +x gradlew
-          && java -version
+        run: chmod +x gradlew
+
+      - name: 🛠️ Build with Gradle
+        run: |
+          if [ "${{ runner.os }}" == "Windows" ]; then
+            echo "Setting JAVA_HOME"
+            echo "##[set-env name=JAVA_HOME;]${{ matrix.root }}"
+            echo "JAVA_HOME set to $JAVA_HOME"
+          else
+            export JAVA_HOME=${{ matrix.root }}
+            java -version
+          fi
+          ./gradlew build
