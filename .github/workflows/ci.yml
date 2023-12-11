@@ -90,4 +90,5 @@ jobs:
         if: matrix.os != 'windows-latest'
         run:
           export JAVA_HOME=${{ matrix.root }}
+          && ls ${{ matrix.root }}
           && ./gradlew build
