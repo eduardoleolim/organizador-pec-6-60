@@ -11,12 +11,16 @@ jobs:
       - name: 👍 Checkout
         uses: actions/checkout@v3
 
-      - name: 📦 Setup Jetbrains Runtime 17
+      - name: 💾 Cache JBR SDK 17.0.9
+        id: jbrsdk-17.0.9
         uses: actions/cache@v2
         with:
           path: |
             /opt/jbrsdk-17.0.9
           key: jbrsdk-17.0.9-${{ runner.os }}
+
+      - name: 📦 Setup JBR SDK 17.0.9
+        if: steps.jbrsdk-17.0.9.outputs.cache-hit != 'true'
         run: |
           set -e
           curl -L https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-linux-x64-b1087.7.tar.gz -o jbrsdk-17.0.9.tar.gz
