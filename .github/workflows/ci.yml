@@ -63,5 +63,6 @@ jobs:
 
       - name: 🛠️ Build in Windows
         run: |
-          echo "JAVA_HOME=\"C:\jbrsdk-17.0.9\"" >> $env:GITHUB_ENV
+          $env:JAVA_HOME = "C:\jbrsdk-17.0.9"
+          echo $env:JAVA_HOME
           java -version
