@@ -63,6 +63,7 @@ jobs:
 
       - name: 🛠️ Build in Windows
         run: |
+          echo $env:JAVA_HOME
           $env:JAVA_HOME = "C:\jbrsdk-17.0.9"
           echo $env:JAVA_HOME
           java -version
