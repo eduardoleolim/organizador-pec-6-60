@@ -46,7 +46,7 @@ jobs:
     name: 🚀 Publish
     # if: github.ref == 'refs/tags/v*'
     needs: build
-    runs-on: { { matrix.os } }
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ ubuntu-latest, macos-latest, windows-latest ]
