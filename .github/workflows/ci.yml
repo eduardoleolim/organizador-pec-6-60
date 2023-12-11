@@ -59,19 +59,19 @@ jobs:
           && tar -xzvf jbrsdk-17.0.9.tar.gz -C "C:\jbrsdk-17.0.9" --strip-components=1
 
       - name: 🔓 Grant execute permission for gradlew
-        run: chmod +x gradlew
+        run: chmod +x gradlew.bat
 
       - name: 🛠️ Build
         run: |
           $env:JAVA_HOME = "C:\jbrsdk-17.0.9"
           $env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
-          ./gradlew build
+          ./gradlew.bat build
 
       - name: 📦 Package
         run: |
           $env:JAVA_HOME = "C:\jbrsdk-17.0.9"
           $env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
-          ./gradlew jpackage
+          ./gradlew.bat jpackage
           dir .\app\build\jpackage
 
   publish_linux:
@@ -84,7 +84,7 @@ jobs:
       - name: 👍 Checkout
         uses: actions/checkout@v3
 
-      - name: �? Cache JBR SDK 17.0.9
+      - name: 💾 Cache JBR SDK 17.0.9
         id: jbrsdk-linux
         uses: actions/cache@v2
         with:
@@ -112,5 +112,5 @@ jobs:
         run: |
           set -e
           export JAVA_HOME=/opt/jbrsdk-17.0.9
-          ./gradlew jpackage
+          ./gradlew jpackage --stacktrace
           ls -l ./app/build/jpackage
