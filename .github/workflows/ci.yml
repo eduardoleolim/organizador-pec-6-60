@@ -53,7 +53,7 @@ jobs:
             root: /opt/jbrsdk-17.0.9
           - os: macos-latest
             url: https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-osx-aarch64-b1087.7.tar.gz
-            root: /Users/runner/java/jbrsdk-17.0.9
+            root: /jbrsdk-17.0.9
           - os: windows-latest
             url: https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-windows-x64-b1087.7.tar.gz
             root: C:\jbrsdk-17.0.9
