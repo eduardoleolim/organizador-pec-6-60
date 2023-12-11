@@ -78,4 +78,6 @@ jobs:
           && tar -xzf jbrsdk-17.0.9.tar.gz -C ${{ matrix.root }} --strip-components=1
 
       - name: 🔓 Grant execute permission for gradlew
-        run: chmod +x gradlew
+        run:
+          chmod +x gradlew
+          && java -version
