@@ -35,7 +35,7 @@ jobs:
           && ./gradlew build
 
       - name: 🧪 Test
-        run: |
+        run:
           export JAVA_HOME=/opt/jbrsdk-17.0.9
           && ./gradlew test
 
@@ -72,7 +72,7 @@ jobs:
 
       - name: 📦 Setup JBR SDK 17.0.9
         if: steps.jbrsdk.outputs.cache-hit != 'true'
-        run: |
+        run:
           curl -L ${{ matrix.url }} -o jbrsdk-17.0.9.tar.gz
           && mkdir ${{ matrix.root }}
           && tar -xzf jbrsdk-17.0.9.tar.gz -C ${{ matrix.root }} --strip-components=1
