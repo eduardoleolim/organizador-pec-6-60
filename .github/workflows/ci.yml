@@ -71,7 +71,7 @@ jobs:
         run:
           curl -L ${{ matrix.url }} -o jbrsdk-17.0.9.tar.gz
           && mkdir ${{ matrix.root }}
-          && tar -xzf jbrsdk-17.0.9.tar.gz -C ${{ matrix.root }} --strip-components=1
+          && tar -xzvf jbrsdk-17.0.9.tar.gz -C "${{ matrix.root }}" --strip-components=1
 
       - name: 🔓 Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -85,7 +85,8 @@ jobs:
 
       - name: 🛠️ Build in Linux and macOS
         if: matrix.os != 'windows-latest'
-        run:
+        run: |
+          set -e
           export JAVA_HOME=${{ matrix.root }}
-          && ls -l ${{ matrix.root }}
-          && java -version
+          ls -l ${{ matrix.root }}
+          java -version
