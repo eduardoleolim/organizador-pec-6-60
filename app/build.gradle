@@ -90,7 +90,6 @@ jlink {
 tasks.register('addModuleInfo', AddModuleInfoTask) {
   moduleName = project.moduleName
   jarPath = jlink.jlinkBasePath.get() + '/jlinkjars/' + jar.archiveFileName.get()
-  println jarPath.get()
   classpath = files(file(jlink.jlinkBasePath.get() + '/jlinkjars/'))
   multiRelease = '17'
 }
