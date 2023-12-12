@@ -108,5 +108,5 @@ jobs:
         run: |
           set -e
           export JAVA_HOME=/opt/jbrsdk-17.0.9
-          ./gradlew jpackage stacktrace
+          ./gradlew jpackage --stacktrace
           tree ./app/build
