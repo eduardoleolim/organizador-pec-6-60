@@ -3,8 +3,8 @@ name: CI
 on: push
 
 jobs:
-  build:
-    name: 🛠️ Build and 🧪 Test
+  test:
+    name: 🧪 Test
     runs-on: ubuntu-latest
 
     steps:
@@ -25,17 +25,17 @@ jobs:
           && mkdir /opt/jbrsdk-17.0.9
           && tar -xzf jbrsdk-17.0.9.tar.gz -C /opt/jbrsdk-17.0.9 --strip-components=1
 
-      - name: 🔓 Grant execute permission for gradlew
+      - name: 🔓 Grant permission
         run: chmod +x gradlew
 
-      - name: 🛠️ Build with Gradle
+      - name: 🛠️ Build
         run: export JAVA_HOME=/opt/jbrsdk-17.0.9 && ./gradlew build
 
       - name: 🧪 Test
         run: export JAVA_HOME=/opt/jbrsdk-17.0.9 && ./gradlew test
 
-  publish_windows:
-    name: 🚀 Publish - Windows
+  build_windows:
+    name: 🛠️ Build - Windows
     # if: github.ref == 'refs/tags/v*'
     needs: build
     runs-on: windows-latest
@@ -58,7 +58,7 @@ jobs:
           && mkdir C:\jbrsdk-17.0.9
           && tar -xzvf jbrsdk-17.0.9.tar.gz -C "C:\jbrsdk-17.0.9" --strip-components=1
 
-      - name: 🔓 Grant execute permission for gradlew
+      - name: 🔓 Grant permission
         run: chmod +x gradlew.bat
 
       - name: 🛠️ Build
@@ -74,8 +74,8 @@ jobs:
           ./gradlew.bat jpackage
           dir .\app\build\jpackage
 
-  publish_linux:
-    name: 🚀 Publish - Linux
+  build_linux:
+    name: 🛠️ Build - Linux
     # if: github.ref == 'refs/tags/v*'
     needs: build
     runs-on: ubuntu-latest
@@ -98,7 +98,7 @@ jobs:
           && mkdir /opt/jbrsdk-17.0.9
           && tar -xzf jbrsdk-17.0.9.tar.gz -C /opt/jbrsdk-17.0.9 --strip-components=1
 
-      - name: 🔓 Grant execute permission for gradlew
+      - name: 🔓 Grant permission
         run: chmod +x gradlew
 
       - name: 🛠️ Build
