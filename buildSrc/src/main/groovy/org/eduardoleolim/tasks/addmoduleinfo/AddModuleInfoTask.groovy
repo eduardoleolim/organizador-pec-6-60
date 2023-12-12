@@ -95,7 +95,10 @@ abstract class AddModuleInfoTask extends DefaultTask {
 
         def moduleInfoPath = "${directory.absolutePath}/module-info.java"
         if (multiRelease != null) {
+            // Remove the .jar extension
             def jarFileName = jarFile.name.replace(".jar", "")
+            // Remove the version with project.version
+            jarFileName = jarFileName.replace("-${project.version}", "")
             moduleInfoPath = "${directory.absolutePath}/${jarFileName}/versions/${this.multiRelease.get()}/module-info.java"
         }
 

@@ -2,6 +2,8 @@ plugins {
   id 'org.eduardoleolim.kotlin-library-conventions'
 }
 
+version = '0.1.0'
+
 ext {
   moduleName = 'org.eduardoleolim.organizadorpec660.core'
   ktormVersion = '3.6.0'

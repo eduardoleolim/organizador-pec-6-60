@@ -7,6 +7,8 @@ plugins {
   id 'org.jetbrains.compose' version '1.5.10'
 }
 
+version = '0.1.0'
+
 ext {
   moduleName = 'org.eduardoleolim.organizadorpec660.app'
   voyagerVersion = '1.0.0-rc10'
@@ -87,8 +89,9 @@ jlink {
 
 tasks.register('addModuleInfo', AddModuleInfoTask) {
   moduleName = project.moduleName
-  jarPath = jlink.jlinkBasePath.get() + '/jlinkJars/app.jar'
-  classpath = files(file(jlink.jlinkBasePath.get() + '/jlinkJars'))
+  jarPath = jlink.jlinkBasePath.get() + '/jlinkjars/' + jar.archiveFileName.get()
+  println jarPath.get()
+  classpath = files(file(jlink.jlinkBasePath.get() + '/jlinkjars/'))
   multiRelease = '17'
 }
 
