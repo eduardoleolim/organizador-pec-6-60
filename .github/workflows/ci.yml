@@ -72,7 +72,6 @@ jobs:
           $env:JAVA_HOME = "C:\jbrsdk-17.0.9"
           $env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
           ./gradlew.bat jpackage
-          dir .\app\build\jpackage
 
   build_linux:
     name: 🛠️ Build - Linux
@@ -97,6 +96,39 @@ jobs:
           curl -L https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-linux-x64-b1087.7.tar.gz -o jbrsdk-17.0.9.tar.gz
           && mkdir /opt/jbrsdk-17.0.9
           && tar -xzf jbrsdk-17.0.9.tar.gz -C /opt/jbrsdk-17.0.9 --strip-components=1
+
+      - name: 🔓 Grant permission
+        run: chmod +x gradlew
+
+      - name: 🛠️ Build
+        run: export JAVA_HOME=/opt/jbrsdk-17.0.9 && ./gradlew build && java -version
+
+      - name: 📦 Package
+        run: export JAVA_HOME=/opt/jbrsdk-17.0.9 && export PATH=$JAVA_HOME/bin:$PATH && ./gradlew jpackage
+
+  build_macos:
+    name: 🛠️ Build - macOS
+    # if: github.ref == 'refs/tags/v*'
+    needs: test
+    runs-on: macos-latest
+
+    steps:
+      - name: 👍 Checkout
+        uses: actions/checkout@v3
+
+      - name: 💾 Cache JBR SDK 17.0.9
+        id: jbrsdk-macos
+        uses: actions/cache@v2
+        with:
+          path: /Users/runner/jbrsdk-17.0.9
+          key: jbrsdk-17.0.9_${{ runner.os }}
+
+      - name: 📦 Setup JBR SDK 17.0.9
+        if: steps.jbrsdk-macos.outputs.cache-hit != 'true'
+        run:
+          curl -L https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-osx-aarch64-b1087.7.tar.gz -o jbrsdk-17.0.9.tar.gz
+          && mkdir /Users/runner/jbrsdk-17.0.9
+          && tar -xzf jbrsdk-17.0.9.tar.gz -C /Users/runner/jbrsdk-17.0.9 --strip-components=1
 
       - name: 🔓 Grant permission
         run: chmod +x gradlew
