@@ -52,6 +52,8 @@ jlink {
   moduleName = project.moduleName
   mergedModuleName = "${project.moduleName}.merged.module"
 
+  addOptions("--strip-debug", "--compress", "2", "--no-header-files", "--no-man-pages")
+
   forceMerge("sqlite", "kotlinx-coroutines-core")
   addExtraDependencies("kotlin", "slf4j")
 
@@ -83,8 +85,6 @@ jlink {
       imageOptions += ['--icon', "src/main/resources/assets/icon.ico"]
     }
   }
-
-  options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
 }
 
 tasks.register('addModuleInfo', AddModuleInfoTask) {
