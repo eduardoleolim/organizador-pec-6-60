@@ -134,7 +134,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: 🛠️ Build
-        run: export JAVA_HOME=/opt/jbrsdk-17.0.9 && ./gradlew build && java -version
+        run: export JAVA_HOME=/Users/runner/jbrsdk-17.0.9 && ./gradlew build && java -version
 
       - name: 📦 Package
-        run: export JAVA_HOME=/opt/jbrsdk-17.0.9 && export PATH=$JAVA_HOME/bin:$PATH && ./gradlew jpackage && ls -l ./app/build/jpackage
+        run: export JAVA_HOME=/Users/runner/jbrsdk-17.0.9 && export PATH=$JAVA_HOME/bin:$PATH && ./gradlew jpackage && ls -l ./app/build/jpackage
