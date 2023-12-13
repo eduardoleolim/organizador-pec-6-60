@@ -105,4 +105,4 @@ jobs:
         run: export JAVA_HOME=/opt/jbrsdk-17.0.9 && ./gradlew build
 
       - name: 📦 Package
-        run: export BADASS_JLINK_JAVA_HOME=/opt/jbrsdk-17.0.9 && javac -version && ./gradlew jpackage --stacktrace && tree ./app/build
+        run: export JAVA_HOME=/opt/jbrsdk-17.0.9 && echo $JAVA_HOME && javac -version && ./gradlew jpackage --stacktrace && tree ./app/build
