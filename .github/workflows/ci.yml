@@ -126,7 +126,7 @@ jobs:
       - name: 📦 Setup JBR SDK 17.0.9
         if: steps.jbrsdk-macos.outputs.cache-hit != 'true'
         run:
-          curl -L https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-osx-aarch64-b1087.7.tar.gz -o jbrsdk-17.0.9.tar.gz
+          curl -L https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-osx-x64-b1087.7.tar.gz -o jbrsdk-17.0.9.tar.gz
           && mkdir /Users/runner/jbrsdk-17.0.9
           && tar -xzf jbrsdk-17.0.9.tar.gz -C /Users/runner/jbrsdk-17.0.9 --strip-components=1
 
