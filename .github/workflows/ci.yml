@@ -61,12 +61,6 @@ jobs:
       - name: 🔓 Grant permission
         run: chmod +x gradlew.bat
 
-      - name: 🛠️ Build
-        run: |
-          $env:JAVA_HOME = "C:\jbrsdk-17.0.9"
-          $env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
-          ./gradlew.bat build
-
       - name: 📦 Package
         run: |
           $env:JAVA_HOME = "C:\jbrsdk-17.0.9"
@@ -100,9 +94,6 @@ jobs:
       - name: 🔓 Grant permission
         run: chmod +x gradlew
 
-      - name: 🛠️ Build
-        run: export JAVA_HOME=/opt/jbrsdk-17.0.9 && ./gradlew build && java -version
-
       - name: 📦 Package
         run: export JAVA_HOME=/opt/jbrsdk-17.0.9 && export PATH=$JAVA_HOME/bin:$PATH && ./gradlew jpackage
 
@@ -132,9 +123,6 @@ jobs:
 
       - name: 🔓 Grant permission
         run: chmod +x gradlew
-
-      - name: 🛠️ Build
-        run: export JAVA_HOME=/Users/runner/jbrsdk-17.0.9/Contents/Home && ./gradlew build && java -version
 
       - name: 📦 Package
         run: export JAVA_HOME=/Users/runner/jbrsdk-17.0.9/Contents/Home && export PATH=$JAVA_HOME/bin:$PATH && ./gradlew jpackage && ls -l ./app/build/jpackage
