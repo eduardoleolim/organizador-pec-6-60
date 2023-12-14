@@ -20,19 +20,26 @@ jobs:
 
       - name: 📦 Setup JBR SDK 17.0.9
         if: steps.jbrsdk.outputs.cache-hit != 'true'
-        run:
+        run: |
+          set -e
           curl -L https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-linux-x64-b1087.7.tar.gz -o jbrsdk-17.0.9.tar.gz
-          && mkdir /opt/jbrsdk-17.0.9
-          && tar -xzf jbrsdk-17.0.9.tar.gz -C /opt/jbrsdk-17.0.9 --strip-components=1
+          mkdir /opt/jbrsdk-17.0.9
+          tar -xzf jbrsdk-17.0.9.tar.gz -C /opt/jbrsdk-17.0.9 --strip-components=1
 
       - name: 🔓 Grant permission
         run: chmod +x gradlew
 
       - name: 🛠️ Build
-        run: export JAVA_HOME=/opt/jbrsdk-17.0.9 && ./gradlew build
+        run: |
+          set -e
+          export JAVA_HOME=/opt/jbrsdk-17.0.9
+          ./gradlew build
 
       - name: 🧪 Test
-        run: export JAVA_HOME=/opt/jbrsdk-17.0.9 && ./gradlew test
+        run: |
+          set -e
+          export JAVA_HOME=/opt/jbrsdk-17.0.9
+          ./gradlew test
 
   build_windows:
     name: 🛠️ Build - Windows
@@ -53,10 +60,10 @@ jobs:
 
       - name: 📦 Setup JBR SDK 17.0.9
         if: steps.jbrsdk-windows.outputs.cache-hit != 'true'
-        run:
+        run: |
           curl -L https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-windows-x64-b1087.7.tar.gz -o jbrsdk-17.0.9.tar.gz
-          && mkdir C:\jbrsdk-17.0.9
-          && tar -xzvf jbrsdk-17.0.9.tar.gz -C "C:\jbrsdk-17.0.9" --strip-components=1
+          mkdir C:\jbrsdk-17.0.9
+          tar -xzvf jbrsdk-17.0.9.tar.gz -C "C:\jbrsdk-17.0.9" --strip-components=1
 
       - name: 🔓 Grant permission
         run: chmod +x gradlew.bat
@@ -86,16 +93,21 @@ jobs:
 
       - name: 📦 Setup JBR SDK 17.0.9
         if: steps.jbrsdk-linux.outputs.cache-hit != 'true'
-        run:
+        run: |
+          set -e
           curl -L https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-linux-x64-b1087.7.tar.gz -o jbrsdk-17.0.9.tar.gz
-          && mkdir /opt/jbrsdk-17.0.9
-          && tar -xzf jbrsdk-17.0.9.tar.gz -C /opt/jbrsdk-17.0.9 --strip-components=1
+          mkdir /opt/jbrsdk-17.0.9
+          tar -xzf jbrsdk-17.0.9.tar.gz -C /opt/jbrsdk-17.0.9 --strip-components=1
 
       - name: 🔓 Grant permission
         run: chmod +x gradlew
 
       - name: 📦 Package
-        run: export JAVA_HOME=/opt/jbrsdk-17.0.9 && export PATH=$JAVA_HOME/bin:$PATH && ./gradlew jpackage
+        run: |
+          set -e
+          export JAVA_HOME=/opt/jbrsdk-17.0.9
+          export PATH=$JAVA_HOME/bin:$PATH
+          ./gradlew jpackage
 
   build_macos:
     name: 🛠️ Build - macOS
@@ -125,4 +137,4 @@ jobs:
         run: chmod +x gradlew
 
       - name: 📦 Package
-        run: export JAVA_HOME=/Users/runner/jbrsdk-17.0.9/Contents/Home && export PATH=$JAVA_HOME/bin:$PATH && ./gradlew jpackage && ls -l ./app/build/jpackage
+        run: export JAVA_HOME=/Users/runner/jbrsdk-17.0.9/Contents/Home && export PATH=$JAVA_HOME/bin:$PATH && ./gradlew jpackage

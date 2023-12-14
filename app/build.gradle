@@ -1,5 +1,5 @@
+import org.apache.tools.ant.taskdefs.condition.Os
 import org.eduardoleolim.tasks.addmoduleinfo.AddModuleInfoTask
-import org.gradle.internal.os.OperatingSystem
 
 plugins {
   id 'org.eduardoleolim.kotlin-application-conventions'
@@ -74,15 +74,31 @@ jlink {
   jpackage {
     args = ['--database={{BIN_DIR}}/database/organizador-pec-6-60.db']
 
+    outputDir = file("${buildDir}/jpackage")
+    imageOutputDir = file("${buildDir}/jpackageImage")
+
     installerOptions = [
       '--description', description,
       '--copyright', 'Copyrigth 2023-2023 Ángel Eduardo Martínez Leo Lim',
       '--vendor', 'Ángel Eduardo Martínez Leo Lim'
     ]
 
-    if (OperatingSystem.current().windows) {
+    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+      installerType = 'msi'
+      icon = 'src/main/resources/assets/icon.ico'
       installerOptions += ['--win-per-user-install', '--win-dir-chooser', '--win-menu', '--win-shortcut']
-      imageOptions += ['--icon', "src/main/resources/assets/icon.ico"]
+    }
+
+    if (Os.isFamily(Os.FAMILY_UNIX)) {
+      installerType = 'deb'
+      icon = 'src/main/resources/assets/icon.png'
+      installerOptions += ['--linux-deb-maintainer', 'eduardoleolim@hotmail.com', '--linux-shortcut']
+    }
+
+    if (Os.isFamily(Os.FAMILY_MAC)) {
+      installerType = 'pkg'
+      // icon = 'src/main/resources/assets/icon.icns'
+      imageOptions += ['--mac-package-identifier', 'org.eduardoleolim.organizadorpec660']
     }
   }
 }
