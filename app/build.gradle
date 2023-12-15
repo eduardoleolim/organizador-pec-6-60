@@ -7,8 +7,6 @@ plugins {
   id 'org.jetbrains.compose' version '1.5.10'
 }
 
-version = '1.0.0'
-
 ext {
   moduleName = 'org.eduardoleolim.organizadorpec660.app'
   voyagerVersion = '1.0.0-rc10'
