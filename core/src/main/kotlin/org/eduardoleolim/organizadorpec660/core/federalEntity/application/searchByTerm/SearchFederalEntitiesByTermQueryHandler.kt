@@ -10,8 +10,9 @@ class SearchFederalEntitiesByTermQueryHandler(private val searcher: FederalEntit
     QueryHandler<SearchFederalEntitiesByTermQuery, FederalEntitiesResponse> {
     override fun handle(query: SearchFederalEntitiesByTermQuery): FederalEntitiesResponse {
         val federalEntities = searchFederalEntities(query.search(), query.orders(), query.limit(), query.offset())
+        val totalFederalEntities = countTotalFederalEntities(query.search())
 
-        return FederalEntitiesResponse.fromAggregate(federalEntities)
+        return FederalEntitiesResponse.fromAggregate(federalEntities, totalFederalEntities)
     }
 
     private fun searchFederalEntities(
@@ -26,5 +27,11 @@ class SearchFederalEntitiesByTermQueryHandler(private val searcher: FederalEntit
         offset = offset
     ).let {
         searcher.search(it)
+    }
+
+    private fun countTotalFederalEntities(search: String? = null) = FederalEntityCriteria.searchCriteria(
+        search = search
+    ).let {
+        searcher.count(it)
     }
 }

@@ -8,7 +8,7 @@ class SearchFederalEntitiesByTermQuery(
     private val limit: Int? = null,
     private val offset: Int? = null
 ) : Query {
-    private val search = search?.trim()
+    private val search = search?.trim()?.uppercase()
 
     fun search(): String? {
         return search
