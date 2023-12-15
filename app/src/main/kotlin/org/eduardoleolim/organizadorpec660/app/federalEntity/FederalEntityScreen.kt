@@ -1,51 +1,144 @@
 package org.eduardoleolim.organizadorpec660.app.federalEntity
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.*
+import androidx.compose.material3.IconButtonDefaults.iconButtonColors
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
+import org.eduardoleolim.organizadorpec660.app.shared.components.dialogs.SearchingErrorDialog
+import org.eduardoleolim.organizadorpec660.app.shared.components.table.Table
+import org.eduardoleolim.organizadorpec660.app.shared.components.table.TableColumn
+import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
 
 class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus: CommandBus) : Screen {
-    @Composable
-    override fun Content() {
-        val screenModel = rememberScreenModel { FederalEntityScreenModel(queryBus, commandBus) }
-        var search: String by remember { mutableStateOf("") }
-        var limit: Int? by remember { mutableStateOf(10) }
-        var offset: Int? by remember { mutableStateOf(0) }
+    private val tableColumns = listOf<TableColumn<FederalEntityResponse>>(
+        TableColumn(name = "Clave", width = 100.dp, formatter = { Text(it.keyCode) }),
+        TableColumn(name = "Nombre", width = 300.dp, formatter = { Text(it.name) }),
+        TableColumn(
+            name = "Acciones",
+            width = 100.dp,
+            formatter = {
+                val editContainerColor = MaterialTheme.colorScheme.secondaryContainer
+                val editContentColor = MaterialTheme.colorScheme.secondary
+                val deleteContainerColor = MaterialTheme.colorScheme.errorContainer
+                val deleteContentColor = MaterialTheme.colorScheme.error
 
-        val federalEntities = screenModel.searchFederalEntities(
-            search = search,
-            limit = limit,
-            offset = offset
-        )
-
-        Box {
-            Column {
-                Text("Entidades federativas")
-
-                LazyColumn {
-                    item {
-                        Row {
-                            Text("Clave")
-                            Text("Nombre")
-                        }
+                Row {
+                    FilledIconButton(
+                        onClick = {
+                            println("Edit")
+                        },
+                        modifier = Modifier.size(30.dp).padding(2.dp),
+                        colors = iconButtonColors(
+                            containerColor = editContainerColor,
+                            contentColor = editContentColor,
+                            disabledContainerColor = editContainerColor.copy(alpha = 0.5f),
+                            disabledContentColor = editContentColor.copy(alpha = 0.5f)
+                        )
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = "Editar",
+                            modifier = Modifier.size(20.dp),
+                        )
                     }
 
-                    items(federalEntities) { federalEntity ->
-                        Row {
-                            Text(federalEntity.keyCode)
-                            Text(federalEntity.name)
-                        }
+                    FilledIconButton(
+                        onClick = {
+                            println("Delete")
+                        },
+                        modifier = Modifier.size(30.dp).padding(2.dp),
+                        colors = iconButtonColors(
+                            containerColor = deleteContainerColor,
+                            contentColor = deleteContentColor,
+                            disabledContainerColor = deleteContainerColor.copy(alpha = 0.5f),
+                            disabledContentColor = deleteContentColor.copy(alpha = 0.5f)
+                        )
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Eliminar",
+                            modifier = Modifier.size(20.dp),
+                        )
                     }
                 }
             }
+        )
+    )
+
+    @Composable
+    override fun Content() {
+        val screenModel = rememberScreenModel { FederalEntityScreenModel(queryBus, commandBus) }
+
+        Box {
+            Column {
+                Text(text = "Entidades federativas")
+
+                Box(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                    FederalEntitiesTable(screenModel)
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun FederalEntitiesTable(screenModel: FederalEntityScreenModel) {
+        var searchingError by remember { mutableStateOf(false) }
+
+        Table(
+            columns = tableColumns,
+            onSearchRequest = { (search, pageNumber, pageSize, orderType, orderBy), load ->
+                val offset = if (pageNumber <= 1) 0 else (pageNumber - 1) * pageSize
+                val orders = if (orderBy != null && orderType != null) arrayOf(
+                    hashMapOf(
+                        "orderBy" to orderBy,
+                        "orderType" to orderType
+                    )
+                ) else null
+
+                screenModel.searchFederalEntities(search, orders, pageSize, offset)
+                    .fold(
+                        onSuccess = {
+                            load(it.federalEntities, it.totalRecords)
+                        },
+                        onFailure = {
+                            searchingError = true
+                        }
+                    )
+            }
+        )
+
+        if (searchingError) {
+            SearchingErrorDialog(
+                onDismissRequest = { searchingError = false },
+                confirmButton = {
+                    Button(
+                        onClick = { searchingError = false },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                            contentColor = MaterialTheme.colorScheme.secondary
+                        )
+                    ) {
+                        Text("Aceptar")
+                    }
+                },
+                title = {
+                    Text("Error")
+                },
+                text = {
+                    Text("Error al cargar las entidades federativas")
+                }
+            )
         }
     }
 }
