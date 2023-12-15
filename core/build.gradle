@@ -4,9 +4,6 @@ plugins {
 
 ext {
   moduleName = 'org.eduardoleolim.organizadorpec660.core'
-  ktormVersion = '3.6.0'
-  sqliteVersion = '3.42.0.0'
-  slf4jVersion = '2.0.9'
 }
 
 dependencies {

@@ -9,9 +9,6 @@ plugins {
 
 ext {
   moduleName = 'org.eduardoleolim.organizadorpec660.app'
-  voyagerVersion = '1.0.0-rc10'
-  coroutinesSwingVersion = '1.6.4'
-  themeDetectorVersion = '3.8'
 }
 
 description = 'Organizador de formatos PEC-6-60'
@@ -24,7 +21,7 @@ dependencies {
   implementation compose.materialIconsExtended
   implementation compose.material3
   implementation "cafe.adriel.voyager:voyager-navigator:$voyagerVersion"
-  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-swing:$coroutinesSwingVersion"
+  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-swing:$coroutinesVersion"
   implementation("com.github.Dansoftowner:jSystemThemeDetector:$themeDetectorVersion") {
     exclude group: 'org.slf4j'
   }
