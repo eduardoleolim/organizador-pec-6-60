@@ -3,8 +3,7 @@ import org.eduardoleolim.tasks.addmoduleinfo.AddModuleInfoTask
 
 plugins {
   id 'org.eduardoleolim.kotlin-application-conventions'
-  id 'org.beryx.jlink' version '3.0.1'
-  id 'org.jetbrains.compose' version '1.5.10'
+  id 'org.jetbrains.compose' version '1.5.11'
 }
 
 ext {
