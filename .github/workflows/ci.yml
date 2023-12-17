@@ -104,8 +104,9 @@ jobs:
       - name: 📁 Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: installer_${{ matrix.os }}
+          name: installer
           path: ${{ matrix.installer_path }}
+          retention-days: 1
 
   release:
     name: 🚀 Release
@@ -115,6 +116,8 @@ jobs:
     steps:
       - name: 📦 Download artifacts
         uses: actions/download-artifact@v2
+        with:
+          name: installer
 
       - name: 🚀 Release
         run: |
