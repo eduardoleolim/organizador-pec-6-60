@@ -59,13 +59,13 @@ fun <T> Table(
     var records by remember { mutableStateOf(emptyList<T>()) }
     var totalRecords by remember { mutableStateOf(0) }
 
-    val load = { values: List<T>, total: Int ->
+    fun loadRecords(values: List<T>, total: Int) {
         records = values
         totalRecords = total
     }
 
     LaunchedEffect(searchValues) {
-        onSearchRequest(searchValues, load)
+        onSearchRequest(searchValues, ::loadRecords)
     }
 
     Column {
