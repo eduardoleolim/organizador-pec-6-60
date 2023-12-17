@@ -17,10 +17,6 @@ jobs:
         with:
           path: /opt/jbrsdk-17.0.9
           key: jbrsdk-17.0.9_${{ runner.os }}
-        run: |
-          set -e
-          echo "JAVA_HOME=/opt/jbrsdk-17.0.9" >> $GITHUB_ENV
-          echo "PATH=\${JAVA_HOME}/bin:\${PATH}" >> $GITHUB_ENV
 
       - name: 📦 Setup JBR SDK 17.0.9
         if: steps.jbrsdk.outputs.cache-hit != 'true'
@@ -29,6 +25,10 @@ jobs:
           curl -L https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-linux-x64-b1087.7.tar.gz -o jbrsdk-17.0.9.tar.gz
           mkdir /opt/jbrsdk-17.0.9
           tar -xzf jbrsdk-17.0.9.tar.gz -C /opt/jbrsdk-17.0.9 --strip-components=1
+
+      - name: ♨️ Set JAVA_HOME
+        run: |
+          set -e
           echo "JAVA_HOME=/opt/jbrsdk-17.0.9" >> $GITHUB_ENV
           echo "PATH=\${JAVA_HOME}/bin:\${PATH}" >> $GITHUB_ENV
 
