@@ -30,10 +30,18 @@ jobs:
         run: chmod +x gradlew
 
       - name: 🛠️ Build
-        run: ./gradlew build -Dorg.gradle.java.home=/opt/jbrsdk-17.0.9
+        run: |
+          set -e
+          export JAVA_HOME=/opt/jbrsdk-17.0.9
+          export PATH=$JAVA_HOME/bin:$PATH
+          ./gradlew build
 
       - name: 🧪 Test
-        run: ./gradlew test -Dorg.gradle.java.home=/opt/jbrsdk-17.0.9
+        run: |
+          set -e
+          export JAVA_HOME=/opt/jbrsdk-17.0.9
+          export PATH=$JAVA_HOME/bin:$PATH
+          ./gradlew test
 
   build_windows:
     name: 🛠️ Build - Windows
@@ -63,7 +71,10 @@ jobs:
         run: chmod +x gradlew.bat
 
       - name: 📦 Package
-        run: ./gradlew.bat packageDistributionForCurrentOS -Dorg.gradle.java.home=C:\\jbrsdk-17.0.9
+        run: |
+          $env:JAVA_HOME = "C:\jbrsdk-17.0.9"
+          $env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
+          ./gradlew packageDistributionForCurrentOS
 
   build_linux:
     name: 🛠️ Build - Linux
@@ -94,7 +105,11 @@ jobs:
         run: chmod +x gradlew
 
       - name: 📦 Package
-        run: ./gradlew packageDistributionForCurrentOS -Dorg.gradle.java.home=/opt/jbrsdk-17.0.9
+        run: |
+          set -e
+          export JAVA_HOME=/opt/jbrsdk-17.0.9
+          export PATH=$JAVA_HOME/bin:$PATH
+          ./gradlew packageDistributionForCurrentOS
 
   build_macos:
     name: 🛠️ Build - macOS
@@ -124,4 +139,8 @@ jobs:
         run: chmod +x gradlew
 
       - name: 📦 Package
-        run: ./gradlew packageDistributionForCurrentOS -Dorg.gradle.java.home=/Users/runner/jbrsdk-17.0.9/Contents/Home
+        run: |
+          set -e
+          export JAVA_HOME=/Users/runner/jbrsdk-17.0.9/Contents/Home
+          export PATH=$JAVA_HOME/bin:$PATH
+          ./gradlew packageDistributionForCurrentOS
