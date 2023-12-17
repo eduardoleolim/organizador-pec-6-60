@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import org.eduardoleolim.organizadorpec660.app.shared.components.dialogs.SearchingErrorDialog
+import org.eduardoleolim.organizadorpec660.app.shared.components.table.SearchValues
 import org.eduardoleolim.organizadorpec660.app.shared.components.table.Table
 import org.eduardoleolim.organizadorpec660.app.shared.components.table.TableColumn
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntityResponse
@@ -95,27 +96,34 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
     private fun FederalEntitiesTable(screenModel: FederalEntityScreenModel) {
         var searchingError by remember { mutableStateOf(false) }
 
+        fun onFederalEntitiesSearchRequest(
+            searchValues: SearchValues,
+            load: (List<FederalEntityResponse>, Int) -> Unit
+        ) {
+            val (search, pageNumber, pageSize, orderType, orderBy) = searchValues
+            val offset = if (pageNumber <= 1) 0 else (pageNumber - 1) * pageSize
+            val orders = if (orderBy != null && orderType != null) arrayOf(
+                hashMapOf(
+                    "orderBy" to orderBy,
+                    "orderType" to orderType
+                )
+            ) else null
+
+            screenModel.searchFederalEntities(search, orders, pageSize, offset)
+                .fold(
+                    onSuccess = {
+                        load(it.federalEntities, it.totalRecords)
+                    },
+                    onFailure = {
+                        searchingError = true
+                        load(emptyList(), 0)
+                    }
+                )
+        }
+
         Table(
             columns = tableColumns,
-            onSearchRequest = { (search, pageNumber, pageSize, orderType, orderBy), load ->
-                val offset = if (pageNumber <= 1) 0 else (pageNumber - 1) * pageSize
-                val orders = if (orderBy != null && orderType != null) arrayOf(
-                    hashMapOf(
-                        "orderBy" to orderBy,
-                        "orderType" to orderType
-                    )
-                ) else null
-
-                screenModel.searchFederalEntities(search, orders, pageSize, offset)
-                    .fold(
-                        onSuccess = {
-                            load(it.federalEntities, it.totalRecords)
-                        },
-                        onFailure = {
-                            searchingError = true
-                        }
-                    )
-            }
+            onSearchRequest = ::onFederalEntitiesSearchRequest
         )
 
         if (searchingError) {
