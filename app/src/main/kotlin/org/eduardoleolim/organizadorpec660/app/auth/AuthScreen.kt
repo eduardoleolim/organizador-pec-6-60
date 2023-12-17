@@ -22,11 +22,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.model.rememberScreenModel
-import cafe.adriel.voyager.core.registry.ScreenRegistry
+import cafe.adriel.voyager.core.model.screenModelScope
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import org.eduardoleolim.organizadorpec660.app.main.router.MainProvider
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.eduardoleolim.organizadorpec660.core.auth.domain.InvalidAuthCredentialsError
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
 import java.awt.Dimension
@@ -34,12 +35,14 @@ import java.awt.Dimension
 class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryBus) : Screen {
     @Composable
     override fun Content() {
-        val screenModel = rememberScreenModel { AuthScreenModel(queryBus) }
+        val navigator = LocalNavigator.currentOrThrow
+        val screenModel = rememberScreenModel { AuthScreenModel(navigator, queryBus) }
 
-        LaunchedEffect(window) {
+        LaunchedEffect(Unit) {
             window.apply {
                 isResizable = false
                 size = Dimension(800, 600)
+                setLocationRelativeTo(null)
             }
         }
 
@@ -64,7 +67,6 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
 
     @Composable
     private fun LoginForm(screenModel: AuthScreenModel) {
-        val navigator = LocalNavigator.currentOrThrow
         var username by remember { mutableStateOf("") }
         var password by remember { mutableStateOf("") }
         var isUsernameError by remember { mutableStateOf(false) }
@@ -73,6 +75,28 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
         var passwordVisibility by remember { mutableStateOf(false) }
         val visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation()
         val trailingIcon = if (passwordVisibility) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+
+        fun onLoginClick() {
+            screenModel.screenModelScope.launch(Dispatchers.Main) {
+                screenModel.login(username, password).fold(
+                    onSuccess = {
+                        screenModel.navigateToHome(it)
+                    },
+                    onFailure = { error ->
+                        when (error) {
+                            is InvalidAuthCredentialsError -> {
+                                areInvalidCredentials = true
+                            }
+
+                            is InvalidCredentialsException -> {
+                                isUsernameError = error.isUsernameInvalid
+                                isPasswordError = error.isPasswordInvalid
+                            }
+                        }
+                    }
+                )
+            }
+        }
 
         Text(
             text = "Organizador\nPEC-6-60",
@@ -139,25 +163,7 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
         )
 
         Button(
-            onClick = {
-                screenModel.login(username, password).fold(
-                    onSuccess = {
-                        navigator.push(ScreenRegistry.get(MainProvider.HomeScreen(it)))
-                    },
-                    onFailure = { error ->
-                        when (error) {
-                            is InvalidAuthCredentialsError -> {
-                                areInvalidCredentials = true
-                            }
-
-                            is InvalidCredentialsException -> {
-                                isUsernameError = error.isUsernameInvalid
-                                isPasswordError = error.isPasswordInvalid
-                            }
-                        }
-                    }
-                )
-            },
+            onClick = ::onLoginClick,
             modifier = Modifier.fillMaxWidth(0.8f)
         ) {
             Text("Iniciar sesión")
