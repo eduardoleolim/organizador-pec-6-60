@@ -17,6 +17,14 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import org.eduardoleolim.organizadorpec660.core.auth.application.AuthUserResponse
+import java.awt.Dimension
+
+enum class HomeScreenTab {
+    ENTIDADES_FEDERATIVAS,
+    MUNICIPIOS,
+    TIPOS_DE_ESTADISTICA,
+    TIPOS_DE_INSTRUMENTO
+}
 
 class HomeScreen(
     private val window: ComposeWindow,
@@ -28,9 +36,12 @@ class HomeScreen(
         val screenModel = rememberScreenModel { HomeScreenModel(navigator) }
         var selectedTab by remember { mutableStateOf(HomeScreenTab.ENTIDADES_FEDERATIVAS) }
 
-        LaunchedEffect(window) {
+        LaunchedEffect(Unit) {
             window.apply {
                 isResizable = true
+                size = Dimension(800, 600)
+                minimumSize = Dimension(800, 600)
+                setLocationRelativeTo(null)
             }
         }
 
@@ -111,11 +122,4 @@ class HomeScreen(
             }
         }
     }
-}
-
-enum class HomeScreenTab {
-    ENTIDADES_FEDERATIVAS,
-    MUNICIPIOS,
-    TIPOS_DE_ESTADISTICA,
-    TIPOS_DE_INSTRUMENTO
 }

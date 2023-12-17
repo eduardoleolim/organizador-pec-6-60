@@ -9,9 +9,7 @@ import cafe.adriel.voyager.navigator.Navigator
 import org.eduardoleolim.organizadorpec660.app.auth.AuthScreen
 import org.eduardoleolim.organizadorpec660.app.main.router.HomeProvider
 
-class HomeScreenModel(
-    private val navigator: Navigator
-) : ScreenModel {
+class HomeScreenModel(private val navigator: Navigator) : ScreenModel {
 
     @Composable
     fun navigateToFederalEntity() {
