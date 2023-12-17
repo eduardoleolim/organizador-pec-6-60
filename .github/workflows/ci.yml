@@ -53,12 +53,15 @@ jobs:
           - os: windows-latest
             download_url: https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-windows-x64-b1087.7.tar.gz
             jbrsdk_path: C:\jbrsdk-17.0.9
+            java_home: C:\jbrsdk-17.0.9
           - os: ubuntu-latest
             download_url: https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-linux-x64-b1087.7.tar.gz
             jbrsdk_path: /opt/jbrsdk-17.0.9
+            java_home: /opt/jbrsdk-17.0.9
           - os: macos-latest
             download_url: https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-osx-x64-b1087.7.tar.gz
-            jbrsdk_path: /Users/runner/jbrsdk-17.0.9/Contents/Home
+            jbrsdk_path: /Users/runner/jbrsdk-17.0.9
+            java_home: /Users/runner/jbrsdk-17.0.9/Contents/Home
 
     steps:
       - name: 👍 Checkout
@@ -85,13 +88,13 @@ jobs:
         if: matrix.os != 'windows-latest'
         run: |
           set -e
-          echo "JAVA_HOME=/opt/jbrsdk-17.0.9" >> $GITHUB_ENV
+          echo "JAVA_HOME=${{ matrix.java_home }}" >> $GITHUB_ENV
           echo "PATH=$JAVA_HOME/bin:$PATH" >> $GITHUB_ENV
 
       - name: ♨️ Set JAVA_HOME (Windows)
         if: matrix.os == 'windows-latest'
         run: |
-          echo "JAVA_HOME=${{ matrix.jbrsdk_path }}" >> $GITHUB_ENV
+          echo "JAVA_HOME=${{ matrix.java_home }}" >> $GITHUB_ENV
           echo "PATH=%JAVA_HOME%\\bin;%PATH%" >> $GITHUB_ENV
 
       - name: 📦 Package
