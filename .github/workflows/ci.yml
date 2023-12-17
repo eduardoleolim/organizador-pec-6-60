@@ -41,104 +41,58 @@ jobs:
       - name: 🧪 Test
         run: ./gradlew test
 
-  build_windows:
-    name: 🛠️ Build - Windows
+  package:
+    name: 📦 Package
     # if: github.ref == 'refs/tags/v*'
     needs: test
-    runs-on: windows-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ windows-latest, ubuntu-latest, macos-latest ]
+        include:
+          - os: windows-latest
+            download_url: https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-windows-x64-b1087.7.tar.gz
+            jbrsdk_path: C:\jbrsdk-17.0.9
+          - os: ubuntu-latest
+            download_url: https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-linux-x64-b1087.7.tar.gz
+            jbrsdk_path: /opt/jbrsdk-17.0.9
+          - os: macos-latest
+            download_url: https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-osx-x64-b1087.7.tar.gz
+            jbrsdk_path: /Users/runner/jbrsdk-17.0.9/Contents/Home
 
     steps:
       - name: 👍 Checkout
         uses: actions/checkout@v3
 
       - name: 💾 Cache JBR SDK 17.0.9
-        id: jbrsdk-windows
+        id: jbrsdk
         uses: actions/cache@v2
         with:
-          path: C:\jbrsdk-17.0.9
+          path: ${{ matrix.jbrsdk_path }}
           key: jbrsdk-17.0.9_${{ runner.os }}
 
       - name: 📦 Setup JBR SDK 17.0.9
-        if: steps.jbrsdk-windows.outputs.cache-hit != 'true'
+        if: steps.jbrsdk.outputs.cache-hit != 'true'
         run: |
-          curl -L https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-windows-x64-b1087.7.tar.gz -o jbrsdk-17.0.9.tar.gz
-          mkdir C:\jbrsdk-17.0.9
-          tar -xzvf jbrsdk-17.0.9.tar.gz -C "C:\jbrsdk-17.0.9" --strip-components=1
+          curl -L ${{ matrix.download_url }} -o jbrsdk-17.0.9.tar.gz
+          mkdir ${{ matrix.jbrsdk_path }}
+          tar -xzvf jbrsdk-17.0.9.tar.gz -C ${{ matrix.jbrsdk_path }} --strip-components=1
 
       - name: 🔓 Grant permission
         run: chmod +x gradlew.bat
 
-      - name: 📦 Package
-        run: |
-          $env:JAVA_HOME = "C:\jbrsdk-17.0.9"
-          $env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
-          ./gradlew packageDistributionForCurrentOS
-
-  build_linux:
-    name: 🛠️ Build - Linux
-    # if: github.ref == 'refs/tags/v*'
-    needs: test
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: 👍 Checkout
-        uses: actions/checkout@v3
-
-      - name: 💾 Cache JBR SDK 17.0.9
-        id: jbrsdk-linux
-        uses: actions/cache@v2
-        with:
-          path: /opt/jbrsdk-17.0.9
-          key: jbrsdk-17.0.9_${{ runner.os }}
-
-      - name: 📦 Setup JBR SDK 17.0.9
-        if: steps.jbrsdk-linux.outputs.cache-hit != 'true'
+      - name: ♨️ Set JAVA_HOME
+        if: matrix.os != 'windows-latest'
         run: |
           set -e
-          curl -L https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-linux-x64-b1087.7.tar.gz -o jbrsdk-17.0.9.tar.gz
-          mkdir /opt/jbrsdk-17.0.9
-          tar -xzf jbrsdk-17.0.9.tar.gz -C /opt/jbrsdk-17.0.9 --strip-components=1
+          echo "JAVA_HOME=/opt/jbrsdk-17.0.9" >> $GITHUB_ENV
+          echo "PATH=$JAVA_HOME/bin:$PATH" >> $GITHUB_ENV
 
-      - name: 🔓 Grant permission
-        run: chmod +x gradlew
+      - name: ♨️ Set JAVA_HOME (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          echo "JAVA_HOME=${{ matrix.jbrsdk_path }}" >> $GITHUB_ENV
+          echo "PATH=%JAVA_HOME%\\bin;%PATH%" >> $GITHUB_ENV
 
       - name: 📦 Package
-        run: |
-          set -e
-          export JAVA_HOME=/opt/jbrsdk-17.0.9
-          export PATH=$JAVA_HOME/bin:$PATH
-          ./gradlew packageDistributionForCurrentOS
-
-  build_macos:
-    name: 🛠️ Build - macOS
-    # if: github.ref == 'refs/tags/v*'
-    needs: test
-    runs-on: macos-latest
-
-    steps:
-      - name: 👍 Checkout
-        uses: actions/checkout@v3
-
-      - name: 💾 Cache JBR SDK 17.0.9
-        id: jbrsdk-macos
-        uses: actions/cache@v2
-        with:
-          path: /Users/runner/jbrsdk-17.0.9
-          key: jbrsdk-17.0.9_${{ runner.os }}
-
-      - name: 📦 Setup JBR SDK 17.0.9
-        if: steps.jbrsdk-macos.outputs.cache-hit != 'true'
-        run:
-          curl -L https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-osx-x64-b1087.7.tar.gz -o jbrsdk-17.0.9.tar.gz
-          && mkdir /Users/runner/jbrsdk-17.0.9
-          && tar -xzf jbrsdk-17.0.9.tar.gz -C /Users/runner/jbrsdk-17.0.9 --strip-components=1
-
-      - name: 🔓 Grant permission
-        run: chmod +x gradlew
-
-      - name: 📦 Package
-        run: |
-          set -e
-          export JAVA_HOME=/Users/runner/jbrsdk-17.0.9/Contents/Home
-          export PATH=$JAVA_HOME/bin:$PATH
-          ./gradlew packageDistributionForCurrentOS
+        run: java -version
