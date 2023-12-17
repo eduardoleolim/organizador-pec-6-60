@@ -98,4 +98,4 @@ jobs:
           echo "PATH=%JAVA_HOME%\\bin;%PATH%" >> $GITHUB_ENV
 
       - name: 📦 Package
-        run: java -version
+        run: ./gradlew build
