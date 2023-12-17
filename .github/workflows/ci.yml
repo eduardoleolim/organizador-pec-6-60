@@ -81,9 +81,6 @@ jobs:
           mkdir ${{ matrix.jbrsdk_path }}
           tar -xzvf jbrsdk-17.0.9.tar.gz -C ${{ matrix.jbrsdk_path }} --strip-components=1
 
-      - name: 🔓 Grant permission
-        run: chmod +x gradlew.bat
-
       - name: ♨️ Set JAVA_HOME
         if: matrix.os != 'windows-latest'
         run: |
@@ -96,6 +93,9 @@ jobs:
         run: |
           echo "JAVA_HOME=${{ matrix.java_home }}" >> $GITHUB_ENV
           echo "PATH=%JAVA_HOME%\\bin;%PATH%" >> $GITHUB_ENV
+
+      - name: 🔓 Grant permission
+        run: chmod +x gradlew
 
       - name: 📦 Package
         run: ./gradlew build
