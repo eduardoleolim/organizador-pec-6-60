@@ -82,17 +82,14 @@ jobs:
           tar -xzvf jbrsdk-17.0.9.tar.gz -C ${{ matrix.jbrsdk_path }} --strip-components=1
 
       - name: ♨️ Set JAVA_HOME
-        if: matrix.os != 'windows-latest'
         run: |
-          set -e
-          echo "JAVA_HOME=${{ matrix.java_home }}" >> $GITHUB_ENV
-          echo "PATH=$JAVA_HOME/bin:$PATH" >> $GITHUB_ENV
-
-      - name: ♨️ Set JAVA_HOME (Windows)
-        if: matrix.os == 'windows-latest'
-        run: |
-          echo "JAVA_HOME=${{ matrix.java_home }}" >> $env:GITHUB_ENV
-          echo "PATH=$env:JAVA_HOME\bin;$env:PATH" >> $env:GITHUB_ENV
+          if [ ${{ matrix.os }} != 'windows-latest' ]; then
+            echo "JAVA_HOME=${{ matrix.java_home }}" >> $GITHUB_ENV
+            echo "PATH=$JAVA_HOME/bin:$PATH" >> $GITHUB_ENV
+          else
+            echo "JAVA_HOME=${{ matrix.java_home }}" >> $env:GITHUB_ENV
+            echo "PATH=$env:JAVA_HOME\bin;$env:PATH" >> $env:GITHUB_ENV
+          fi
 
       - name: 🔓 Grant permission
         run: chmod +x gradlew
