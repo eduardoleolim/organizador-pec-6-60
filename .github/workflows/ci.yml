@@ -54,14 +54,25 @@ jobs:
             download_url: https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-windows-x64-b1087.7.tar.gz
             jbrsdk_path: C:\jbrsdk-17.0.9
             java_home: C:\jbrsdk-17.0.9
+            java_home_env: JAVA_HOME=${{ matrix.java_home }}
+            path_env: PATH=$env:JAVA_HOME\bin;$env:PATH
+            github_env: $env:GITHUB_ENV
+
           - os: ubuntu-latest
             download_url: https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-linux-x64-b1087.7.tar.gz
             jbrsdk_path: /opt/jbrsdk-17.0.9
             java_home: /opt/jbrsdk-17.0.9
+            java_home_env: JAVA_HOME=${{ matrix.java_home }}
+            path_env: PATH=$JAVA_HOME/bin:$PATH
+            github_env: $GITHUB_ENV
+
           - os: macos-latest
             download_url: https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-osx-x64-b1087.7.tar.gz
             jbrsdk_path: /Users/runner/jbrsdk-17.0.9
             java_home: /Users/runner/jbrsdk-17.0.9/Contents/Home
+            java_home_env: JAVA_HOME=${{ matrix.java_home }}
+            path_env: PATH=$JAVA_HOME/bin:$PATH
+            github_env: $GITHUB_ENV
 
     steps:
       - name: 👍 Checkout
@@ -83,13 +94,8 @@ jobs:
 
       - name: ♨️ Set JAVA_HOME
         run: |
-          if [ ${{ matrix.os }} != 'windows-latest' ]; then
-            echo "JAVA_HOME=${{ matrix.java_home }}" >> $GITHUB_ENV
-            echo "PATH=$JAVA_HOME/bin:$PATH" >> $GITHUB_ENV
-          else
-            echo "JAVA_HOME=${{ matrix.java_home }}" >> $env:GITHUB_ENV
-            echo "PATH=$env:JAVA_HOME\bin;$env:PATH" >> $env:GITHUB_ENV
-          fi
+          echo "${{ matrix.java_home_env }}" >> ${{ matrix.github_env }}
+          echo "${{ matrix.path_env }}" >> ${{ matrix.github_env }}
 
       - name: 🔓 Grant permission
         run: chmod +x gradlew
