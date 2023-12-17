@@ -91,8 +91,8 @@ jobs:
       - name: ♨️ Set JAVA_HOME (Windows)
         if: matrix.os == 'windows-latest'
         run: |
-          echo "JAVA_HOME=${{ matrix.java_home }}" >> $GITHUB_ENV
-          echo "PATH=%JAVA_HOME%\\bin;%PATH%" >> $GITHUB_ENV
+          echo "JAVA_HOME=${{ matrix.java_home }}" >> $env:GITHUB_ENV
+          echo "PATH=$env:JAVA_HOME\bin;$env:PATH" >> $env:GITHUB_ENV
 
       - name: 🔓 Grant permission
         run: chmod +x gradlew
