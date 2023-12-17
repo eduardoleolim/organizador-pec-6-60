@@ -21,14 +21,12 @@ jobs:
       - name: 📦 Setup JBR SDK 17.0.9
         if: steps.jbrsdk.outputs.cache-hit != 'true'
         run: |
-          set -e
           curl -L https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-linux-x64-b1087.7.tar.gz -o jbrsdk-17.0.9.tar.gz
           mkdir /opt/jbrsdk-17.0.9
           tar -xzf jbrsdk-17.0.9.tar.gz -C /opt/jbrsdk-17.0.9 --strip-components=1
 
       - name: ♨️ Set JAVA_HOME
         run: |
-          set -e
           echo "JAVA_HOME=/opt/jbrsdk-17.0.9" >> $GITHUB_ENV
           echo "PATH=$JAVA_HOME/bin:$PATH" >> $GITHUB_ENV
 
@@ -56,6 +54,7 @@ jobs:
             java_home: C:\jbrsdk-17.0.9
             path_env: PATH=$env:JAVA_HOME\bin;$env:PATH
             github_env: $env:GITHUB_ENV
+            installer_path: .\app\build\compose\binaries\main\msi\*.msi
 
           - os: ubuntu-latest
             download_url: https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-linux-x64-b1087.7.tar.gz
@@ -63,6 +62,7 @@ jobs:
             java_home: /opt/jbrsdk-17.0.9
             path_env: PATH=$JAVA_HOME/bin:$PATH
             github_env: $GITHUB_ENV
+            installer_path: ./app/build/compose/binaries/main/deb/*.deb
 
           - os: macos-latest
             download_url: https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.9-osx-x64-b1087.7.tar.gz
@@ -70,6 +70,7 @@ jobs:
             java_home: /Users/runner/jbrsdk-17.0.9/Contents/Home
             path_env: PATH=$JAVA_HOME/bin:$PATH
             github_env: $GITHUB_ENV
+            installer_path: ./app/build/compose/binaries/main/dmg/*.dmg
 
     steps:
       - name: 👍 Checkout
@@ -99,3 +100,22 @@ jobs:
 
       - name: 📦 Package
         run: ./gradlew packageDistributionForCurrentOS
+
+      - name: 📁 Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: installer_${{ matrix.os }}
+          path: ${{ matrix.installer_path }}
+
+  release:
+    name: 🚀 Release
+    needs: package
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📦 Download artifacts
+        uses: actions/download-artifact@v2
+
+      - name: 🚀 Release
+        run: |
+          tree .
