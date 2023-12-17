@@ -1,16 +1,9 @@
-import org.apache.tools.ant.taskdefs.condition.Os
-import org.eduardoleolim.tasks.addmoduleinfo.AddModuleInfoTask
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
   id 'org.eduardoleolim.kotlin-application-conventions'
   id 'org.jetbrains.compose' version '1.5.11'
 }
-
-ext {
-  moduleName = 'org.eduardoleolim.organizadorpec660.app'
-}
-
-description = 'Organizador de formatos PEC-6-60'
 
 dependencies {
   implementation project(':core')
@@ -36,68 +29,26 @@ compileKotlin {
   }
 }
 
-application {
-  // Define the main class for the application.
-  mainClass = 'org.eduardoleolim.organizadorpec660.app.MainKt'
-  applicationDefaultJvmArgs += ['-Dfile.encoding=UTF-8']
-}
+compose.desktop {
+  application {
+    mainClass = 'org.eduardoleolim.organizadorpec660.app.MainKt'
+    args.addAll(['--database=./database/organizador-pec-6-60.db'])
 
-jlink {
-  moduleName = project.moduleName
-  mergedModuleName = "${project.moduleName}.merged.module"
+    nativeDistributions {
+      packageName = 'Organizador PEC-6-60'
+      description = 'Organizador de formatos PEC-6-60'
+      copyright = 'Copyright © 2023 Angel Eduardo Martinez Leo Lim. All rights reserved.'
 
-  addOptions("--strip-debug", "--compress", "2", "--no-header-files", "--no-man-pages")
+      includeAllModules = true
 
-  forceMerge("sqlite", "kotlinx-coroutines-core")
-  addExtraDependencies("kotlin", "slf4j")
+      windows {
+        iconFile.set(file('src/main/resources/assets/icon.ico'))
+      }
+      linux {
+        iconFile.set(file('src/main/resources/assets/icon.png'))
+      }
 
-  mergedModule {
-    requires 'java.desktop'
-    requires 'java.sql'
-    requires 'org.slf4j'
-
-    uses 'kotlin.reflect.jvm.internal.impl.resolve.ExternalOverridabilityCondition'
-    uses 'kotlin.reflect.jvm.internal.impl.util.ModuleVisibilityHelper'
-  }
-
-  launcher {
-    name = 'Organizador PEC-6-60'
-    args = ['--database={{BIN_DIR}}/../database/organizador-pec-6-60.db']
-  }
-
-  jpackage {
-    args = ['--database={{BIN_DIR}}/database/organizador-pec-6-60.db']
-
-    outputDir = file("${buildDir}/jpackage")
-    imageOutputDir = file("${buildDir}/jpackageImage")
-
-    installerOptions = [
-      '--description', description,
-      '--copyright', 'Copyrigth 2023-2023 Ángel Eduardo Martínez Leo Lim',
-      '--vendor', 'Ángel Eduardo Martínez Leo Lim'
-    ]
-
-    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-      installerType = 'msi'
-      icon = 'src/main/resources/assets/icon.ico'
-      installerOptions += ['--win-per-user-install', '--win-dir-chooser', '--win-menu', '--win-shortcut']
-    } else if (Os.isFamily(Os.FAMILY_MAC)) {
-      installerType = 'pkg'
-      // icon = 'src/main/resources/assets/icon.icns'
-      imageOptions += ['--mac-package-identifier', 'org.eduardoleolim.organizadorpec660']
-    } else if (Os.isFamily(Os.FAMILY_UNIX)) {
-      installerType = 'deb'
-      icon = 'src/main/resources/assets/icon.png'
-      installerOptions += ['--linux-deb-maintainer', 'eduardoleolim@hotmail.com', '--linux-shortcut']
+      targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
     }
   }
 }
-
-tasks.register('addModuleInfo', AddModuleInfoTask) {
-  moduleName = project.moduleName
-  jarPath = jlink.jlinkBasePath.get() + '/jlinkjars/' + jar.archiveFileName.get()
-  classpath = files(file(jlink.jlinkBasePath.get() + '/jlinkjars/'))
-  multiRelease = '17'
-}
-
-prepareModulesDir.finalizedBy addModuleInfo

@@ -2,10 +2,6 @@ plugins {
   id 'org.eduardoleolim.kotlin-library-conventions'
 }
 
-ext {
-  moduleName = 'org.eduardoleolim.organizadorpec660.core'
-}
-
 dependencies {
   api "org.ktorm:ktorm-core:$ktormVersion"
   api "org.ktorm:ktorm-support-sqlite:$ktormVersion"
@@ -16,8 +12,4 @@ dependencies {
 
 kotlin {
   jvmToolchain(17)
-}
-
-compileJava {
-  options.compilerArgs += ['--patch-module', "${moduleName}=${sourceSets.main.output.asPath}"]
 }
