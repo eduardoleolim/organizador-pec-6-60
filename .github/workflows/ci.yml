@@ -1,6 +1,6 @@
 name: CI
 
-on: push
+on: [ push, pull_request ]
 
 jobs:
   test:
@@ -41,7 +41,7 @@ jobs:
 
   package:
     name: 📦 Package
-    # if: github.ref == 'refs/tags/v*'
+    if: startsWith(github.ref, 'refs/tags/v')
     needs: test
     runs-on: ${{ matrix.os }}
     strategy:
@@ -123,7 +123,9 @@ jobs:
         uses: geekyeggo/delete-artifact@v2
         with:
           name: installer
+          failOnError: false
 
       - name: 🚀 Release
-        run: |
-          tree .
+        uses: softprops/action-gh-release@v1
+        with:
+          files: .
