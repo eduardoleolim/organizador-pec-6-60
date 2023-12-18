@@ -119,6 +119,11 @@ jobs:
         with:
           name: installer
 
+      - name: 🗑️ Delete artifacts
+        uses: geekyeggo/delete-artifact@v2
+        with:
+          name: installer
+
       - name: 🚀 Release
         run: |
           tree .

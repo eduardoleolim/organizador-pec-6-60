@@ -19,8 +19,6 @@ dependencies {
   }
 }
 
-println System.getenv('JAVA_HOME')
-
 kotlin {
   jvmToolchain(17)
 }
