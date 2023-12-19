@@ -60,7 +60,7 @@ class StatisticType private constructor(
 
     fun name() = name.value
 
-    fun instrumentTypeIds() = instrumentTypeIds.toList()
+    fun instrumentTypeIds() = instrumentTypeIds.map { it.value.toString() }.toList()
 
     fun createdAt() = createdAt.value
 

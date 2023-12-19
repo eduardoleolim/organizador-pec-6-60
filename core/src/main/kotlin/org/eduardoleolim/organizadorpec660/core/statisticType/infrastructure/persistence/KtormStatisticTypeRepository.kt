@@ -48,7 +48,7 @@ class KtormStatisticTypeRepository(private val database: Database) : StatisticTy
                 statisticType.instrumentTypeIds().forEach { instrumentTypeId ->
                     item {
                         set(it.statisticTypeId, statisticType.id().toString())
-                        set(it.instrumentTypeId, instrumentTypeId.toString())
+                        set(it.instrumentTypeId, instrumentTypeId)
                     }
                 }
             }
