@@ -28,4 +28,19 @@ object StatisticTypeCriteria {
         1,
         null
     )
+
+    fun searchCriteria(search: String? = null, orders: List<Order>? = null, limit: Int? = null, offset: Int? = null) =
+        Criteria(
+            search?.let {
+                OrFilters(
+                    listOf(
+                        SingleFilter(Filter(FilterField("keyCode"), FilterOperator.CONTAINS, FilterValue(it))),
+                        SingleFilter(Filter(FilterField("name"), FilterOperator.CONTAINS, FilterValue(it)))
+                    )
+                )
+            } ?: EmptyFilters(),
+            Orders(orders ?: listOf(Order.asc("keyCode"))),
+            limit,
+            offset
+        )
 }
