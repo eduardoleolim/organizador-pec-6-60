@@ -1,6 +1,7 @@
 package org.eduardoleolim.organizadorpec660.core.statisticType.application.update
 
 import org.eduardoleolim.organizadorpec660.core.instrumentType.domain.InstrumentTypeCriteria
+import org.eduardoleolim.organizadorpec660.core.instrumentType.domain.InstrumentTypeRepository
 import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeAlreadyExistsError
 import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeCriteria
 import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeNotFoundError
@@ -8,7 +9,7 @@ import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTy
 
 class StatisticTypeUpdater(
     private val statisticTypeRepository: StatisticTypeRepository,
-    private val instrumentTypeRepository: StatisticTypeRepository
+    private val instrumentTypeRepository: InstrumentTypeRepository
 ) {
     fun update(id: String, keyCode: String, name: String, instrumentTypeIds: List<String>) {
         val statisticType = searchStatisticType(id) ?: throw StatisticTypeNotFoundError(id)
