@@ -4,6 +4,7 @@ import org.eduardoleolim.organizadorpec660.core.federalEntity.infrastructure.bus
 import org.eduardoleolim.organizadorpec660.core.instrumentType.infrastructure.bus.KtormInstrumentTypeCommandHandlers
 import org.eduardoleolim.organizadorpec660.core.municipality.infrastructure.bus.KtormMunicipalityCommandHandlers
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.*
+import org.eduardoleolim.organizadorpec660.core.statisticType.infrastructure.bus.KtormStatisticTypeCommandHandlers
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 
@@ -11,11 +12,11 @@ class KtormCommandBus(database: Database) : CommandBus {
     private val commandHandlers: Map<KClass<out Command>, CommandHandler<out Command>>
 
     init {
-        this.commandHandlers = HashMap()
-        commandHandlers.apply {
+        commandHandlers = HashMap<KClass<out Command>, CommandHandler<out Command>>().apply {
             putAll(KtormFederalEntityCommandHandlers(database))
             putAll(KtormInstrumentTypeCommandHandlers(database))
             putAll(KtormMunicipalityCommandHandlers(database))
+            putAll(KtormStatisticTypeCommandHandlers(database))
         }
     }
 
