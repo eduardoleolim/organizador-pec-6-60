@@ -5,6 +5,7 @@ import org.eduardoleolim.organizadorpec660.core.federalEntity.infrastructure.bus
 import org.eduardoleolim.organizadorpec660.core.instrumentType.infrastructure.bus.KtormInstrumentTypeQueryHandlers
 import org.eduardoleolim.organizadorpec660.core.municipality.infrastructure.bus.KtormMunicipalityQueryHandlers
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.*
+import org.eduardoleolim.organizadorpec660.core.statisticType.infrastructure.bus.KtormStatisticTypeQueryHandlers
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 
@@ -12,12 +13,12 @@ class KtormQueryBus(private val database: Database) : QueryBus {
     private val queryHandlers: Map<KClass<out Query>, QueryHandler<out Query, out Response>>
 
     init {
-        queryHandlers = HashMap()
-        queryHandlers.apply {
+        queryHandlers = HashMap<KClass<out Query>, QueryHandler<out Query, out Response>>().apply {
             putAll(KtormAuthQueryHandlers(database))
             putAll(KtormFederalEntityQueryHandlers(database))
             putAll(KtormInstrumentTypeQueryHandlers(database))
             putAll(KtormMunicipalityQueryHandlers(database))
+            putAll(KtormStatisticTypeQueryHandlers(database))
         }
     }
 

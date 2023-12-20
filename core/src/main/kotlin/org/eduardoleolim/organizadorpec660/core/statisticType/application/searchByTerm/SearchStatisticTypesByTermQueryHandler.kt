@@ -6,9 +6,9 @@ import org.eduardoleolim.organizadorpec660.core.statisticType.application.Statis
 import org.eduardoleolim.organizadorpec660.core.statisticType.application.search.StatisticTypeSearcher
 import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeCriteria
 
-class SearchStatisticTypeByTermQueryHandler(private val searcher: StatisticTypeSearcher) :
-    QueryHandler<SearchStatisticTypeByTermQuery, StatisticTypesResponse> {
-    override fun handle(query: SearchStatisticTypeByTermQuery): StatisticTypesResponse {
+class SearchStatisticTypesByTermQueryHandler(private val searcher: StatisticTypeSearcher) :
+    QueryHandler<SearchStatisticTypesByTermQuery, StatisticTypesResponse> {
+    override fun handle(query: SearchStatisticTypesByTermQuery): StatisticTypesResponse {
         val statisticTypes = searchStatisticTypes(query.search(), query.orders(), query.limit(), query.offset())
         val totalStatisticTypes = countStatisticTypes(query.search())
 

@@ -2,7 +2,7 @@ package org.eduardoleolim.organizadorpec660.core.statisticType.application.searc
 
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.Query
 
-class SearchStatisticTypeByTermQuery(
+class SearchStatisticTypesByTermQuery(
     search: String? = null,
     private val orders: Array<HashMap<String, String>>? = null,
     private val limit: Int? = null,
