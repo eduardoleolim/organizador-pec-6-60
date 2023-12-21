@@ -1,6 +1,9 @@
 package org.eduardoleolim.organizadorpec660.app.home
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ListAlt
 import androidx.compose.material.icons.filled.Logout
@@ -101,11 +104,6 @@ class HomeScreen(
                     label = { Text("Cerrar sesión") }
                 )
             }
-
-            Divider(
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.fillMaxHeight().width(1.dp)
-            )
 
             Column(
                 modifier = Modifier.padding(8.dp)

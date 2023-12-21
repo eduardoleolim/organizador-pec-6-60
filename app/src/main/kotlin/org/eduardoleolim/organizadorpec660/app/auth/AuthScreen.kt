@@ -50,7 +50,7 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
             Column(modifier = Modifier.fillMaxWidth(0.5f).fillMaxHeight()) {
                 Image(
                     painter = painterResource("assets/img/login_background.png"),
-                    contentDescription = null,
+                    contentDescription = "Fuente de los 4 ríos",
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.FillWidth
                 )
@@ -77,8 +77,8 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
         val trailingIcon = if (passwordVisibility) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
 
         fun onLoginClick() {
-            screenModel.screenModelScope.launch(Dispatchers.Main) {
-                screenModel.login(username, password).fold(
+            screenModel.login(username, password) { result ->
+                result.fold(
                     onSuccess = {
                         screenModel.navigateToHome(it)
                     },
@@ -91,6 +91,10 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
                             is InvalidCredentialsException -> {
                                 isUsernameError = error.isUsernameInvalid
                                 isPasswordError = error.isPasswordInvalid
+                            }
+
+                            else -> {
+                                println("Error: ${error.message}")
                             }
                         }
                     }
@@ -166,7 +170,7 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
             onClick = ::onLoginClick,
             modifier = Modifier.fillMaxWidth(0.8f)
         ) {
-            Text("Iniciar sesión")
+            Text(text = "Iniciar sesión", fontSize = 16.sp)
         }
     }
 }
