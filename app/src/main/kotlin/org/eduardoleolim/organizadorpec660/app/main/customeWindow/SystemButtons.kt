@@ -46,17 +46,11 @@ fun SystemButton(
                 isHovered -> onHoveredBackgroundColor
                 else -> onBackground
             }.copy(
-                alpha = if (isFocused || isHovered) {
-                    1f
-                } else {
-                    0.25f
-                }
+                alpha = if (!enabled) 0.5f else if (isFocused || isHovered) 1f else 0.7f
             )
         ).value,
         modifier = modifier
-            .clickable(
-                enabled = enabled,
-            ) { onClick() }
+            .clickable(enabled = enabled) { onClick() }
             .background(
                 animateColorAsState(
                     when {
