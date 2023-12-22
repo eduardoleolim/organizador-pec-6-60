@@ -33,7 +33,7 @@ compileKotlin {
 compose.desktop {
   application {
     mainClass = 'org.eduardoleolim.organizadorpec660.app.MainKt'
-    args.addAll(['--database=./database/organizador-pec-6-60.db'])
+    args('--database=./data/organizador-pec-6-60.db', '--instruments=./data/instruments')
 
     nativeDistributions {
       packageName = 'Organizador PEC-6-60'
