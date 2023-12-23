@@ -25,14 +25,14 @@ class StatisticTypes(alias: String? = null) : Table<StatisticType>("statisticTyp
 }
 
 interface InstrumentTypeOfStatisticType : Entity<InstrumentTypeOfStatisticType> {
-    val instrumentTypeId: InstrumentType
-    val statisticTypeId: StatisticType
+    val instrumentType: InstrumentType
+    val statisticType: StatisticType
 }
 
 class InstrumentTypesOfStatisticTypes(alias: String? = null) :
     Table<InstrumentTypeOfStatisticType>("statisticType_instrumentType", alias) {
-    val instrumentTypeId = varchar("instrumentTypeId").references(InstrumentTypes()) { it.instrumentTypeId }
-    val statisticTypeId = varchar("statisticTypeId").references(StatisticTypes()) { it.statisticTypeId }
+    val instrumentTypeId = varchar("instrumentTypeId").references(InstrumentTypes()) { it.instrumentType }
+    val statisticTypeId = varchar("statisticTypeId").references(StatisticTypes()) { it.statisticType }
 
     override fun aliased(alias: String) = InstrumentTypesOfStatisticTypes(alias)
 }
