@@ -1,5 +1,6 @@
 package org.eduardoleolim.organizadorpec660.core.user.infrastructure.persistence
 
+import org.eduardoleolim.organizadorpec660.core.shared.domain.InvalidArgumentError
 import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.*
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.Credentials
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.Roles
@@ -66,7 +67,7 @@ object KtormUsersCriteriaParser {
             "updatedAt" -> parseOrderType(orderType, users.updatedAt)
             "role.id" -> parseOrderType(orderType, roles.id)
             "role.name" -> parseOrderType(orderType, roles.name)
-            else -> null
+            else -> throw InvalidArgumentError()
         }
     }
 
@@ -228,7 +229,7 @@ object KtormUsersCriteriaParser {
                 }
             }
 
-            else -> null
+            else -> throw InvalidArgumentError()
         }
     }
 }

@@ -1,5 +1,6 @@
 package org.eduardoleolim.organizadorpec660.core.federalEntity.infrastructure.persistence
 
+import org.eduardoleolim.organizadorpec660.core.shared.domain.InvalidArgumentError
 import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.*
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.FederalEntities
 import org.ktorm.database.Database
@@ -44,7 +45,7 @@ object KtormFederalEntitiesCriteriaParser {
             "name" -> parseOrderType(orderType, federalEntities.name)
             "createdAt" -> parseOrderType(orderType, federalEntities.createdAt)
             "updatedAt" -> parseOrderType(orderType, federalEntities.updatedAt)
-            else -> null
+            else -> throw InvalidArgumentError()
         }
     }
 
@@ -158,7 +159,7 @@ object KtormFederalEntitiesCriteriaParser {
                 }
             }
 
-            else -> null
+            else -> throw InvalidArgumentError()
         }
     }
 }

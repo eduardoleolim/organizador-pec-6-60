@@ -1,5 +1,6 @@
 package org.eduardoleolim.organizadorpec660.core.municipality.infrastructure.persistence
 
+import org.eduardoleolim.organizadorpec660.core.shared.domain.InvalidArgumentError
 import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.*
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.FederalEntities
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.Municipalities
@@ -73,7 +74,7 @@ object KtormMunicipalitiesCriteriaParser {
             "federalEntity.name" -> parseOrderType(orderType, federalEntities.name)
             "federalEntity.createdAt" -> parseOrderType(orderType, federalEntities.createdAt)
             "federalEntity.updatedAt" -> parseOrderType(orderType, federalEntities.updatedAt)
-            else -> null
+            else -> throw InvalidArgumentError()
         }
     }
 
@@ -257,7 +258,7 @@ object KtormMunicipalitiesCriteriaParser {
                 }
             }
 
-            else -> null
+            else -> throw InvalidArgumentError()
         }
     }
 }

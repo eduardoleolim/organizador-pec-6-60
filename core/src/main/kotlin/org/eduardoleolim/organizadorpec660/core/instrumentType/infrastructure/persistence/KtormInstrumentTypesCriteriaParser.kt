@@ -1,5 +1,6 @@
 package org.eduardoleolim.organizadorpec660.core.instrumentType.infrastructure.persistence
 
+import org.eduardoleolim.organizadorpec660.core.shared.domain.InvalidArgumentError
 import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.*
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.InstrumentTypes
 import org.ktorm.database.Database
@@ -60,7 +61,7 @@ object KtormInstrumentTypesCriteriaParser {
             "name" -> parseOrderType(orderType, instrumentTypes.name)
             "createdAt" -> parseOrderType(orderType, instrumentTypes.createdAt)
             "updatedAt" -> parseOrderType(orderType, instrumentTypes.updatedAt)
-            else -> null
+            else -> throw InvalidArgumentError()
         }
     }
 
@@ -168,7 +169,7 @@ object KtormInstrumentTypesCriteriaParser {
                 }
             }
 
-            else -> null
+            else -> throw InvalidArgumentError()
         }
     }
 }
