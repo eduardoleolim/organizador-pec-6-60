@@ -22,12 +22,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.model.rememberScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.eduardoleolim.organizadorpec660.core.auth.domain.InvalidAuthCredentialsError
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
 import java.awt.Dimension
@@ -72,9 +69,9 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
         var isUsernameError by remember { mutableStateOf(false) }
         var isPasswordError by remember { mutableStateOf(false) }
         var areInvalidCredentials by remember { mutableStateOf(false) }
-        var passwordVisibility by remember { mutableStateOf(false) }
-        val visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation()
-        val trailingIcon = if (passwordVisibility) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+        var isPasswordVisible by remember { mutableStateOf(false) }
+        val visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation()
+        val trailingIcon = if (isPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
 
         fun onLoginClick() {
             screenModel.login(username, password) { result ->
@@ -158,10 +155,10 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
             visualTransformation = visualTransformation,
             trailingIcon = {
                 IconButton(
-                    onClick = { passwordVisibility = !passwordVisibility },
+                    onClick = { isPasswordVisible = !isPasswordVisible },
                     modifier = Modifier.pointerHoverIcon(PointerIcon.Hand)
                 ) {
-                    Icon(imageVector = trailingIcon, contentDescription = null)
+                    Icon(imageVector = trailingIcon, contentDescription = "Password visibility")
                 }
             }
         )
