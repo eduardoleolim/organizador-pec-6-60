@@ -9,7 +9,6 @@ import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.Sql
 fun main(args: Array<String>) {
     try {
         val databasePath = ArgsUtils.databasePath(args) ?: throw Exception("Database path not found")
-        val instrumentsPath = ArgsUtils.instrumentsPath(args) ?: throw Exception("Instruments path not found")
         val commandBus = KtormCommandBus(SqliteKtormDatabase.connect(databasePath))
         val queryBus = KtormQueryBus(SqliteKtormDatabase.connect(databasePath, true))
 
