@@ -1,13 +1,14 @@
-package org.eduardoleolim.organizadorpec660.app.main.customeWindow.icons
+package org.eduardoleolim.organizadorpec660.app.main.customWindow.icons
 
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
+
 private var vector: ImageVector? = null
 
-val CustomIcons.Floating: ImageVector
+val CustomIcons.Maximize: ImageVector
     get() {
         if (vector != null) {
             return vector!!
@@ -30,31 +31,17 @@ val CustomIcons.Floating: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.EvenOdd
             ) {
-                moveTo(6.54545f, 0f)
-                verticalLineTo(6.54545f)
-                horizontalLineTo(0f)
-                verticalLineTo(24f)
-                horizontalLineTo(17.4545f)
-                verticalLineTo(17.4545f)
-                horizontalLineTo(24f)
-                verticalLineTo(0f)
-                horizontalLineTo(6.54545f)
-                close()
                 moveTo(21.8182f, 2.18182f)
-                horizontalLineTo(8.72727f)
-                verticalLineTo(6.54545f)
-                horizontalLineTo(17.4545f)
-                verticalLineTo(15.2727f)
+                horizontalLineTo(2.18182f)
+                verticalLineTo(21.8182f)
                 horizontalLineTo(21.8182f)
                 verticalLineTo(2.18182f)
                 close()
-                moveTo(15.2727f, 15.2727f)
-                verticalLineTo(21.8182f)
-                horizontalLineTo(2.18182f)
-                verticalLineTo(8.72727f)
-                horizontalLineTo(8.72727f)
-                horizontalLineTo(15.2727f)
-                verticalLineTo(15.2727f)
+                moveTo(0f, 0f)
+                verticalLineTo(24f)
+                horizontalLineTo(24f)
+                verticalLineTo(0f)
+                horizontalLineTo(0f)
                 close()
             }
         }.build()

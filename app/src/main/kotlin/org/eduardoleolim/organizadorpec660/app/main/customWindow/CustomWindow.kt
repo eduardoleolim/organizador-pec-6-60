@@ -1,4 +1,4 @@
-package org.eduardoleolim.organizadorpec660.app.main.customeWindow
+package org.eduardoleolim.organizadorpec660.app.main.customWindow
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -20,7 +20,7 @@ import androidx.compose.ui.window.FrameWindowScope
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.WindowState
-import org.eduardoleolim.organizadorpec660.app.main.customeWindow.utils.CustomWindowDecorationAccessing
+import org.eduardoleolim.organizadorpec660.app.main.customWindow.utils.CustomWindowDecorationAccessing
 
 @Composable
 private fun FrameWindowScope.CustomWindowFrame(

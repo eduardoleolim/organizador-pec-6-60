@@ -1,4 +1,4 @@
-package org.eduardoleolim.organizadorpec660.app.main.customeWindow.icons
+package org.eduardoleolim.organizadorpec660.app.main.customWindow.icons
 
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.vector.ImageVector

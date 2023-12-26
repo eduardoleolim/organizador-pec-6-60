@@ -1,4 +1,4 @@
-package org.eduardoleolim.organizadorpec660.app.main.customeWindow
+package org.eduardoleolim.organizadorpec660.app.main.customWindow
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
@@ -21,7 +21,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.FrameWindowScope
-import org.eduardoleolim.organizadorpec660.app.main.customeWindow.icons.*
+import org.eduardoleolim.organizadorpec660.app.main.customWindow.icons.*
 import java.beans.PropertyChangeListener
 
 @Composable

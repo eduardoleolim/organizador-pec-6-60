@@ -1,4 +1,4 @@
-package org.eduardoleolim.organizadorpec660.app.main.customeWindow.utils
+package org.eduardoleolim.organizadorpec660.app.main.customWindow.utils
 
 import java.awt.Shape
 import java.awt.Window
