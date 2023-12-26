@@ -156,7 +156,7 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
             trailingIcon = {
                 IconButton(
                     onClick = { isPasswordVisible = !isPasswordVisible },
-                    modifier = Modifier.pointerHoverIcon(PointerIcon.Hand)
+                    modifier = Modifier.pointerHoverIcon(PointerIcon.Default)
                 ) {
                     Icon(imageVector = trailingIcon, contentDescription = "Password visibility")
                 }

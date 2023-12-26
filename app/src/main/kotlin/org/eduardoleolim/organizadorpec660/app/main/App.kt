@@ -38,19 +38,19 @@ class App(private val commandBus: CommandBus, private val queryBus: QueryBus) {
         var isDarkTheme: Boolean by remember { mutableStateOf(true) }
 
         DisposableEffect(Unit) {
-            Consumer<Boolean> {
+            val consumer = Consumer<Boolean> {
                 SwingUtilities.invokeLater {
                     if (!isThemeSelected) {
                         isDarkTheme = it
                         isThemeSelected = true
                     }
                 }
-            }.let {
-                OsThemeDetector.getDetector().registerListener(it)
+            }
 
-                onDispose {
-                    OsThemeDetector.getDetector().removeListener(it)
-                }
+            OsThemeDetector.getDetector().registerListener(consumer)
+
+            onDispose {
+                OsThemeDetector.getDetector().removeListener(consumer)
             }
         }
 
@@ -79,6 +79,7 @@ class App(private val commandBus: CommandBus, private val queryBus: QueryBus) {
                         )
                     }
                 }
+
                 Router(commandBus, queryBus)
             }
         }
