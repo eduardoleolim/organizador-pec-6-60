@@ -7,7 +7,7 @@ plugins {
     id("org.jetbrains.compose").version("1.5.12")
 }
 
-tasks.named("compileKotlin",KotlinCompilationTask::class) {
+tasks.named("compileKotlin", KotlinCompilationTask::class) {
     compilerOptions {
         freeCompilerArgs.addAll("-Xcontext-receivers=true")
     }
@@ -21,10 +21,10 @@ dependencies {
     }
     implementation(compose.materialIconsExtended)
     implementation(compose.material3)
-    implementation("cafe.adriel.voyager:voyager-navigator:${properties["voyagerVersion"]}")
-    implementation("cafe.adriel.voyager:voyager-screenmodel:${properties["voyagerVersion"]}")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:${properties["kotlinxCoroutinesVersion"]}")
-    implementation("com.github.Dansoftowner:jSystemThemeDetector:${properties["themeDetectorVersion"]}") {
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:${properties["kotlinxCoroutines.version"]}")
+    implementation("cafe.adriel.voyager:voyager-navigator:${properties["voyager.version"]}")
+    implementation("cafe.adriel.voyager:voyager-screenmodel:${properties["voyager.version"]}")
+    implementation("com.github.Dansoftowner:jSystemThemeDetector:${properties["themeDetector.version"]}") {
         exclude("org.slf4j")
     }
 }

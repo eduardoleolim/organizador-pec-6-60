@@ -1,2 +1,0 @@
-rootProject.name = 'organizador-pec-660'
-include('app', 'core')

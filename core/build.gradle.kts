@@ -3,8 +3,8 @@ plugins {
 }
 
 dependencies {
-    api("org.ktorm:ktorm-core:${properties["ktormVersion"]}")
-    api("org.ktorm:ktorm-support-sqlite:${properties["ktormVersion"]}")
-    api("org.xerial:sqlite-jdbc:${properties["sqliteVersion"]}")
-    api("org.slf4j:slf4j-simple:${properties["slf4jVersion"]}")
+    api("org.ktorm:ktorm-core:${properties["ktorm.version"]}")
+    api("org.ktorm:ktorm-support-sqlite:${properties["ktorm.version"]}")
+    api("org.xerial:sqlite-jdbc:${properties["sqlite.version"]}")
+    api("org.slf4j:slf4j-simple:${properties["slf4j.version"]}")
 }
