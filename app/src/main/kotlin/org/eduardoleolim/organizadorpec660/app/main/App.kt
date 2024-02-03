@@ -68,9 +68,9 @@ class App(private val commandBus: CommandBus, private val queryBus: QueryBus) {
                         Modifier.fillMaxWidth().padding(start = 16.dp),
                     ) {
                         Icon(
-                            if (isDarkTheme) Icons.Default.DarkMode else Icons.Default.LightMode,
-                            null,
-                            Modifier
+                            imageVector =  if (isDarkTheme) Icons.Default.DarkMode else Icons.Default.LightMode,
+                            contentDescription = "Toggle theme",
+                            modifier =  Modifier
                                 .windowFrameItem("theme", HitSpots.OTHER_HIT_SPOT)
                                 .clickable { isDarkTheme = !isDarkTheme }
                                 .padding(4.dp)
