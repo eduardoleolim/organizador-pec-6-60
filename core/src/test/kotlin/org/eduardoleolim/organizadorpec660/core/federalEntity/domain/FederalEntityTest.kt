@@ -60,7 +60,7 @@ class FederalEntityTest {
     }
 
     @Test
-    fun `key code with less than 2 characters`() {
+    fun `check key code with less than 2 characters`() {
         val keyCode = "1"
         try {
             FederalEntityKeyCode(keyCode)
@@ -71,7 +71,7 @@ class FederalEntityTest {
     }
 
     @Test
-    fun `key code with more than 2 characters`() {
+    fun `check key code with more than 2 characters`() {
         val keyCode = "123"
         try {
             FederalEntityKeyCode(keyCode)
@@ -82,7 +82,7 @@ class FederalEntityTest {
     }
 
     @Test
-    fun `key code with letters`() {
+    fun `check key code with letters`() {
         val keyCode = "ab"
         try {
             FederalEntityKeyCode(keyCode)
@@ -93,7 +93,7 @@ class FederalEntityTest {
     }
 
     @Test
-    fun `key code with special characters`() {
+    fun `check key code with special characters`() {
         val keyCode = "1@"
         try {
             FederalEntityKeyCode(keyCode)
@@ -104,7 +104,7 @@ class FederalEntityTest {
     }
 
     @Test
-    fun `key code with numbers`() {
+    fun `check valid key code`() {
         val keyCode = "12"
         try {
             FederalEntityKeyCode(keyCode)
