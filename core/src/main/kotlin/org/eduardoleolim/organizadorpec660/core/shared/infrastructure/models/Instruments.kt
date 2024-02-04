@@ -11,7 +11,7 @@ interface InstrumentFile : Entity<InstrumentFile> {
 
 class InstrumentFiles(alias: String? = null) : Table<InstrumentFile>("instrumentFile", alias) {
     val instrumentFileId = varchar("instrumentFileId").primaryKey().bindTo { it.instrumentFileId }
-    val content = blob("content").bindTo { it.content }
+    val content = bytes("content").bindTo { it.content }
 
     override fun aliased(alias: String) = InstrumentFiles(alias)
 }
