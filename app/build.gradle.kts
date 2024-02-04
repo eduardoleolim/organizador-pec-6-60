@@ -15,7 +15,6 @@ tasks.named("compileKotlin", KotlinCompilationTask::class) {
 
 dependencies {
     implementation(project(":core"))
-
     implementation(compose.desktop.currentOs) {
         exclude("org.jetbrains.compose.material")
     }
@@ -32,7 +31,15 @@ dependencies {
 compose.desktop {
     application {
         mainClass = "org.eduardoleolim.organizadorpec660.app.MainKt"
-        args("--database=./data/organizador-pec-6-60.db")
+
+        val taskNames = project.gradle.startParameter.taskNames
+        val runTasks = listOf("run", "${project.name}:run", ":${project.name}:run")
+
+        if (runTasks.any { it in taskNames }) {
+            args("--database=../data/organizador-pec-6-60.db")
+        } else {
+            args("--database=./data/organizador-pec-6-60.db")
+        }
 
         nativeDistributions {
             packageName = "Organizador PEC-6-60"
@@ -44,6 +51,7 @@ compose.desktop {
             windows {
                 iconFile.set(file("src/main/resources/assets/icon.ico"))
             }
+
             linux {
                 iconFile.set(file("src/main/resources/assets/icon.png"))
             }
