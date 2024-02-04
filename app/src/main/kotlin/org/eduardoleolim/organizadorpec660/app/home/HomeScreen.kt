@@ -4,13 +4,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ListAlt
 import androidx.compose.material.icons.filled.Logout
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.outlined.ListAlt
+import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.awt.ComposeWindow
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
@@ -23,33 +23,58 @@ import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
 
 enum class HomeScreenTab {
+    INSTRUMENTOS,
     ENTIDADES_FEDERATIVAS,
     MUNICIPIOS,
     TIPOS_DE_ESTADISTICA,
     TIPOS_DE_INSTRUMENTO
 }
 
+private class MenuItem(
+    val tab: HomeScreenTab,
+    val icon: @Composable () -> Unit,
+    val label: @Composable () -> Unit,
+    val modifier: Modifier = Modifier
+)
+
 class HomeScreen(
     private val window: ComposeWindow,
     private val user: AuthUserResponse
 ) : Screen {
+    private val items = listOf(
+        Triple("Instrumentos", Icons.Default.ListAlt, HomeScreenTab.INSTRUMENTOS),
+        Triple("Entidades Federativas", Icons.Default.ListAlt, HomeScreenTab.ENTIDADES_FEDERATIVAS),
+        Triple("Municipios", Icons.Default.ListAlt, HomeScreenTab.MUNICIPIOS),
+        Triple("Tipos de Estadística", Icons.Default.ListAlt, HomeScreenTab.TIPOS_DE_ESTADISTICA),
+        Triple("Tipos de Instrumento", Icons.Default.ListAlt, HomeScreenTab.TIPOS_DE_INSTRUMENTO)
+    )
+
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val screenModel = rememberScreenModel { HomeScreenModel(navigator) }
-        var selectedTab by remember { mutableStateOf(HomeScreenTab.ENTIDADES_FEDERATIVAS) }
-        var windowSize by remember(window) { mutableStateOf(WindowSize.fromWidth(window.size.width.dp)) }
+        val compositionContext = rememberCompositionContext()
+        val drawerState = rememberDrawerState(DrawerValue.Closed)
+        val screenModel = rememberScreenModel { HomeScreenModel(navigator, drawerState, compositionContext) }
+        var selectedTab by remember { mutableStateOf(HomeScreenTab.INSTRUMENTOS) }
+        var windowSize by remember { mutableStateOf(WindowSize.fromWidth(window.size.width.dp)) }
 
-        LaunchedEffect(Unit) {
+        val title = when (selectedTab) {
+            HomeScreenTab.INSTRUMENTOS -> "Instrumentos"
+            HomeScreenTab.ENTIDADES_FEDERATIVAS -> "Entidades Federativas"
+            HomeScreenTab.MUNICIPIOS -> "Municipios"
+            HomeScreenTab.TIPOS_DE_ESTADISTICA -> "Tipos de Estadística"
+            HomeScreenTab.TIPOS_DE_INSTRUMENTO -> "Tipos de Instrumento"
+        }
+
+        DisposableEffect(Unit) {
             window.apply {
                 isResizable = true
                 size = Dimension(800, 600)
                 minimumSize = Dimension(800, 600)
                 setLocationRelativeTo(null)
             }
-        }
 
-        DisposableEffect(Unit) {
             val listener = object : ComponentAdapter() {
                 override fun componentResized(event: ComponentEvent) {
                     windowSize = WindowSize.fromWidth(event.component.size.width.dp)
@@ -62,164 +87,97 @@ class HomeScreen(
             }
         }
 
-        when (windowSize) {
-            WindowSize.COMPACT, WindowSize.MEDIUM -> MediumMenu(
-                screenModel = screenModel,
-                selectedTab = selectedTab,
-                onSelectedTabChange = { selectedTab = it }
-            ) {
-                WorkArea(screenModel = screenModel, selectedTab = selectedTab)
-            }
-
-            WindowSize.EXPANDED -> ExpandedMenu(
-                screenModel = screenModel,
-                selectedTab = selectedTab,
-                onSelectedTabChange = { selectedTab = it }
-            ) {
-                WorkArea(screenModel = screenModel, selectedTab = selectedTab)
-            }
-        }
-    }
-
-    @Composable
-    private fun MediumMenu(
-        screenModel: HomeScreenModel,
-        selectedTab: HomeScreenTab,
-        onSelectedTabChange: (HomeScreenTab) -> Unit,
-        content: @Composable () -> Unit
-    ) {
-        Row {
-            NavigationRail(
-                modifier = Modifier.padding(8.dp),
-                header = {
-                    IconButton(
-                        onClick = { },
-                        content = { Icon(Icons.Default.Menu, contentDescription = null) }
-                    )
-                }
-            ) {
-                NavigationRailItem(
-                    selected = selectedTab == HomeScreenTab.ENTIDADES_FEDERATIVAS,
-                    onClick = { onSelectedTabChange(HomeScreenTab.ENTIDADES_FEDERATIVAS) },
-                    modifier = Modifier.height(72.dp),
-                    icon = { Icon(Icons.Default.ListAlt, contentDescription = null) },
-                    label = { Text(text = "Entidades\nfederativas", textAlign = TextAlign.Center) }
-                )
-
-                NavigationRailItem(
-                    selected = selectedTab == HomeScreenTab.MUNICIPIOS,
-                    onClick = { onSelectedTabChange(HomeScreenTab.MUNICIPIOS) },
-                    icon = {
-                        Icon(
-                            imageVector = if (selectedTab == HomeScreenTab.MUNICIPIOS) Icons.Default.ListAlt else Icons.Outlined.ListAlt,
-                            contentDescription = null
-                        )
-                    },
-                    label = { Text(text = "Municípios", textAlign = TextAlign.Center) }
-                )
-
-                NavigationRailItem(
-                    selected = selectedTab == HomeScreenTab.TIPOS_DE_ESTADISTICA,
-                    onClick = { onSelectedTabChange(HomeScreenTab.TIPOS_DE_ESTADISTICA) },
-                    modifier = Modifier.height(72.dp),
-                    icon = { Icon(Icons.Default.ListAlt, contentDescription = null) },
-                    label = { Text(text = "Tipos de\nestadísticas", textAlign = TextAlign.Center) }
-                )
-
-                NavigationRailItem(
-                    selected = selectedTab == HomeScreenTab.TIPOS_DE_INSTRUMENTO,
-                    onClick = { onSelectedTabChange(HomeScreenTab.TIPOS_DE_INSTRUMENTO) },
-                    modifier = Modifier.height(72.dp),
-                    icon = { Icon(Icons.Default.ListAlt, contentDescription = null) },
-                    label = { Text(text = "Tipos de\ninstrumentos", textAlign = TextAlign.Center) }
-                )
-
-                NavigationRailItem(
-                    selected = false,
-                    onClick = { screenModel.logout() },
-                    icon = { Icon(Icons.Default.Logout, contentDescription = null) },
-                    label = { Text("Cerrar sesión") }
-                )
-            }
-
-            content()
-        }
-    }
-
-    @Composable
-    private fun ExpandedMenu(
-        screenModel: HomeScreenModel,
-        selectedTab: HomeScreenTab,
-        onSelectedTabChange: (HomeScreenTab) -> Unit,
-        content: @Composable () -> Unit
-    ) {
-        PermanentNavigationDrawer(
+        ModalNavigationDrawer(
+            drawerState = drawerState,
             drawerContent = {
-                PermanentDrawerSheet(Modifier.width(240.dp)) {
-                    Spacer(Modifier.height(12.dp))
-
-                    NavigationDrawerItem(
-                        selected = selectedTab == HomeScreenTab.ENTIDADES_FEDERATIVAS,
-                        onClick = { onSelectedTabChange(HomeScreenTab.ENTIDADES_FEDERATIVAS) },
-                        icon = { Icon(Icons.Default.ListAlt, contentDescription = null) },
-                        label = { Text(text = "Entidades federativas") }
-                    )
-
-                    NavigationDrawerItem(
-                        selected = selectedTab == HomeScreenTab.MUNICIPIOS,
-                        onClick = { onSelectedTabChange(HomeScreenTab.MUNICIPIOS) },
-                        icon = { Icon(Icons.Default.ListAlt, contentDescription = null) },
-                        label = { Text(text = "Municípios") }
-                    )
-
-                    NavigationDrawerItem(
-                        selected = selectedTab == HomeScreenTab.TIPOS_DE_ESTADISTICA,
-                        onClick = { onSelectedTabChange(HomeScreenTab.TIPOS_DE_ESTADISTICA) },
-                        icon = { Icon(Icons.Default.ListAlt, contentDescription = null) },
-                        label = { Text(text = "Tipos de estadísticas") }
-                    )
-
-                    NavigationDrawerItem(
-                        selected = selectedTab == HomeScreenTab.TIPOS_DE_INSTRUMENTO,
-                        onClick = { onSelectedTabChange(HomeScreenTab.TIPOS_DE_INSTRUMENTO) },
-                        icon = { Icon(Icons.Default.ListAlt, contentDescription = null) },
-                        label = { Text(text = "Tipos de instrumentos") }
-                    )
-
-                    Spacer(Modifier.height(12.dp))
-
-                    Divider()
-
-                    Spacer(Modifier.height(12.dp))
-
-                    NavigationDrawerItem(
-                        selected = false,
-                        onClick = { screenModel.logout() },
-                        icon = { Icon(Icons.Default.Logout, contentDescription = null) },
-                        label = { Text("Cerrar sesión") }
+                ModalNavigationDrawerContent(
+                    items = items,
+                    screenModel = screenModel,
+                    selectedTab = selectedTab,
+                    onChangeSelectedTab = {
+                        screenModel.closeNavigationDrawer(onOpen = { selectedTab = it })
+                    }
+                )
+            },
+        ) {
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        title = { Text(title) },
+                        navigationIcon = {
+                            IconButton(
+                                onClick = { screenModel.openNavigationDrawer() },
+                            ) {
+                                Icon(Icons.Rounded.Menu, contentDescription = null)
+                            }
+                        }
                     )
                 }
-            },
-            content = content
-        )
+            ) { paddingValues ->
+                WorkArea(
+                    screenModel = screenModel,
+                    selectedTab = selectedTab,
+                    paddingValues = paddingValues
+                )
+            }
+        }
     }
 
     @Composable
-    private fun WorkArea(
+    private fun ModalNavigationDrawerContent(
+        items: List<Triple<String, ImageVector, HomeScreenTab>>,
         screenModel: HomeScreenModel,
         selectedTab: HomeScreenTab,
+        onChangeSelectedTab: (HomeScreenTab) -> Unit
     ) {
+        ModalDrawerSheet {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                IconButton(
+                    onClick = { screenModel.closeNavigationDrawer() },
+                    modifier = Modifier.padding(start = 4.dp)
+                ) {
+                    Icon(Icons.Rounded.Menu, contentDescription = null)
+                }
+                Text("Organizador PEC-6-60")
+            }
+
+            Divider()
+            items.forEach {
+                val (label, icon, tab) = it
+                NavigationDrawerItem(
+                    icon = { Icon(icon, contentDescription = null) },
+                    label = { Text(text = label) },
+                    selected = selectedTab == tab,
+                    onClick = { onChangeSelectedTab(tab) }
+                )
+            }
+            Spacer(
+                modifier = Modifier.weight(1.0f)
+            )
+
+            Divider()
+            NavigationDrawerItem(
+                icon = { Icon(Icons.Default.Logout, contentDescription = null) },
+                label = { Text(text = "Cerrar Sesión") },
+                selected = false,
+                onClick = { screenModel.logout() }
+            )
+        }
+    }
+
+    @Composable
+    private fun WorkArea(screenModel: HomeScreenModel, selectedTab: HomeScreenTab, paddingValues: PaddingValues) {
         Column(
-            modifier = Modifier.padding(8.dp)
+            modifier = Modifier.padding(paddingValues)
         ) {
-            when (selectedTab) {
-                HomeScreenTab.ENTIDADES_FEDERATIVAS -> screenModel.navigateToFederalEntity()
-
-                HomeScreenTab.MUNICIPIOS -> screenModel.navigateToMunicipality()
-
-                HomeScreenTab.TIPOS_DE_ESTADISTICA -> screenModel.navigateToStatisticType()
-
-                HomeScreenTab.TIPOS_DE_INSTRUMENTO -> screenModel.navigateToInstrumentType()
+            screenModel.apply {
+                when (selectedTab) {
+                    HomeScreenTab.INSTRUMENTOS -> NavigateToInstrument()
+                    HomeScreenTab.ENTIDADES_FEDERATIVAS -> NavigateToFederalEntity()
+                    HomeScreenTab.MUNICIPIOS -> NavigateToMunicipality()
+                    HomeScreenTab.TIPOS_DE_ESTADISTICA -> NavigateToStatisticType()
+                    HomeScreenTab.TIPOS_DE_INSTRUMENTO -> NavigateToInstrumentType()
+                }
             }
         }
     }
