@@ -31,3 +31,12 @@ class InvalidInstrumentContentError :
 
 class InstrumentNotFoundError(id: String) :
     InstrumentError("The instrument with id <$id> was not found")
+
+class InstrumentAlreadyExistsError(
+    statisticYear: Int,
+    statisticMonth: Int,
+    consecutive: String,
+    instrumentTypeId: String,
+    statisticTypeId: String,
+    municipalityId: String
+) : InstrumentError("The instrument with statistic year <$statisticYear>, statistic month <$statisticMonth>, consecutive <$consecutive>, instrument type id <$instrumentTypeId>, statistic type id <$statisticTypeId>, and municipality id <$municipalityId> already exists")
