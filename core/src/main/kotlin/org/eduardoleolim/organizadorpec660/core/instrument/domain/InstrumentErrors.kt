@@ -22,3 +22,12 @@ class InvalidInstrumentFileIdError(id: String, override val cause: Throwable?) :
 
 class InvalidInstrumentUpdateDateError(val updatedAt: Date, val createdAt: Date) :
     InstrumentError("The update date <$updatedAt> is not valid because it is before the create date <$createdAt>")
+
+class InvalidEmptyInstrumentContentError :
+    InstrumentError("The instrument content cannot be empty")
+
+class InvalidInstrumentContentError :
+    InstrumentError("The instrument content is not a valid PDF file")
+
+class InstrumentNotFoundError(id: String) :
+    InstrumentError("The instrument with id <$id> was not found")

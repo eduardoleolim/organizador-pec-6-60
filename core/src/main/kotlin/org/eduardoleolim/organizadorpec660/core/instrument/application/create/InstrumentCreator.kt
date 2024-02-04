@@ -12,10 +12,10 @@ import org.eduardoleolim.organizadorpec660.core.municipality.domain.Municipality
 import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeCriteria
 import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeNotFoundError
 import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeRepository
-import java.nio.Buffer
 
 class InstrumentCreator(
     private val instrumentRepository: InstrumentRepository,
+    private val instrumentFileRepository: InstrumentFileRepository,
     private val instrumentTypeRepository: InstrumentTypeRepository,
     private val statisticTypeRepository: StatisticTypeRepository,
     private val municipalityRepository: MunicipalityRepository
@@ -27,7 +27,7 @@ class InstrumentCreator(
         instrumentTypeId: String,
         statisticTypeId: String,
         municipalityId: String,
-        file: Buffer
+        file: ByteArray
     ) {
         if (existsInstrumentType(instrumentTypeId).not())
             throw InstrumentTypeNotFoundError(instrumentTypeId)
