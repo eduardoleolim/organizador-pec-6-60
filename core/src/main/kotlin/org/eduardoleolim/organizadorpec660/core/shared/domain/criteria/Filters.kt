@@ -31,6 +31,24 @@ class SingleFilter(val filter: Filter) : Filters() {
     override fun serialize(): String {
         return filter.serialize()
     }
+
+    companion object {
+        fun equal(field: String, value: String) = SingleFilter(Filter.equal(field, value))
+
+        fun notEqual(field: String, value: String) = SingleFilter(Filter.notEqual(field, value))
+
+        fun greaterThan(field: String, value: String) = SingleFilter(Filter.greaterThan(field, value))
+
+        fun greaterThanOrEqual(field: String, value: String) = SingleFilter(Filter.greaterThanOrEqual(field, value))
+
+        fun lessThan(field: String, value: String) = SingleFilter(Filter.lessThan(field, value))
+
+        fun lessThanOrEqual(field: String, value: String) = SingleFilter(Filter.lessThanOrEqual(field, value))
+
+        fun contains(field: String, value: String) = SingleFilter(Filter.contains(field, value))
+
+        fun notContains(field: String, value: String) = SingleFilter(Filter.notContains(field, value))
+    }
 }
 
 open class MultipleFilters(val filters: List<Filters>, val operator: FiltersOperator) : Filters() {

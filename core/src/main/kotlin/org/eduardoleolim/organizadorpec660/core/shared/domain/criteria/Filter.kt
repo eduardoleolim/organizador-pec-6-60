@@ -9,6 +9,22 @@ class Filter(val field: FilterField, val operator: FilterOperator, val value: Fi
         fun create(field: String, operator: String, value: String) =
             Filter(FilterField(field), FilterOperator.fromValue(operator.uppercase()), FilterValue(value))
 
+        fun equal(field: String, value: String) = create(field, "=", value)
+
+        fun notEqual(field: String, value: String) = create(field, "!=", value)
+
+        fun greaterThan(field: String, value: String) = create(field, ">", value)
+
+        fun greaterThanOrEqual(field: String, value: String) = create(field, ">=", value)
+
+        fun lessThan(field: String, value: String) = create(field, "<", value)
+
+        fun lessThanOrEqual(field: String, value: String) = create(field, "<=", value)
+
+        fun contains(field: String, value: String) = create(field, "CONTAINS", value)
+
+        fun notContains(field: String, value: String) = create(field, "NOT_CONTAINS", value)
+
         fun fromValues(values: HashMap<String, String>): Filter {
             val field = values["field"]
             val operator = values["operator"]

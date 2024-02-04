@@ -3,34 +3,20 @@ package org.eduardoleolim.organizadorpec660.core.municipality.domain
 import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.*
 
 object MunicipalityCriteria {
-    fun idCriteria(id: String) = Criteria(
-        SingleFilter(Filter(FilterField("id"), FilterOperator.EQUAL, FilterValue(id))),
-        Orders.none(),
-        1,
-        null
-    )
+    fun idCriteria(id: String) = Criteria(SingleFilter.equal("id", id), Orders.none(), 1, null)
 
-    fun keyCodeCriteria(keyCode: String) = Criteria(
-        SingleFilter(Filter(FilterField("keyCode"), FilterOperator.EQUAL, FilterValue(keyCode))),
-        Orders.none(),
-        1,
-        null
-    )
+    fun keyCodeCriteria(keyCode: String) =
+        Criteria(SingleFilter.equal("keyCode", keyCode), Orders.none(), 1, null)
 
     fun anotherKeyCodeCriteria(id: String, keyCode: String) = Criteria(
-        AndFilters(
-            listOf(
-                SingleFilter(Filter(FilterField("id"), FilterOperator.NOT_EQUAL, FilterValue(id))),
-                SingleFilter(Filter(FilterField("keyCode"), FilterOperator.EQUAL, FilterValue(keyCode)))
-            )
-        ),
+        AndFilters(listOf(SingleFilter.notEqual("id", id), SingleFilter.equal("keyCode", keyCode))),
         Orders.none(),
         1,
         null
     )
 
     fun federalEntityIdCriteria(federalEntityId: String) = Criteria(
-        SingleFilter(Filter(FilterField("federalEntity.id"), FilterOperator.EQUAL, FilterValue(federalEntityId))),
+        SingleFilter.equal("federalEntity.id", federalEntityId),
         Orders.none(),
         1,
         null
@@ -46,27 +32,15 @@ object MunicipalityCriteria {
         AndFilters(
             listOf(
                 federalEntityId?.let {
-                    SingleFilter(Filter(FilterField("federalEntity.id"), FilterOperator.EQUAL, FilterValue(it)))
+                    SingleFilter.equal("federalEntity.id", it)
                 } ?: EmptyFilters(),
                 search?.let {
                     OrFilters(
                         listOf(
-                            SingleFilter(Filter(FilterField("keyCode"), FilterOperator.CONTAINS, FilterValue(it))),
-                            SingleFilter(Filter(FilterField("name"), FilterOperator.CONTAINS, FilterValue(it))),
-                            SingleFilter(
-                                Filter(
-                                    FilterField("federalEntity.keyCode"),
-                                    FilterOperator.CONTAINS,
-                                    FilterValue(it)
-                                )
-                            ),
-                            SingleFilter(
-                                Filter(
-                                    FilterField("federalEntity.name"),
-                                    FilterOperator.CONTAINS,
-                                    FilterValue(it)
-                                )
-                            )
+                            SingleFilter.contains("keyCode", it),
+                            SingleFilter.contains("name", it),
+                            SingleFilter.contains("federalEntity.keyCode", it),
+                            SingleFilter.contains("federalEntity.name", it)
                         )
                     )
                 } ?: EmptyFilters()
