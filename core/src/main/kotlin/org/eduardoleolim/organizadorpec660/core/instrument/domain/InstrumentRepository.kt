@@ -9,7 +9,5 @@ interface InstrumentRepository {
 
     fun save(instrument: Instrument)
 
-    fun save(instrumentFile: InstrumentFile)
-
     fun delete(instrumentId: String)
 }

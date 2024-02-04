@@ -2,6 +2,7 @@ package org.eduardoleolim.organizadorpec660.core.instrument.application.create
 
 import org.eduardoleolim.organizadorpec660.core.instrument.domain.Instrument
 import org.eduardoleolim.organizadorpec660.core.instrument.domain.InstrumentFile
+import org.eduardoleolim.organizadorpec660.core.instrument.domain.InstrumentFileRepository
 import org.eduardoleolim.organizadorpec660.core.instrument.domain.InstrumentRepository
 import org.eduardoleolim.organizadorpec660.core.instrumentType.domain.InstrumentTypeCriteria
 import org.eduardoleolim.organizadorpec660.core.instrumentType.domain.InstrumentTypeNotFoundError
@@ -50,7 +51,7 @@ class InstrumentCreator(
         )
 
         instrumentRepository.save(instrument)
-        instrumentRepository.save(instrumentFile)
+        instrumentFileRepository.save(instrumentFile)
     }
 
     private fun existsInstrumentType(instrumentTypeId: String) =
