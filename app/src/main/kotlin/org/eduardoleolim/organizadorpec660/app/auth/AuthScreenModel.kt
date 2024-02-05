@@ -12,20 +12,19 @@ import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryHandlerExecutionError
 
 class AuthScreenModel(private val navigator: Navigator, private val queryBus: QueryBus) : ScreenModel {
-    fun login(username: String, password: String, function: (Result<AuthUserResponse>) -> Unit) {
+    fun login(username: String, password: String, callback: (Result<AuthUserResponse>) -> Unit) {
         screenModelScope.launch {
             val isUsernameInvalid = username.isEmpty()
             val isPasswordInvalid = password.isEmpty()
 
             if (isUsernameInvalid || isPasswordInvalid) {
-                function(Result.failure(InvalidCredentialsException(isUsernameInvalid, isPasswordInvalid)))
-                return@launch
-            }
-
-            try {
-                function(Result.success(queryBus.ask(AuthenticateUserQuery(username, password))))
-            } catch (e: QueryHandlerExecutionError) {
-                function(Result.failure(e.cause!!))
+                callback(Result.failure(InvalidCredentialsException(isUsernameInvalid, isPasswordInvalid)))
+            } else {
+                try {
+                    callback(Result.success(queryBus.ask(AuthenticateUserQuery(username, password))))
+                } catch (e: QueryHandlerExecutionError) {
+                    callback(Result.failure(e.cause!!))
+                }
             }
         }
     }

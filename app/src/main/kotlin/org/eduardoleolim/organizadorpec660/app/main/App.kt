@@ -1,10 +1,7 @@
 package org.eduardoleolim.organizadorpec660.app.main
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
@@ -55,7 +52,7 @@ class App(private val commandBus: CommandBus, private val queryBus: QueryBus) {
         }
 
         MaterialTheme(
-            colorScheme = if (isDarkTheme) DarkColors else LightColors,
+            colorScheme = if (isDarkTheme) DarkColors else LightColors
         ) {
             CustomWindow(
                 state = state,
