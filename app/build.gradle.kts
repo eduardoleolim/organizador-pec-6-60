@@ -3,7 +3,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
     id("org.eduardoleolim.organizadorpec660.kotlin-application-conventions")
-
     id("org.jetbrains.compose").version("1.5.12")
 }
 
@@ -20,7 +19,7 @@ dependencies {
     }
     implementation(compose.materialIconsExtended)
     implementation(compose.material3)
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:${properties["kotlinxCoroutines.version"]}")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:${properties["coroutines.version"]}")
     implementation("cafe.adriel.voyager:voyager-navigator:${properties["voyager.version"]}")
     implementation("cafe.adriel.voyager:voyager-screenmodel:${properties["voyager.version"]}")
     implementation("com.github.Dansoftowner:jSystemThemeDetector:${properties["themeDetector.version"]}") {
