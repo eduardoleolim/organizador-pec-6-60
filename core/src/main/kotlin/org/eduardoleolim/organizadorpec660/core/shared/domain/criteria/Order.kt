@@ -7,7 +7,7 @@ class Order(val orderBy: OrderBy, val orderType: OrderType) {
 
     companion object {
         fun fromValues(orderBy: String?, orderType: String?) =
-            if (orderBy == null) none() else Order(OrderBy(orderBy), OrderType.valueOf(orderType ?: "asc"))
+            if (orderBy == null) none() else Order(OrderBy(orderBy), OrderType.valueOf(orderType?.uppercase() ?: "ASC"))
 
         fun none() = Order(OrderBy(""), OrderType.NONE)
 
