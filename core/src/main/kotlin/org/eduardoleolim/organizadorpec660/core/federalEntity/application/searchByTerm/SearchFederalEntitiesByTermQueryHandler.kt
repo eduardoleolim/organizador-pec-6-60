@@ -12,7 +12,7 @@ class SearchFederalEntitiesByTermQueryHandler(private val searcher: FederalEntit
         val federalEntities = searchFederalEntities(query.search(), query.orders(), query.limit(), query.offset())
         val totalFederalEntities = countTotalFederalEntities(query.search())
 
-        return FederalEntitiesResponse.fromAggregate(federalEntities, totalFederalEntities)
+        return FederalEntitiesResponse.fromAggregate(federalEntities, totalFederalEntities, query.limit(), query.offset())
     }
 
     private fun searchFederalEntities(
