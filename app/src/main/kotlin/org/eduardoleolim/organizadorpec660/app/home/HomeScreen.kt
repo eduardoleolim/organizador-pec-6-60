@@ -4,7 +4,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ListAlt
 import androidx.compose.material.icons.filled.Logout
-import androidx.compose.material.icons.rounded.Menu
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MenuOpen
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -108,7 +109,7 @@ class HomeScreen(
                             IconButton(
                                 onClick = { screenModel.openNavigationDrawer() },
                             ) {
-                                Icon(Icons.Rounded.Menu, contentDescription = null)
+                                Icon(Icons.Filled.Menu, contentDescription = null)
                             }
                         }
                     )
@@ -130,15 +131,22 @@ class HomeScreen(
         selectedTab: HomeScreenTab,
         onChangeSelectedTab: (HomeScreenTab) -> Unit
     ) {
-        ModalDrawerSheet {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                IconButton(
-                    onClick = { screenModel.closeNavigationDrawer() },
-                    modifier = Modifier.padding(start = 4.dp)
-                ) {
-                    Icon(Icons.Rounded.Menu, contentDescription = null)
-                }
+        ModalDrawerSheet(
+            modifier = Modifier.width(300.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Text("Organizador PEC-6-60")
+                Spacer(modifier = Modifier.weight(1.0f))
+                IconButton(
+                    onClick = { screenModel.closeNavigationDrawer() }
+                ) {
+                    Icon(Icons.Filled.MenuOpen, contentDescription = null)
+                }
             }
 
             Divider()
@@ -151,10 +159,8 @@ class HomeScreen(
                     onClick = { onChangeSelectedTab(tab) }
                 )
             }
-            Spacer(
-                modifier = Modifier.weight(1.0f)
-            )
 
+            Spacer(modifier = Modifier.weight(1.0f))
             Divider()
             NavigationDrawerItem(
                 icon = { Icon(Icons.Default.Logout, contentDescription = null) },
