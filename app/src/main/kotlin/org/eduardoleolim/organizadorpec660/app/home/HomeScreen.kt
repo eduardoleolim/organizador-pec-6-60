@@ -31,13 +31,6 @@ enum class HomeScreenTab {
     TIPOS_DE_INSTRUMENTO
 }
 
-private class MenuItem(
-    val tab: HomeScreenTab,
-    val icon: @Composable () -> Unit,
-    val label: @Composable () -> Unit,
-    val modifier: Modifier = Modifier
-)
-
 class HomeScreen(
     private val window: ComposeWindow,
     private val user: AuthUserResponse
@@ -105,15 +98,13 @@ class HomeScreen(
                         TopAppBar(
                             modifier = Modifier.padding(16.dp),
                             title = { Text(title) },
+                            actions = actions,
                             navigationIcon = {
                                 IconButton(
                                     onClick = { screenModel.openNavigationDrawer() },
                                 ) {
                                     Icon(Icons.Filled.Menu, contentDescription = null)
                                 }
-                            },
-                            actions = {
-                                actions()
                             }
                         )
                     }
@@ -182,11 +173,11 @@ class HomeScreen(
         ) {
             screenModel.apply {
                 when (selectedTab) {
-                    HomeScreenTab.INSTRUMENTOS -> NavigateToInstrument()
-                    HomeScreenTab.ENTIDADES_FEDERATIVAS -> NavigateToFederalEntity()
-                    HomeScreenTab.MUNICIPIOS -> NavigateToMunicipality()
-                    HomeScreenTab.TIPOS_DE_ESTADISTICA -> NavigateToStatisticType()
-                    HomeScreenTab.TIPOS_DE_INSTRUMENTO -> NavigateToInstrumentType()
+                    HomeScreenTab.INSTRUMENTOS -> InstrumentView()
+                    HomeScreenTab.ENTIDADES_FEDERATIVAS -> FederalEntityView()
+                    HomeScreenTab.MUNICIPIOS -> MunicipalityView()
+                    HomeScreenTab.TIPOS_DE_ESTADISTICA -> StatisticTypeView()
+                    HomeScreenTab.TIPOS_DE_INSTRUMENTO -> InstrumentTypeView()
                 }
             }
         }

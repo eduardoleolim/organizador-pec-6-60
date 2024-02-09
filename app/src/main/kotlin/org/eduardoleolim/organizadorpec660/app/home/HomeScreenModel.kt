@@ -35,27 +35,27 @@ class HomeScreenModel(
     }
 
     @Composable
-    fun NavigateToInstrument() {
+    fun InstrumentView() {
 
     }
 
     @Composable
-    fun NavigateToFederalEntity() {
+    fun FederalEntityView() {
         Navigator(ScreenRegistry.get(HomeProvider.FederalEntityScreen))
     }
 
     @Composable
-    fun NavigateToMunicipality() {
+    fun MunicipalityView() {
         Navigator(ScreenRegistry.get(HomeProvider.MunicipalityScreen))
     }
 
     @Composable
-    fun NavigateToStatisticType() {
+    fun StatisticTypeView() {
         Navigator(ScreenRegistry.get(HomeProvider.StatisticTypeScreen))
     }
 
     @Composable
-    fun NavigateToInstrumentType() {
+    fun InstrumentTypeView() {
         Navigator(ScreenRegistry.get(HomeProvider.InstrumentTypeScreen))
     }
 
