@@ -194,9 +194,10 @@ private val LocalHomeConfig = compositionLocalOf<HomeConfig> { error("home actio
 @Composable
 fun HomeTitle(title: String) {
     val current = LocalHomeConfig.current
-    current.title = title
 
     DisposableEffect(Unit) {
+        current.title = title
+
         onDispose {
             current.title = ""
         }
@@ -206,9 +207,10 @@ fun HomeTitle(title: String) {
 @Composable
 fun HomeActions(actions: @Composable RowScope.() -> Unit) {
     val current = LocalHomeConfig.current
-    current.actions = actions
 
     DisposableEffect(Unit) {
+        current.actions = actions
+
         onDispose {
             current.actions = @Composable {}
         }
