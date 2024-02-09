@@ -5,7 +5,7 @@ import org.ktorm.schema.*
 import java.time.LocalDateTime
 
 interface InstrumentFile : Entity<InstrumentFile> {
-    val instrumentFileId : String
+    val instrumentFileId: String
     val content: ByteArray
 }
 

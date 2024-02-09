@@ -1,6 +1,9 @@
 package org.eduardoleolim.organizadorpec660.core.instrument.domain
 
-import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.*
+import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.AndFilters
+import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.Criteria
+import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.Orders
+import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.SingleFilter
 
 object InstrumentCriteria {
     fun idCriteria(id: String) = Criteria(SingleFilter.equal("id", id), Orders.none(), 1, null)
