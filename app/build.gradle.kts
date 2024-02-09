@@ -31,6 +31,7 @@ dependencies {
 compose.desktop {
     application {
         mainClass = "org.eduardoleolim.organizadorpec660.app.MainKt"
+        jvmArgs("-Dfile.encoding=UTF-8")
 
         val taskNames = project.gradle.startParameter.taskNames
         val runTasks = listOf("run", "${project.name}:run", ":${project.name}:run")
