@@ -96,7 +96,6 @@ class HomeScreen(
                         val title = homeConfig.title
 
                         TopAppBar(
-                            modifier = Modifier.padding(16.dp),
                             title = { Text(title) },
                             actions = actions,
                             navigationIcon = {

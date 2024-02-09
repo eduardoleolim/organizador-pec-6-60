@@ -1,9 +1,6 @@
 package org.eduardoleolim.organizadorpec660.app.federalEntity
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -14,6 +11,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
@@ -48,6 +46,7 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
         HomeTitle("Entidades federativas")
         HomeActions {
             SmallFloatingActionButton(
+                modifier = Modifier.padding(16.dp),
                 onClick = { showFormDialog = true },
                 containerColor = MaterialTheme.colorScheme.secondaryContainer,
                 contentColor = MaterialTheme.colorScheme.secondary
@@ -103,29 +102,22 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
             }
         )
 
-        selectedFederalEntity?.takeIf { showDeleteModal }?.let {
-            QuestionDialog(
-                title = {
-                    Text("Eliminar entidad federativa")
+        if (showDeleteModal && selectedFederalEntity != null) {
+            DeleteFederalEntityModal(
+                screenModel = screenModel,
+                selectedFederalEntity = selectedFederalEntity!!,
+                onSuccess = {
+                    showDeleteModal = false
+                    selectedFederalEntity = null
+                    resetTable()
                 },
-                text = {
-                    Text("¿Estás seguro de que deseas eliminar la entidad federativa ${selectedFederalEntity!!.name}?")
-                },
-                onConfirmRequest = {
-                    screenModel.deleteFederalEntity(selectedFederalEntity!!.id) { result ->
-                        result.fold(
-                            onSuccess = {
-                                resetTable()
-                            },
-                            onFailure = {
-                                println(it.localizedMessage)
-                                resetTable()
-                            }
-                        )
-                    }
+                onFail = {
+                    showDeleteModal = false
+                    selectedFederalEntity = null
                 },
                 onDismissRequest = {
-                    resetTable()
+                    showDeleteModal = false
+                    selectedFederalEntity = null
                 }
             )
         }
@@ -149,13 +141,47 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
     }
 
     @Composable
+    private fun DeleteFederalEntityModal(
+        screenModel: FederalEntityScreenModel,
+        selectedFederalEntity: FederalEntityResponse,
+        onSuccess: () -> Unit,
+        onFail: () -> Unit,
+        onDismissRequest: () -> Unit
+    ) {
+        QuestionDialog(
+            title = {
+                Text("Eliminar entidad federativa")
+            },
+            text = {
+                Text("¿Estás seguro de que deseas eliminar la entidad federativa ${selectedFederalEntity.name}?")
+            },
+            onConfirmRequest = {
+                screenModel.deleteFederalEntity(selectedFederalEntity.id) { result ->
+                    result.fold(
+                        onSuccess = {
+                            onSuccess()
+                        },
+                        onFailure = {
+                            println(it.localizedMessage)
+                            onFail()
+                        }
+                    )
+                }
+            },
+            onDismissRequest = {
+                onDismissRequest()
+            }
+        )
+    }
+
+    @Composable
     private fun FederalEntityForm(
         screenModel: FederalEntityScreenModel,
         selectedFederalEntity: FederalEntityResponse?,
         onDismissRequest: () -> Unit,
         onSuccess: () -> Unit
     ) {
-        var federalEntityId by remember { mutableStateOf(selectedFederalEntity?.id) }
+        val federalEntityId = remember { selectedFederalEntity?.id }
         var keyCode by remember { mutableStateOf(selectedFederalEntity?.keyCode ?: "") }
         var name by remember { mutableStateOf(selectedFederalEntity?.name ?: "") }
 
@@ -174,11 +200,17 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
                             }
                         },
                         label = { Text("Clave") },
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .onFocusChanged {
+                                if (!it.isFocused && keyCode.isNotEmpty()) {
+                                    keyCode = keyCode.padStart(2, '0')
+                                }
+                            },
                         singleLine = true
                     )
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(24.dp))
 
                     OutlinedTextField(
                         value = name,
