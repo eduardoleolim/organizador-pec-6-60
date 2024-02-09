@@ -7,6 +7,7 @@ import cafe.adriel.voyager.navigator.Navigator
 import org.eduardoleolim.organizadorpec660.app.auth.AuthScreen
 import org.eduardoleolim.organizadorpec660.app.federalEntity.FederalEntityScreen
 import org.eduardoleolim.organizadorpec660.app.home.HomeScreen
+import org.eduardoleolim.organizadorpec660.app.instrument.InstrumentScreen
 import org.eduardoleolim.organizadorpec660.app.instrumentType.InstrumentTypeScreen
 import org.eduardoleolim.organizadorpec660.app.municipality.MunicipalityScreen
 import org.eduardoleolim.organizadorpec660.app.statisticType.StatisticTypeScreen
@@ -22,6 +23,7 @@ fun FrameWindowScope.Router(commandBus: CommandBus, queryBus: QueryBus) {
         register<HomeProvider.MunicipalityScreen> { MunicipalityScreen(queryBus, commandBus) }
         register<HomeProvider.StatisticTypeScreen> { StatisticTypeScreen(queryBus, commandBus) }
         register<HomeProvider.InstrumentTypeScreen> { InstrumentTypeScreen(queryBus, commandBus) }
+        register<HomeProvider.InstrumentScreen> { InstrumentScreen(queryBus, commandBus) }
     }
 
     Navigator(ScreenRegistry.get(MainProvider.AuthScreen))
