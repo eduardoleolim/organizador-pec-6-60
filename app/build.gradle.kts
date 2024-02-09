@@ -22,6 +22,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:${properties["coroutines.version"]}")
     implementation("cafe.adriel.voyager:voyager-navigator:${properties["voyager.version"]}")
     implementation("cafe.adriel.voyager:voyager-screenmodel:${properties["voyager.version"]}")
+    implementation("com.seanproctor:data-table-material3:0.5.1")
     implementation("com.github.Dansoftowner:jSystemThemeDetector:${properties["themeDetector.version"]}") {
         exclude("org.slf4j")
     }
