@@ -4,8 +4,10 @@ import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.launch
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntitiesResponse
+import org.eduardoleolim.organizadorpec660.core.federalEntity.application.create.CreateFederalEntityCommand
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.delete.DeleteFederalEntityCommand
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.searchByTerm.SearchFederalEntitiesByTermQuery
+import org.eduardoleolim.organizadorpec660.core.federalEntity.application.update.UpdateFederalEntityCommand
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
 
@@ -22,6 +24,28 @@ class FederalEntityScreenModel(private val queryBus: QueryBus, private val comma
 
             try {
                 callback(Result.success(queryBus.ask(query)))
+            } catch (e: Exception) {
+                callback(Result.failure(e.cause!!))
+            }
+        }
+    }
+
+    fun createFederalEntity(keyCode: String, name: String, callback: (Result<Unit>) -> Unit) {
+        screenModelScope.launch {
+            try {
+                commandBus.dispatch(CreateFederalEntityCommand(keyCode, name))
+                callback(Result.success(Unit))
+            } catch (e: Exception) {
+                callback(Result.failure(e.cause!!))
+            }
+        }
+    }
+
+    fun editFederalEntity(federalEntityId: String, keyCode: String, name: String, callback: (Result<Unit>) -> Unit) {
+        screenModelScope.launch {
+            try {
+                commandBus.dispatch(UpdateFederalEntityCommand(federalEntityId, keyCode, name))
+                callback(Result.success(Unit))
             } catch (e: Exception) {
                 callback(Result.failure(e.cause!!))
             }

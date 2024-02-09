@@ -1,6 +1,9 @@
 package org.eduardoleolim.organizadorpec660.app.federalEntity
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -12,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import com.seanproctor.datatable.DataColumn
@@ -33,7 +37,8 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
     @Composable
     override fun Content() {
         val screenModel = rememberScreenModel { FederalEntityScreenModel(queryBus, commandBus) }
-        var showDeleteModel by remember { mutableStateOf(false) }
+        var showDeleteModal by remember { mutableStateOf(false) }
+        var showFormDialog by remember { mutableStateOf(false) }
         var selectedFederalEntity by remember { mutableStateOf<FederalEntityResponse?>(null) }
         val pageSizes = remember { listOf(10, 25, 50, 100) }
         val state = rememberPaginatedDataTableState(pageSizes.first())
@@ -43,12 +48,20 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
         HomeTitle("Entidades federativas")
         HomeActions {
             SmallFloatingActionButton(
-                onClick = { println("Crear entidad federativa") },
+                onClick = { showFormDialog = true },
                 containerColor = MaterialTheme.colorScheme.secondaryContainer,
                 contentColor = MaterialTheme.colorScheme.secondary
             ) {
                 Icon(Icons.Filled.Add, "Agregar entidad federativa")
             }
+        }
+
+        fun resetTable() {
+            searchValue = ""
+            state.pageIndex = -1
+            state.pageSize = pageSizes.first()
+            showDeleteModal = false
+            selectedFederalEntity = null
         }
 
         FederalEntitiesTable(
@@ -82,11 +95,15 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
             },
             onDeleteRequest = { federalEntity ->
                 selectedFederalEntity = federalEntity
-                showDeleteModel = true
+                showDeleteModal = true
+            },
+            onEditRequest = { federalEntity ->
+                selectedFederalEntity = federalEntity
+                showFormDialog = true
             }
         )
 
-        selectedFederalEntity?.takeIf { showDeleteModel }?.let {
+        selectedFederalEntity?.takeIf { showDeleteModal }?.let {
             QuestionDialog(
                 title = {
                     Text("Eliminar entidad federativa")
@@ -98,32 +115,119 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
                     screenModel.deleteFederalEntity(selectedFederalEntity!!.id) { result ->
                         result.fold(
                             onSuccess = {
-                                searchValue = ""
-                                state.pageIndex = -1
-                                state.pageSize = pageSizes.first()
-                                showDeleteModel = false
-                                selectedFederalEntity = null
+                                resetTable()
                             },
                             onFailure = {
                                 println(it.localizedMessage)
-                                searchValue = ""
-                                state.pageIndex = -1
-                                state.pageSize = pageSizes.first()
-                                showDeleteModel = false
-                                selectedFederalEntity = null
+                                resetTable()
                             }
                         )
                     }
                 },
                 onDismissRequest = {
-                    searchValue = ""
-                    state.pageIndex = -1
-                    state.pageSize = pageSizes.first()
-                    showDeleteModel = false
-                    selectedFederalEntity = null
+                    resetTable()
                 }
             )
         }
+
+        if (showFormDialog) {
+            FederalEntityForm(
+                screenModel = screenModel,
+                selectedFederalEntity = selectedFederalEntity,
+                onDismissRequest = {
+                    showFormDialog = false
+                    selectedFederalEntity = null
+                    resetTable()
+                },
+                onSuccess = {
+                    showFormDialog = false
+                    selectedFederalEntity = null
+                    resetTable()
+                }
+            )
+        }
+    }
+
+    @Composable
+    private fun FederalEntityForm(
+        screenModel: FederalEntityScreenModel,
+        selectedFederalEntity: FederalEntityResponse?,
+        onDismissRequest: () -> Unit,
+        onSuccess: () -> Unit
+    ) {
+        var federalEntityId by remember { mutableStateOf(selectedFederalEntity?.id) }
+        var keyCode by remember { mutableStateOf(selectedFederalEntity?.keyCode ?: "") }
+        var name by remember { mutableStateOf(selectedFederalEntity?.name ?: "") }
+
+        AlertDialog(
+            onDismissRequest = onDismissRequest,
+            title = {
+                Text(selectedFederalEntity?.let { "Editar entidad federativa" } ?: "Agregar entidad federativa")
+            },
+            text = {
+                Column {
+                    OutlinedTextField(
+                        value = keyCode,
+                        onValueChange = {
+                            if (Regex("[0-9]{0,2}").matches(it)) {
+                                keyCode = it
+                            }
+                        },
+                        label = { Text("Clave") },
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = true
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    OutlinedTextField(
+                        value = name,
+                        onValueChange = { name = it.uppercase() },
+                        label = { Text("Nombre") },
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = true
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        if (selectedFederalEntity != null) {
+                            screenModel.editFederalEntity(federalEntityId!!, keyCode, name) { result ->
+                                result.fold(
+                                    onSuccess = {
+                                        onSuccess()
+                                    },
+                                    onFailure = {
+                                        println(it.localizedMessage)
+                                    }
+                                )
+                            }
+                        } else {
+                            screenModel.createFederalEntity(keyCode, name) { result ->
+                                result.fold(
+                                    onSuccess = {
+                                        onSuccess()
+                                    },
+                                    onFailure = {
+                                        println(it.localizedMessage)
+                                    }
+                                )
+                            }
+                        }
+                    }
+                ) {
+                    Text("Guardar")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = onDismissRequest,
+                ) {
+                    Text("Cancelar")
+                }
+            }
+        )
     }
 
     @Composable
@@ -134,7 +238,8 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
         data: FederalEntitiesResponse,
         state: PaginatedDataTableState,
         onSearch: (search: String, pageIndex: Int, pageSize: Int, orderBy: String?, isAscending: Boolean) -> Unit,
-        onDeleteRequest: (FederalEntityResponse) -> Unit
+        onDeleteRequest: (FederalEntityResponse) -> Unit,
+        onEditRequest: (FederalEntityResponse) -> Unit
     ) {
         var sortColumnIndex by remember { mutableStateOf<Int?>(null) }
         var sortAscending by remember { mutableStateOf(true) }
@@ -235,14 +340,15 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
                     }
                     cell {
                         Text(
-                            text = federalEntity.updatedAt?.toLocalDateTime()?.format(dateTimeFormatter) ?: "N/A"
+                            text = federalEntity.updatedAt?.toLocalDateTime()?.format(dateTimeFormatter)
+                                ?: "N/A"
                         )
                     }
 
                     cell {
                         IconButton(
                             onClick = {
-                                println("Edit federal entity ${federalEntity.id}")
+                                onEditRequest(federalEntity)
                             }
                         ) {
                             Icon(
