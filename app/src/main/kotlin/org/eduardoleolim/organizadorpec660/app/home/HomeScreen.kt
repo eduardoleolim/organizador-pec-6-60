@@ -59,14 +59,7 @@ class HomeScreen(
         val screenModel = rememberScreenModel { HomeScreenModel(navigator, drawerState, compositionContext) }
         var selectedTab by remember { mutableStateOf(HomeScreenTab.INSTRUMENTOS) }
         var windowSize by remember { mutableStateOf(WindowSize.fromWidth(window.size.width.dp)) }
-
-        val title = when (selectedTab) {
-            HomeScreenTab.INSTRUMENTOS -> "Instrumentos"
-            HomeScreenTab.ENTIDADES_FEDERATIVAS -> "Entidades Federativas"
-            HomeScreenTab.MUNICIPIOS -> "Municipios"
-            HomeScreenTab.TIPOS_DE_ESTADISTICA -> "Tipos de Estadística"
-            HomeScreenTab.TIPOS_DE_INSTRUMENTO -> "Tipos de Instrumento"
-        }
+        val homeConfig = remember { HomeConfig() }
 
         DisposableEffect(Unit) {
             window.apply {
@@ -88,38 +81,49 @@ class HomeScreen(
             }
         }
 
-        ModalNavigationDrawer(
-            drawerState = drawerState,
-            drawerContent = {
-                ModalNavigationDrawerContent(
-                    items = items,
-                    screenModel = screenModel,
-                    selectedTab = selectedTab,
-                    onChangeSelectedTab = {
-                        screenModel.closeNavigationDrawer(onOpen = { selectedTab = it })
-                    }
-                )
-            },
+        CompositionLocalProvider(
+            LocalHomeConfig provides homeConfig
         ) {
-            Scaffold(
-                topBar = {
-                    TopAppBar(
-                        title = { Text(title) },
-                        navigationIcon = {
-                            IconButton(
-                                onClick = { screenModel.openNavigationDrawer() },
-                            ) {
-                                Icon(Icons.Filled.Menu, contentDescription = null)
-                            }
+            ModalNavigationDrawer(
+                drawerState = drawerState,
+                drawerContent = {
+                    ModalNavigationDrawerContent(
+                        items = items,
+                        screenModel = screenModel,
+                        selectedTab = selectedTab,
+                        onChangeSelectedTab = {
+                            screenModel.closeNavigationDrawer(onOpen = { selectedTab = it })
                         }
                     )
+                },
+            ) {
+                Scaffold(
+                    topBar = {
+                        val actions = homeConfig.actions
+                        val title = homeConfig.title
+
+                        TopAppBar(
+                            modifier = Modifier.padding(16.dp),
+                            title = { Text(title) },
+                            navigationIcon = {
+                                IconButton(
+                                    onClick = { screenModel.openNavigationDrawer() },
+                                ) {
+                                    Icon(Icons.Filled.Menu, contentDescription = null)
+                                }
+                            },
+                            actions = {
+                                actions()
+                            }
+                        )
+                    }
+                ) { paddingValues ->
+                    WorkArea(
+                        screenModel = screenModel,
+                        selectedTab = selectedTab,
+                        paddingValues = paddingValues
+                    )
                 }
-            ) { paddingValues ->
-                WorkArea(
-                    screenModel = screenModel,
-                    selectedTab = selectedTab,
-                    paddingValues = paddingValues
-                )
             }
         }
     }
@@ -185,6 +189,37 @@ class HomeScreen(
                     HomeScreenTab.TIPOS_DE_INSTRUMENTO -> NavigateToInstrumentType()
                 }
             }
+        }
+    }
+}
+
+class HomeConfig {
+    var title by mutableStateOf("")
+    var actions by mutableStateOf<@Composable RowScope.() -> Unit>(@Composable {})
+}
+
+private val LocalHomeConfig = compositionLocalOf<HomeConfig> { error("home actions not provided") }
+
+@Composable
+fun HomeTitle(title: String) {
+    val current = LocalHomeConfig.current
+    current.title = title
+
+    DisposableEffect(Unit) {
+        onDispose {
+            current.title = ""
+        }
+    }
+}
+
+@Composable
+fun HomeActions(actions: @Composable RowScope.() -> Unit) {
+    val current = LocalHomeConfig.current
+    current.actions = actions
+
+    DisposableEffect(Unit) {
+        onDispose {
+            current.actions = @Composable {}
         }
     }
 }
