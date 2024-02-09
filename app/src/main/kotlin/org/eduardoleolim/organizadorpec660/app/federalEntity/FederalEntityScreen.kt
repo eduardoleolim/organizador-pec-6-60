@@ -4,11 +4,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,6 +18,8 @@ import com.seanproctor.datatable.DataColumn
 import com.seanproctor.datatable.TableColumnWidth
 import com.seanproctor.datatable.paging.PaginatedDataTableState
 import com.seanproctor.datatable.paging.rememberPaginatedDataTableState
+import org.eduardoleolim.organizadorpec660.app.home.HomeActions
+import org.eduardoleolim.organizadorpec660.app.home.HomeTitle
 import org.eduardoleolim.organizadorpec660.app.shared.components.PaginatedDataTable
 import org.eduardoleolim.organizadorpec660.app.shared.components.dialogs.QuestionDialog
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntitiesResponse
@@ -38,6 +39,17 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
         val state = rememberPaginatedDataTableState(pageSizes.first())
         var federalEntitiesResponse by remember { mutableStateOf(FederalEntitiesResponse(emptyList(), 0, null, null)) }
         var searchValue by remember { mutableStateOf("") }
+
+        HomeTitle("Entidades federativas")
+        HomeActions {
+            SmallFloatingActionButton(
+                onClick = { println("Crear entidad federativa") },
+                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                contentColor = MaterialTheme.colorScheme.secondary
+            ) {
+                Icon(Icons.Filled.Add, "Agregar entidad federativa")
+            }
+        }
 
         FederalEntitiesTable(
             value = searchValue,

@@ -36,7 +36,7 @@ class HomeScreenModel(
 
     @Composable
     fun InstrumentView() {
-
+        Navigator(ScreenRegistry.get(HomeProvider.InstrumentScreen))
     }
 
     @Composable
