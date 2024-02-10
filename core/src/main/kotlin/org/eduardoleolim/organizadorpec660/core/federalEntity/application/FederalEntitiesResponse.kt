@@ -5,11 +5,11 @@ import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.Response
 
 class FederalEntitiesResponse(
     val federalEntities: List<FederalEntityResponse>,
-    val totalRecords: Int,
+    val total: Int,
     val limit: Int?,
     val offset: Int?
 ) : Response {
-    val filteredRecords: Int
+    val filtered: Int
         get() = federalEntities.size
 
     companion object {

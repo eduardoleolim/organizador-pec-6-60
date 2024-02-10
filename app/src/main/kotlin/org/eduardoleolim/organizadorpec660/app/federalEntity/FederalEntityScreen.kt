@@ -342,8 +342,8 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
             modifier = Modifier.verticalScroll(rememberScrollState()).fillMaxWidth(),
         ) {
             val offset = data.offset ?: 0
-            val filteredRecords = data.filteredRecords
-            val totalRecords = data.totalRecords
+            val filteredRecords = data.filtered
+            val totalRecords = data.total
             val remainingRows = (totalRecords - offset) - filteredRecords
 
             // Add necessary rows for pagination
