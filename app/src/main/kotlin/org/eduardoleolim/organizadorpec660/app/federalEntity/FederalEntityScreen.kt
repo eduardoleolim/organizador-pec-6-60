@@ -36,7 +36,7 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
     override fun Content() {
         val screenModel = rememberScreenModel { FederalEntityScreenModel(queryBus, commandBus) }
         var showDeleteModal by remember { mutableStateOf(false) }
-        var showFormDialog by remember { mutableStateOf(false) }
+        var showFormModal by remember { mutableStateOf(false) }
         var selectedFederalEntity by remember { mutableStateOf<FederalEntityResponse?>(null) }
         val pageSizes = remember { listOf(10, 25, 50, 100) }
         val state = rememberPaginatedDataTableState(pageSizes.first())
@@ -47,7 +47,7 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
         HomeActions {
             SmallFloatingActionButton(
                 modifier = Modifier.padding(16.dp),
-                onClick = { showFormDialog = true },
+                onClick = { showFormModal = true },
                 containerColor = MaterialTheme.colorScheme.secondaryContainer,
                 contentColor = MaterialTheme.colorScheme.secondary
             ) {
@@ -98,7 +98,7 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
             },
             onEditRequest = { federalEntity ->
                 selectedFederalEntity = federalEntity
-                showFormDialog = true
+                showFormModal = true
             }
         )
 
@@ -122,17 +122,17 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
             )
         }
 
-        if (showFormDialog) {
-            FederalEntityForm(
+        if (showFormModal) {
+            FederalEntityFormModal(
                 screenModel = screenModel,
                 selectedFederalEntity = selectedFederalEntity,
                 onDismissRequest = {
-                    showFormDialog = false
+                    showFormModal = false
                     selectedFederalEntity = null
                     resetTable()
                 },
                 onSuccess = {
-                    showFormDialog = false
+                    showFormModal = false
                     selectedFederalEntity = null
                     resetTable()
                 }
@@ -175,7 +175,7 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
     }
 
     @Composable
-    private fun FederalEntityForm(
+    private fun FederalEntityFormModal(
         screenModel: FederalEntityScreenModel,
         selectedFederalEntity: FederalEntityResponse?,
         onDismissRequest: () -> Unit,
@@ -307,10 +307,7 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
                     )
                 },
                 DataColumn(
-                    onSort = { index, ascending ->
-                        sortColumnIndex = index
-                        sortAscending = ascending
-                    },
+                    onSort = ::onSort,
                     alignment = Alignment.CenterHorizontally,
                     width = TableColumnWidth.Fraction(0.2f)
                 ) {
@@ -339,7 +336,7 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
             onSearch = { search, pageIndex, pageSize, sortBy, isAscending ->
                 onSearch(search, pageIndex, pageSize, sortBy?.let { orders[it] }, isAscending)
             },
-            modifier = Modifier.verticalScroll(rememberScrollState()).fillMaxWidth(),
+            modifier = Modifier.verticalScroll(rememberScrollState()).fillMaxWidth()
         ) {
             val offset = data.offset ?: 0
             val filteredRecords = data.filtered
