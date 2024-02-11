@@ -27,6 +27,7 @@ fun PaginatedDataTable(
     columns: List<DataColumn>,
     modifier: Modifier = Modifier,
     separator: @Composable (rowIndex: Int) -> Unit = { Divider() },
+    header: @Composable RowScope.() -> Unit = {},
     headerHeight: Dp = 56.dp,
     rowHeight: Dp = 52.dp,
     horizontalPadding: Dp = 16.dp,
@@ -68,7 +69,10 @@ fun PaginatedDataTable(
                         fontWeight = FontWeight.Normal,
                         color = MaterialTheme.colorScheme.onSurface,
                     )
-                    Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = "Expand")
+                    Icon(
+                        imageVector = if (expandedPageSize) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
+                        contentDescription = "Expand"
+                    )
                 }
                 DropdownMenu(
                     expanded = expandedPageSize,
@@ -89,6 +93,8 @@ fun PaginatedDataTable(
                     }
                 }
             }
+
+            header()
 
             Spacer(modifier = Modifier.weight(1f))
 
