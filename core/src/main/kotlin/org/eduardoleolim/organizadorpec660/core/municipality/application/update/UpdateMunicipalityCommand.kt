@@ -2,7 +2,7 @@ package org.eduardoleolim.organizadorpec660.core.municipality.application.update
 
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.Command
 
-class UpdateMunicipalityCommand(municipalityId: String, name: String, keyCode: String, federalEntityId: String) :
+class UpdateMunicipalityCommand(municipalityId: String, keyCode: String, name: String, federalEntityId: String) :
     Command {
     private val municipalityId: String = municipalityId.trim()
     private val name: String = name.trim().uppercase()
