@@ -1,14 +1,13 @@
 package org.eduardoleolim.organizadorpec660.app.federalEntity
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,11 +16,13 @@ import com.seanproctor.datatable.DataColumn
 import com.seanproctor.datatable.TableColumnWidth
 import com.seanproctor.datatable.paging.PaginatedDataTableState
 import org.eduardoleolim.organizadorpec660.app.shared.components.PaginatedDataTable
+import org.eduardoleolim.organizadorpec660.app.shared.components.tooltipOnHover
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntitiesResponse
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorpec660.core.shared.domain.toLocalDateTime
 import java.time.format.DateTimeFormatter
 
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun FederalEntityScreen.FederalEntitiesTable(
     value: String,
@@ -135,26 +136,41 @@ fun FederalEntityScreen.FederalEntitiesTable(
                 }
 
                 cell {
-                    IconButton(
-                        onClick = {
-                            onEditRequest(federalEntity)
-                        }
+                    val editTooltipState = remember { PlainTooltipState() }
+                    val deleteTooltipState = remember { PlainTooltipState() }
+
+                    PlainTooltipBox(
+                        tooltip = { Text("Editar") },
+                        tooltipState = editTooltipState,
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Edit,
-                            contentDescription = "Edit"
-                        )
+                        IconButton(
+                            modifier = Modifier.tooltipOnHover(editTooltipState),
+                            onClick = {
+                                onEditRequest(federalEntity)
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Edit,
+                                contentDescription = "Edit"
+                            )
+                        }
                     }
 
-                    IconButton(
-                        onClick = {
-                            onDeleteRequest(federalEntity)
-                        }
+                    PlainTooltipBox(
+                        tooltip = { Text("Eliminar") },
+                        tooltipState = deleteTooltipState
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Delete,
-                            contentDescription = "Delete"
-                        )
+                        IconButton(
+                            modifier = Modifier.tooltipOnHover(deleteTooltipState),
+                            onClick = {
+                                onDeleteRequest(federalEntity)
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = "Delete"
+                            )
+                        }
                     }
                 }
             }
