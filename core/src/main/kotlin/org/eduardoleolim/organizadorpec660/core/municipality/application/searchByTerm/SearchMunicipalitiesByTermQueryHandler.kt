@@ -25,13 +25,14 @@ class SearchMunicipalitiesByTermQueryHandler(
                 query.limit(),
                 query.offset()
             )
+            val totalMunicipalities = countTotalMunicipalities(query.federalEntityId(), query.search())
 
             return municipalities.map { municipality ->
                 val federalEntity = searchFederalEntity(municipality.federalEntityId().toString())
 
                 MunicipalityResponse.fromAggregate(municipality, federalEntity)
             }.let {
-                MunicipalitiesResponse(it)
+                MunicipalitiesResponse(it, totalMunicipalities, query.limit(), query.offset())
             }
         } finally {
             cache.clear()
@@ -52,6 +53,16 @@ class SearchMunicipalitiesByTermQueryHandler(
         offset = offset
     ).let {
         municipalitySearcher.search(it)
+    }
+
+    private fun countTotalMunicipalities(
+        federalEntityId: String? = null,
+        search: String? = null
+    ) = MunicipalityCriteria.searchCriteria(
+        federalEntityId = federalEntityId,
+        search = search
+    ).let {
+        municipalitySearcher.count(it)
     }
 
     private fun searchFederalEntity(id: String): FederalEntity {
