@@ -105,10 +105,7 @@ private fun placeHitSpots(
     height: Int,
 ) {
     CustomWindowDecorationAccessing.setCustomDecorationEnabled(window, true)
-    CustomWindowDecorationAccessing.setCustomDecorationTitleBarHeight(
-        window,
-        height,
-    )
+    CustomWindowDecorationAccessing.setCustomDecorationTitleBarHeight(window, height)
     CustomWindowDecorationAccessing.setCustomDecorationHitTestSpotsMethod(window, spots)
 }
 
@@ -152,11 +149,13 @@ fun ProvideWindowSpotContainer(
     CompositionLocalProvider(
         LocalWindowHitSpots provides spotInfoState
     ) {
-        Box(Modifier.onGloballyPositioned {
-            toolbarHeight = with(density) {
-                it.size.height.toAwtUnitSize()
+        Box(
+            modifier = Modifier.onGloballyPositioned {
+                toolbarHeight = with(density) {
+                    it.size.height.toAwtUnitSize()
+                }
             }
-        }) {
+        ) {
             content()
         }
     }
@@ -168,9 +167,7 @@ fun Modifier.windowFrameItem(
     key: Any,
     spot: Int,
 ) = composed {
-    var shape by remember(key) {
-        mutableStateOf(null as Rectangle?)
-    }
+    var shape by remember(key) { mutableStateOf<Rectangle?>(null) }
     val localWindowSpots = LocalWindowHitSpots.current
     DisposableEffect(shape, key) {
         shape.let { shape ->

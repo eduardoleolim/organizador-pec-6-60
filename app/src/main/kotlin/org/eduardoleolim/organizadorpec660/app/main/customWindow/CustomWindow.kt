@@ -210,8 +210,9 @@ private val LocalWindowState = compositionLocalOf<WindowState> { error("window c
 @Composable
 fun WindowCenter(content: @Composable () -> Unit) {
     val c = LocalWindowController.current
-    c.center = content
+
     DisposableEffect(Unit) {
+        c.center = content
         onDispose {
             c.center = null
         }

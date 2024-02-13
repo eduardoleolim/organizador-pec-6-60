@@ -15,6 +15,6 @@ fun main(args: Array<String>) {
 
         App(commandBus, queryBus).start()
     } catch (e: Exception) {
-        println(e.message)
+        println(e.localizedMessage)
     }
 }
