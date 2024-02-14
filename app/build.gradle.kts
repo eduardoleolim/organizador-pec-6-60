@@ -22,7 +22,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:${properties["coroutines.version"]}")
     implementation("cafe.adriel.voyager:voyager-navigator:${properties["voyager.version"]}")
     implementation("cafe.adriel.voyager:voyager-screenmodel:${properties["voyager.version"]}")
-    implementation("com.seanproctor:data-table-material3:0.5.1")
+    implementation("com.seanproctor:data-table-material3:${properties["dataTable.version"]}")
     implementation("com.github.Dansoftowner:jSystemThemeDetector:${properties["themeDetector.version"]}") {
         exclude("org.slf4j")
     }
@@ -51,6 +51,9 @@ compose.desktop {
 
             windows {
                 iconFile.set(file("src/main/resources/assets/icon.ico"))
+                dirChooser = true
+                shortcut = true
+                menu = true
             }
 
             linux {
