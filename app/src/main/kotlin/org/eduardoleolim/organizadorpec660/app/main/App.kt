@@ -19,10 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import com.jthemedetecor.OsThemeDetector
-import org.eduardoleolim.organizadorpec660.app.main.customWindow.CustomWindow
-import org.eduardoleolim.organizadorpec660.app.main.customWindow.HitSpots
-import org.eduardoleolim.organizadorpec660.app.main.customWindow.WindowCenter
-import org.eduardoleolim.organizadorpec660.app.main.customWindow.windowFrameItem
+import org.eduardoleolim.organizadorpec660.app.main.customWindow.*
 import org.eduardoleolim.organizadorpec660.app.main.router.Router
 import org.eduardoleolim.organizadorpec660.app.shared.theme.DarkColors
 import org.eduardoleolim.organizadorpec660.app.shared.theme.LightColors
@@ -35,9 +32,11 @@ class App(private val commandBus: CommandBus, private val queryBus: QueryBus) {
     fun start() = application {
         val state = rememberWindowState()
         var isThemeSelected by remember { mutableStateOf(false) }
-        var isDarkTheme: Boolean by remember { mutableStateOf(true) }
+        var isDarkTheme by remember { mutableStateOf(true) }
 
         DisposableEffect(Unit) {
+            val osThemeDetector = OsThemeDetector.getDetector()
+
             val consumer = Consumer<Boolean> {
                 SwingUtilities.invokeLater {
                     if (!isThemeSelected) {
@@ -47,22 +46,23 @@ class App(private val commandBus: CommandBus, private val queryBus: QueryBus) {
                 }
             }
 
-            OsThemeDetector.getDetector().registerListener(consumer)
-
+            osThemeDetector.registerListener(consumer)
             onDispose {
-                OsThemeDetector.getDetector().removeListener(consumer)
+                osThemeDetector.removeListener(consumer)
             }
         }
 
         MaterialTheme(
             colorScheme = if (isDarkTheme) DarkColors else LightColors
         ) {
+            val icon = painterResource("assets/icon.png")
             CustomWindow(
                 state = state,
                 onCloseRequest = { exitApplication() },
                 defaultTitle = "Organizador PEC-6-60",
-                defaultIcon = painterResource("assets/icon.ico")
+                defaultIcon = icon
             ) {
+                WindowIcon(icon) {}
                 WindowCenter {
                     Row(
                         Modifier.fillMaxWidth().padding(start = 16.dp),

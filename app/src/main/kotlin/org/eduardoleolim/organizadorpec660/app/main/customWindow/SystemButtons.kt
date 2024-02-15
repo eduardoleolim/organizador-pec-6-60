@@ -38,6 +38,7 @@ fun SystemButton(
     val isFocused = isWindowFocused()
     val interactionSource = remember { MutableInteractionSource() }
     val isHovered by interactionSource.collectIsHoveredAsState()
+
     Icon(
         painter = icon,
         contentDescription = null,
@@ -46,7 +47,11 @@ fun SystemButton(
                 isHovered -> onHoveredBackgroundColor
                 else -> onBackground
             }.copy(
-                alpha = if (!enabled) 0.5f else if (isFocused || isHovered) 1f else 0.7f
+                alpha = when {
+                    !enabled -> 0.5f
+                    isFocused || isHovered -> 1f
+                    else -> 0.7f
+                }
             )
         ).value,
         modifier = modifier
@@ -64,12 +69,8 @@ fun SystemButton(
     )
 }
 
-
 @Composable
-fun CloseButton(
-    onRequestClose: () -> Unit,
-    modifier: Modifier,
-) {
+fun CloseButton(onRequestClose: () -> Unit, modifier: Modifier) {
     SystemButton(
         onRequestClose,
         background = Color.Transparent,
@@ -83,7 +84,8 @@ fun CloseButton(
 
 private fun Modifier.windowButton(): Modifier {
     return padding(
-        vertical = 10.dp, horizontal = 20.dp
+        vertical = 10.dp,
+        horizontal = 20.dp
     ).size(10.dp)
 }
 
@@ -91,7 +93,7 @@ private fun Modifier.windowButton(): Modifier {
 fun FrameWindowScope.WindowsActionButtons(
     onRequestClose: () -> Unit,
     onRequestMinimize: (() -> Unit)?,
-    onToggleMaximize: (() -> Unit)?,
+    onToggleMaximize: (() -> Unit)?
 ) {
     var isResizable by remember(window) { mutableStateOf(window.isResizable) }
 
@@ -100,7 +102,6 @@ fun FrameWindowScope.WindowsActionButtons(
             isResizable = it.newValue as Boolean
         }.let {
             window.addPropertyChangeListener("resizable", it)
-
             onDispose {
                 window.removePropertyChangeListener("resizable", it)
             }
@@ -115,7 +116,9 @@ fun FrameWindowScope.WindowsActionButtons(
             SystemButton(
                 icon = rememberVectorPainter(CustomIcons.Minimize),
                 onClick = onRequestMinimize,
-                modifier = Modifier.windowFrameItem("minimize", HitSpots.MINIMIZE_BUTTON).fillMaxHeight()
+                modifier = Modifier
+                    .windowFrameItem("minimize", HitSpots.MINIMIZE_BUTTON)
+                    .fillMaxHeight()
             )
         }
 
@@ -130,13 +133,17 @@ fun FrameWindowScope.WindowsActionButtons(
                 ),
                 onClick = onToggleMaximize,
                 enabled = isResizable,
-                modifier = Modifier.windowFrameItem("maximize", HitSpots.MAXIMIZE_BUTTON).fillMaxHeight()
+                modifier = Modifier
+                    .windowFrameItem("maximize", HitSpots.MAXIMIZE_BUTTON)
+                    .fillMaxHeight()
             )
         }
 
         CloseButton(
             onRequestClose = onRequestClose,
-            modifier = Modifier.windowFrameItem("close", HitSpots.CLOSE_BUTTON).fillMaxHeight()
+            modifier = Modifier
+                .windowFrameItem("close", HitSpots.CLOSE_BUTTON)
+                .fillMaxHeight()
         )
     }
 }

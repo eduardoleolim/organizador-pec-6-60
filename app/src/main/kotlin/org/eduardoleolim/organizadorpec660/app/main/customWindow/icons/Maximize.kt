@@ -5,16 +5,15 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-
-private var vector: ImageVector? = null
+private var _maximize: ImageVector? = null
 
 val CustomIcons.Maximize: ImageVector
     get() {
-        if (vector != null) {
-            return vector!!
+        if (_maximize != null) {
+            return _maximize!!
         }
-        vector = ImageVector.Builder(
-            name = "vector",
+        _maximize = ImageVector.Builder(
+            name = "CustomIcons.Maximize",
             defaultWidth = 24.dp,
             defaultHeight = 24.dp,
             viewportWidth = 24f,
@@ -45,5 +44,5 @@ val CustomIcons.Maximize: ImageVector
                 close()
             }
         }.build()
-        return vector!!
+        return _maximize!!
     }

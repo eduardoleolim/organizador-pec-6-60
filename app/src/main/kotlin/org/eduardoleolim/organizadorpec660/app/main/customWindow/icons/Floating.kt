@@ -5,15 +5,15 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-private var vector: ImageVector? = null
+private var _floating: ImageVector? = null
 
 val CustomIcons.Floating: ImageVector
     get() {
-        if (vector != null) {
-            return vector!!
+        if (_floating != null) {
+            return _floating!!
         }
-        vector = ImageVector.Builder(
-            name = "vector",
+        _floating = ImageVector.Builder(
+            name = "CustomIcons.Floating",
             defaultWidth = 24.dp,
             defaultHeight = 24.dp,
             viewportWidth = 24f,
@@ -58,5 +58,5 @@ val CustomIcons.Floating: ImageVector
                 close()
             }
         }.build()
-        return vector!!
+        return _floating!!
     }

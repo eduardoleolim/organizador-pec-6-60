@@ -5,16 +5,15 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-
-private var vector: ImageVector? = null
+private var _minimize: ImageVector? = null
 
 val CustomIcons.Minimize: ImageVector
     get() {
-        if (vector != null) {
-            return vector!!
+        if (_minimize != null) {
+            return _minimize!!
         }
-        vector = ImageVector.Builder(
-            name = "vector",
+        _minimize = ImageVector.Builder(
+            name = "CustomIcons.Minimize",
             defaultWidth = 24.dp,
             defaultHeight = 24.dp,
             viewportWidth = 24f,
@@ -39,5 +38,5 @@ val CustomIcons.Minimize: ImageVector
                 close()
             }
         }.build()
-        return vector!!
+        return _minimize!!
     }

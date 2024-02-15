@@ -6,12 +6,7 @@ import java.lang.reflect.Method
 
 object CustomWindowDecorationAccessing {
     init {
-        UnsafeAccessing.assignAccessibility(
-            UnsafeAccessing.desktopModule,
-            listOf(
-                "java.awt"
-            )
-        )
+        UnsafeAccessing.assignAccessibility(UnsafeAccessing.desktopModule, listOf("java.awt"))
     }
 
     private val customWindowDecorationInstance: Any? = try {
@@ -35,9 +30,7 @@ object CustomWindowDecorationAccessing {
     private fun getMethod(name: String, vararg params: Class<*>): Method? {
         return try {
             val clazz = Class.forName("java.awt.Window\$CustomWindowDecoration")
-            val method = clazz.getDeclaredMethod(
-                name, *params
-            )
+            val method = clazz.getDeclaredMethod(name, *params)
             method.isAccessible = true
             method
         } catch (e: Exception) {

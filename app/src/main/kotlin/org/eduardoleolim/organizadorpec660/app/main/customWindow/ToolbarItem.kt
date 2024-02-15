@@ -31,79 +31,60 @@ object HitSpots {
     const val DRAGGABLE_AREA = 6
 }
 
-
 private val LocalWindowHitSpots =
     compositionLocalOf<MutableMap<Any, Pair<Rectangle, Int>>> { error("LocalWindowHitSpots not provided") }
 
 @Composable
 private fun FrameWindowScope.getCurrentWindowSize(): DpSize {
-    var windowSize by remember {
-        mutableStateOf(DpSize(window.width.dp, window.height.dp))
-    }
-    //observe window size
+    var windowSize by remember { mutableStateOf(DpSize(window.width.dp, window.height.dp)) }
+
     DisposableEffect(window) {
         val listener = object : ComponentAdapter() {
-            override fun componentResized(p0: ComponentEvent?) {
-                windowSize = DpSize(window.width.dp, window.height.dp)
+            override fun componentResized(event: ComponentEvent) {
+                val size = event.component.size
+                windowSize = DpSize(size.width.dp, size.height.dp)
             }
         }
+
         window.addComponentListener(listener)
         onDispose {
             window.removeComponentListener(listener)
         }
     }
+
     return windowSize
 }
 
 context (FrameWindowScope)
 @Composable
-private fun Modifier.onPositionInRect(
-    onChange: (Rectangle) -> Unit,
-) = composed {
+private fun Modifier.onPositionInRect(onChange: (Rectangle) -> Unit) = composed {
     val density = LocalDensity.current
+
     onGloballyPositioned {
-        onChange(
-            it.positionInWindow().toDpRectangle(
-                width = it.size.width,
-                height = it.size.height,
-                density = density
-            )
-        )
+        val position = it.positionInWindow()
+        val shape = position.toDpRectangle(it.size.width, it.size.height, density)
+        onChange(shape)
     }
 }
 
-
-private fun Offset.toDpRectangle(
-    width: Int,
-    height: Int,
-    density: Density,
-): Rectangle {
-    val offset = this
+private fun Offset.toDpRectangle(width: Int, height: Int, density: Density): Rectangle {
     density.run {
-        return Rectangle(
-            (offset.x).toAwtUnitSize(),
-            offset.y.toAwtUnitSize(),
-            width.toAwtUnitSize(),
-            height.toAwtUnitSize(),
-        )
+        val awtX = x.toAwtUnitSize()
+        val awtY = y.toAwtUnitSize()
+        val awtWidth = width.toAwtUnitSize()
+        val awtHeight = height.toAwtUnitSize()
+
+        return Rectangle(awtX, awtY, awtWidth, awtHeight)
     }
 }
 
-/**
- * dp as int
- */
 context (Density)
 private fun Int.toAwtUnitSize() = toDp().value.toInt()
 
 context (Density)
 private fun Float.toAwtUnitSize() = toDp().value.toInt()
 
-
-private fun placeHitSpots(
-    window: Window,
-    spots: Map<Shape, Int>,
-    height: Int,
-) {
+private fun placeHitSpots(window: Window, spots: Map<Shape, Int>, height: Int) {
     CustomWindowDecorationAccessing.setCustomDecorationEnabled(window, true)
     CustomWindowDecorationAccessing.setCustomDecorationTitleBarHeight(window, height)
     CustomWindowDecorationAccessing.setCustomDecorationHitTestSpotsMethod(window, spots)
@@ -113,9 +94,7 @@ private fun placeHitSpots(
 context (FrameWindowScope)
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun ProvideWindowSpotContainer(
-    content: @Composable () -> Unit,
-) {
+fun ProvideWindowSpotContainer(content: @Composable () -> Unit) {
     val density = LocalDensity.current
     val windowSize = getCurrentWindowSize()
     val containerSize = with(density) {
@@ -126,29 +105,21 @@ fun ProvideWindowSpotContainer(
 
     val spotInfoState = remember { mutableStateMapOf<Any, Pair<Rectangle, Int>>() }
     var toolbarHeight by remember { mutableStateOf(0) }
-
     val spotsWithInfo = spotInfoState.toMap()
 
-    LaunchedEffect(
-        spotsWithInfo,
-        toolbarHeight,
-        window,
-        windowSize,
-        containerSize,
-    ) {
+    LaunchedEffect(spotsWithInfo, toolbarHeight, window, windowSize, containerSize) {
         if (CustomWindowDecorationAccessing.isSupported) {
             val startOffset = (windowSize - containerSize) / 2
             val startWidthOffsetInDp = startOffset.width.value.toInt()
-//          val startHeightInDp=delta.height.value.toInt() //it seems no need here
+            // val startHeightInDp=delta.height.value.toInt() //it seems no need here
             val spots: Map<Shape, Int> = spotsWithInfo.values.associate { (rect, spot) ->
                 Rectangle(rect.x + startWidthOffsetInDp, rect.y, rect.width, rect.height) to spot
             }
             placeHitSpots(window, spots, toolbarHeight)
         }
     }
-    CompositionLocalProvider(
-        LocalWindowHitSpots provides spotInfoState
-    ) {
+
+    CompositionLocalProvider(LocalWindowHitSpots provides spotInfoState) {
         Box(
             modifier = Modifier.onGloballyPositioned {
                 toolbarHeight = with(density) {
@@ -163,12 +134,10 @@ fun ProvideWindowSpotContainer(
 
 context (FrameWindowScope)
 @Composable
-fun Modifier.windowFrameItem(
-    key: Any,
-    spot: Int,
-) = composed {
+fun Modifier.windowFrameItem(key: Any, spot: Int) = composed {
     var shape by remember(key) { mutableStateOf<Rectangle?>(null) }
     val localWindowSpots = LocalWindowHitSpots.current
+
     DisposableEffect(shape, key) {
         shape.let { shape ->
             if (shape != null) {
@@ -181,5 +150,6 @@ fun Modifier.windowFrameItem(
             }
         }
     }
+
     onPositionInRect { shape = it }
 }

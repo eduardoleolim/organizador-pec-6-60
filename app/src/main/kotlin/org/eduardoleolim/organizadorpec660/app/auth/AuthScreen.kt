@@ -44,7 +44,11 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
         }
 
         Row {
-            Column(modifier = Modifier.fillMaxWidth(0.5f).fillMaxHeight()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(0.5f)
+                    .fillMaxHeight()
+            ) {
                 Image(
                     painter = painterResource("assets/img/login_background.png"),
                     contentDescription = "Fuente de los 4 ríos",

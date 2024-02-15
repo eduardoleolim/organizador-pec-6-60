@@ -5,16 +5,15 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-
-private var _vector: ImageVector? = null
+private var _close: ImageVector? = null
 
 val CustomIcons.Close: ImageVector
     get() {
-        if (_vector != null) {
-            return _vector!!
+        if (_close != null) {
+            return _close!!
         }
-        _vector = ImageVector.Builder(
-            name = "vector",
+        _close = ImageVector.Builder(
+            name = "CustomIcons.Close",
             defaultWidth = 24.dp,
             defaultHeight = 24.dp,
             viewportWidth = 24f,
@@ -57,5 +56,5 @@ val CustomIcons.Close: ImageVector
                 close()
             }
         }.build()
-        return _vector!!
+        return _close!!
     }
