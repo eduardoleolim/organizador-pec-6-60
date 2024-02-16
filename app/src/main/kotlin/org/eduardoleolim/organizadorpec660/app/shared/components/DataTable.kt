@@ -58,14 +58,13 @@ fun PaginatedDataTable(
         ) {
             var expandedPageSize by remember { mutableStateOf(false) }
 
-            Text("Mostrar: ")
             Box {
                 TextButton(
                     onClick = { expandedPageSize = true },
                     enabled = state.pageSize > 1,
                 ) {
                     Text(
-                        text = "${state.pageSize} items",
+                        text = "Mostrar ${state.pageSize} items",
                         fontWeight = FontWeight.Normal,
                         color = MaterialTheme.colorScheme.onSurface,
                     )
@@ -101,16 +100,21 @@ fun PaginatedDataTable(
             OutlinedTextField(
                 value = value,
                 onValueChange = onValueChange,
-                label = { Text("Buscar") },
-                leadingIcon = { Icon(Icons.Default.Search, "Search") },
+                label = {
+                    Text(
+                        text = "Buscar",
+                        fontSize = MaterialTheme.typography.bodyMedium.fontSize
+                    )
+                },
+                textStyle = MaterialTheme.typography.bodyMedium,
+                leadingIcon = { Icon(Icons.Default.Search, "Buscar") },
                 singleLine = true,
                 modifier = Modifier.width(250.dp),
+                shape = MaterialTheme.shapes.extraLarge,
                 trailingIcon = {
                     if (value.isNotEmpty()) {
                         IconButton(
-                            onClick = {
-                                onValueChange("")
-                            },
+                            onClick = { onValueChange("") },
                             enabled = value.isNotEmpty(),
                         ) {
                             Icon(Icons.Default.Clear, "Clear")
