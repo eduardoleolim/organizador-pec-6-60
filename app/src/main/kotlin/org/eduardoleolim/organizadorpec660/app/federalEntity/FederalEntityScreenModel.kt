@@ -1,8 +1,6 @@
 package org.eduardoleolim.organizadorpec660.app.federalEntity
 
 import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
-import kotlinx.coroutines.launch
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntitiesResponse
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.create.CreateFederalEntityCommand
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.delete.DeleteFederalEntityCommand
@@ -10,6 +8,7 @@ import org.eduardoleolim.organizadorpec660.core.federalEntity.application.search
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.update.UpdateFederalEntityCommand
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
+import kotlin.concurrent.thread
 
 class FederalEntityScreenModel(private val queryBus: QueryBus, private val commandBus: CommandBus) : ScreenModel {
     fun searchFederalEntities(
@@ -19,47 +18,55 @@ class FederalEntityScreenModel(private val queryBus: QueryBus, private val comma
         offset: Int? = null,
         callback: (Result<FederalEntitiesResponse>) -> Unit
     ) {
-        screenModelScope.launch {
+        thread(start = true) {
             val query = SearchFederalEntitiesByTermQuery(search, orders, limit, offset)
 
-            try {
-                callback(Result.success(queryBus.ask(query)))
+            val result = try {
+                Result.success(queryBus.ask<FederalEntitiesResponse>(query))
             } catch (e: Exception) {
-                callback(Result.failure(e.cause!!))
+                Result.failure(e.cause!!)
             }
+
+            callback(result)
         }
     }
 
     fun createFederalEntity(keyCode: String, name: String, callback: (Result<Unit>) -> Unit) {
-        screenModelScope.launch {
-            try {
+        thread(start = true) {
+            val result = try {
                 commandBus.dispatch(CreateFederalEntityCommand(keyCode, name))
-                callback(Result.success(Unit))
+                Result.success(Unit)
             } catch (e: Exception) {
-                callback(Result.failure(e.cause!!))
+                Result.failure(e.cause!!)
             }
+
+            callback(result)
         }
     }
 
     fun editFederalEntity(federalEntityId: String, keyCode: String, name: String, callback: (Result<Unit>) -> Unit) {
-        screenModelScope.launch {
-            try {
+        thread(start = true) {
+            val result = try {
                 commandBus.dispatch(UpdateFederalEntityCommand(federalEntityId, keyCode, name))
-                callback(Result.success(Unit))
+                Result.success(Unit)
             } catch (e: Exception) {
-                callback(Result.failure(e.cause!!))
+                Result.failure(e.cause!!)
             }
+
+            callback(result)
         }
     }
 
     fun deleteFederalEntity(federalEntityId: String, callback: (Result<Unit>) -> Unit) {
-        screenModelScope.launch {
-            try {
+        thread(start = true) {
+            val result = try {
                 commandBus.dispatch(DeleteFederalEntityCommand(federalEntityId))
-                callback(Result.success(Unit))
+                Result.success(Unit)
             } catch (e: Exception) {
-                callback(Result.failure(e.cause!!))
+                Result.failure(e.cause!!)
             }
+
+            callback(result)
         }
     }
 }

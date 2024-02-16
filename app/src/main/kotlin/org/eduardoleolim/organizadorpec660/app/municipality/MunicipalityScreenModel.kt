@@ -13,6 +13,7 @@ import org.eduardoleolim.organizadorpec660.core.municipality.application.searchB
 import org.eduardoleolim.organizadorpec660.core.municipality.application.update.UpdateMunicipalityCommand
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
+import kotlin.concurrent.thread
 
 class MunicipalityScreenModel(private val queryBus: QueryBus, private val commandBus: CommandBus) : ScreenModel {
     fun searchMunicipalities(
@@ -23,25 +24,29 @@ class MunicipalityScreenModel(private val queryBus: QueryBus, private val comman
         offset: Int? = null,
         callback: (Result<MunicipalitiesResponse>) -> Unit
     ) {
-        screenModelScope.launch {
+        thread(start = true) {
             val query = SearchMunicipalitiesByTermQuery(federalEntityId, search, orders, limit, offset)
 
-            try {
-                callback(Result.success(queryBus.ask(query)))
+            val result = try {
+                Result.success(queryBus.ask<MunicipalitiesResponse>(query))
             } catch (e: Exception) {
-                callback(Result.failure(e.cause!!))
+                Result.failure(e.cause!!)
             }
+
+            callback(result)
         }
     }
 
     fun allFederalEntities(callback: (Result<List<FederalEntityResponse>>) -> Unit) {
-        screenModelScope.launch {
-            try {
+        thread(start = true) {
+            val result = try {
                 val federalEntities = queryBus.ask<FederalEntitiesResponse>(SearchFederalEntitiesByTermQuery())
-                callback(Result.success(federalEntities.federalEntities))
+                Result.success(federalEntities.federalEntities)
             } catch (e: Exception) {
-                callback(Result.failure(e.cause!!))
+                Result.failure(e.cause!!)
             }
+
+            callback(result)
         }
     }
 
@@ -51,13 +56,15 @@ class MunicipalityScreenModel(private val queryBus: QueryBus, private val comman
         federalEntityId: String,
         callback: (Result<Unit>) -> Unit
     ) {
-        screenModelScope.launch {
-            try {
+        thread(start = true) {
+            val result = try {
                 commandBus.dispatch(CreateMunicipalityCommand(keyCode, name, federalEntityId))
-                callback(Result.success(Unit))
+                Result.success(Unit)
             } catch (e: Exception) {
-                callback(Result.failure(e.cause!!))
+                Result.failure(e.cause!!)
             }
+
+            callback(result)
         }
     }
 
@@ -68,24 +75,34 @@ class MunicipalityScreenModel(private val queryBus: QueryBus, private val comman
         federalEntityId: String,
         callback: (Result<Unit>) -> Unit
     ) {
-        screenModelScope.launch {
-            try {
+        thread(start = true) {
+            val result = try {
                 commandBus.dispatch(UpdateMunicipalityCommand(municipalityId, keyCode, name, federalEntityId))
-                callback(Result.success(Unit))
+                Result.success(Unit)
             } catch (e: Exception) {
-                callback(Result.failure(e.cause!!))
+                Result.failure(e.cause!!)
             }
+
+            callback(result)
         }
     }
 
     fun deleteMunicipality(municipalityId: String, callback: (Result<Unit>) -> Unit) {
-        screenModelScope.launch {
-            try {
+        thread(start = true) {
+            val result = try {
                 commandBus.dispatch(DeleteMunicipalityCommand(municipalityId))
-                callback(Result.success(Unit))
+                Result.success(Unit)
             } catch (e: Exception) {
-                callback(Result.failure(e.cause!!))
+                Result.failure(e.cause!!)
             }
+
+            callback(result)
+        }
+    }
+
+    fun launch(block: () -> Unit) {
+        screenModelScope.launch {
+            block()
         }
     }
 }
