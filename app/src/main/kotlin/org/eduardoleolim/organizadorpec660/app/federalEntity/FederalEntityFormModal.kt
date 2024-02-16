@@ -9,11 +9,14 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntityResponse
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun FederalEntityScreen.FederalEntityFormModal(
     screenModel: FederalEntityScreenModel,
@@ -26,6 +29,10 @@ fun FederalEntityScreen.FederalEntityFormModal(
     var name by remember { mutableStateOf(selectedFederalEntity?.name ?: "") }
 
     AlertDialog(
+        properties = DialogProperties(
+            dismissOnBackPress = false,
+            dismissOnClickOutside = false
+        ),
         onDismissRequest = onDismissRequest,
         title = {
             Text(selectedFederalEntity?.let { "Editar entidad federativa" } ?: "Agregar entidad federativa")
