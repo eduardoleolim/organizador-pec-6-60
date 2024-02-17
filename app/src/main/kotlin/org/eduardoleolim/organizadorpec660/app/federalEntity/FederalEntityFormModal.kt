@@ -4,19 +4,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntityResponse
+import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityAlreadyExistsError
+import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.InvalidFederalEntityKeyCodeError
+import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.InvalidFederalEntityNameError
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun FederalEntityScreen.FederalEntityFormModal(
     screenModel: FederalEntityScreenModel,
@@ -27,6 +25,31 @@ fun FederalEntityScreen.FederalEntityFormModal(
     val federalEntityId = remember { selectedFederalEntity?.id }
     var keyCode by remember { mutableStateOf(selectedFederalEntity?.keyCode ?: "") }
     var name by remember { mutableStateOf(selectedFederalEntity?.name ?: "") }
+
+    var enabled by remember { mutableStateOf(true) }
+    var isKeyCodeInvalid by remember { mutableStateOf(false) }
+    var keyCodeErrorMessage by remember { mutableStateOf("") }
+    var isNameInvalid by remember { mutableStateOf(false) }
+    var nameErrorMessage by remember { mutableStateOf("") }
+
+    fun handleError(error: Throwable) {
+        when (error) {
+            is InvalidFederalEntityKeyCodeError -> {
+                keyCodeErrorMessage = "La clave debe ser un número de dos dígitos"
+                isKeyCodeInvalid = true
+            }
+
+            is InvalidFederalEntityNameError -> {
+                nameErrorMessage = "El nombre no puede estar vacío"
+                isNameInvalid = true
+            }
+
+            is FederalEntityAlreadyExistsError -> {
+                keyCodeErrorMessage = "Ya existe una entidad federativa con esa clave"
+                isKeyCodeInvalid = true
+            }
+        }
+    }
 
     AlertDialog(
         properties = DialogProperties(
@@ -47,6 +70,15 @@ fun FederalEntityScreen.FederalEntityFormModal(
                         }
                     },
                     label = { Text("Clave") },
+                    isError = isKeyCodeInvalid,
+                    supportingText = {
+                        if (isKeyCodeInvalid) {
+                            Text(
+                                text = keyCodeErrorMessage,
+                                color = MaterialTheme.colorScheme.onError
+                            )
+                        }
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .onFocusChanged {
@@ -64,23 +96,40 @@ fun FederalEntityScreen.FederalEntityFormModal(
                     onValueChange = { name = it.uppercase() },
                     label = { Text("Nombre") },
                     modifier = Modifier.fillMaxWidth(),
-                    singleLine = true
+                    singleLine = true,
+                    isError = isNameInvalid,
+                    supportingText = {
+                        if (isNameInvalid) {
+                            Text(
+                                text = nameErrorMessage,
+                                color = MaterialTheme.colorScheme.onError
+                            )
+                        }
+                    }
                 )
             }
         },
         confirmButton = {
             TextButton(
+                enabled = enabled,
                 onClick = {
+                    enabled = false
+                    isKeyCodeInvalid = false
+                    isNameInvalid = false
+                    nameErrorMessage = ""
+                    keyCodeErrorMessage = ""
+
                     if (selectedFederalEntity != null) {
                         screenModel.editFederalEntity(federalEntityId!!, keyCode, name) { result ->
                             result.fold(
                                 onSuccess = {
                                     onSuccess()
                                 },
-                                onFailure = {
-                                    println(it.localizedMessage)
+                                onFailure = { error ->
+                                    handleError(error)
                                 }
                             )
+                            enabled = true
                         }
                     } else {
                         screenModel.createFederalEntity(keyCode, name) { result ->
@@ -88,10 +137,11 @@ fun FederalEntityScreen.FederalEntityFormModal(
                                 onSuccess = {
                                     onSuccess()
                                 },
-                                onFailure = {
-                                    println(it.localizedMessage)
+                                onFailure = { error ->
+                                    handleError(error)
                                 }
                             )
+                            enabled = true
                         }
                     }
                 }
@@ -101,6 +151,7 @@ fun FederalEntityScreen.FederalEntityFormModal(
         },
         dismissButton = {
             TextButton(
+                enabled = enabled,
                 onClick = onDismissRequest,
             ) {
                 Text("Cancelar")
