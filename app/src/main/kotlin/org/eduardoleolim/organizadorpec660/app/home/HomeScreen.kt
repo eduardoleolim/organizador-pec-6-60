@@ -6,6 +6,7 @@ import androidx.compose.material.icons.filled.ListAlt
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MenuOpen
+import androidx.compose.material.icons.outlined.ListAlt
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -23,7 +24,7 @@ import java.awt.Dimension
 import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
 
-enum class HomeScreenTab {
+enum class MenuTab {
     INSTRUMENTOS,
     ENTIDADES_FEDERATIVAS,
     MUNICIPIOS,
@@ -35,14 +36,6 @@ class HomeScreen(
     private val window: ComposeWindow,
     private val user: AuthUserResponse
 ) : Screen {
-    private val items = listOf(
-        Triple("Instrumentos", Icons.Default.ListAlt, HomeScreenTab.INSTRUMENTOS),
-        Triple("Entidades Federativas", Icons.Default.ListAlt, HomeScreenTab.ENTIDADES_FEDERATIVAS),
-        Triple("Municipios", Icons.Default.ListAlt, HomeScreenTab.MUNICIPIOS),
-        Triple("Tipos de Estadística", Icons.Default.ListAlt, HomeScreenTab.TIPOS_DE_ESTADISTICA),
-        Triple("Tipos de Instrumento", Icons.Default.ListAlt, HomeScreenTab.TIPOS_DE_INSTRUMENTO)
-    )
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
@@ -50,15 +43,45 @@ class HomeScreen(
         val compositionContext = rememberCompositionContext()
         val drawerState = rememberDrawerState(DrawerValue.Closed)
         val screenModel = rememberScreenModel { HomeScreenModel(navigator, drawerState, compositionContext) }
-        var selectedTab by remember { mutableStateOf(HomeScreenTab.INSTRUMENTOS) }
+        var selectedTab by remember { mutableStateOf(MenuTab.INSTRUMENTOS) }
         var windowSize by remember { mutableStateOf(WindowSize.fromWidth(window.size.width.dp)) }
         val homeConfig = remember { HomeConfig() }
+        val items = remember {
+            listOf(
+                Triple(
+                    "Instrumentos",
+                    Pair(Icons.Filled.ListAlt, Icons.Outlined.ListAlt),
+                    MenuTab.INSTRUMENTOS
+                ),
+                Triple(
+                    "Entidades Federativas",
+                    Pair(Icons.Filled.ListAlt, Icons.Outlined.ListAlt),
+                    MenuTab.ENTIDADES_FEDERATIVAS
+                ),
+                Triple(
+                    "Municipios",
+                    Pair(Icons.Filled.ListAlt, Icons.Outlined.ListAlt),
+                    MenuTab.MUNICIPIOS
+                ),
+                Triple(
+                    "Tipos de Estadística",
+                    Pair(Icons.Filled.ListAlt, Icons.Outlined.ListAlt),
+                    MenuTab.TIPOS_DE_ESTADISTICA
+                ),
+                Triple(
+                    "Tipos de Instrumento",
+                    Pair(Icons.Filled.ListAlt, Icons.Outlined.ListAlt),
+                    MenuTab.TIPOS_DE_INSTRUMENTO
+                )
+            )
+        }
 
         DisposableEffect(Unit) {
+            val dimension = Dimension(900, 640)
             window.apply {
                 isResizable = true
-                size = Dimension(800, 600)
-                minimumSize = Dimension(800, 600)
+                size = dimension
+                minimumSize = dimension
                 setLocationRelativeTo(null)
             }
 
@@ -120,10 +143,10 @@ class HomeScreen(
 
     @Composable
     private fun ModalNavigationDrawerContent(
-        items: List<Triple<String, ImageVector, HomeScreenTab>>,
+        items: List<Triple<String, Pair<ImageVector, ImageVector>, MenuTab>>,
         screenModel: HomeScreenModel,
-        selectedTab: HomeScreenTab,
-        onChangeSelectedTab: (HomeScreenTab) -> Unit
+        selectedTab: MenuTab,
+        onChangeSelectedTab: (MenuTab) -> Unit
     ) {
         ModalDrawerSheet(
             modifier = Modifier.width(300.dp)
@@ -147,7 +170,12 @@ class HomeScreen(
             items.forEach {
                 val (label, icon, tab) = it
                 NavigationDrawerItem(
-                    icon = { Icon(icon, contentDescription = null) },
+                    icon = {
+                        Icon(
+                            imageVector = if (selectedTab == tab) icon.first else icon.second,
+                            contentDescription = label
+                        )
+                    },
                     label = { Text(text = label) },
                     selected = selectedTab == tab,
                     onClick = { onChangeSelectedTab(tab) }
@@ -156,6 +184,7 @@ class HomeScreen(
 
             Spacer(modifier = Modifier.weight(1.0f))
             Divider()
+
             NavigationDrawerItem(
                 icon = { Icon(Icons.Default.Logout, contentDescription = null) },
                 label = { Text(text = "Cerrar Sesión") },
@@ -166,17 +195,17 @@ class HomeScreen(
     }
 
     @Composable
-    private fun WorkArea(screenModel: HomeScreenModel, selectedTab: HomeScreenTab, paddingValues: PaddingValues) {
+    private fun WorkArea(screenModel: HomeScreenModel, selectedTab: MenuTab, paddingValues: PaddingValues) {
         Column(
             modifier = Modifier.padding(paddingValues)
         ) {
             screenModel.apply {
                 when (selectedTab) {
-                    HomeScreenTab.INSTRUMENTOS -> InstrumentView()
-                    HomeScreenTab.ENTIDADES_FEDERATIVAS -> FederalEntityView()
-                    HomeScreenTab.MUNICIPIOS -> MunicipalityView()
-                    HomeScreenTab.TIPOS_DE_ESTADISTICA -> StatisticTypeView()
-                    HomeScreenTab.TIPOS_DE_INSTRUMENTO -> InstrumentTypeView()
+                    MenuTab.INSTRUMENTOS -> InstrumentView()
+                    MenuTab.ENTIDADES_FEDERATIVAS -> FederalEntityView()
+                    MenuTab.MUNICIPIOS -> MunicipalityView()
+                    MenuTab.TIPOS_DE_ESTADISTICA -> StatisticTypeView()
+                    MenuTab.TIPOS_DE_INSTRUMENTO -> InstrumentTypeView()
                 }
             }
         }
