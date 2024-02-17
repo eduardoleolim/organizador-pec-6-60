@@ -1,6 +1,7 @@
 package org.eduardoleolim.organizadorpec660.core.federalEntity.infrastructure.persistence
 
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntity
+import org.eduardoleolim.organizadorpec660.core.shared.domain.InvalidArgumentError
 import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.*
 import java.time.Instant
 import java.util.*
@@ -104,14 +105,11 @@ object InMemoryFederalEntitiesCriteriaParser {
                 }
             }
 
-            else -> null
+            else -> throw InvalidArgumentError()
         }
     }
 
-    fun applyOrders(
-        records: List<FederalEntity>,
-        criteria: Criteria
-    ): List<FederalEntity> {
+    fun applyOrders(records: List<FederalEntity>, criteria: Criteria): List<FederalEntity> {
         return criteria.orders.orders.fold(records) { list, order ->
             val orderBy = order.orderBy.value
             val orderType = order.orderType
