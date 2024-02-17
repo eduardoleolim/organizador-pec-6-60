@@ -44,6 +44,10 @@ fun PaginatedDataTable(
         onSearch(value, state.pageIndex, state.pageSize, sortColumnIndex, sortAscending)
     }
 
+    LaunchedEffect(value) {
+        state.pageIndex = 0
+    }
+
     Column(
         modifier = modifier
     ) {
