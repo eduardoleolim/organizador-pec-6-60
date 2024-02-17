@@ -34,6 +34,7 @@ fun FederalEntityScreen.FederalEntitiesTable(
     onDeleteRequest: (FederalEntityResponse) -> Unit,
     onEditRequest: (FederalEntityResponse) -> Unit
 ) {
+    val scrollState = rememberScrollState()
     var sortColumnIndex by remember { mutableStateOf<Int?>(null) }
     var sortAscending by remember { mutableStateOf(true) }
     val orders = listOf("keyCode", "name", "createdAt", "updatedAt")
@@ -97,7 +98,9 @@ fun FederalEntityScreen.FederalEntitiesTable(
         onSearch = { search, pageIndex, pageSize, sortBy, isAscending ->
             onSearch(search, pageIndex, pageSize, sortBy?.let { orders[it] }, isAscending)
         },
-        modifier = Modifier.verticalScroll(rememberScrollState()).fillMaxWidth()
+        modifier = Modifier
+            .verticalScroll(scrollState)
+            .fillMaxWidth()
     ) {
         val offset = data.offset ?: 0
         val filteredRecords = data.filtered

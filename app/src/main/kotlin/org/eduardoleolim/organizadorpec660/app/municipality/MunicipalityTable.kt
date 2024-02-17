@@ -21,12 +21,14 @@ import com.seanproctor.datatable.DataColumn
 import com.seanproctor.datatable.TableColumnWidth
 import com.seanproctor.datatable.paging.PaginatedDataTableState
 import org.eduardoleolim.organizadorpec660.app.shared.components.PaginatedDataTable
+import org.eduardoleolim.organizadorpec660.app.shared.components.tooltipOnHover
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorpec660.core.municipality.application.MunicipalitiesResponse
 import org.eduardoleolim.organizadorpec660.core.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorpec660.core.shared.domain.toLocalDateTime
 import java.time.format.DateTimeFormatter
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MunicipalityScreen.MunicipalitiesTable(
     screenModel: MunicipalityScreenModel,
@@ -64,10 +66,12 @@ fun MunicipalityScreen.MunicipalitiesTable(
                 Text("Nombre")
             },
             DataColumn(
-                onSort = ::onSort,
-                alignment = Alignment.CenterHorizontally,
+                onSort = ::onSort
             ) {
-                Text("Entidad federativa")
+                Text(
+                    text = "Entidad federativa",
+                    textAlign = TextAlign.Center
+                )
             },
             DataColumn(
                 onSort = ::onSort,
@@ -113,7 +117,7 @@ fun MunicipalityScreen.MunicipalitiesTable(
         header = {
             Box {
                 var expanded by remember { mutableStateOf(false) }
-                var federalEntities by remember { mutableStateOf<List<FederalEntityResponse>>(emptyList()) }
+                val federalEntities = remember { mutableListOf<FederalEntityResponse>() }
                 var selectedFederalEntity by remember { mutableStateOf<FederalEntityResponse?>(null) }
 
                 LaunchedEffect(selectedFederalEntity) {
@@ -121,18 +125,20 @@ fun MunicipalityScreen.MunicipalitiesTable(
                     state.pageIndex = -1
                 }
 
-                screenModel.allFederalEntities { result ->
-                    result.fold(
-                        onSuccess = {
-                            federalEntities = it
-                        },
-                        onFailure = {
-                            println(it.localizedMessage)
-                            federalEntities = emptyList()
-                        }
-                    )
+                LaunchedEffect(Unit) {
+                    screenModel.allFederalEntities { result ->
+                        result.fold(
+                            onSuccess = {
+                                federalEntities.clear()
+                                federalEntities.addAll(it)
+                            },
+                            onFailure = {
+                                println(it.localizedMessage)
+                                federalEntities.clear()
+                            }
+                        )
+                    }
                 }
-
 
                 TextButton(
                     onClick = { expanded = true },
@@ -200,24 +206,48 @@ fun MunicipalityScreen.MunicipalitiesTable(
         val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
         data.municipalities.forEach { municipality ->
             row {
-                cell { Text(municipality.keyCode) }
-                cell { Text(municipality.name) }
-                cell { Text(municipality.federalEntity.name) }
-                cell { Text(municipality.createdAt.toLocalDateTime().format(dateTimeFormatter)) }
-                cell { Text(municipality.updatedAt?.toLocalDateTime()?.format(dateTimeFormatter) ?: "N/A") }
                 cell {
-                    IconButton(
-                        onClick = { onEditRequest(municipality) },
-                        content = {
+                    Text(municipality.keyCode)
+                }
+                cell {
+                    Text(municipality.name)
+                }
+                cell {
+                    Text(municipality.federalEntity.name)
+                }
+                cell {
+                    Text(municipality.createdAt.toLocalDateTime().format(dateTimeFormatter))
+                }
+                cell {
+                    Text(municipality.updatedAt?.toLocalDateTime()?.format(dateTimeFormatter) ?: "N/A")
+                }
+                cell {
+                    val editTooltipState = remember { PlainTooltipState() }
+                    val deleteTooltipState = remember { PlainTooltipState() }
+
+                    PlainTooltipBox(
+                        tooltip = { Text("Editar") },
+                        tooltipState = editTooltipState,
+                    ) {
+                        IconButton(
+                            modifier = Modifier.tooltipOnHover(editTooltipState),
+                            onClick = { onEditRequest(municipality) }
+                        ) {
                             Icon(Icons.Default.Edit, "Editar")
                         }
-                    )
-                    IconButton(
-                        onClick = { onDeleteRequest(municipality) },
-                        content = {
+                    }
+
+                    PlainTooltipBox(
+                        tooltip = { Text("Eliminar") },
+                        tooltipState = deleteTooltipState
+                    ) {
+                        IconButton(
+                            modifier = Modifier.tooltipOnHover(deleteTooltipState),
+                            onClick = { onDeleteRequest(municipality) }
+                        ) {
                             Icon(Icons.Default.Delete, "Eliminar")
                         }
-                    )
+                    }
                 }
             }
         }

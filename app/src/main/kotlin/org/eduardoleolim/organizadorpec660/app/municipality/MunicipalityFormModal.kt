@@ -21,7 +21,7 @@ fun MunicipalityScreen.MunicipalityFormModal(
 ) {
     val municipalityId by remember { mutableStateOf(selectedMunicipality?.id) }
     var federalEntityId by remember { mutableStateOf(selectedMunicipality?.federalEntity?.id) }
-    var KeyCode by remember { mutableStateOf(selectedMunicipality?.keyCode ?: "") }
+    var keyCode by remember { mutableStateOf(selectedMunicipality?.keyCode ?: "") }
     var name by remember { mutableStateOf(selectedMunicipality?.name ?: "") }
     var isFederalEntityError by remember { mutableStateOf(false) }
 
@@ -34,27 +34,28 @@ fun MunicipalityScreen.MunicipalityFormModal(
             Column {
                 Box {
                     var expanded by remember { mutableStateOf(false) }
-                    var federalEntities by remember { mutableStateOf<List<FederalEntityResponse>>(emptyList()) }
+                    val federalEntities = remember { mutableListOf<FederalEntityResponse>() }
                     var selectedFederalEntity by remember { mutableStateOf<FederalEntityResponse?>(null) }
+
+                    LaunchedEffect(Unit) {
+                        screenModel.allFederalEntities { result ->
+                            result.fold(
+                                onSuccess = {
+                                    federalEntities.clear()
+                                    federalEntities.addAll(it)
+                                    selectedFederalEntity =
+                                        federalEntities.find { federalEntity -> federalEntity.id == selectedMunicipality?.federalEntity?.id }
+                                },
+                                onFailure = {
+                                    println(it.localizedMessage)
+                                    federalEntities.clear()
+                                }
+                            )
+                        }
+                    }
 
                     LaunchedEffect(selectedFederalEntity) {
                         federalEntityId = selectedFederalEntity?.id
-                    }
-
-                    screenModel.allFederalEntities { result ->
-                        result.fold(
-                            onSuccess = {
-                                federalEntities = it
-                                if (federalEntityId != null) {
-                                    selectedFederalEntity =
-                                        it.find { federalEntity -> federalEntity.id == federalEntityId }
-                                }
-                            },
-                            onFailure = {
-                                println(it.localizedMessage)
-                                federalEntities = emptyList()
-                            }
-                        )
                     }
 
                     OutlinedTextField(
@@ -89,7 +90,10 @@ fun MunicipalityScreen.MunicipalityFormModal(
                     ) {
                         DropdownMenuItem(
                             text = {
-                                Text(text = "Todas las entidades", color = MaterialTheme.colorScheme.onSurface)
+                                Text(
+                                    text = "Selecciona una entidad federativa",
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
                             },
                             onClick = {
                                 expanded = false
@@ -117,8 +121,8 @@ fun MunicipalityScreen.MunicipalityFormModal(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 OutlinedTextField(
-                    value = KeyCode,
-                    onValueChange = { KeyCode = it },
+                    value = keyCode,
+                    onValueChange = { keyCode = it },
                     label = { Text("Clave") }
                 )
 
@@ -141,7 +145,7 @@ fun MunicipalityScreen.MunicipalityFormModal(
 
                     if (municipalityId == null) {
                         screenModel.createMunicipality(
-                            keyCode = KeyCode,
+                            keyCode = keyCode,
                             name = name,
                             federalEntityId = federalEntityId!!
                         ) {
@@ -157,7 +161,7 @@ fun MunicipalityScreen.MunicipalityFormModal(
                     } else {
                         screenModel.editMunicipality(
                             municipalityId = municipalityId!!,
-                            keyCode = KeyCode,
+                            keyCode = keyCode,
                             name = name,
                             federalEntityId = federalEntityId!!
                         ) {

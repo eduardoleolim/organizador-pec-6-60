@@ -1,8 +1,6 @@
 package org.eduardoleolim.organizadorpec660.app.municipality
 
 import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
-import kotlinx.coroutines.launch
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntitiesResponse
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.searchByTerm.SearchFederalEntitiesByTermQuery
@@ -97,12 +95,6 @@ class MunicipalityScreenModel(private val queryBus: QueryBus, private val comman
             }
 
             callback(result)
-        }
-    }
-
-    fun launch(block: () -> Unit) {
-        screenModelScope.launch {
-            block()
         }
     }
 }
