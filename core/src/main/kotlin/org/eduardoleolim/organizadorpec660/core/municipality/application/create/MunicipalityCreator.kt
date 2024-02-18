@@ -13,19 +13,21 @@ class MunicipalityCreator(
     private val federalEntityRepository: FederalEntityRepository
 ) {
     fun create(keyCode: String, name: String, federalEntityId: String) {
-        if (existsWithSameKeyCode(keyCode))
-            throw MunicipalityAlreadyExistsError(keyCode)
+        if (existsFederalEntity(federalEntityId).not())
+            throw FederalEntityNotFoundError(federalEntityId)
 
-        if (!existsFederalEntity(federalEntityId)) throw FederalEntityNotFoundError(federalEntityId)
+        if (existsMunicipality(keyCode, federalEntityId))
+            throw MunicipalityAlreadyExistsError(keyCode)
 
         Municipality.create(keyCode, name, federalEntityId).let {
             municipalityRepository.save(it)
         }
     }
 
-    private fun existsWithSameKeyCode(keyCode: String) = MunicipalityCriteria.keyCodeCriteria(keyCode).let {
-        municipalityRepository.count(it) > 0
-    }
+    private fun existsMunicipality(keyCode: String, federalEntityId: String) =
+        MunicipalityCriteria.keyCodeAndFederalEntityIdCriteria(keyCode, federalEntityId).let {
+            municipalityRepository.count(it) > 0
+        }
 
     private fun existsFederalEntity(federalEntityId: String) = FederalEntityCriteria.idCriteria(federalEntityId).let {
         federalEntityRepository.count(it) > 0

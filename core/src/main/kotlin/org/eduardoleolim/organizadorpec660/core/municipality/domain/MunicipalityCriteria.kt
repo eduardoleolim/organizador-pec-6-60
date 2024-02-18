@@ -5,8 +5,17 @@ import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.*
 object MunicipalityCriteria {
     fun idCriteria(id: String) = Criteria(SingleFilter.equal("id", id), Orders.none(), 1, null)
 
-    fun keyCodeCriteria(keyCode: String) =
-        Criteria(SingleFilter.equal("keyCode", keyCode), Orders.none(), 1, null)
+    fun keyCodeAndFederalEntityIdCriteria(keyCode: String, federalEntityId: String) = Criteria(
+        AndFilters(
+            listOf(
+                SingleFilter.equal("keyCode", keyCode),
+                SingleFilter.equal("federalEntity.id", federalEntityId)
+            )
+        ),
+        Orders.none(),
+        1,
+        null
+    )
 
     fun anotherKeyCodeCriteria(id: String, keyCode: String) = Criteria(
         AndFilters(listOf(SingleFilter.notEqual("id", id), SingleFilter.equal("keyCode", keyCode))),
