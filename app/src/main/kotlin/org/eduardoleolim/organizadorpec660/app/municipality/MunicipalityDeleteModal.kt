@@ -2,8 +2,8 @@ package org.eduardoleolim.organizadorpec660.app.municipality
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import org.eduardoleolim.organizadorPec660.core.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorpec660.app.shared.components.dialogs.QuestionDialog
-import org.eduardoleolim.organizadorpec660.core.municipality.application.MunicipalityResponse
 
 @Composable
 fun MunicipalityScreen.MunicipalityDeleteModal(

@@ -18,8 +18,8 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import org.eduardoleolim.organizadorPec660.core.auth.application.AuthUserResponse
 import org.eduardoleolim.organizadorpec660.app.shared.utils.WindowSize
-import org.eduardoleolim.organizadorpec660.core.auth.application.AuthUserResponse
 import java.awt.Dimension
 import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent

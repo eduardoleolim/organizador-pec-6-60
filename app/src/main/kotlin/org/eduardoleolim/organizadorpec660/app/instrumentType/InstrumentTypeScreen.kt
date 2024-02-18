@@ -7,10 +7,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.core.screen.Screen
+import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.command.CommandBus
+import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryBus
 import org.eduardoleolim.organizadorpec660.app.home.HomeActions
 import org.eduardoleolim.organizadorpec660.app.home.HomeTitle
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
 
 class InstrumentTypeScreen(private val queryBus: QueryBus, private val commandBus: CommandBus) : Screen {
     @Composable

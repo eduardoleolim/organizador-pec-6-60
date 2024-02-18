@@ -12,12 +12,12 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import com.seanproctor.datatable.paging.rememberPaginatedDataTableState
+import org.eduardoleolim.organizadorPec660.core.federalEntity.application.FederalEntitiesResponse
+import org.eduardoleolim.organizadorPec660.core.federalEntity.application.FederalEntityResponse
+import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.command.CommandBus
+import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryBus
 import org.eduardoleolim.organizadorpec660.app.home.HomeActions
 import org.eduardoleolim.organizadorpec660.app.home.HomeTitle
-import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntitiesResponse
-import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntityResponse
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
 
 class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus: CommandBus) : Screen {
     @Composable

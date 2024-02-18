@@ -3,11 +3,11 @@ package org.eduardoleolim.organizadorpec660.app.auth
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.registry.ScreenRegistry
 import cafe.adriel.voyager.navigator.Navigator
+import org.eduardoleolim.organizadorPec660.core.auth.application.AuthUserResponse
+import org.eduardoleolim.organizadorPec660.core.auth.application.authenticate.AuthenticateUserQuery
+import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryHandlerExecutionError
 import org.eduardoleolim.organizadorpec660.app.main.router.MainProvider
-import org.eduardoleolim.organizadorpec660.core.auth.application.AuthUserResponse
-import org.eduardoleolim.organizadorpec660.core.auth.application.authenticate.AuthenticateUserQuery
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryHandlerExecutionError
 import kotlin.concurrent.thread
 
 class AuthScreenModel(private val navigator: Navigator, private val queryBus: QueryBus) : ScreenModel {

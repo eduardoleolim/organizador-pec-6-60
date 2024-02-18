@@ -19,12 +19,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import com.jthemedetecor.OsThemeDetector
+import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.command.CommandBus
+import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryBus
 import org.eduardoleolim.organizadorpec660.app.main.customWindow.*
 import org.eduardoleolim.organizadorpec660.app.main.router.Router
 import org.eduardoleolim.organizadorpec660.app.shared.theme.DarkColors
 import org.eduardoleolim.organizadorpec660.app.shared.theme.LightColors
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
 import java.util.function.Consumer
 import javax.swing.SwingUtilities
 

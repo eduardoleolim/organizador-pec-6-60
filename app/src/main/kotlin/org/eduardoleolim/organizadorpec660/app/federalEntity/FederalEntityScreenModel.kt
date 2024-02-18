@@ -1,13 +1,13 @@
 package org.eduardoleolim.organizadorpec660.app.federalEntity
 
 import cafe.adriel.voyager.core.model.ScreenModel
-import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntitiesResponse
-import org.eduardoleolim.organizadorpec660.core.federalEntity.application.create.CreateFederalEntityCommand
-import org.eduardoleolim.organizadorpec660.core.federalEntity.application.delete.DeleteFederalEntityCommand
-import org.eduardoleolim.organizadorpec660.core.federalEntity.application.searchByTerm.SearchFederalEntitiesByTermQuery
-import org.eduardoleolim.organizadorpec660.core.federalEntity.application.update.UpdateFederalEntityCommand
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorPec660.core.federalEntity.application.FederalEntitiesResponse
+import org.eduardoleolim.organizadorPec660.core.federalEntity.application.create.CreateFederalEntityCommand
+import org.eduardoleolim.organizadorPec660.core.federalEntity.application.delete.DeleteFederalEntityCommand
+import org.eduardoleolim.organizadorPec660.core.federalEntity.application.searchByTerm.SearchFederalEntitiesByTermQuery
+import org.eduardoleolim.organizadorPec660.core.federalEntity.application.update.UpdateFederalEntityCommand
+import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.command.CommandBus
+import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryBus
 import kotlin.concurrent.thread
 
 class FederalEntityScreenModel(private val queryBus: QueryBus, private val commandBus: CommandBus) : ScreenModel {

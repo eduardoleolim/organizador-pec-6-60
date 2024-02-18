@@ -10,10 +10,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntityResponse
-import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityAlreadyExistsError
-import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.InvalidFederalEntityKeyCodeError
-import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.InvalidFederalEntityNameError
+import org.eduardoleolim.organizadorPec660.core.federalEntity.application.FederalEntityResponse
+import org.eduardoleolim.organizadorPec660.core.federalEntity.domain.FederalEntityAlreadyExistsError
+import org.eduardoleolim.organizadorPec660.core.federalEntity.domain.InvalidFederalEntityKeyCodeError
+import org.eduardoleolim.organizadorPec660.core.federalEntity.domain.InvalidFederalEntityNameError
 
 @Composable
 fun FederalEntityScreen.FederalEntityFormModal(

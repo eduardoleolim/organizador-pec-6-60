@@ -9,8 +9,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntityResponse
-import org.eduardoleolim.organizadorpec660.core.municipality.application.MunicipalityResponse
+import org.eduardoleolim.organizadorPec660.core.federalEntity.application.FederalEntityResponse
+import org.eduardoleolim.organizadorPec660.core.municipality.application.MunicipalityResponse
 
 @Composable
 fun MunicipalityScreen.MunicipalityFormModal(

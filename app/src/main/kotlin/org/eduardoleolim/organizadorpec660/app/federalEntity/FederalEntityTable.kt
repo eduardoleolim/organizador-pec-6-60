@@ -15,11 +15,11 @@ import androidx.compose.ui.text.style.TextAlign
 import com.seanproctor.datatable.DataColumn
 import com.seanproctor.datatable.TableColumnWidth
 import com.seanproctor.datatable.paging.PaginatedDataTableState
+import org.eduardoleolim.organizadorPec660.core.federalEntity.application.FederalEntitiesResponse
+import org.eduardoleolim.organizadorPec660.core.federalEntity.application.FederalEntityResponse
+import org.eduardoleolim.organizadorPec660.core.shared.domain.toLocalDateTime
 import org.eduardoleolim.organizadorpec660.app.shared.components.PaginatedDataTable
 import org.eduardoleolim.organizadorpec660.app.shared.components.tooltipOnHover
-import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntitiesResponse
-import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntityResponse
-import org.eduardoleolim.organizadorpec660.core.shared.domain.toLocalDateTime
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
