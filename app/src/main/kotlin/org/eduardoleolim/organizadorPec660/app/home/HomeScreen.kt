@@ -18,11 +18,9 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import org.eduardoleolim.organizadorPec660.app.shared.utils.WindowSize
+import org.eduardoleolim.organizadorPec660.app.main.customWindow.rememberWindowSize
 import org.eduardoleolim.organizadorPec660.core.auth.application.AuthUserResponse
 import java.awt.Dimension
-import java.awt.event.ComponentAdapter
-import java.awt.event.ComponentEvent
 
 enum class MenuTab {
     INSTRUMENTOS,
@@ -44,7 +42,7 @@ class HomeScreen(
         val drawerState = rememberDrawerState(DrawerValue.Closed)
         val screenModel = rememberScreenModel { HomeScreenModel(navigator, drawerState, compositionContext) }
         var selectedTab by remember { mutableStateOf(MenuTab.INSTRUMENTOS) }
-        var windowSize by remember { mutableStateOf(WindowSize.fromWidth(window.size.width.dp)) }
+        val windowSize = rememberWindowSize()
         val homeConfig = remember { HomeConfig() }
         val items = remember {
             listOf(
@@ -76,24 +74,13 @@ class HomeScreen(
             )
         }
 
-        DisposableEffect(Unit) {
+        LaunchedEffect(Unit) {
             val dimension = Dimension(900, 640)
             window.apply {
                 isResizable = true
                 size = dimension
                 minimumSize = dimension
                 setLocationRelativeTo(null)
-            }
-
-            val listener = object : ComponentAdapter() {
-                override fun componentResized(event: ComponentEvent) {
-                    windowSize = WindowSize.fromWidth(event.component.size.width.dp)
-                }
-            }
-
-            window.addComponentListener(listener)
-            onDispose {
-                window.removeComponentListener(listener)
             }
         }
 

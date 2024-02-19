@@ -20,6 +20,19 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.WindowState
 import org.eduardoleolim.organizadorPec660.app.main.customWindow.utils.CustomWindowDecorationAccessing
+import org.eduardoleolim.organizadorPec660.app.main.customWindow.utils.WindowSize
+
+@Composable
+fun rememberWindowSize(): WindowSize {
+    val windowState = LocalWindowState.current
+    var windowSize by remember { mutableStateOf(WindowSize.fromWidth(windowState.size.width)) }
+
+    LaunchedEffect(windowState.size) {
+        windowSize = WindowSize.fromWidth(windowState.size.width)
+    }
+
+    return windowSize
+}
 
 @Composable
 fun isWindowFocused(): Boolean {

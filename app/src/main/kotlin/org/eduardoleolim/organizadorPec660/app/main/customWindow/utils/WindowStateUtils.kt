@@ -1,4 +1,4 @@
-package org.eduardoleolim.organizadorPec660.app.shared.utils
+package org.eduardoleolim.organizadorPec660.app.main.customWindow.utils
 
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
