@@ -13,13 +13,8 @@ class FederalEntitiesResponse(
         get() = federalEntities.size
 
     companion object {
-        fun fromAggregate(federalEntities: List<FederalEntity>, totalRecords: Int, limit: Int?, offset: Int?) =
-            FederalEntitiesResponse(
-                federalEntities.map(FederalEntityResponse::fromAggregate),
-                totalRecords,
-                limit,
-                offset
-            )
+        fun fromAggregate(federalEntities: List<FederalEntity>, total: Int, limit: Int?, offset: Int?) =
+            FederalEntitiesResponse(federalEntities.map(FederalEntityResponse::fromAggregate), total, limit, offset)
     }
 
 }

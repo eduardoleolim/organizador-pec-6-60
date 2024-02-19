@@ -1,6 +1,5 @@
 package org.eduardoleolim.organizadorPec660.app.federalEntity
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -22,7 +21,7 @@ import org.eduardoleolim.organizadorPec660.core.federalEntity.application.Federa
 import org.eduardoleolim.organizadorPec660.core.shared.domain.toLocalDateTime
 import java.time.format.DateTimeFormatter
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FederalEntityScreen.FederalEntitiesTable(
     value: String,
