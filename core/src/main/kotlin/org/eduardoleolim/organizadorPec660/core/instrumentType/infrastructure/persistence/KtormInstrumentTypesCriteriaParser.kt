@@ -31,7 +31,7 @@ object KtormInstrumentTypesCriteriaParser {
         criteria: Criteria
     ): Query {
         return database.from(instrumentTypes)
-            .select().let {
+            .select(count()).let {
                 addConditionsToQuery(it, instrumentTypes, criteria)
             }.limit(criteria.offset, criteria.limit)
     }
