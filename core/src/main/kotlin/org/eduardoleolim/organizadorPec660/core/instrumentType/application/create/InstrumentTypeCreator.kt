@@ -7,7 +7,7 @@ import org.eduardoleolim.organizadorPec660.core.instrumentType.domain.Instrument
 
 class InstrumentTypeCreator(private val repository: InstrumentTypeRepository) {
     fun create(name: String) {
-        if (existsWithSameName(name))
+        if (existsAnotherSameName(name))
             throw InstrumentTypeAlreadyExistsError(name)
 
         InstrumentType.create(name).let {
@@ -15,7 +15,7 @@ class InstrumentTypeCreator(private val repository: InstrumentTypeRepository) {
         }
     }
 
-    private fun existsWithSameName(name: String) = InstrumentTypeCriteria.nameCriteria(name).let {
+    private fun existsAnotherSameName(name: String) = InstrumentTypeCriteria.nameCriteria(name).let {
         repository.count(it) > 0
     }
 }

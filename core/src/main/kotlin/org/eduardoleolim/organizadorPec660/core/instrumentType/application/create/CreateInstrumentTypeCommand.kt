@@ -2,10 +2,10 @@ package org.eduardoleolim.organizadorPec660.core.instrumentType.application.crea
 
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.command.Command
 
-class CreateInstrumentTypeCommand(nombre: String) : Command {
-    private val nombre = nombre.trim()
+class CreateInstrumentTypeCommand(name: String) : Command {
+    private val name = name.trim()
 
-    fun nombre(): String {
-        return nombre
+    fun name(): String {
+        return name
     }
 }

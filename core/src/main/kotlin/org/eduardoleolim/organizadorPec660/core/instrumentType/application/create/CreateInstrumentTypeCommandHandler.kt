@@ -5,6 +5,6 @@ import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.command.Comman
 class CreateInstrumentTypeCommandHandler(private val creator: InstrumentTypeCreator) :
     CommandHandler<CreateInstrumentTypeCommand> {
     override fun handle(command: CreateInstrumentTypeCommand) {
-        creator.create(command.nombre())
+        creator.create(command.name())
     }
 }
