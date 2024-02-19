@@ -10,8 +10,14 @@ class SearchInstrumentTypesByTermQueryHandler(private val searcher: InstrumentTy
     QueryHandler<SearchInstrumentTypesByTermQuery, InstrumentTypesResponse> {
     override fun handle(query: SearchInstrumentTypesByTermQuery): InstrumentTypesResponse {
         val instrumentTypes = searchInstrumentTypes(query.search(), query.orders(), query.limit(), query.offset())
+        val totalInstrumentTypes = countTotalInstrumentTypes(query.search())
 
-        return InstrumentTypesResponse.fromAggregate(instrumentTypes)
+        return InstrumentTypesResponse.fromAggregate(
+            instrumentTypes,
+            totalInstrumentTypes,
+            query.limit(),
+            query.offset()
+        )
     }
 
     private fun searchInstrumentTypes(
@@ -26,5 +32,11 @@ class SearchInstrumentTypesByTermQueryHandler(private val searcher: InstrumentTy
         offset = offset
     ).let {
         searcher.search(it)
+    }
+
+    private fun countTotalInstrumentTypes(search: String? = null) = InstrumentTypeCriteria.searchCriteria(
+        search = search
+    ).let {
+        searcher.count(it)
     }
 }
