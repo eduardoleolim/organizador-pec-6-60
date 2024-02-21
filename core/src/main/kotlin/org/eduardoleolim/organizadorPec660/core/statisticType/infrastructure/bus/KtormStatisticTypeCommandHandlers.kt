@@ -17,38 +17,35 @@ import org.eduardoleolim.organizadorPec660.core.statisticType.infrastructure.per
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 
-class KtormStatisticTypeCommandHandlers(database: Database) :
+class KtormStatisticTypeCommandHandlers(private val database: Database, private val sqliteExtensions: List<String>) :
     HashMap<KClass<out Command>, CommandHandler<out Command>>() {
-    private val statisticTypeRepository: KtormStatisticTypeRepository
-    private val instrumentTypeRepository: KtormInstrumentTypeRepository
+    private val statisticTypeRepository = KtormStatisticTypeRepository(database)
+    private val instrumentTypeRepository = KtormInstrumentTypeRepository(database)
 
     init {
-        statisticTypeRepository = KtormStatisticTypeRepository(database)
-        instrumentTypeRepository = KtormInstrumentTypeRepository(database)
-
-        this[CreateStatisticTypeCommand::class] = createCommandHandler(database)
-        this[UpdateStatisticTypeCommand::class] = updateCommandHandler(database)
-        this[DeleteStatisticTypeCommand::class] = deleteCommandHandler(database)
+        this[CreateStatisticTypeCommand::class] = createCommandHandler()
+        this[UpdateStatisticTypeCommand::class] = updateCommandHandler()
+        this[DeleteStatisticTypeCommand::class] = deleteCommandHandler()
     }
 
-    private fun createCommandHandler(database: Database): CommandHandler<out Command> {
+    private fun createCommandHandler(): CommandHandler<out Command> {
         val creator = StatisticTypeCreator(statisticTypeRepository, instrumentTypeRepository)
         val commandHandler = CreateStatisticTypeCommandHandler(creator)
 
-        return KtormCommandHandlerDecorator(database, commandHandler)
+        return KtormCommandHandlerDecorator(database, commandHandler, sqliteExtensions)
     }
 
-    private fun updateCommandHandler(database: Database): CommandHandler<out Command> {
+    private fun updateCommandHandler(): CommandHandler<out Command> {
         val updater = StatisticTypeUpdater(statisticTypeRepository, instrumentTypeRepository)
         val commandHandler = UpdateStatisticTypeCommandHandler(updater)
 
-        return KtormCommandHandlerDecorator(database, commandHandler)
+        return KtormCommandHandlerDecorator(database, commandHandler, sqliteExtensions)
     }
 
-    private fun deleteCommandHandler(database: Database): CommandHandler<out Command> {
+    private fun deleteCommandHandler(): CommandHandler<out Command> {
         val deleter = StatisticTypeDeleter(statisticTypeRepository)
         val commandHandler = DeleteStatisticTypeCommandHandler(deleter)
 
-        return KtormCommandHandlerDecorator(database, commandHandler)
+        return KtormCommandHandlerDecorator(database, commandHandler, sqliteExtensions)
     }
 }

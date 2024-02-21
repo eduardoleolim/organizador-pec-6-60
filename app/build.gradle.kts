@@ -49,11 +49,12 @@ compose.desktop {
 
             includeAllModules = true
 
+            appResourcesRootDir.set(project.layout.projectDirectory.dir("../resources"))
+
             windows {
                 iconFile.set(file("src/main/resources/assets/icon.ico"))
                 dirChooser = true
                 shortcut = true
-                menu = true
             }
 
             linux {

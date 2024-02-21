@@ -9,19 +9,29 @@ import org.eduardoleolim.organizadorPec660.core.federalEntity.infrastructure.per
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.Query
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryHandler
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.Response
+import org.eduardoleolim.organizadorPec660.core.shared.infrastructure.bus.KtormQueryHandlerDecorator
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 
-class KtormFederalEntityQueryHandlers(database: Database) :
+class KtormFederalEntityQueryHandlers(private val database: Database, private val sqliteExtensions: List<String>) :
     HashMap<KClass<out Query>, QueryHandler<out Query, out Response>>() {
-    private val federalEntityRepository: KtormFederalEntityRepository
-    private val searcher: FederalEntitySearcher
+    private val federalEntityRepository = KtormFederalEntityRepository(database)
+    private val searcher = FederalEntitySearcher(federalEntityRepository)
 
     init {
-        federalEntityRepository = KtormFederalEntityRepository(database)
-        searcher = FederalEntitySearcher(federalEntityRepository)
+        this[SearchFederalEntityByIdQuery::class] = searchByIdQueryHandler()
+        this[SearchFederalEntitiesByTermQuery::class] = searchByTermQueryHandler()
+    }
 
-        this[SearchFederalEntityByIdQuery::class] = SearchFederalEntityByIdQueryHandler(searcher)
-        this[SearchFederalEntitiesByTermQuery::class] = SearchFederalEntitiesByTermQueryHandler(searcher)
+    private fun searchByIdQueryHandler(): KtormQueryHandlerDecorator<out Query, out Response> {
+        val queryHandler = SearchFederalEntityByIdQueryHandler(searcher)
+
+        return KtormQueryHandlerDecorator(database, queryHandler, sqliteExtensions)
+    }
+
+    private fun searchByTermQueryHandler(): KtormQueryHandlerDecorator<out Query, out Response> {
+        val queryHandler = SearchFederalEntitiesByTermQueryHandler(searcher)
+
+        return KtormQueryHandlerDecorator(database, queryHandler, sqliteExtensions)
     }
 }

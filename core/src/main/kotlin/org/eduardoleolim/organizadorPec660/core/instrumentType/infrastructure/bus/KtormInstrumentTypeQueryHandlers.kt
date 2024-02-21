@@ -9,19 +9,29 @@ import org.eduardoleolim.organizadorPec660.core.instrumentType.infrastructure.pe
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.Query
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryHandler
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.Response
+import org.eduardoleolim.organizadorPec660.core.shared.infrastructure.bus.KtormQueryHandlerDecorator
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 
-class KtormInstrumentTypeQueryHandlers(database: Database) :
+class KtormInstrumentTypeQueryHandlers(private val database: Database, private val sqliteExtensions: List<String>) :
     HashMap<KClass<out Query>, QueryHandler<out Query, out Response>>() {
-    private val instrumentTypeRepository: KtormInstrumentTypeRepository
-    private val instrumentTypeSearcher: InstrumentTypeSearcher
+    private val instrumentTypeRepository = KtormInstrumentTypeRepository(database)
+    private val instrumentTypeSearcher = InstrumentTypeSearcher(instrumentTypeRepository)
 
     init {
-        instrumentTypeRepository = KtormInstrumentTypeRepository(database)
-        instrumentTypeSearcher = InstrumentTypeSearcher(instrumentTypeRepository)
+        this[SearchInstrumentTypeByIdQuery::class] = searchByIdQueryHandler()
+        this[SearchInstrumentTypesByTermQuery::class] = searchByTermQueryHandler()
+    }
 
-        this[SearchInstrumentTypeByIdQuery::class] = SearchInstrumentTypeByIdQueryHandler(instrumentTypeSearcher)
-        this[SearchInstrumentTypesByTermQuery::class] = SearchInstrumentTypesByTermQueryHandler(instrumentTypeSearcher)
+    private fun searchByIdQueryHandler(): KtormQueryHandlerDecorator<out Query, out Response> {
+        val queryHandler = SearchInstrumentTypeByIdQueryHandler(instrumentTypeSearcher)
+
+        return KtormQueryHandlerDecorator(database, queryHandler, sqliteExtensions)
+    }
+
+    private fun searchByTermQueryHandler(): KtormQueryHandlerDecorator<out Query, out Response> {
+        val queryHandler = SearchInstrumentTypesByTermQueryHandler(instrumentTypeSearcher)
+
+        return KtormQueryHandlerDecorator(database, queryHandler, sqliteExtensions)
     }
 }

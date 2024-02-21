@@ -17,38 +17,35 @@ import org.eduardoleolim.organizadorPec660.core.shared.infrastructure.bus.KtormC
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 
-class KtormMunicipalityCommandHandlers(database: Database) :
+class KtormMunicipalityCommandHandlers(private val database: Database, private val sqliteExtensions: List<String>) :
     HashMap<KClass<out Command>, CommandHandler<out Command>>() {
-    private val municipalityRepository: KtormMunicipalityRepository
-    private val federalEntityRepository: KtormFederalEntityRepository
+    private val municipalityRepository = KtormMunicipalityRepository(database)
+    private val federalEntityRepository = KtormFederalEntityRepository(database)
 
     init {
-        municipalityRepository = KtormMunicipalityRepository(database)
-        federalEntityRepository = KtormFederalEntityRepository(database)
-
-        this[CreateMunicipalityCommand::class] = createCommandHandler(database)
-        this[UpdateMunicipalityCommand::class] = updateCommandHandler(database)
-        this[DeleteMunicipalityCommand::class] = deleteCommandHandler(database)
+        this[CreateMunicipalityCommand::class] = createCommandHandler()
+        this[UpdateMunicipalityCommand::class] = updateCommandHandler()
+        this[DeleteMunicipalityCommand::class] = deleteCommandHandler()
     }
 
-    private fun createCommandHandler(database: Database): CommandHandler<out Command> {
+    private fun createCommandHandler(): CommandHandler<out Command> {
         val creator = MunicipalityCreator(municipalityRepository, federalEntityRepository)
         val commandHandler = CreateMunicipalityCommandHandler(creator)
 
-        return KtormCommandHandlerDecorator(database, commandHandler)
+        return KtormCommandHandlerDecorator(database, commandHandler, sqliteExtensions)
     }
 
-    private fun updateCommandHandler(database: Database): CommandHandler<out Command> {
+    private fun updateCommandHandler(): CommandHandler<out Command> {
         val updater = MunicipalityUpdater(municipalityRepository, federalEntityRepository)
         val commandHandler = UpdateMunicipalityCommandHandler(updater)
 
-        return KtormCommandHandlerDecorator(database, commandHandler)
+        return KtormCommandHandlerDecorator(database, commandHandler, sqliteExtensions)
     }
 
-    private fun deleteCommandHandler(database: Database): CommandHandler<out Command> {
+    private fun deleteCommandHandler(): CommandHandler<out Command> {
         val deleter = MunicipalityDeleter(municipalityRepository)
         val commandHandler = DeleteMunicipalityCommandHandler(deleter)
 
-        return KtormCommandHandlerDecorator(database, commandHandler)
+        return KtormCommandHandlerDecorator(database, commandHandler, sqliteExtensions)
     }
 }

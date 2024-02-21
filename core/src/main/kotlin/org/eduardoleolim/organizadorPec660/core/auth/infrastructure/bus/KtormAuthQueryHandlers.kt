@@ -7,24 +7,26 @@ import org.eduardoleolim.organizadorPec660.core.auth.infrastructure.persistence.
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.Query
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryHandler
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.Response
+import org.eduardoleolim.organizadorPec660.core.shared.infrastructure.bus.KtormQueryHandlerDecorator
 import org.eduardoleolim.organizadorPec660.core.user.application.search.UserSearcher
 import org.eduardoleolim.organizadorPec660.core.user.infrastructure.persistence.KtormUserRepository
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 
-class KtormAuthQueryHandlers(database: Database) :
+class KtormAuthQueryHandlers(private val database: Database) :
     HashMap<KClass<out Query>, QueryHandler<out Query, out Response>>() {
-    private val authRepository: KtormAuthRepository
-    private val userRepository: KtormUserRepository
-    private val authenticator: UserAuthenticator
-    private val searcher: UserSearcher
+    private val authRepository = KtormAuthRepository(database)
+    private val userRepository = KtormUserRepository(database)
+    private val authenticator = UserAuthenticator(authRepository)
+    private val searcher = UserSearcher(userRepository)
 
     init {
-        authRepository = KtormAuthRepository(database)
-        userRepository = KtormUserRepository(database)
-        authenticator = UserAuthenticator(authRepository)
-        searcher = UserSearcher(userRepository)
+        this[AuthenticateUserQuery::class] = authQueryHandler()
+    }
 
-        this[AuthenticateUserQuery::class] = AuthenticateUserQueryHandler(authenticator, searcher)
+    private fun authQueryHandler(): KtormQueryHandlerDecorator<out Query, out Response> {
+        val queryHandler = AuthenticateUserQueryHandler(authenticator, searcher)
+
+        return KtormQueryHandlerDecorator(database, queryHandler)
     }
 }

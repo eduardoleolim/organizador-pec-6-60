@@ -16,36 +16,34 @@ import org.eduardoleolim.organizadorPec660.core.shared.infrastructure.bus.KtormC
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 
-class KtormInstrumentTypeCommandHandlers(database: Database) :
+class KtormInstrumentTypeCommandHandlers(private val database: Database, private val sqliteExtensions: List<String>) :
     HashMap<KClass<out Command>, CommandHandler<out Command>>() {
-    private val instrumentTypeRepository: KtormInstrumentTypeRepository
+    private val instrumentTypeRepository = KtormInstrumentTypeRepository(database)
 
     init {
-        instrumentTypeRepository = KtormInstrumentTypeRepository(database)
-
-        this[CreateInstrumentTypeCommand::class] = createCommandHandler(database)
-        this[UpdateInstrumentTypeCommand::class] = updateCommandHandler(database)
-        this[DeleteInstrumentTypeCommand::class] = deleteCommandHandler(database)
+        this[CreateInstrumentTypeCommand::class] = createCommandHandler()
+        this[UpdateInstrumentTypeCommand::class] = updateCommandHandler()
+        this[DeleteInstrumentTypeCommand::class] = deleteCommandHandler()
     }
 
-    private fun createCommandHandler(database: Database): CommandHandler<out Command> {
+    private fun createCommandHandler(): CommandHandler<out Command> {
         val creator = InstrumentTypeCreator(instrumentTypeRepository)
         val commandHandler = CreateInstrumentTypeCommandHandler(creator)
 
-        return KtormCommandHandlerDecorator(database, commandHandler)
+        return KtormCommandHandlerDecorator(database, commandHandler, sqliteExtensions)
     }
 
-    private fun updateCommandHandler(database: Database): CommandHandler<out Command> {
+    private fun updateCommandHandler(): CommandHandler<out Command> {
         val updater = InstrumentTypeUpdater(instrumentTypeRepository)
         val commandHandler = UpdateInstrumentTypeCommandHandler(updater)
 
-        return KtormCommandHandlerDecorator(database, commandHandler)
+        return KtormCommandHandlerDecorator(database, commandHandler, sqliteExtensions)
     }
 
-    private fun deleteCommandHandler(database: Database): CommandHandler<out Command> {
+    private fun deleteCommandHandler(): CommandHandler<out Command> {
         val deleter = InstrumentTypeDeleter(instrumentTypeRepository)
         val commandHandler = DeleteInstrumentTypeCommandHandler(deleter)
 
-        return KtormCommandHandlerDecorator(database, commandHandler)
+        return KtormCommandHandlerDecorator(database, commandHandler, sqliteExtensions)
     }
 }

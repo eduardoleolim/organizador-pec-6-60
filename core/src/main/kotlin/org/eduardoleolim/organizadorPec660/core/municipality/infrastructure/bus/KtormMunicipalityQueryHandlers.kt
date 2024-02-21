@@ -11,25 +11,31 @@ import org.eduardoleolim.organizadorPec660.core.municipality.infrastructure.pers
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.Query
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryHandler
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.Response
+import org.eduardoleolim.organizadorPec660.core.shared.infrastructure.bus.KtormQueryHandlerDecorator
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 
-class KtormMunicipalityQueryHandlers(database: Database) :
+class KtormMunicipalityQueryHandlers(private val database: Database, private val sqliteExtensions: List<String>) :
     HashMap<KClass<out Query>, QueryHandler<out Query, out Response>>() {
-    private val municipalityRepository: KtormMunicipalityRepository
-    private val federalEntityRepository: KtormFederalEntityRepository
-    private val municipalitySearcher: MunicipalitySearcher
-    private val federalEntitySearcher: FederalEntitySearcher
+    private val municipalityRepository = KtormMunicipalityRepository(database)
+    private val federalEntityRepository = KtormFederalEntityRepository(database)
+    private val municipalitySearcher = MunicipalitySearcher(municipalityRepository)
+    private val federalEntitySearcher = FederalEntitySearcher(federalEntityRepository)
 
     init {
-        municipalityRepository = KtormMunicipalityRepository(database)
-        federalEntityRepository = KtormFederalEntityRepository(database)
-        municipalitySearcher = MunicipalitySearcher(municipalityRepository)
-        federalEntitySearcher = FederalEntitySearcher(federalEntityRepository)
+        this[SearchMunicipalitiesByTermQuery::class] = searchByTermQueryHandler()
+        this[SearchMunicipalityByIdQuery::class] = searchByIdQueryHandler()
+    }
 
-        this[SearchMunicipalitiesByTermQuery::class] =
-            SearchMunicipalitiesByTermQueryHandler(municipalitySearcher, federalEntitySearcher)
-        this[SearchMunicipalityByIdQuery::class] =
-            SearchMunicipalityByIdQueryHandler(municipalitySearcher, federalEntitySearcher)
+    private fun searchByTermQueryHandler(): QueryHandler<out Query, out Response> {
+        val queryHandler = SearchMunicipalitiesByTermQueryHandler(municipalitySearcher, federalEntitySearcher)
+
+        return KtormQueryHandlerDecorator(database, queryHandler, sqliteExtensions)
+    }
+
+    private fun searchByIdQueryHandler(): QueryHandler<out Query, out Response> {
+        val queryHandler = SearchMunicipalityByIdQueryHandler(municipalitySearcher, federalEntitySearcher)
+
+        return KtormQueryHandlerDecorator(database, queryHandler, sqliteExtensions)
     }
 }

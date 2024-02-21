@@ -3,6 +3,7 @@ package org.eduardoleolim.organizadorPec660.core.statisticType.infrastructure.bu
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.Query
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryHandler
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.Response
+import org.eduardoleolim.organizadorPec660.core.shared.infrastructure.bus.KtormQueryHandlerDecorator
 import org.eduardoleolim.organizadorPec660.core.statisticType.application.search.StatisticTypeSearcher
 import org.eduardoleolim.organizadorPec660.core.statisticType.application.searchById.SearchStatisticTypeByIdQuery
 import org.eduardoleolim.organizadorPec660.core.statisticType.application.searchById.SearchStatisticTypeByIdQueryHandler
@@ -12,18 +13,25 @@ import org.eduardoleolim.organizadorPec660.core.statisticType.infrastructure.per
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 
-class KtormStatisticTypeQueryHandlers(database: Database) :
+class KtormStatisticTypeQueryHandlers(private val database: Database, private val sqliteExtensions: List<String>) :
     HashMap<KClass<out Query>, QueryHandler<out Query, out Response>>() {
-    private val statisticTypeRepository: KtormStatisticTypeRepository
-    private val searcher: StatisticTypeSearcher
+    private val statisticTypeRepository = KtormStatisticTypeRepository(database)
+    private val searcher = StatisticTypeSearcher(statisticTypeRepository)
 
     init {
-        statisticTypeRepository = KtormStatisticTypeRepository(database)
-        searcher = StatisticTypeSearcher(statisticTypeRepository)
+        this[SearchStatisticTypesByTermQuery::class] = searchByTermQueryHandler()
+        this[SearchStatisticTypeByIdQuery::class] = searchByIdQueryHandler()
+    }
 
-        this[SearchStatisticTypesByTermQuery::class] =
-            SearchStatisticTypesByTermQueryHandler(searcher)
-        this[SearchStatisticTypeByIdQuery::class] =
-            SearchStatisticTypeByIdQueryHandler(searcher)
+    private fun searchByTermQueryHandler(): QueryHandler<out Query, out Response> {
+        val queryHandler = SearchStatisticTypesByTermQueryHandler(searcher)
+
+        return KtormQueryHandlerDecorator(database, queryHandler, sqliteExtensions)
+    }
+
+    private fun searchByIdQueryHandler(): QueryHandler<out Query, out Response> {
+        val queryHandler = SearchStatisticTypeByIdQueryHandler(searcher)
+
+        return KtormQueryHandlerDecorator(database, queryHandler, sqliteExtensions)
     }
 }
