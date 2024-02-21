@@ -15,13 +15,25 @@ object SqliteKtormDatabase {
     fun connect(
         databasePath: String,
         password: String,
+        extensions: List<String> = emptyList()
+    ) = connect(databasePath, password, false, extensions)
+
+    fun connectReadOnly(
+        databasePath: String,
+        password: String,
+        extensions: List<String> = emptyList()
+    ) = connect(databasePath, password, true, extensions)
+
+    private fun connect(
+        databasePath: String,
+        password: String,
         isReadOnly: Boolean = false,
         extensions: List<String> = emptyList()
     ): Database {
         val file = File(databasePath)
-        val existsFile = file.exists()
+        val existsDatabase = file.exists()
 
-        if (existsFile.not())
+        if (existsDatabase.not())
             file.parentFile.mkdirs()
 
         val url = "jdbc:sqlite:$databasePath"
@@ -31,7 +43,7 @@ object SqliteKtormDatabase {
             enableLoadExtension(true)
         }
 
-        if (existsFile.not()) {
+        if (existsDatabase.not()) {
             try {
                 config.setReadOnly(false)
 
