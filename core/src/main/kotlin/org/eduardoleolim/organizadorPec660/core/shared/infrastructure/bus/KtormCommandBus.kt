@@ -8,13 +8,13 @@ import org.eduardoleolim.organizadorPec660.core.statisticType.infrastructure.bus
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 
-class KtormCommandBus(database: Database, sqliteExtensions: List<String> = emptyList()) : CommandBus {
+class KtormCommandBus(database: Database) : CommandBus {
     private val commandHandlers: Map<KClass<out Command>, CommandHandler<out Command>> =
         HashMap<KClass<out Command>, CommandHandler<out Command>>().apply {
-            putAll(KtormFederalEntityCommandHandlers(database, sqliteExtensions))
-            putAll(KtormInstrumentTypeCommandHandlers(database, sqliteExtensions))
-            putAll(KtormMunicipalityCommandHandlers(database, sqliteExtensions))
-            putAll(KtormStatisticTypeCommandHandlers(database, sqliteExtensions))
+            putAll(KtormFederalEntityCommandHandlers(database))
+            putAll(KtormInstrumentTypeCommandHandlers(database))
+            putAll(KtormMunicipalityCommandHandlers(database))
+            putAll(KtormStatisticTypeCommandHandlers(database))
         }
 
     override fun dispatch(command: Command) {

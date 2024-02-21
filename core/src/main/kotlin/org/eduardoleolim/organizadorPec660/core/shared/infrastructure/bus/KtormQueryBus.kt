@@ -9,14 +9,14 @@ import org.eduardoleolim.organizadorPec660.core.statisticType.infrastructure.bus
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 
-class KtormQueryBus(private val database: Database, sqliteExtensions: List<String> = emptyList()) : QueryBus {
+class KtormQueryBus(private val database: Database) : QueryBus {
     private val queryHandlers: Map<KClass<out Query>, QueryHandler<out Query, out Response>> =
         HashMap<KClass<out Query>, QueryHandler<out Query, out Response>>().apply {
             putAll(KtormAuthQueryHandlers(database))
-            putAll(KtormFederalEntityQueryHandlers(database, sqliteExtensions))
-            putAll(KtormInstrumentTypeQueryHandlers(database, sqliteExtensions))
-            putAll(KtormMunicipalityQueryHandlers(database, sqliteExtensions))
-            putAll(KtormStatisticTypeQueryHandlers(database, sqliteExtensions))
+            putAll(KtormFederalEntityQueryHandlers(database))
+            putAll(KtormInstrumentTypeQueryHandlers(database))
+            putAll(KtormMunicipalityQueryHandlers(database))
+            putAll(KtormStatisticTypeQueryHandlers(database))
         }
 
     override fun <R> ask(query: Query): R {

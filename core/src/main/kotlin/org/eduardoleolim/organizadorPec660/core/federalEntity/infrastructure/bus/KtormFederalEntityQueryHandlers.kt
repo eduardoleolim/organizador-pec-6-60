@@ -13,7 +13,7 @@ import org.eduardoleolim.organizadorPec660.core.shared.infrastructure.bus.KtormQ
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 
-class KtormFederalEntityQueryHandlers(private val database: Database, private val sqliteExtensions: List<String>) :
+class KtormFederalEntityQueryHandlers(private val database: Database) :
     HashMap<KClass<out Query>, QueryHandler<out Query, out Response>>() {
     private val federalEntityRepository = KtormFederalEntityRepository(database)
     private val searcher = FederalEntitySearcher(federalEntityRepository)
@@ -26,12 +26,12 @@ class KtormFederalEntityQueryHandlers(private val database: Database, private va
     private fun searchByIdQueryHandler(): KtormQueryHandlerDecorator<out Query, out Response> {
         val queryHandler = SearchFederalEntityByIdQueryHandler(searcher)
 
-        return KtormQueryHandlerDecorator(database, queryHandler, sqliteExtensions)
+        return KtormQueryHandlerDecorator(database, queryHandler)
     }
 
     private fun searchByTermQueryHandler(): KtormQueryHandlerDecorator<out Query, out Response> {
         val queryHandler = SearchFederalEntitiesByTermQueryHandler(searcher)
 
-        return KtormQueryHandlerDecorator(database, queryHandler, sqliteExtensions)
+        return KtormQueryHandlerDecorator(database, queryHandler)
     }
 }

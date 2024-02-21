@@ -17,7 +17,7 @@ import org.eduardoleolim.organizadorPec660.core.shared.infrastructure.bus.KtormC
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 
-class KtormMunicipalityCommandHandlers(private val database: Database, private val sqliteExtensions: List<String>) :
+class KtormMunicipalityCommandHandlers(private val database: Database) :
     HashMap<KClass<out Command>, CommandHandler<out Command>>() {
     private val municipalityRepository = KtormMunicipalityRepository(database)
     private val federalEntityRepository = KtormFederalEntityRepository(database)
@@ -32,20 +32,20 @@ class KtormMunicipalityCommandHandlers(private val database: Database, private v
         val creator = MunicipalityCreator(municipalityRepository, federalEntityRepository)
         val commandHandler = CreateMunicipalityCommandHandler(creator)
 
-        return KtormCommandHandlerDecorator(database, commandHandler, sqliteExtensions)
+        return KtormCommandHandlerDecorator(database, commandHandler)
     }
 
     private fun updateCommandHandler(): CommandHandler<out Command> {
         val updater = MunicipalityUpdater(municipalityRepository, federalEntityRepository)
         val commandHandler = UpdateMunicipalityCommandHandler(updater)
 
-        return KtormCommandHandlerDecorator(database, commandHandler, sqliteExtensions)
+        return KtormCommandHandlerDecorator(database, commandHandler)
     }
 
     private fun deleteCommandHandler(): CommandHandler<out Command> {
         val deleter = MunicipalityDeleter(municipalityRepository)
         val commandHandler = DeleteMunicipalityCommandHandler(deleter)
 
-        return KtormCommandHandlerDecorator(database, commandHandler, sqliteExtensions)
+        return KtormCommandHandlerDecorator(database, commandHandler)
     }
 }

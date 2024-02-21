@@ -16,7 +16,7 @@ import org.eduardoleolim.organizadorPec660.core.shared.infrastructure.bus.KtormC
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 
-class KtormInstrumentTypeCommandHandlers(private val database: Database, private val sqliteExtensions: List<String>) :
+class KtormInstrumentTypeCommandHandlers(private val database: Database) :
     HashMap<KClass<out Command>, CommandHandler<out Command>>() {
     private val instrumentTypeRepository = KtormInstrumentTypeRepository(database)
 
@@ -30,20 +30,20 @@ class KtormInstrumentTypeCommandHandlers(private val database: Database, private
         val creator = InstrumentTypeCreator(instrumentTypeRepository)
         val commandHandler = CreateInstrumentTypeCommandHandler(creator)
 
-        return KtormCommandHandlerDecorator(database, commandHandler, sqliteExtensions)
+        return KtormCommandHandlerDecorator(database, commandHandler)
     }
 
     private fun updateCommandHandler(): CommandHandler<out Command> {
         val updater = InstrumentTypeUpdater(instrumentTypeRepository)
         val commandHandler = UpdateInstrumentTypeCommandHandler(updater)
 
-        return KtormCommandHandlerDecorator(database, commandHandler, sqliteExtensions)
+        return KtormCommandHandlerDecorator(database, commandHandler)
     }
 
     private fun deleteCommandHandler(): CommandHandler<out Command> {
         val deleter = InstrumentTypeDeleter(instrumentTypeRepository)
         val commandHandler = DeleteInstrumentTypeCommandHandler(deleter)
 
-        return KtormCommandHandlerDecorator(database, commandHandler, sqliteExtensions)
+        return KtormCommandHandlerDecorator(database, commandHandler)
     }
 }

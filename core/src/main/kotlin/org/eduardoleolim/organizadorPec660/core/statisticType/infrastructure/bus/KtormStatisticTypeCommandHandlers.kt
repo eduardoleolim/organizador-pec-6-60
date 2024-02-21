@@ -17,7 +17,7 @@ import org.eduardoleolim.organizadorPec660.core.statisticType.infrastructure.per
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 
-class KtormStatisticTypeCommandHandlers(private val database: Database, private val sqliteExtensions: List<String>) :
+class KtormStatisticTypeCommandHandlers(private val database: Database) :
     HashMap<KClass<out Command>, CommandHandler<out Command>>() {
     private val statisticTypeRepository = KtormStatisticTypeRepository(database)
     private val instrumentTypeRepository = KtormInstrumentTypeRepository(database)
@@ -32,20 +32,20 @@ class KtormStatisticTypeCommandHandlers(private val database: Database, private 
         val creator = StatisticTypeCreator(statisticTypeRepository, instrumentTypeRepository)
         val commandHandler = CreateStatisticTypeCommandHandler(creator)
 
-        return KtormCommandHandlerDecorator(database, commandHandler, sqliteExtensions)
+        return KtormCommandHandlerDecorator(database, commandHandler)
     }
 
     private fun updateCommandHandler(): CommandHandler<out Command> {
         val updater = StatisticTypeUpdater(statisticTypeRepository, instrumentTypeRepository)
         val commandHandler = UpdateStatisticTypeCommandHandler(updater)
 
-        return KtormCommandHandlerDecorator(database, commandHandler, sqliteExtensions)
+        return KtormCommandHandlerDecorator(database, commandHandler)
     }
 
     private fun deleteCommandHandler(): CommandHandler<out Command> {
         val deleter = StatisticTypeDeleter(statisticTypeRepository)
         val commandHandler = DeleteStatisticTypeCommandHandler(deleter)
 
-        return KtormCommandHandlerDecorator(database, commandHandler, sqliteExtensions)
+        return KtormCommandHandlerDecorator(database, commandHandler)
     }
 }

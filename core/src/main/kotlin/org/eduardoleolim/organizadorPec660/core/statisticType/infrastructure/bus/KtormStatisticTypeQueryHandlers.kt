@@ -13,7 +13,7 @@ import org.eduardoleolim.organizadorPec660.core.statisticType.infrastructure.per
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 
-class KtormStatisticTypeQueryHandlers(private val database: Database, private val sqliteExtensions: List<String>) :
+class KtormStatisticTypeQueryHandlers(private val database: Database) :
     HashMap<KClass<out Query>, QueryHandler<out Query, out Response>>() {
     private val statisticTypeRepository = KtormStatisticTypeRepository(database)
     private val searcher = StatisticTypeSearcher(statisticTypeRepository)
@@ -26,12 +26,12 @@ class KtormStatisticTypeQueryHandlers(private val database: Database, private va
     private fun searchByTermQueryHandler(): QueryHandler<out Query, out Response> {
         val queryHandler = SearchStatisticTypesByTermQueryHandler(searcher)
 
-        return KtormQueryHandlerDecorator(database, queryHandler, sqliteExtensions)
+        return KtormQueryHandlerDecorator(database, queryHandler)
     }
 
     private fun searchByIdQueryHandler(): QueryHandler<out Query, out Response> {
         val queryHandler = SearchStatisticTypeByIdQueryHandler(searcher)
 
-        return KtormQueryHandlerDecorator(database, queryHandler, sqliteExtensions)
+        return KtormQueryHandlerDecorator(database, queryHandler)
     }
 }

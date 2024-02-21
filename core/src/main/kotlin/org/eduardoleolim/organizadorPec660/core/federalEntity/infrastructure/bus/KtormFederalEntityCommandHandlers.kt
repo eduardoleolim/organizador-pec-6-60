@@ -16,7 +16,7 @@ import org.eduardoleolim.organizadorPec660.core.shared.infrastructure.bus.KtormC
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 
-class KtormFederalEntityCommandHandlers(private val database: Database, private val sqliteExtensions: List<String>) :
+class KtormFederalEntityCommandHandlers(private val database: Database) :
     HashMap<KClass<out Command>, CommandHandler<out Command>>() {
     private val federalEntityRepository = KtormFederalEntityRepository(database)
 
@@ -30,20 +30,20 @@ class KtormFederalEntityCommandHandlers(private val database: Database, private 
         val creator = FederalEntityCreator(federalEntityRepository)
         val commandHandler = CreateFederalEntityCommandHandler(creator)
 
-        return KtormCommandHandlerDecorator(database, commandHandler, sqliteExtensions)
+        return KtormCommandHandlerDecorator(database, commandHandler)
     }
 
     private fun updateCommandHandler(): CommandHandler<out Command> {
         val updater = FederalEntityUpdater(federalEntityRepository)
         val commandHandler = UpdateFederalEntityCommandHandler(updater)
 
-        return KtormCommandHandlerDecorator(database, commandHandler, sqliteExtensions)
+        return KtormCommandHandlerDecorator(database, commandHandler)
     }
 
     private fun deleteCommandHandler(): CommandHandler<out Command> {
         val deleter = FederalEntityDeleter(federalEntityRepository)
         val commandHandler = DeleteFederalEntityCommandHandler(deleter)
 
-        return KtormCommandHandlerDecorator(database, commandHandler, sqliteExtensions)
+        return KtormCommandHandlerDecorator(database, commandHandler)
     }
 }

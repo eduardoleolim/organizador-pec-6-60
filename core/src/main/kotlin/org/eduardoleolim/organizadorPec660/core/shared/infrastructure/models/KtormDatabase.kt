@@ -1,91 +1,111 @@
 package org.eduardoleolim.organizadorPec660.core.shared.infrastructure.models
 
 import org.ktorm.database.Database
-import org.ktorm.dsl.insert
 import org.ktorm.support.sqlite.SQLiteDialect
-import org.sqlite.SQLiteDataSource
 import org.sqlite.mc.SQLiteMCSqlCipherConfig
 import java.io.File
 import java.sql.Connection
-import java.time.LocalDateTime
+import java.sql.DriverManager
 import java.util.*
-
+import kotlin.concurrent.thread
 
 object SqliteKtormDatabase {
     private val classLoader = Thread.currentThread().contextClassLoader
 
     fun connect(
         databasePath: String,
+        password: String,
         isReadOnly: Boolean = false,
         extensions: List<String> = emptyList()
     ): Database {
         val file = File(databasePath)
         val existsFile = file.exists()
 
-        if (!existsFile)
+        if (existsFile.not())
             file.parentFile.mkdirs()
 
-        val dataSource = SQLiteDataSource().apply {
-            url = "jdbc:sqlite:$databasePath"
-            config = SQLiteMCSqlCipherConfig.getDefault().withKey("12345").build().apply {
-                setEnforceForeignKeys(true)
-                setReadOnly(if (existsFile) isReadOnly else false)
-                enableLoadExtension(true)
+        val url = "jdbc:sqlite:$databasePath"
+        val config = SQLiteMCSqlCipherConfig.getDefault().withKey(password).build().apply {
+            enforceForeignKeys(true)
+            setReadOnly(isReadOnly)
+            enableLoadExtension(true)
+        }
+
+        if (existsFile.not()) {
+            try {
+                config.setReadOnly(false)
+
+                DriverManager.getConnection(url, config.toProperties()).use { connection ->
+                    connection.createDatabase()
+                }
+
+                config.setReadOnly(isReadOnly)
+            } catch (e: Exception) {
+                file.delete()
+                throw e
             }
         }
 
-        return Database.connect(dataSource, SQLiteDialect()).also {
-            it.runCatching {
-                if (!existsFile) {
-                    it.createDatabase(extensions)
-                    dataSource.setReadOnly(isReadOnly)
+
+        val connection = DriverManager.getConnection(url, config.toProperties())
+        connection.loadExtensions(extensions)
+
+        Runtime.getRuntime().addShutdownHook(
+            thread(start = false) {
+                connection.close()
+            }
+        )
+
+        return Database.connect(SQLiteDialect()) {
+            object : Connection by connection {
+                override fun close() {
+                    // Override the close function and do nothing, keep the connection open.
                 }
-            }.onFailure { error ->
-                file.delete()
-                throw error
             }
         }
     }
 
-    private fun Database.createDatabase(extensionPaths: List<String>) {
+    private fun Connection.createDatabase() {
         val schemaStream = classLoader.getResourceAsStream("database/schema.sql")
             ?: throw Exception("Database schema not found")
 
         val schema = schemaStream.bufferedReader().use { it.readText() }
         val queries = schema.split(";").map { it.trim() }.filter { it.isNotEmpty() }
 
-        useTransaction { transaction ->
-            transaction.apply {
-                connection.loadExtensions(extensionPaths)
-                connection.createStatement().use { statement ->
-                    queries.forEach { statement.addBatch(it) }
-                    statement.executeBatch()
-                }
-            }
+        autoCommit = false
 
-            val adminRoleId = UUID.randomUUID().toString()
-            val adminUserId = UUID.randomUUID().toString()
-
-            insert(Roles()) {
-                set(it.id, adminRoleId)
-                set(it.name, "ADMINISTRADOR")
-            }
-
-            insert(Users()) {
-                set(it.id, adminUserId)
-                set(it.firstname, "Administrador")
-                set(it.lastname, "Administrador")
-                set(it.roleId, adminRoleId)
-                set(it.createdAt, LocalDateTime.now())
-            }
-
-            insert(Credentials()) {
-                set(it.email, "admin@localhost")
-                set(it.username, "admin")
-                set(it.password, "admin")
-                set(it.userId, adminUserId)
-            }
+        createStatement().use { statement ->
+            queries.forEach { statement.addBatch(it) }
+            statement.executeBatch()
         }
+
+        val adminRoleId = UUID.randomUUID().toString()
+        val adminUserId = UUID.randomUUID().toString()
+
+        prepareStatement("INSERT INTO role (roleId, name) VALUES (?, ?)").use { statement ->
+            statement.setString(1, adminRoleId)
+            statement.setString(2, "ADMINISTRADOR")
+            statement.execute()
+        }
+
+        prepareStatement("INSERT INTO user (userId, firstname, lastname, roleId, createdAt) VALUES (?, ?, ?, ?, ?)").use { statement ->
+            statement.setString(1, adminUserId)
+            statement.setString(2, "Administrador")
+            statement.setString(3, "Administrador")
+            statement.setString(4, adminRoleId)
+            statement.setObject(5, Date().time)
+            statement.execute()
+        }
+
+        prepareStatement("INSERT INTO credentials (email, username, password, userId) VALUES (?, ?, ?, ?)").use { statement ->
+            statement.setString(1, "admin@localhost")
+            statement.setString(2, "admin")
+            statement.setString(3, "admin")
+            statement.setString(4, adminUserId)
+            statement.execute()
+        }
+
+        commit()
     }
 }
 

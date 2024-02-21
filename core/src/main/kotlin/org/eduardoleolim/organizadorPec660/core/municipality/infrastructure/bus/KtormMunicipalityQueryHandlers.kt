@@ -15,7 +15,7 @@ import org.eduardoleolim.organizadorPec660.core.shared.infrastructure.bus.KtormQ
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 
-class KtormMunicipalityQueryHandlers(private val database: Database, private val sqliteExtensions: List<String>) :
+class KtormMunicipalityQueryHandlers(private val database: Database) :
     HashMap<KClass<out Query>, QueryHandler<out Query, out Response>>() {
     private val municipalityRepository = KtormMunicipalityRepository(database)
     private val federalEntityRepository = KtormFederalEntityRepository(database)
@@ -30,12 +30,12 @@ class KtormMunicipalityQueryHandlers(private val database: Database, private val
     private fun searchByTermQueryHandler(): QueryHandler<out Query, out Response> {
         val queryHandler = SearchMunicipalitiesByTermQueryHandler(municipalitySearcher, federalEntitySearcher)
 
-        return KtormQueryHandlerDecorator(database, queryHandler, sqliteExtensions)
+        return KtormQueryHandlerDecorator(database, queryHandler)
     }
 
     private fun searchByIdQueryHandler(): QueryHandler<out Query, out Response> {
         val queryHandler = SearchMunicipalityByIdQueryHandler(municipalitySearcher, federalEntitySearcher)
 
-        return KtormQueryHandlerDecorator(database, queryHandler, sqliteExtensions)
+        return KtormQueryHandlerDecorator(database, queryHandler)
     }
 }

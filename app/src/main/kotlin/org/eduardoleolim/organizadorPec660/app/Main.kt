@@ -15,10 +15,8 @@ fun main(args: Array<String>) {
         } ?: emptyList<String>()
 
         val databasePath = ArgsUtils.databasePath(args) ?: throw Exception("Database path not found")
-        val commandBus =
-            KtormCommandBus(SqliteKtormDatabase.connect(databasePath, false, sqliteExtensions), sqliteExtensions)
-        val queryBus =
-            KtormQueryBus(SqliteKtormDatabase.connect(databasePath, true, sqliteExtensions), sqliteExtensions)
+        val commandBus = KtormCommandBus(SqliteKtormDatabase.connect(databasePath, "12345", false, sqliteExtensions))
+        val queryBus = KtormQueryBus(SqliteKtormDatabase.connect(databasePath, "12345", true, sqliteExtensions))
 
         App(commandBus, queryBus).start()
     } catch (e: Exception) {

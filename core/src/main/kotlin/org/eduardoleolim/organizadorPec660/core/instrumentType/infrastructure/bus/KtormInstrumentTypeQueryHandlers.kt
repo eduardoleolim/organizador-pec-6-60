@@ -13,7 +13,7 @@ import org.eduardoleolim.organizadorPec660.core.shared.infrastructure.bus.KtormQ
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 
-class KtormInstrumentTypeQueryHandlers(private val database: Database, private val sqliteExtensions: List<String>) :
+class KtormInstrumentTypeQueryHandlers(private val database: Database) :
     HashMap<KClass<out Query>, QueryHandler<out Query, out Response>>() {
     private val instrumentTypeRepository = KtormInstrumentTypeRepository(database)
     private val instrumentTypeSearcher = InstrumentTypeSearcher(instrumentTypeRepository)
@@ -26,12 +26,12 @@ class KtormInstrumentTypeQueryHandlers(private val database: Database, private v
     private fun searchByIdQueryHandler(): KtormQueryHandlerDecorator<out Query, out Response> {
         val queryHandler = SearchInstrumentTypeByIdQueryHandler(instrumentTypeSearcher)
 
-        return KtormQueryHandlerDecorator(database, queryHandler, sqliteExtensions)
+        return KtormQueryHandlerDecorator(database, queryHandler)
     }
 
     private fun searchByTermQueryHandler(): KtormQueryHandlerDecorator<out Query, out Response> {
         val queryHandler = SearchInstrumentTypesByTermQueryHandler(instrumentTypeSearcher)
 
-        return KtormQueryHandlerDecorator(database, queryHandler, sqliteExtensions)
+        return KtormQueryHandlerDecorator(database, queryHandler)
     }
 }
