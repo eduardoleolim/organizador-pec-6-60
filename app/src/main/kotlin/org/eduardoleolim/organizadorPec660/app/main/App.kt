@@ -36,12 +36,12 @@ class App(private val commandBus: CommandBus, private val queryBus: QueryBus) {
 
         DisposableEffect(Unit) {
             val osThemeDetector = OsThemeDetector.getDetector()
+            isDarkTheme = osThemeDetector.isDark
 
             val consumer = Consumer<Boolean> {
                 SwingUtilities.invokeLater {
-                    if (!isThemeSelected) {
+                    if (isThemeSelected.not()) {
                         isDarkTheme = it
-                        isThemeSelected = true
                     }
                 }
             }
@@ -72,7 +72,10 @@ class App(private val commandBus: CommandBus, private val queryBus: QueryBus) {
                             contentDescription = "Toggle theme",
                             modifier = Modifier
                                 .windowFrameItem("theme", HitSpots.OTHER_HIT_SPOT)
-                                .clickable { isDarkTheme = !isDarkTheme }
+                                .clickable {
+                                    isDarkTheme = !isDarkTheme
+                                    isThemeSelected = true
+                                }
                                 .padding(4.dp)
                                 .size(16.dp)
                                 .clip(CircleShape)
