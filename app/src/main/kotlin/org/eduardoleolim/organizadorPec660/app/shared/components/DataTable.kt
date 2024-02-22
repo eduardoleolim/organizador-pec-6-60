@@ -23,6 +23,7 @@ import kotlin.math.min
 fun PaginatedDataTable(
     value: String,
     onValueChange: (String) -> Unit,
+    delayMillis: Long = 500L,
     pageSizes: List<Int> = listOf(10, 25, 50, 100),
     columns: List<DataColumn>,
     modifier: Modifier = Modifier,
@@ -38,14 +39,15 @@ fun PaginatedDataTable(
     state: PaginatedDataTableState = rememberPaginatedDataTableState(pageSizes.first()),
     content: DataTableScope.() -> Unit,
 ) {
-    LaunchedEffect(value, state.pageIndex, state.pageSize, sortColumnIndex, sortAscending) {
-        if (state.pageIndex < 0) state.pageIndex = 0
-
+    value.useDebounce(delayMillis) {
+        state.pageIndex = 0
         onSearch(value, state.pageIndex, state.pageSize, sortColumnIndex, sortAscending)
     }
 
-    LaunchedEffect(value) {
-        state.pageIndex = 0
+    LaunchedEffect(state.pageIndex, state.pageSize, sortColumnIndex, sortAscending) {
+        if (state.pageIndex < 0) state.pageIndex = 0
+
+        onSearch(value, state.pageIndex, state.pageSize, sortColumnIndex, sortAscending)
     }
 
     Column(
