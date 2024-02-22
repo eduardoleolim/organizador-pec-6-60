@@ -12,6 +12,12 @@ import kotlin.concurrent.thread
 object SqliteKtormDatabase {
     private val classLoader = Thread.currentThread().contextClassLoader
 
+    fun exists(databasePath: String): Boolean {
+        return File(databasePath).let {
+            it.exists() && it.isFile
+        }
+    }
+
     fun connect(
         databasePath: String,
         password: String,
