@@ -2,8 +2,8 @@ package org.eduardoleolim.organizadorPec660.app.municipality
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import com.seanproctor.datatable.DataColumn
 import com.seanproctor.datatable.TableColumnWidth
 import com.seanproctor.datatable.paging.PaginatedDataTableState
@@ -76,7 +77,7 @@ fun MunicipalityScreen.MunicipalitiesTable(
             DataColumn(
                 onSort = ::onSort,
                 alignment = Alignment.CenterHorizontally,
-                width = TableColumnWidth.Fraction(0.2f)
+                width = TableColumnWidth.Fraction(0.18f)
             ) {
                 Text(
                     text = "Fecha de registro",
@@ -86,7 +87,7 @@ fun MunicipalityScreen.MunicipalitiesTable(
             DataColumn(
                 onSort = ::onSort,
                 alignment = Alignment.CenterHorizontally,
-                width = TableColumnWidth.Fraction(0.2f)
+                width = TableColumnWidth.Fraction(0.18f)
             ) {
                 Text(
                     text = "Última actualización",
@@ -158,7 +159,7 @@ fun MunicipalityScreen.MunicipalitiesTable(
                     expanded = expanded,
                     onDismissRequest = { expanded = false },
                     modifier = Modifier
-                        .fillMaxHeight(0.6f)
+                        .heightIn(0.dp, 300.dp)
                         .background(MaterialTheme.colorScheme.surface)
                 ) {
                     DropdownMenuItem(
