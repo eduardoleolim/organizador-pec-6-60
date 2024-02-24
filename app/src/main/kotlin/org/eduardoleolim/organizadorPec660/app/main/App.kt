@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.LightMode
@@ -72,13 +72,13 @@ class App(private val commandBus: CommandBus, private val queryBus: QueryBus) {
                             contentDescription = "Toggle theme",
                             modifier = Modifier
                                 .windowFrameItem("theme", HitSpots.OTHER_HIT_SPOT)
+                                .clip(RoundedCornerShape(4.dp))
                                 .clickable {
                                     isDarkTheme = !isDarkTheme
                                     isThemeSelected = true
                                 }
                                 .padding(4.dp)
                                 .size(16.dp)
-                                .clip(CircleShape)
                         )
                     }
                 }
