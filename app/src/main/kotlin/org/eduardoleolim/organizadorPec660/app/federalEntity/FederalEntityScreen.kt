@@ -14,7 +14,6 @@ import cafe.adriel.voyager.core.screen.Screen
 import com.seanproctor.datatable.paging.rememberPaginatedDataTableState
 import org.eduardoleolim.organizadorPec660.app.home.HomeActions
 import org.eduardoleolim.organizadorPec660.app.home.HomeTitle
-import org.eduardoleolim.organizadorPec660.core.federalEntity.application.FederalEntitiesResponse
 import org.eduardoleolim.organizadorPec660.core.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryBus
@@ -28,7 +27,6 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
         var selectedFederalEntity by remember { mutableStateOf<FederalEntityResponse?>(null) }
         val pageSizes = remember { listOf(10, 25, 50, 100) }
         val state = rememberPaginatedDataTableState(pageSizes.first())
-        var federalEntitiesResponse by remember { mutableStateOf(FederalEntitiesResponse(emptyList(), 0, null, null)) }
         var searchValue by remember { mutableStateOf("") }
 
         HomeTitle("Entidades federativas")
@@ -56,29 +54,14 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
             onValueChange = { searchValue = it },
             pageSizes = pageSizes,
             state = state,
-            data = federalEntitiesResponse,
+            data = screenModel.federalEntities.value,
             onSearch = { search, pageIndex, pageSize, orderBy, isAscending ->
-                val order = orderBy?.let {
+                val orders = orderBy?.let {
                     val orderType = if (isAscending) "ASC" else "DESC"
                     arrayOf(hashMapOf("orderBy" to orderBy, "orderType" to orderType))
                 }
 
-                screenModel.searchFederalEntities(
-                    search = search,
-                    limit = pageSize,
-                    offset = pageIndex * pageSize,
-                    orders = order
-                ) { result ->
-                    result.fold(
-                        onSuccess = {
-                            federalEntitiesResponse = it
-                        },
-                        onFailure = {
-                            println(it.localizedMessage)
-                            federalEntitiesResponse = FederalEntitiesResponse(emptyList(), 0, null, null)
-                        }
-                    )
-                }
+                screenModel.searchFederalEntities(search, orders, pageSize, pageIndex * pageSize)
             },
             onDeleteRequest = { federalEntity ->
                 selectedFederalEntity = federalEntity
