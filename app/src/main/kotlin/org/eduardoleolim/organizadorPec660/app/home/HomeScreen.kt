@@ -183,8 +183,8 @@ class HomeScreen(
 
     @Composable
     private fun WorkArea(screenModel: HomeScreenModel, selectedTab: MenuTab, paddingValues: PaddingValues) {
-        Column(
-            modifier = Modifier.padding(paddingValues)
+        Box(
+            modifier = Modifier.padding(paddingValues).fillMaxSize()
         ) {
             screenModel.apply {
                 when (selectedTab) {

@@ -53,8 +53,8 @@ object SqliteKtormDatabase {
             try {
                 config.setReadOnly(false)
 
-                DriverManager.getConnection(url, config.toProperties()).use { connection ->
-                    connection.createDatabase()
+                DriverManager.getConnection(url, config.toProperties()).use {
+                    it.createDatabase()
                 }
 
                 config.setReadOnly(isReadOnly)
