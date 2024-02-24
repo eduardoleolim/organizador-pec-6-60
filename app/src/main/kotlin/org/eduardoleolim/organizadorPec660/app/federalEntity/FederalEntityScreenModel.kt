@@ -13,7 +13,6 @@ import org.eduardoleolim.organizadorPec660.core.federalEntity.application.search
 import org.eduardoleolim.organizadorPec660.core.federalEntity.application.update.UpdateFederalEntityCommand
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryBus
-import kotlin.concurrent.thread
 
 class FederalEntityScreenModel(private val queryBus: QueryBus, private val commandBus: CommandBus) : ScreenModel {
     private var _federalEntities = mutableStateOf(FederalEntitiesResponse(emptyList(), 0, null, null))
@@ -37,7 +36,7 @@ class FederalEntityScreenModel(private val queryBus: QueryBus, private val comma
     }
 
     fun createFederalEntity(keyCode: String, name: String, callback: (Result<Unit>) -> Unit) {
-        thread(start = true) {
+        screenModelScope.launch(Dispatchers.IO) {
             val result = try {
                 commandBus.dispatch(CreateFederalEntityCommand(keyCode, name))
                 Result.success(Unit)
@@ -50,7 +49,7 @@ class FederalEntityScreenModel(private val queryBus: QueryBus, private val comma
     }
 
     fun editFederalEntity(federalEntityId: String, keyCode: String, name: String, callback: (Result<Unit>) -> Unit) {
-        thread(start = true) {
+        screenModelScope.launch(Dispatchers.IO) {
             val result = try {
                 commandBus.dispatch(UpdateFederalEntityCommand(federalEntityId, keyCode, name))
                 Result.success(Unit)
@@ -63,7 +62,7 @@ class FederalEntityScreenModel(private val queryBus: QueryBus, private val comma
     }
 
     fun deleteFederalEntity(federalEntityId: String, callback: (Result<Unit>) -> Unit) {
-        thread(start = true) {
+        screenModelScope.launch(Dispatchers.IO) {
             val result = try {
                 commandBus.dispatch(DeleteFederalEntityCommand(federalEntityId))
                 Result.success(Unit)

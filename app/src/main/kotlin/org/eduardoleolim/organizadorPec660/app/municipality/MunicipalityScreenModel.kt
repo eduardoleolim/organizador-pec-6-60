@@ -1,6 +1,9 @@
 package org.eduardoleolim.organizadorPec660.app.municipality
 
 import cafe.adriel.voyager.core.model.ScreenModel
+import cafe.adriel.voyager.core.model.screenModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.eduardoleolim.organizadorPec660.core.federalEntity.application.FederalEntitiesResponse
 import org.eduardoleolim.organizadorPec660.core.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorPec660.core.federalEntity.application.searchByTerm.SearchFederalEntitiesByTermQuery
@@ -11,7 +14,6 @@ import org.eduardoleolim.organizadorPec660.core.municipality.application.searchB
 import org.eduardoleolim.organizadorPec660.core.municipality.application.update.UpdateMunicipalityCommand
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryBus
-import kotlin.concurrent.thread
 
 class MunicipalityScreenModel(private val queryBus: QueryBus, private val commandBus: CommandBus) : ScreenModel {
     fun searchMunicipalities(
@@ -22,7 +24,7 @@ class MunicipalityScreenModel(private val queryBus: QueryBus, private val comman
         offset: Int? = null,
         callback: (Result<MunicipalitiesResponse>) -> Unit
     ) {
-        thread(start = true) {
+        screenModelScope.launch(Dispatchers.IO) {
             val query = SearchMunicipalitiesByTermQuery(federalEntityId, search, orders, limit, offset)
 
             val result = try {
@@ -36,7 +38,7 @@ class MunicipalityScreenModel(private val queryBus: QueryBus, private val comman
     }
 
     fun allFederalEntities(callback: (Result<List<FederalEntityResponse>>) -> Unit) {
-        thread(start = true) {
+        screenModelScope.launch(Dispatchers.IO) {
             val result = try {
                 val federalEntities = queryBus.ask<FederalEntitiesResponse>(SearchFederalEntitiesByTermQuery())
                 Result.success(federalEntities.federalEntities)
@@ -54,7 +56,7 @@ class MunicipalityScreenModel(private val queryBus: QueryBus, private val comman
         federalEntityId: String,
         callback: (Result<Unit>) -> Unit
     ) {
-        thread(start = true) {
+        screenModelScope.launch(Dispatchers.IO) {
             val result = try {
                 commandBus.dispatch(CreateMunicipalityCommand(keyCode, name, federalEntityId))
                 Result.success(Unit)
@@ -73,7 +75,7 @@ class MunicipalityScreenModel(private val queryBus: QueryBus, private val comman
         federalEntityId: String,
         callback: (Result<Unit>) -> Unit
     ) {
-        thread(start = true) {
+        screenModelScope.launch(Dispatchers.IO) {
             val result = try {
                 commandBus.dispatch(UpdateMunicipalityCommand(municipalityId, keyCode, name, federalEntityId))
                 Result.success(Unit)
@@ -86,7 +88,7 @@ class MunicipalityScreenModel(private val queryBus: QueryBus, private val comman
     }
 
     fun deleteMunicipality(municipalityId: String, callback: (Result<Unit>) -> Unit) {
-        thread(start = true) {
+        screenModelScope.launch(Dispatchers.IO) {
             val result = try {
                 commandBus.dispatch(DeleteMunicipalityCommand(municipalityId))
                 Result.success(Unit)

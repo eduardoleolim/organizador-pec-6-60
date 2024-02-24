@@ -1,6 +1,9 @@
 package org.eduardoleolim.organizadorPec660.app.instrumentType
 
 import cafe.adriel.voyager.core.model.ScreenModel
+import cafe.adriel.voyager.core.model.screenModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.eduardoleolim.organizadorPec660.core.instrumentType.application.InstrumentTypesResponse
 import org.eduardoleolim.organizadorPec660.core.instrumentType.application.create.CreateInstrumentTypeCommand
 import org.eduardoleolim.organizadorPec660.core.instrumentType.application.delete.DeleteInstrumentTypeCommand
@@ -8,7 +11,6 @@ import org.eduardoleolim.organizadorPec660.core.instrumentType.application.searc
 import org.eduardoleolim.organizadorPec660.core.instrumentType.application.update.UpdateInstrumentTypeCommand
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryBus
-import kotlin.concurrent.thread
 
 class InstrumentTypeScreenModel(private val queryBus: QueryBus, private val commandBus: CommandBus) : ScreenModel {
     fun searchInstrumentTypes(
@@ -18,7 +20,7 @@ class InstrumentTypeScreenModel(private val queryBus: QueryBus, private val comm
         offset: Int? = null,
         callback: (Result<InstrumentTypesResponse>) -> Unit
     ) {
-        thread(start = true) {
+        screenModelScope.launch(Dispatchers.IO) {
             val query = SearchInstrumentTypesByTermQuery(search, orders, limit, offset)
 
             val result = try {
@@ -32,7 +34,7 @@ class InstrumentTypeScreenModel(private val queryBus: QueryBus, private val comm
     }
 
     fun createInstrumentType(name: String, callback: (Result<Unit>) -> Unit) {
-        thread(start = true) {
+        screenModelScope.launch(Dispatchers.IO) {
             val result = try {
                 commandBus.dispatch(CreateInstrumentTypeCommand(name))
                 Result.success(Unit)
@@ -45,7 +47,7 @@ class InstrumentTypeScreenModel(private val queryBus: QueryBus, private val comm
     }
 
     fun editInstrumentType(instrumentTypeId: String, name: String, callback: (Result<Unit>) -> Unit) {
-        thread(start = true) {
+        screenModelScope.launch(Dispatchers.IO) {
             val result = try {
                 commandBus.dispatch(UpdateInstrumentTypeCommand(instrumentTypeId, name))
                 Result.success(Unit)
@@ -58,7 +60,7 @@ class InstrumentTypeScreenModel(private val queryBus: QueryBus, private val comm
     }
 
     fun deleteInstrumentType(instrumentTypeId: String, callback: (Result<Unit>) -> Unit) {
-        thread(start = true) {
+        screenModelScope.launch(Dispatchers.IO) {
             val result = try {
                 commandBus.dispatch(DeleteInstrumentTypeCommand(instrumentTypeId))
                 Result.success(Unit)
