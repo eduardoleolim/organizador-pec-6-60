@@ -95,16 +95,16 @@ fun FrameWindowScope.WindowsActionButtons(
     onRequestMinimize: (() -> Unit)?,
     onToggleMaximize: (() -> Unit)?
 ) {
-    var isResizable by remember(window) { mutableStateOf(window.isResizable) }
+    var isResizable by remember { mutableStateOf(window.isResizable) }
 
     DisposableEffect(window) {
-        PropertyChangeListener {
+        val listener = PropertyChangeListener {
             isResizable = it.newValue as Boolean
-        }.let {
-            window.addPropertyChangeListener("resizable", it)
-            onDispose {
-                window.removePropertyChangeListener("resizable", it)
-            }
+        }
+
+        window.addPropertyChangeListener("resizable", listener)
+        onDispose {
+            window.removePropertyChangeListener("resizable", listener)
         }
     }
 
