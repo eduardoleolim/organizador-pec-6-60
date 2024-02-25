@@ -2,7 +2,7 @@ package org.eduardoleolim.organizadorPec660.app.federalEntity
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import org.eduardoleolim.organizadorPec660.app.shared.components.dialogs.QuestionDialog
+import org.eduardoleolim.organizadorPec660.app.shared.composables.QuestionDialog
 import org.eduardoleolim.organizadorPec660.core.federalEntity.application.FederalEntityResponse
 
 @Composable

@@ -1,4 +1,4 @@
-package org.eduardoleolim.organizadorPec660.app.shared.components
+package org.eduardoleolim.organizadorPec660.app.shared.composables
 
 import androidx.compose.runtime.*
 import kotlinx.coroutines.CoroutineScope

@@ -1,4 +1,4 @@
-package org.eduardoleolim.organizadorPec660.app.shared.components.dialogs
+package org.eduardoleolim.organizadorPec660.app.shared.composables
 
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons

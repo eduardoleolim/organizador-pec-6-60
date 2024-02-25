@@ -21,8 +21,8 @@ import androidx.compose.ui.unit.dp
 import com.seanproctor.datatable.DataColumn
 import com.seanproctor.datatable.TableColumnWidth
 import com.seanproctor.datatable.paging.PaginatedDataTableState
-import org.eduardoleolim.organizadorPec660.app.shared.components.PaginatedDataTable
-import org.eduardoleolim.organizadorPec660.app.shared.components.tooltipOnHover
+import org.eduardoleolim.organizadorPec660.app.shared.composables.PaginatedDataTable
+import org.eduardoleolim.organizadorPec660.app.shared.composables.tooltipOnHover
 import org.eduardoleolim.organizadorPec660.core.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorPec660.core.municipality.application.MunicipalitiesResponse
 import org.eduardoleolim.organizadorPec660.core.municipality.application.MunicipalityResponse

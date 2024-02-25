@@ -14,8 +14,8 @@ import androidx.compose.ui.text.style.TextAlign
 import com.seanproctor.datatable.DataColumn
 import com.seanproctor.datatable.TableColumnWidth
 import com.seanproctor.datatable.paging.PaginatedDataTableState
-import org.eduardoleolim.organizadorPec660.app.shared.components.PaginatedDataTable
-import org.eduardoleolim.organizadorPec660.app.shared.components.tooltipOnHover
+import org.eduardoleolim.organizadorPec660.app.shared.composables.PaginatedDataTable
+import org.eduardoleolim.organizadorPec660.app.shared.composables.tooltipOnHover
 import org.eduardoleolim.organizadorPec660.core.instrumentType.application.InstrumentTypeResponse
 import org.eduardoleolim.organizadorPec660.core.instrumentType.application.InstrumentTypesResponse
 import org.eduardoleolim.organizadorPec660.core.shared.domain.toLocalDateTime
