@@ -74,6 +74,7 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
         )
 
         if (showDeleteModal && selectedFederalEntity != null) {
+            screenModel.resetDeleteModal()
             FederalEntityDeleteModal(
                 screenModel = screenModel,
                 selectedFederalEntity = selectedFederalEntity!!,
@@ -94,6 +95,7 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
         }
 
         if (showFormModal) {
+            screenModel.resetForm()
             FederalEntityFormModal(
                 screenModel = screenModel,
                 selectedFederalEntity = selectedFederalEntity,

@@ -2,7 +2,6 @@ package org.eduardoleolim.organizadorPec660.app.federalEntity
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -32,28 +31,52 @@ fun FederalEntityScreen.FederalEntityFormModal(
     var isNameInvalid by remember { mutableStateOf(false) }
     var nameErrorMessage by remember { mutableStateOf("") }
 
-    fun handleError(error: Throwable) {
-        when (error) {
-            is InvalidFederalEntityKeyCodeError -> {
-                keyCodeErrorMessage = "La clave debe ser un número de dos dígitos"
-                isKeyCodeInvalid = true
-            }
+    when (val formState = screenModel.formState.value) {
+        FormState.Idle -> {
+            enabled = true
+        }
 
-            is InvalidFederalEntityNameError -> {
-                nameErrorMessage = "El nombre no puede estar vacío"
-                isNameInvalid = true
-            }
+        FormState.InProgress -> {
+            enabled = false
+            isKeyCodeInvalid = false
+            isNameInvalid = false
+            nameErrorMessage = ""
+            keyCodeErrorMessage = ""
+        }
 
-            is FederalEntityAlreadyExistsError -> {
-                keyCodeErrorMessage = "Ya existe una entidad federativa con esa clave"
-                isKeyCodeInvalid = true
+        FormState.SuccessCreate -> {
+            enabled = true
+            onSuccess()
+        }
+
+        FormState.SuccessEdit -> {
+            enabled = true
+            onSuccess()
+        }
+
+        is FormState.Error -> {
+            enabled = true
+            when (formState.error) {
+                is InvalidFederalEntityKeyCodeError -> {
+                    keyCodeErrorMessage = "La clave debe ser un número de dos dígitos"
+                    isKeyCodeInvalid = true
+                }
+
+                is InvalidFederalEntityNameError -> {
+                    nameErrorMessage = "El nombre no puede estar vacío"
+                    isNameInvalid = true
+                }
+
+                is FederalEntityAlreadyExistsError -> {
+                    keyCodeErrorMessage = "Ya existe una entidad federativa con esa clave"
+                    isKeyCodeInvalid = true
+                }
             }
         }
     }
 
     AlertDialog(
         properties = DialogProperties(
-            dismissOnBackPress = false,
             dismissOnClickOutside = false
         ),
         onDismissRequest = onDismissRequest,
@@ -63,13 +86,14 @@ fun FederalEntityScreen.FederalEntityFormModal(
         text = {
             Column {
                 OutlinedTextField(
+                    label = { Text("Clave") },
                     value = keyCode,
                     onValueChange = {
                         if (Regex("[0-9]{0,2}").matches(it)) {
                             keyCode = it
                         }
                     },
-                    label = { Text("Clave") },
+                    singleLine = true,
                     isError = isKeyCodeInvalid,
                     supportingText = {
                         if (isKeyCodeInvalid) {
@@ -79,23 +103,19 @@ fun FederalEntityScreen.FederalEntityFormModal(
                             )
                         }
                     },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .onFocusChanged {
-                            if (!it.isFocused && keyCode.isNotEmpty()) {
-                                keyCode = keyCode.padStart(2, '0')
-                            }
-                        },
-                    singleLine = true
+                    modifier = Modifier.onFocusChanged {
+                        if (!it.isFocused && keyCode.isNotEmpty()) {
+                            keyCode = keyCode.padStart(2, '0')
+                        }
+                    }
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
 
                 OutlinedTextField(
+                    label = { Text("Nombre") },
                     value = name,
                     onValueChange = { name = it.uppercase() },
-                    label = { Text("Nombre") },
-                    modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
                     isError = isNameInvalid,
                     supportingText = {
@@ -113,36 +133,10 @@ fun FederalEntityScreen.FederalEntityFormModal(
             TextButton(
                 enabled = enabled,
                 onClick = {
-                    enabled = false
-                    isKeyCodeInvalid = false
-                    isNameInvalid = false
-                    nameErrorMessage = ""
-                    keyCodeErrorMessage = ""
-
                     if (selectedFederalEntity != null) {
-                        screenModel.editFederalEntity(federalEntityId!!, keyCode, name) { result ->
-                            result.fold(
-                                onSuccess = {
-                                    onSuccess()
-                                },
-                                onFailure = { error ->
-                                    handleError(error)
-                                }
-                            )
-                            enabled = true
-                        }
+                        screenModel.editFederalEntity(federalEntityId!!, keyCode, name)
                     } else {
-                        screenModel.createFederalEntity(keyCode, name) { result ->
-                            result.fold(
-                                onSuccess = {
-                                    onSuccess()
-                                },
-                                onFailure = { error ->
-                                    handleError(error)
-                                }
-                            )
-                            enabled = true
-                        }
+                        screenModel.createFederalEntity(keyCode, name)
                     }
                 }
             ) {

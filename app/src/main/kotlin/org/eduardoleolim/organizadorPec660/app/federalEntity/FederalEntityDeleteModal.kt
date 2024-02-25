@@ -13,6 +13,25 @@ fun FederalEntityScreen.FederalEntityDeleteModal(
     onFail: () -> Unit,
     onDismissRequest: () -> Unit
 ) {
+    when (val deleteState = screenModel.deleteState.value) {
+        DeleteState.Idle -> {
+
+        }
+
+        DeleteState.InProgress -> {
+
+        }
+
+        DeleteState.Success -> {
+            onSuccess()
+        }
+
+        is DeleteState.Error -> {
+            onFail()
+            println(deleteState.error.message)
+        }
+    }
+
     QuestionDialog(
         title = {
             Text("Eliminar entidad federativa")
@@ -21,17 +40,7 @@ fun FederalEntityScreen.FederalEntityDeleteModal(
             Text("¿Estás seguro de que deseas eliminar la entidad federativa ${selectedFederalEntity.name}?")
         },
         onConfirmRequest = {
-            screenModel.deleteFederalEntity(selectedFederalEntity.id) { result ->
-                result.fold(
-                    onSuccess = {
-                        onSuccess()
-                    },
-                    onFailure = {
-                        println(it.localizedMessage)
-                        onFail()
-                    }
-                )
-            }
+            screenModel.deleteFederalEntity(selectedFederalEntity.id)
         },
         onDismissRequest = {
             onDismissRequest()
