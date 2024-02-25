@@ -8,6 +8,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -122,6 +124,7 @@ fun PaginatedDataTable(
                         IconButton(
                             onClick = { onValueChange("") },
                             enabled = value.isNotEmpty(),
+                            modifier = Modifier.pointerHoverIcon(PointerIcon.Default)
                         ) {
                             Icon(Icons.Default.Clear, "Clear")
                         }

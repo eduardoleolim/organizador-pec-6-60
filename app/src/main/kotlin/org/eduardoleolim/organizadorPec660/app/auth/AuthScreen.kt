@@ -61,13 +61,13 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                LoginForm(screenModel)
+                AuthForm(screenModel)
             }
         }
     }
 
     @Composable
-    private fun LoginForm(screenModel: AuthScreenModel) {
+    private fun AuthForm(screenModel: AuthScreenModel) {
         var username by remember { mutableStateOf("") }
         var password by remember { mutableStateOf("") }
         var isUsernameError by remember { mutableStateOf(false) }
