@@ -96,16 +96,15 @@ context (FrameWindowScope)
 @Composable
 fun ProvideWindowSpotContainer(content: @Composable () -> Unit) {
     val density = LocalDensity.current
-    val windowSize = getCurrentWindowSize()
-    val containerSize = with(density) {
-        LocalWindowInfo.current.containerSize.let {
-            DpSize(it.width.toDp(), it.height.toDp())
-        }
-    }
-
     val spotInfoState = remember { mutableStateMapOf<Any, Pair<Rectangle, Int>>() }
     var toolbarHeight by remember { mutableStateOf(0) }
     val spotsWithInfo = spotInfoState.toMap()
+    val windowSize = getCurrentWindowSize()
+    val containerSize = with(density) {
+        LocalWindowInfo.current.containerSize.let {
+            DpSize(it.width.toDp(), (it.height - toolbarHeight).toDp())
+        }
+    }
 
     LaunchedEffect(spotsWithInfo, toolbarHeight, window, windowSize, containerSize) {
         if (CustomWindowDecorationAccessing.isSupported) {
