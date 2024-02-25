@@ -9,39 +9,40 @@ import org.eduardoleolim.organizadorPec660.core.federalEntity.application.delete
 import org.eduardoleolim.organizadorPec660.core.federalEntity.application.update.FederalEntityUpdater
 import org.eduardoleolim.organizadorPec660.core.federalEntity.application.update.UpdateFederalEntityCommand
 import org.eduardoleolim.organizadorPec660.core.federalEntity.application.update.UpdateFederalEntityCommandHandler
-import org.eduardoleolim.organizadorPec660.core.federalEntity.infrastructure.persistence.KtormFederalEntityRepository
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.command.Command
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.command.CommandHandler
 import org.eduardoleolim.organizadorPec660.core.shared.infrastructure.bus.KtormCommandHandlerDecorator
+import org.eduardoleolim.organizadorPec660.core.shared.infrastructure.koin.KtormAppKoinComponent
+import org.eduardoleolim.organizadorPec660.core.shared.infrastructure.koin.KtormAppKoinContext
+import org.koin.core.component.inject
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 
-class KtormFederalEntityCommandHandlers(private val database: Database) :
-    HashMap<KClass<out Command>, CommandHandler<out Command>>() {
-    private val federalEntityRepository = KtormFederalEntityRepository(database)
+class KtormFederalEntityCommandHandlers(context: KtormAppKoinContext) : KtormAppKoinComponent(context) {
+    private val database: Database by inject()
 
-    init {
-        this[CreateFederalEntityCommand::class] = createCommandHandler()
-        this[UpdateFederalEntityCommand::class] = updateCommandHandler()
-        this[DeleteFederalEntityCommand::class] = deleteCommandHandler()
-    }
+    val handlers: Map<KClass<out Command>, CommandHandler<out Command>> = mapOf(
+        CreateFederalEntityCommand::class to createCommandHandler(),
+        UpdateFederalEntityCommand::class to updateCommandHandler(),
+        DeleteFederalEntityCommand::class to deleteCommandHandler()
+    )
 
     private fun createCommandHandler(): CommandHandler<out Command> {
-        val creator = FederalEntityCreator(federalEntityRepository)
+        val creator: FederalEntityCreator by inject()
         val commandHandler = CreateFederalEntityCommandHandler(creator)
 
         return KtormCommandHandlerDecorator(database, commandHandler)
     }
 
     private fun updateCommandHandler(): CommandHandler<out Command> {
-        val updater = FederalEntityUpdater(federalEntityRepository)
+        val updater: FederalEntityUpdater by inject()
         val commandHandler = UpdateFederalEntityCommandHandler(updater)
 
         return KtormCommandHandlerDecorator(database, commandHandler)
     }
 
     private fun deleteCommandHandler(): CommandHandler<out Command> {
-        val deleter = FederalEntityDeleter(federalEntityRepository)
+        val deleter: FederalEntityDeleter by inject()
         val commandHandler = DeleteFederalEntityCommandHandler(deleter)
 
         return KtormCommandHandlerDecorator(database, commandHandler)

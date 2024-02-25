@@ -5,19 +5,21 @@ import org.eduardoleolim.organizadorPec660.core.federalEntity.infrastructure.bus
 import org.eduardoleolim.organizadorPec660.core.instrumentType.infrastructure.bus.KtormInstrumentTypeQueryHandlers
 import org.eduardoleolim.organizadorPec660.core.municipality.infrastructure.bus.KtormMunicipalityQueryHandlers
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.*
+import org.eduardoleolim.organizadorPec660.core.shared.infrastructure.koin.KtormAppKoinContext
 import org.eduardoleolim.organizadorPec660.core.statisticType.infrastructure.bus.KtormStatisticTypeQueryHandlers
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 
-class KtormQueryBus(private val database: Database) : QueryBus {
-    private val queryHandlers: Map<KClass<out Query>, QueryHandler<out Query, out Response>> =
-        HashMap<KClass<out Query>, QueryHandler<out Query, out Response>>().apply {
-            putAll(KtormAuthQueryHandlers(database))
-            putAll(KtormFederalEntityQueryHandlers(database))
-            putAll(KtormInstrumentTypeQueryHandlers(database))
-            putAll(KtormMunicipalityQueryHandlers(database))
-            putAll(KtormStatisticTypeQueryHandlers(database))
-        }
+class KtormQueryBus(database: Database) : QueryBus {
+    private val context = KtormAppKoinContext(database)
+
+    private val queryHandlers = HashMap<KClass<out Query>, QueryHandler<out Query, out Response>>().apply {
+        putAll(KtormAuthQueryHandlers(context).handlers)
+        putAll(KtormFederalEntityQueryHandlers(context).handlers)
+        putAll(KtormInstrumentTypeQueryHandlers(context).handlers)
+        putAll(KtormMunicipalityQueryHandlers(context).handlers)
+        putAll(KtormStatisticTypeQueryHandlers(context).handlers)
+    }
 
     override fun <R> ask(query: Query): R {
         try {

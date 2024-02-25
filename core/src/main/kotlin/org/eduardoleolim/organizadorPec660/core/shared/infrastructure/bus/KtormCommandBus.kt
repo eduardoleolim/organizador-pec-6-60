@@ -4,18 +4,20 @@ import org.eduardoleolim.organizadorPec660.core.federalEntity.infrastructure.bus
 import org.eduardoleolim.organizadorPec660.core.instrumentType.infrastructure.bus.KtormInstrumentTypeCommandHandlers
 import org.eduardoleolim.organizadorPec660.core.municipality.infrastructure.bus.KtormMunicipalityCommandHandlers
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.command.*
+import org.eduardoleolim.organizadorPec660.core.shared.infrastructure.koin.KtormAppKoinContext
 import org.eduardoleolim.organizadorPec660.core.statisticType.infrastructure.bus.KtormStatisticTypeCommandHandlers
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 
 class KtormCommandBus(database: Database) : CommandBus {
-    private val commandHandlers: Map<KClass<out Command>, CommandHandler<out Command>> =
-        HashMap<KClass<out Command>, CommandHandler<out Command>>().apply {
-            putAll(KtormFederalEntityCommandHandlers(database))
-            putAll(KtormInstrumentTypeCommandHandlers(database))
-            putAll(KtormMunicipalityCommandHandlers(database))
-            putAll(KtormStatisticTypeCommandHandlers(database))
-        }
+    private val context = KtormAppKoinContext(database)
+
+    private val commandHandlers = HashMap<KClass<out Command>, CommandHandler<out Command>>().apply {
+        putAll(KtormMunicipalityCommandHandlers(context).handlers)
+        putAll(KtormInstrumentTypeCommandHandlers(context).handlers)
+        putAll(KtormStatisticTypeCommandHandlers(context).handlers)
+        putAll(KtormFederalEntityCommandHandlers(context).handlers)
+    }
 
     override fun dispatch(command: Command) {
         try {

@@ -1,9 +1,10 @@
 package org.eduardoleolim.organizadorPec660.core.statisticType.infrastructure.bus
 
-import org.eduardoleolim.organizadorPec660.core.instrumentType.infrastructure.persistence.KtormInstrumentTypeRepository
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.command.Command
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.command.CommandHandler
 import org.eduardoleolim.organizadorPec660.core.shared.infrastructure.bus.KtormCommandHandlerDecorator
+import org.eduardoleolim.organizadorPec660.core.shared.infrastructure.koin.KtormAppKoinComponent
+import org.eduardoleolim.organizadorPec660.core.shared.infrastructure.koin.KtormAppKoinContext
 import org.eduardoleolim.organizadorPec660.core.statisticType.application.create.CreateStatisticTypeCommand
 import org.eduardoleolim.organizadorPec660.core.statisticType.application.create.CreateStatisticTypeCommandHandler
 import org.eduardoleolim.organizadorPec660.core.statisticType.application.create.StatisticTypeCreator
@@ -13,37 +14,35 @@ import org.eduardoleolim.organizadorPec660.core.statisticType.application.delete
 import org.eduardoleolim.organizadorPec660.core.statisticType.application.update.StatisticTypeUpdater
 import org.eduardoleolim.organizadorPec660.core.statisticType.application.update.UpdateStatisticTypeCommand
 import org.eduardoleolim.organizadorPec660.core.statisticType.application.update.UpdateStatisticTypeCommandHandler
-import org.eduardoleolim.organizadorPec660.core.statisticType.infrastructure.persistence.KtormStatisticTypeRepository
+import org.koin.core.component.inject
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 
-class KtormStatisticTypeCommandHandlers(private val database: Database) :
-    HashMap<KClass<out Command>, CommandHandler<out Command>>() {
-    private val statisticTypeRepository = KtormStatisticTypeRepository(database)
-    private val instrumentTypeRepository = KtormInstrumentTypeRepository(database)
+class KtormStatisticTypeCommandHandlers(context: KtormAppKoinContext) : KtormAppKoinComponent(context) {
+    private val database: Database by inject()
 
-    init {
-        this[CreateStatisticTypeCommand::class] = createCommandHandler()
-        this[UpdateStatisticTypeCommand::class] = updateCommandHandler()
-        this[DeleteStatisticTypeCommand::class] = deleteCommandHandler()
-    }
+    val handlers: Map<KClass<out Command>, CommandHandler<out Command>> = mapOf(
+        CreateStatisticTypeCommand::class to createCommandHandler(),
+        UpdateStatisticTypeCommand::class to updateCommandHandler(),
+        DeleteStatisticTypeCommand::class to deleteCommandHandler()
+    )
 
     private fun createCommandHandler(): CommandHandler<out Command> {
-        val creator = StatisticTypeCreator(statisticTypeRepository, instrumentTypeRepository)
+        val creator: StatisticTypeCreator by inject()
         val commandHandler = CreateStatisticTypeCommandHandler(creator)
 
         return KtormCommandHandlerDecorator(database, commandHandler)
     }
 
     private fun updateCommandHandler(): CommandHandler<out Command> {
-        val updater = StatisticTypeUpdater(statisticTypeRepository, instrumentTypeRepository)
+        val updater: StatisticTypeUpdater by inject()
         val commandHandler = UpdateStatisticTypeCommandHandler(updater)
 
         return KtormCommandHandlerDecorator(database, commandHandler)
     }
 
     private fun deleteCommandHandler(): CommandHandler<out Command> {
-        val deleter = StatisticTypeDeleter(statisticTypeRepository)
+        val deleter: StatisticTypeDeleter by inject()
         val commandHandler = DeleteStatisticTypeCommandHandler(deleter)
 
         return KtormCommandHandlerDecorator(database, commandHandler)
