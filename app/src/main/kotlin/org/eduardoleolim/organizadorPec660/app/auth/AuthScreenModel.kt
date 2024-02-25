@@ -1,5 +1,7 @@
 package org.eduardoleolim.organizadorPec660.app.auth
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import cafe.adriel.voyager.core.registry.ScreenRegistry
@@ -12,23 +14,37 @@ import org.eduardoleolim.organizadorPec660.core.auth.application.authenticate.Au
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryBus
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryHandlerExecutionError
 
+sealed class AuthState {
+    data object Idle : AuthState()
+    data object InProgress : AuthState()
+    data class Success(val user: AuthUserResponse) : AuthState()
+    data class Error(val error: Throwable) : AuthState()
+}
+
 class AuthScreenModel(private val navigator: Navigator, private val queryBus: QueryBus) : ScreenModel {
-    fun login(username: String, password: String, callback: (Result<AuthUserResponse>) -> Unit) {
+    private var _authState = mutableStateOf<AuthState>(AuthState.Idle)
+    val authState: State<AuthState> get() = _authState
+
+    fun resetAuthForm() {
+        _authState.value = AuthState.Idle
+    }
+
+    fun login(username: String, password: String) {
+        _authState.value = AuthState.InProgress
         screenModelScope.launch(Dispatchers.IO) {
             val isUsernameInvalid = username.isEmpty()
             val isPasswordInvalid = password.isEmpty()
 
-            val result = if (isUsernameInvalid || isPasswordInvalid) {
-                Result.failure(InvalidCredentialsException(isUsernameInvalid, isPasswordInvalid))
+            if (isUsernameInvalid || isPasswordInvalid) {
+                _authState.value = AuthState.Error(InvalidCredentialsException(isUsernameInvalid, isPasswordInvalid))
             } else {
                 try {
-                    Result.success(queryBus.ask<AuthUserResponse>(AuthenticateUserQuery(username, password)))
+                    val authUserResponse: AuthUserResponse = queryBus.ask(AuthenticateUserQuery(username, password))
+                    _authState.value = AuthState.Success(authUserResponse)
                 } catch (e: QueryHandlerExecutionError) {
-                    Result.failure(e.cause!!)
+                    _authState.value = AuthState.Error(e.cause!!)
                 }
             }
-
-            callback(result)
         }
     }
 

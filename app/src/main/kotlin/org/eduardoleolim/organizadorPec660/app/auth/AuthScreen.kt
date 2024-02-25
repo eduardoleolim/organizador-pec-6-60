@@ -61,6 +61,7 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                screenModel.resetAuthForm()
                 AuthForm(screenModel)
             }
         }
@@ -70,36 +71,85 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
     private fun AuthForm(screenModel: AuthScreenModel) {
         var username by remember { mutableStateOf("") }
         var password by remember { mutableStateOf("") }
-        var isUsernameError by remember { mutableStateOf(false) }
-        var isPasswordError by remember { mutableStateOf(false) }
-        var areInvalidCredentials by remember { mutableStateOf(false) }
+
         var isPasswordVisible by remember { mutableStateOf(false) }
         val visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation()
         val trailingIcon = if (isPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
 
-        fun onLoginClick() {
-            screenModel.login(username, password) { result ->
-                result.fold(
-                    onSuccess = {
-                        screenModel.navigateToHome(it)
-                    },
-                    onFailure = { error ->
-                        when (error) {
-                            is InvalidAuthCredentialsError -> {
-                                areInvalidCredentials = true
-                            }
+        var enabled by remember { mutableStateOf(true) }
+        var isUsernameError by remember { mutableStateOf(false) }
+        var isPasswordError by remember { mutableStateOf(false) }
+        var areInvalidCredentials by remember { mutableStateOf(false) }
+        var usernameSupportingText: (@Composable () -> Unit)? by remember { mutableStateOf(null) }
+        var passwordSupportingText: (@Composable () -> Unit)? by remember { mutableStateOf(null) }
 
-                            is InvalidCredentialsException -> {
-                                isUsernameError = error.isUsernameInvalid
-                                isPasswordError = error.isPasswordInvalid
-                            }
+        when (val authState = screenModel.authState.value) {
+            AuthState.Idle -> {
+                enabled = true
+                isPasswordError = false
+                isUsernameError = false
+                areInvalidCredentials = false
+                usernameSupportingText = null
+                passwordSupportingText = null
+            }
 
-                            else -> {
-                                println("Error: ${error.message}")
-                            }
+            AuthState.InProgress -> {
+                enabled = false
+                isPasswordError = false
+                isUsernameError = false
+                areInvalidCredentials = false
+                usernameSupportingText = null
+                passwordSupportingText = null
+            }
+
+            is AuthState.Success -> {
+                screenModel.navigateToHome(authState.user)
+            }
+
+            is AuthState.Error -> {
+                enabled = true
+                var usernameMessage: String? = null
+                var passwordMessage: String? = null
+
+                when (val error = authState.error) {
+                    is InvalidAuthCredentialsError -> {
+                        areInvalidCredentials = true
+                    }
+
+                    is InvalidCredentialsException -> {
+                        if (error.isUsernameInvalid) {
+                            isUsernameError = true
+                            usernameMessage = "El usuario es requerido"
+                        }
+
+                        if (error.isPasswordInvalid) {
+                            isPasswordError = true
+                            passwordMessage = "La contraseña es requerida"
                         }
                     }
-                )
+
+                    else -> {
+                        println("Error: ${error.message}")
+                    }
+                }
+
+                passwordSupportingText = passwordMessage?.let { message ->
+                    {
+                        Text(
+                            text = message,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
+
+                usernameSupportingText = usernameMessage?.let { message ->
+                    {
+                        Text(
+                            text = message,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
             }
         }
 
@@ -128,15 +178,9 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
             value = username,
             onValueChange = { username = it },
             label = { Text("Usuario") },
+            enabled = enabled,
             isError = isUsernameError || areInvalidCredentials,
-            supportingText = {
-                if (username.isEmpty() && isUsernameError) {
-                    Text(
-                        text = "Debes proporcionar el usuario",
-                        color = MaterialTheme.colorScheme.error
-                    )
-                }
-            },
+            supportingText = usernameSupportingText,
             singleLine = true,
             modifier = Modifier.fillMaxWidth(0.8f).padding(bottom = 20.dp)
         )
@@ -145,15 +189,9 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
             value = password,
             onValueChange = { password = it },
             label = { Text("Contraseña") },
+            enabled = enabled,
             isError = isPasswordError || areInvalidCredentials,
-            supportingText = {
-                if (password.isEmpty() && isPasswordError) {
-                    Text(
-                        text = "Debes proporcionar la contraseña",
-                        color = MaterialTheme.colorScheme.error
-                    )
-                }
-            },
+            supportingText = passwordSupportingText,
             singleLine = true,
             modifier = Modifier.fillMaxWidth(0.8f).padding(bottom = 20.dp),
             visualTransformation = visualTransformation,
@@ -168,7 +206,10 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
         )
 
         Button(
-            onClick = ::onLoginClick,
+            enabled = enabled,
+            onClick = {
+                screenModel.login(username, password)
+            },
             modifier = Modifier.fillMaxWidth(0.8f)
         ) {
             Text(text = "Iniciar sesión", fontSize = 16.sp)
