@@ -13,6 +13,25 @@ fun MunicipalityScreen.MunicipalityDeleteModal(
     onFail: () -> Unit,
     onDismissRequest: () -> Unit
 ) {
+    when (val deleteState = screenModel.deleteState.value) {
+        DeleteState.Idle -> {
+
+        }
+
+        DeleteState.InProgress -> {
+
+        }
+
+        DeleteState.Success -> {
+            onSuccess()
+        }
+
+        is DeleteState.Error -> {
+            onFail()
+            println(deleteState.error.message)
+        }
+    }
+
     QuestionDialog(
         title = {
             Text("Eliminar municipio")
@@ -21,17 +40,7 @@ fun MunicipalityScreen.MunicipalityDeleteModal(
             Text("¿Estás seguro que deseas eliminar el municipio ${selectedMunicipality.name}?")
         },
         onConfirmRequest = {
-            screenModel.deleteMunicipality(selectedMunicipality.id) { result ->
-                result.fold(
-                    onSuccess = {
-                        onSuccess()
-                    },
-                    onFailure = {
-                        println(it.localizedMessage)
-                        onFail()
-                    }
-                )
-            }
+            screenModel.deleteMunicipality(selectedMunicipality.id)
         },
         onDismissRequest = onDismissRequest
     )

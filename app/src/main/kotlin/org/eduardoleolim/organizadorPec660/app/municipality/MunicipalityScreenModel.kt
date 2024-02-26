@@ -25,6 +25,13 @@ sealed class FormState {
     data class Error(val error: Throwable) : FormState()
 }
 
+sealed class DeleteState {
+    data object Idle : DeleteState()
+    data object InProgress : DeleteState()
+    data object Success : DeleteState()
+    data class Error(val error: Throwable) : DeleteState()
+}
+
 class MunicipalityScreenModel(private val queryBus: QueryBus, private val commandBus: CommandBus) : ScreenModel {
     private var _municipalities = mutableStateOf(MunicipalitiesResponse(emptyList(), 0, null, null))
     val municipalities: State<MunicipalitiesResponse> get() = _municipalities
@@ -35,8 +42,15 @@ class MunicipalityScreenModel(private val queryBus: QueryBus, private val comman
     private var _formState = mutableStateOf<FormState>(FormState.Idle)
     val formState: State<FormState> get() = _formState
 
+    private var _deleteState = mutableStateOf<DeleteState>(DeleteState.Idle)
+    val deleteState: State<DeleteState> get() = _deleteState
+
     fun resetForm() {
         _formState.value = FormState.Idle
+    }
+
+    fun resetDeleteModal() {
+        _deleteState.value = DeleteState.Idle
     }
 
     fun searchMunicipalities(
@@ -111,16 +125,15 @@ class MunicipalityScreenModel(private val queryBus: QueryBus, private val comman
         }
     }
 
-    fun deleteMunicipality(municipalityId: String, callback: (Result<Unit>) -> Unit) {
+    fun deleteMunicipality(municipalityId: String) {
+        _deleteState.value = DeleteState.InProgress
         screenModelScope.launch(Dispatchers.IO) {
-            val result = try {
+            try {
                 commandBus.dispatch(DeleteMunicipalityCommand(municipalityId))
-                Result.success(Unit)
+                _deleteState.value = DeleteState.Success
             } catch (e: Exception) {
-                Result.failure(e.cause!!)
+                _deleteState.value = DeleteState.Error(e.cause!!)
             }
-
-            callback(result)
         }
     }
 }

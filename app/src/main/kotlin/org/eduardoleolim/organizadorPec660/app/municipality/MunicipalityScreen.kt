@@ -79,6 +79,7 @@ class MunicipalityScreen(private val queryBus: QueryBus, private val commandBus:
         )
 
         if (showDeleteModal && selectedMunicipality != null) {
+            screenModel.resetDeleteModal()
             MunicipalityDeleteModal(
                 screenModel = screenModel,
                 selectedMunicipality = selectedMunicipality!!,
