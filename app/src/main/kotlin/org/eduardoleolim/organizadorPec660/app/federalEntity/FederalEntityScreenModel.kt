@@ -44,7 +44,7 @@ class FederalEntityScreenModel(private val queryBus: QueryBus, private val comma
     }
 
     fun resetDeleteModal() {
-
+        _deleteState.value = DeleteState.Idle
     }
 
     fun searchFederalEntities(
@@ -67,6 +67,14 @@ class FederalEntityScreenModel(private val queryBus: QueryBus, private val comma
     fun createFederalEntity(keyCode: String, name: String) {
         _formState.value = FormState.InProgress
         screenModelScope.launch(Dispatchers.IO) {
+            val isKeyCodeEmpty = keyCode.isBlank()
+            val isNameBlank = name.isBlank()
+
+            if (isKeyCodeEmpty || isNameBlank) {
+                _formState.value = FormState.Error(EmptyFederalEntityDataException(isKeyCodeEmpty, isNameBlank))
+                return@launch
+            }
+
             try {
                 commandBus.dispatch(CreateFederalEntityCommand(keyCode, name))
                 _formState.value = FormState.SuccessCreate
@@ -79,6 +87,14 @@ class FederalEntityScreenModel(private val queryBus: QueryBus, private val comma
     fun editFederalEntity(federalEntityId: String, keyCode: String, name: String) {
         _formState.value = FormState.InProgress
         screenModelScope.launch(Dispatchers.IO) {
+            val isKeyCodeEmpty = keyCode.isBlank()
+            val isNameBlank = name.isBlank()
+
+            if (isKeyCodeEmpty || isNameBlank) {
+                _formState.value = FormState.Error(EmptyFederalEntityDataException(isKeyCodeEmpty, isNameBlank))
+                return@launch
+            }
+
             try {
                 commandBus.dispatch(UpdateFederalEntityCommand(federalEntityId, keyCode, name))
                 _formState.value = FormState.SuccessEdit

@@ -26,22 +26,26 @@ fun FederalEntityScreen.FederalEntityFormModal(
     var name by remember { mutableStateOf(selectedFederalEntity?.name ?: "") }
 
     var enabled by remember { mutableStateOf(true) }
-    var isKeyCodeInvalid by remember { mutableStateOf(false) }
-    var keyCodeErrorMessage by remember { mutableStateOf("") }
-    var isNameInvalid by remember { mutableStateOf(false) }
-    var nameErrorMessage by remember { mutableStateOf("") }
+    var isKeyCodeError by remember { mutableStateOf(false) }
+    var isNameError by remember { mutableStateOf(false) }
+    var keyCodeSupportingText: (@Composable () -> Unit)? by remember { mutableStateOf(null) }
+    var nameSupportingText: (@Composable () -> Unit)? by remember { mutableStateOf(null) }
 
     when (val formState = screenModel.formState.value) {
         FormState.Idle -> {
             enabled = true
+            isKeyCodeError = false
+            isNameError = false
+            keyCodeSupportingText = null
+            nameSupportingText = null
         }
 
         FormState.InProgress -> {
             enabled = false
-            isKeyCodeInvalid = false
-            isNameInvalid = false
-            nameErrorMessage = ""
-            keyCodeErrorMessage = ""
+            isKeyCodeError = false
+            isNameError = false
+            keyCodeSupportingText = null
+            nameSupportingText = null
         }
 
         FormState.SuccessCreate -> {
@@ -56,20 +60,56 @@ fun FederalEntityScreen.FederalEntityFormModal(
 
         is FormState.Error -> {
             enabled = true
-            when (formState.error) {
+            var keyCodeMessage: String? = null
+            var nameMessage: String? = null
+
+            when (val error = formState.error) {
                 is InvalidFederalEntityKeyCodeError -> {
-                    keyCodeErrorMessage = "La clave debe ser un número de dos dígitos"
-                    isKeyCodeInvalid = true
+                    keyCodeMessage = "La clave debe ser un número de dos dígitos"
+                    isKeyCodeError = true
                 }
 
                 is InvalidFederalEntityNameError -> {
-                    nameErrorMessage = "El nombre no puede estar vacío"
-                    isNameInvalid = true
+                    nameMessage = "El nombre no puede estar vacío"
+                    isNameError = true
                 }
 
                 is FederalEntityAlreadyExistsError -> {
-                    keyCodeErrorMessage = "Ya existe una entidad federativa con esa clave"
-                    isKeyCodeInvalid = true
+                    keyCodeMessage = "Ya existe una entidad federativa con esa clave"
+                    isKeyCodeError = true
+                }
+
+                is EmptyFederalEntityDataException -> {
+                    if (error.isKeyCodeEmpty) {
+                        keyCodeMessage = "La clave es requerida."
+                        isKeyCodeError = true
+                    }
+                    if (error.isNameEmpty) {
+                        nameMessage = "El nombre es requerido"
+                        isNameError = true
+                    }
+                }
+
+                else -> {
+                    println("Error: ${error.message}")
+                }
+            }
+
+            keyCodeSupportingText = keyCodeMessage?.let { message ->
+                {
+                    Text(
+                        text = message,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            }
+
+            nameSupportingText = nameMessage?.let { message ->
+                {
+                    Text(
+                        text = message,
+                        color = MaterialTheme.colorScheme.error
+                    )
                 }
             }
         }
@@ -94,15 +134,8 @@ fun FederalEntityScreen.FederalEntityFormModal(
                         }
                     },
                     singleLine = true,
-                    isError = isKeyCodeInvalid,
-                    supportingText = {
-                        if (isKeyCodeInvalid) {
-                            Text(
-                                text = keyCodeErrorMessage,
-                                color = MaterialTheme.colorScheme.onError
-                            )
-                        }
-                    },
+                    isError = isKeyCodeError,
+                    supportingText = keyCodeSupportingText,
                     modifier = Modifier.onFocusChanged {
                         if (!it.isFocused && keyCode.isNotEmpty()) {
                             keyCode = keyCode.padStart(2, '0')
@@ -110,22 +143,15 @@ fun FederalEntityScreen.FederalEntityFormModal(
                     }
                 )
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(32.dp))
 
                 OutlinedTextField(
                     label = { Text("Nombre") },
                     value = name,
                     onValueChange = { name = it.uppercase() },
                     singleLine = true,
-                    isError = isNameInvalid,
-                    supportingText = {
-                        if (isNameInvalid) {
-                            Text(
-                                text = nameErrorMessage,
-                                color = MaterialTheme.colorScheme.onError
-                            )
-                        }
-                    }
+                    isError = isNameError,
+                    supportingText = nameSupportingText
                 )
             }
         },
