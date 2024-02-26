@@ -118,7 +118,6 @@ fun MunicipalityScreen.MunicipalitiesTable(
         header = {
             Box {
                 var expanded by remember { mutableStateOf(false) }
-                val federalEntities = remember { mutableListOf<FederalEntityResponse>() }
                 var selectedFederalEntity by remember { mutableStateOf<FederalEntityResponse?>(null) }
 
                 LaunchedEffect(selectedFederalEntity) {
@@ -127,18 +126,7 @@ fun MunicipalityScreen.MunicipalitiesTable(
                 }
 
                 LaunchedEffect(Unit) {
-                    screenModel.allFederalEntities { result ->
-                        result.fold(
-                            onSuccess = {
-                                federalEntities.clear()
-                                federalEntities.addAll(it)
-                            },
-                            onFailure = {
-                                println(it.localizedMessage)
-                                federalEntities.clear()
-                            }
-                        )
-                    }
+                    screenModel.searchAllFederalEntities()
                 }
 
                 TextButton(
@@ -172,7 +160,7 @@ fun MunicipalityScreen.MunicipalitiesTable(
                         }
                     )
 
-                    federalEntities.forEach { federalEntity ->
+                    screenModel.federalEntities.value.forEach { federalEntity ->
                         DropdownMenuItem(
                             text = {
                                 Text(

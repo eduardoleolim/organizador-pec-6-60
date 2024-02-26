@@ -1,5 +1,7 @@
 package org.eduardoleolim.organizadorPec660.app.municipality
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.Dispatchers
@@ -15,75 +17,97 @@ import org.eduardoleolim.organizadorPec660.core.municipality.application.update.
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryBus
 
+sealed class FormState {
+    data object Idle : FormState()
+    data object InProgress : FormState()
+    data object SuccessCreate : FormState()
+    data object SuccessEdit : FormState()
+    data class Error(val error: Throwable) : FormState()
+}
+
 class MunicipalityScreenModel(private val queryBus: QueryBus, private val commandBus: CommandBus) : ScreenModel {
+    private var _municipalities = mutableStateOf(MunicipalitiesResponse(emptyList(), 0, null, null))
+    val municipalities: State<MunicipalitiesResponse> get() = _municipalities
+
+    private var _federalEntities = mutableStateOf(emptyList<FederalEntityResponse>())
+    val federalEntities: State<List<FederalEntityResponse>> get() = _federalEntities
+
+    private var _formState = mutableStateOf<FormState>(FormState.Idle)
+    val formState: State<FormState> get() = _formState
+
+    fun resetForm() {
+        _formState.value = FormState.Idle
+    }
+
     fun searchMunicipalities(
         search: String? = null,
         federalEntityId: String? = null,
         orders: Array<HashMap<String, String>>? = null,
         limit: Int? = null,
-        offset: Int? = null,
-        callback: (Result<MunicipalitiesResponse>) -> Unit
+        offset: Int? = null
     ) {
         screenModelScope.launch(Dispatchers.IO) {
-            val query = SearchMunicipalitiesByTermQuery(federalEntityId, search, orders, limit, offset)
-
-            val result = try {
-                Result.success(queryBus.ask<MunicipalitiesResponse>(query))
+            try {
+                val query = SearchMunicipalitiesByTermQuery(federalEntityId, search, orders, limit, offset)
+                _municipalities.value = queryBus.ask(query)
             } catch (e: Exception) {
-                Result.failure(e.cause!!)
+                _municipalities.value = MunicipalitiesResponse(emptyList(), 0, null, null)
             }
-
-            callback(result)
         }
     }
 
-    fun allFederalEntities(callback: (Result<List<FederalEntityResponse>>) -> Unit) {
+    fun searchAllFederalEntities() {
         screenModelScope.launch(Dispatchers.IO) {
-            val result = try {
-                val federalEntities = queryBus.ask<FederalEntitiesResponse>(SearchFederalEntitiesByTermQuery())
-                Result.success(federalEntities.federalEntities)
+            try {
+                val query = SearchFederalEntitiesByTermQuery()
+                _federalEntities.value = queryBus.ask<FederalEntitiesResponse>(query).federalEntities
             } catch (e: Exception) {
-                Result.failure(e.cause!!)
+                _federalEntities.value = emptyList()
             }
-
-            callback(result)
         }
     }
 
-    fun createMunicipality(
-        keyCode: String,
-        name: String,
-        federalEntityId: String,
-        callback: (Result<Unit>) -> Unit
-    ) {
+    fun createMunicipality(keyCode: String, name: String, federalEntityId: String?) {
+        _formState.value = FormState.InProgress
         screenModelScope.launch(Dispatchers.IO) {
-            val result = try {
-                commandBus.dispatch(CreateMunicipalityCommand(keyCode, name, federalEntityId))
-                Result.success(Unit)
-            } catch (e: Exception) {
-                Result.failure(e.cause!!)
+            val isFederalEntityEmpty = federalEntityId.isNullOrBlank()
+            val isKeyCodeEmpty = keyCode.isEmpty()
+            val isNameEmpty = name.isEmpty()
+
+            if (isFederalEntityEmpty || isKeyCodeEmpty || isNameEmpty) {
+                _formState.value =
+                    FormState.Error(EmptyMunicipalityDataException(isFederalEntityEmpty, isKeyCodeEmpty, isNameEmpty))
+                return@launch
             }
 
-            callback(result)
+            try {
+                commandBus.dispatch(CreateMunicipalityCommand(keyCode, name, federalEntityId!!))
+                _formState.value = FormState.SuccessCreate
+            } catch (e: Exception) {
+                _formState.value = FormState.Error(e.cause!!)
+            }
         }
     }
 
-    fun editMunicipality(
-        municipalityId: String,
-        keyCode: String,
-        name: String,
-        federalEntityId: String,
-        callback: (Result<Unit>) -> Unit
-    ) {
+    fun editMunicipality(municipalityId: String, keyCode: String, name: String, federalEntityId: String?) {
+        _formState.value = FormState.InProgress
         screenModelScope.launch(Dispatchers.IO) {
-            val result = try {
-                commandBus.dispatch(UpdateMunicipalityCommand(municipalityId, keyCode, name, federalEntityId))
-                Result.success(Unit)
-            } catch (e: Exception) {
-                Result.failure(e.cause!!)
+            val isFederalEntityEmpty = federalEntityId.isNullOrBlank()
+            val isKeyCodeEmpty = keyCode.isEmpty()
+            val isNameEmpty = name.isEmpty()
+
+            if (isFederalEntityEmpty || isKeyCodeEmpty || isNameEmpty) {
+                _formState.value =
+                    FormState.Error(EmptyMunicipalityDataException(isFederalEntityEmpty, isKeyCodeEmpty, isNameEmpty))
+                return@launch
             }
 
-            callback(result)
+            try {
+                commandBus.dispatch(UpdateMunicipalityCommand(municipalityId, keyCode, name, federalEntityId!!))
+                _formState.value = FormState.SuccessEdit
+            } catch (e: Exception) {
+                _formState.value = FormState.Error(e.cause!!)
+            }
         }
     }
 

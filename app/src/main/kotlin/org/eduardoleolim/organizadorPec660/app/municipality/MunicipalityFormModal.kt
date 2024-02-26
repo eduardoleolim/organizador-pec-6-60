@@ -8,9 +8,14 @@ import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.unit.dp
-import org.eduardoleolim.organizadorPec660.core.federalEntity.application.FederalEntityResponse
+import androidx.compose.ui.window.DialogProperties
+import org.eduardoleolim.organizadorPec660.core.federalEntity.domain.FederalEntityNotFoundError
 import org.eduardoleolim.organizadorPec660.core.municipality.application.MunicipalityResponse
+import org.eduardoleolim.organizadorPec660.core.municipality.domain.InvalidMunicipalityKeyCodeError
+import org.eduardoleolim.organizadorPec660.core.municipality.domain.InvalidMunicipalityNameError
+import org.eduardoleolim.organizadorPec660.core.municipality.domain.MunicipalityAlreadyExistsError
 
 @Composable
 fun MunicipalityScreen.MunicipalityFormModal(
@@ -20,12 +25,135 @@ fun MunicipalityScreen.MunicipalityFormModal(
     onSuccess: () -> Unit
 ) {
     val municipalityId by remember { mutableStateOf(selectedMunicipality?.id) }
-    var federalEntityId by remember { mutableStateOf(selectedMunicipality?.federalEntity?.id) }
+    var federalEntity by remember { mutableStateOf(selectedMunicipality?.federalEntity) }
     var keyCode by remember { mutableStateOf(selectedMunicipality?.keyCode ?: "") }
     var name by remember { mutableStateOf(selectedMunicipality?.name ?: "") }
+
+    var enabled by remember { mutableStateOf(true) }
     var isFederalEntityError by remember { mutableStateOf(false) }
+    var isKeyCodeError by remember { mutableStateOf(false) }
+    var isNameError by remember { mutableStateOf(false) }
+    var federalEntitySupportingText: (@Composable () -> Unit)? by remember { mutableStateOf(null) }
+    var keyCodeSupportingText: (@Composable () -> Unit)? by remember { mutableStateOf(null) }
+    var nameSupportingText: (@Composable () -> Unit)? by remember { mutableStateOf(null) }
+
+    LaunchedEffect(Unit) {
+        screenModel.searchAllFederalEntities()
+    }
+
+    when (val formState = screenModel.formState.value) {
+        FormState.Idle -> {
+            enabled = true
+            isFederalEntityError = false
+            isKeyCodeError = false
+            isNameError = false
+            federalEntitySupportingText = null
+            keyCodeSupportingText = null
+            nameSupportingText = null
+        }
+
+        FormState.InProgress -> {
+            enabled = false
+            isFederalEntityError = false
+            isKeyCodeError = false
+            isNameError = false
+            federalEntitySupportingText = null
+            keyCodeSupportingText = null
+            nameSupportingText = null
+        }
+
+        FormState.SuccessCreate -> {
+            enabled = true
+            onSuccess()
+        }
+
+        FormState.SuccessEdit -> {
+            enabled = true
+            onSuccess()
+        }
+
+        is FormState.Error -> {
+            enabled = true
+            var federalEntityMessage: String? = null
+            var keyCodeMessage: String? = null
+            var nameMessage: String? = null
+
+            when (val error = formState.error) {
+                is FederalEntityNotFoundError -> {
+                    isFederalEntityError = true
+                    federalEntityMessage = "La entidad federativa no existe"
+                }
+
+                is MunicipalityAlreadyExistsError -> {
+                    isFederalEntityError = true
+                    federalEntityMessage = "Ya existe una municipio con la clave $keyCode"
+                    isKeyCodeError = true
+                    keyCodeMessage = "Ya existe una municipio con la clave $keyCode"
+                }
+
+                is InvalidMunicipalityKeyCodeError -> {
+                    isKeyCodeError = true
+                    keyCodeMessage = "La clave debe ser un número de 3 dígitos"
+                }
+
+                is InvalidMunicipalityNameError -> {
+                    isNameError = true
+                    nameMessage = "El nombre no puede estar vacio"
+                }
+
+                is EmptyMunicipalityDataException -> {
+                    if (error.isFederalEntityEmpty) {
+                        isFederalEntityError = true
+                        federalEntityMessage = "La entidad federativa es requerida"
+                    }
+                    if (error.isKeyCodeEmpty) {
+                        keyCodeMessage = "La clave es requerida."
+                        isKeyCodeError = true
+                    }
+                    if (error.isNameEmpty) {
+                        nameMessage = "El nombre es requerido"
+                        isNameError = true
+                    }
+                }
+
+                else -> {
+                    println("Error: ${error.message}")
+                }
+            }
+
+            federalEntitySupportingText = federalEntityMessage?.let { message ->
+                {
+                    Text(
+                        text = message,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            }
+
+            keyCodeSupportingText = keyCodeMessage?.let { message ->
+                {
+                    Text(
+                        text = message,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            }
+
+            nameSupportingText = nameMessage?.let { message ->
+                {
+                    Text(
+                        text = message,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            }
+        }
+    }
 
     AlertDialog(
+        properties = DialogProperties(
+            dismissOnClickOutside = false
+        ),
         onDismissRequest = onDismissRequest,
         title = {
             Text(selectedMunicipality?.let { "Editar municipio" } ?: "Agregar municipio")
@@ -34,40 +162,15 @@ fun MunicipalityScreen.MunicipalityFormModal(
             Column {
                 Box {
                     var expanded by remember { mutableStateOf(false) }
-                    val federalEntities = remember { mutableListOf<FederalEntityResponse>() }
-                    var selectedFederalEntity by remember { mutableStateOf<FederalEntityResponse?>(null) }
-
-                    LaunchedEffect(Unit) {
-                        screenModel.allFederalEntities { result ->
-                            result.fold(
-                                onSuccess = {
-                                    federalEntities.clear()
-                                    federalEntities.addAll(it)
-                                    selectedFederalEntity =
-                                        federalEntities.find { federalEntity -> federalEntity.id == selectedMunicipality?.federalEntity?.id }
-                                },
-                                onFailure = {
-                                    println(it.localizedMessage)
-                                    federalEntities.clear()
-                                }
-                            )
-                        }
-                    }
-
-                    LaunchedEffect(selectedFederalEntity) {
-                        federalEntityId = selectedFederalEntity?.id
-                    }
 
                     OutlinedTextField(
-                        value = selectedFederalEntity?.let { "${it.keyCode} - ${it.name}" }
+                        enabled = true,
+                        value = federalEntity?.let { "${it.keyCode} - ${it.name}" }
                             ?: "Selecciona una entidad federativa",
                         onValueChange = {},
                         readOnly = true,
-                        supportingText = {
-                            if (isFederalEntityError) {
-                                Text("Selecciona una entidad federativa", color = MaterialTheme.colorScheme.error)
-                            }
-                        },
+                        isError = isFederalEntityError,
+                        supportingText = federalEntitySupportingText,
                         trailingIcon = {
                             IconButton(
                                 onClick = { expanded = true },
@@ -85,7 +188,7 @@ fun MunicipalityScreen.MunicipalityFormModal(
                         expanded = expanded,
                         onDismissRequest = { expanded = false },
                         modifier = Modifier
-                            .fillMaxHeight(0.6f)
+                            .heightIn(0.dp, 300.dp)
                             .background(MaterialTheme.colorScheme.surface)
                     ) {
                         DropdownMenuItem(
@@ -97,83 +200,69 @@ fun MunicipalityScreen.MunicipalityFormModal(
                             },
                             onClick = {
                                 expanded = false
-                                selectedFederalEntity = null
+                                federalEntity = null
                             }
                         )
 
-                        federalEntities.forEach { federalEntity ->
+                        screenModel.federalEntities.value.forEach {
                             DropdownMenuItem(
                                 text = {
                                     Text(
-                                        text = "${federalEntity.keyCode} - ${federalEntity.name}",
+                                        text = "${it.keyCode} - ${it.name}",
                                         color = MaterialTheme.colorScheme.onSurface
                                     )
                                 },
                                 onClick = {
                                     expanded = false
-                                    selectedFederalEntity = federalEntity
+                                    federalEntity = it
                                 }
                             )
                         }
                     }
                 }
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(32.dp))
 
                 OutlinedTextField(
+                    enabled = true,
+                    label = { Text("Clave") },
                     value = keyCode,
-                    onValueChange = { keyCode = it },
-                    label = { Text("Clave") }
+                    onValueChange = {
+                        if (Regex("[0-9]{0,3}").matches(it)) {
+                            keyCode = it
+                        }
+                    },
+                    singleLine = true,
+                    isError = isKeyCodeError,
+                    supportingText = keyCodeSupportingText,
+                    modifier = Modifier.onFocusChanged {
+                        if (!it.isFocused && keyCode.isNotEmpty()) {
+                            keyCode = keyCode.padStart(3, '0')
+                        }
+                    }
                 )
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(32.dp))
 
                 OutlinedTextField(
+                    enabled = true,
+                    label = { Text("Nombre") },
                     value = name,
-                    onValueChange = { name = it },
-                    label = { Text("Nombre") }
+                    onValueChange = { name = it.uppercase() },
+                    singleLine = true,
+                    isError = isNameError,
+                    supportingText = nameSupportingText
                 )
             }
         },
         confirmButton = {
             TextButton(
+                enabled = true,
                 onClick = {
-                    if (federalEntityId == null) {
-                        isFederalEntityError = true
-                        return@TextButton
-                    }
-
                     if (municipalityId == null) {
-                        screenModel.createMunicipality(
-                            keyCode = keyCode,
-                            name = name,
-                            federalEntityId = federalEntityId!!
-                        ) {
-                            it.fold(
-                                onSuccess = {
-                                    onSuccess()
-                                },
-                                onFailure = {
-                                    println(it.localizedMessage)
-                                }
-                            )
-                        }
+                        screenModel.createMunicipality(keyCode, name, federalEntity?.id)
                     } else {
-                        screenModel.editMunicipality(
-                            municipalityId = municipalityId!!,
-                            keyCode = keyCode,
-                            name = name,
-                            federalEntityId = federalEntityId!!
-                        ) {
-                            it.fold(
-                                onSuccess = {
-                                    onSuccess()
-                                },
-                                onFailure = {
-                                    println(it.localizedMessage)
-                                }
-                            )
-                        }
+                        screenModel.editMunicipality(municipalityId!!, keyCode, name, federalEntity?.id)
                     }
                 }
             ) {
@@ -182,6 +271,7 @@ fun MunicipalityScreen.MunicipalityFormModal(
         },
         dismissButton = {
             TextButton(
+                enabled = true,
                 onClick = onDismissRequest
             ) {
                 Text("Cancelar")

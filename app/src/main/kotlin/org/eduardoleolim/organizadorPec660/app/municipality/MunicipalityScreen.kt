@@ -14,7 +14,6 @@ import cafe.adriel.voyager.core.screen.Screen
 import com.seanproctor.datatable.paging.rememberPaginatedDataTableState
 import org.eduardoleolim.organizadorPec660.app.home.HomeActions
 import org.eduardoleolim.organizadorPec660.app.home.HomeTitle
-import org.eduardoleolim.organizadorPec660.core.municipality.application.MunicipalitiesResponse
 import org.eduardoleolim.organizadorPec660.core.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryBus
@@ -26,7 +25,6 @@ class MunicipalityScreen(private val queryBus: QueryBus, private val commandBus:
         var showDeleteModal by remember { mutableStateOf(false) }
         var showFormModal by remember { mutableStateOf(false) }
         var selectedMunicipality by remember { mutableStateOf<MunicipalityResponse?>(null) }
-        var municipalitiesResponse by remember { mutableStateOf(MunicipalitiesResponse(emptyList(), 0, null, null)) }
         var searchValue by remember { mutableStateOf("") }
         val pageSizes = remember { listOf(10, 25, 50, 100) }
         val state = rememberPaginatedDataTableState(pageSizes.first())
@@ -52,6 +50,7 @@ class MunicipalityScreen(private val queryBus: QueryBus, private val commandBus:
             state.pageSize = pageSizes.first()
             showDeleteModal = false
             selectedMunicipality = null
+            screenModel.searchAllFederalEntities()
         }
 
         MunicipalitiesTable(
@@ -59,30 +58,15 @@ class MunicipalityScreen(private val queryBus: QueryBus, private val commandBus:
             value = searchValue,
             onValueChange = { searchValue = it },
             pageSizes = pageSizes,
-            data = municipalitiesResponse,
+            data = screenModel.municipalities.value,
             state = state,
             onSearch = { search, federalEntityId, pageIndex, pageSize, orderBy, isAscending ->
-                val order = orderBy?.let {
+                val orders = orderBy?.let {
                     val orderType = if (isAscending) "ASC" else "DESC"
                     arrayOf(hashMapOf("orderBy" to orderBy, "orderType" to orderType))
                 }
 
-                screenModel.searchMunicipalities(
-                    search = search,
-                    federalEntityId = federalEntityId,
-                    limit = pageSize,
-                    offset = pageIndex * pageSize,
-                    orders = order
-                ) { result ->
-                    result.fold(
-                        onSuccess = {
-                            municipalitiesResponse = it
-                        },
-                        onFailure = {
-                            println(it.localizedMessage)
-                        }
-                    )
-                }
+                screenModel.searchMunicipalities(search, federalEntityId, orders, pageSize, pageIndex * pageSize)
             },
             onDeleteRequest = { federalEntity ->
                 selectedMunicipality = federalEntity
@@ -111,6 +95,7 @@ class MunicipalityScreen(private val queryBus: QueryBus, private val commandBus:
         }
 
         if (showFormModal) {
+            screenModel.resetForm()
             MunicipalityFormModal(
                 screenModel = screenModel,
                 selectedMunicipality = selectedMunicipality,
