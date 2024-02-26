@@ -37,13 +37,14 @@ class AuthScreenModel(private val navigator: Navigator, private val queryBus: Qu
 
             if (isUsernameInvalid || isPasswordInvalid) {
                 _authState.value = AuthState.Error(InvalidCredentialsException(isUsernameInvalid, isPasswordInvalid))
-            } else {
-                try {
-                    val authUserResponse: AuthUserResponse = queryBus.ask(AuthenticateUserQuery(username, password))
-                    _authState.value = AuthState.Success(authUserResponse)
-                } catch (e: QueryHandlerExecutionError) {
-                    _authState.value = AuthState.Error(e.cause!!)
-                }
+                return@launch
+            }
+
+            try {
+                val authUserResponse: AuthUserResponse = queryBus.ask(AuthenticateUserQuery(username, password))
+                _authState.value = AuthState.Success(authUserResponse)
+            } catch (e: QueryHandlerExecutionError) {
+                _authState.value = AuthState.Error(e.cause!!)
             }
         }
     }
