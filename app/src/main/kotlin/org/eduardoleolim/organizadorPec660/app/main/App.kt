@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Contrast
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material3.Icon
@@ -18,47 +19,43 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
-import com.jthemedetecor.OsThemeDetector
 import org.eduardoleolim.organizadorPec660.app.main.customWindow.*
 import org.eduardoleolim.organizadorPec660.app.main.router.Router
 import org.eduardoleolim.organizadorPec660.app.shared.theme.DarkColors
 import org.eduardoleolim.organizadorPec660.app.shared.theme.LightColors
+import org.eduardoleolim.organizadorPec660.app.shared.utils.isSystemInDarkTheme
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryBus
-import java.util.function.Consumer
-import javax.swing.SwingUtilities
+
+enum class SystemTheme {
+    DARK, LIGHT, DEFAULT
+}
 
 class App(private val commandBus: CommandBus, private val queryBus: QueryBus) {
     fun start() = application {
+
+        MainWindow(
+            onCloseRequest = { exitApplication() }
+        )
+    }
+
+    @Composable
+    private fun MainWindow(onCloseRequest: () -> Unit) {
         val state = rememberWindowState()
-        var isThemeSelected by remember { mutableStateOf(false) }
-        var isDarkTheme by remember { mutableStateOf(true) }
-
-        DisposableEffect(Unit) {
-            val osThemeDetector = OsThemeDetector.getDetector()
-            isDarkTheme = osThemeDetector.isDark
-
-            val consumer = Consumer<Boolean> {
-                SwingUtilities.invokeLater {
-                    if (isThemeSelected.not()) {
-                        isDarkTheme = it
-                    }
-                }
-            }
-
-            osThemeDetector.registerListener(consumer)
-            onDispose {
-                osThemeDetector.removeListener(consumer)
-            }
-        }
+        var selectedTheme by remember { mutableStateOf(SystemTheme.DEFAULT) }
+        val isSystemInDarkTheme = isSystemInDarkTheme()
 
         MaterialTheme(
-            colorScheme = if (isDarkTheme) DarkColors else LightColors
+            colorScheme = when (selectedTheme) {
+                SystemTheme.DARK -> DarkColors
+                SystemTheme.LIGHT -> LightColors
+                SystemTheme.DEFAULT -> if (isSystemInDarkTheme) DarkColors else LightColors
+            }
         ) {
             val icon = painterResource("assets/icon.png")
             CustomWindow(
                 state = state,
-                onCloseRequest = { exitApplication() },
+                onCloseRequest = { onCloseRequest() },
                 defaultTitle = "Organizador PEC-6-60",
                 defaultIcon = icon
             ) {
@@ -68,14 +65,21 @@ class App(private val commandBus: CommandBus, private val queryBus: QueryBus) {
                         Modifier.fillMaxWidth().padding(start = 16.dp),
                     ) {
                         Icon(
-                            imageVector = if (isDarkTheme) Icons.Default.DarkMode else Icons.Default.LightMode,
+                            imageVector = when (selectedTheme) {
+                                SystemTheme.DARK -> Icons.Filled.DarkMode
+                                SystemTheme.LIGHT -> Icons.Filled.LightMode
+                                SystemTheme.DEFAULT -> Icons.Filled.Contrast
+                            },
                             contentDescription = "Toggle theme",
                             modifier = Modifier
                                 .windowFrameItem("theme", HitSpots.OTHER_HIT_SPOT)
-                                .clip(RoundedCornerShape(4.dp))
+                                .clip(RoundedCornerShape(6.dp))
                                 .clickable {
-                                    isDarkTheme = !isDarkTheme
-                                    isThemeSelected = true
+                                    selectedTheme = when (selectedTheme) {
+                                        SystemTheme.DARK -> SystemTheme.LIGHT
+                                        SystemTheme.LIGHT -> SystemTheme.DEFAULT
+                                        SystemTheme.DEFAULT -> SystemTheme.DARK
+                                    }
                                 }
                                 .padding(4.dp)
                                 .size(16.dp)
