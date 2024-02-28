@@ -95,7 +95,9 @@ class HomeScreen(
                         screenModel = screenModel,
                         selectedTab = selectedTab,
                         onChangeSelectedTab = {
-                            screenModel.closeNavigationDrawer(onOpen = { selectedTab = it })
+                            screenModel.closeNavigationDrawer(
+                                onClosed = { selectedTab = it }
+                            )
                         }
                     )
                 },

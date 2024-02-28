@@ -26,11 +26,11 @@ class HomeScreenModel(
         }
     }
 
-    fun closeNavigationDrawer(onOpen: () -> Unit = {}, onOpened: () -> Unit = {}) {
+    fun closeNavigationDrawer(onClose: () -> Unit = {}, onClosed: () -> Unit = {}) {
         screenModelScope.launch(compositionContext.effectCoroutineContext) {
-            onOpen()
+            onClose()
             drawerState.close()
-            onOpened()
+            onClosed()
         }
     }
 
