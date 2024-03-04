@@ -1,5 +1,7 @@
 package org.eduardoleolim.organizadorPec660.app.instrumentType
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.Dispatchers
@@ -12,63 +14,88 @@ import org.eduardoleolim.organizadorPec660.core.instrumentType.application.updat
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryBus
 
+sealed class FormState {
+    data object Idle : FormState()
+    data object InProgress : FormState()
+    data object SuccessCreate : FormState()
+    data object SuccessEdit : FormState()
+    data class Error(val error: Throwable) : FormState()
+}
+
+sealed class DeleteState {
+    data object Idle : DeleteState()
+    data object InProgress : DeleteState()
+    data object Success : DeleteState()
+    data class Error(val error: Throwable) : DeleteState()
+}
+
 class InstrumentTypeScreenModel(private val queryBus: QueryBus, private val commandBus: CommandBus) : ScreenModel {
+    private var _instrumentTypes = mutableStateOf(InstrumentTypesResponse(emptyList(), 0, null, null))
+    val instrumentTypes: State<InstrumentTypesResponse> get() = _instrumentTypes
+
+    private var _formState = mutableStateOf<FormState>(FormState.Idle)
+    val formState: State<FormState> get() = _formState
+
+    private var _deleteState = mutableStateOf<DeleteState>(DeleteState.Idle)
+    val deleteState: State<DeleteState> get() = _deleteState
+
+    fun resetForm() {
+        _formState.value = FormState.Idle
+    }
+
+    fun resetDeleteModal() {
+        _deleteState.value = DeleteState.Idle
+    }
+
     fun searchInstrumentTypes(
         search: String? = null,
         orders: Array<HashMap<String, String>>? = null,
         limit: Int? = null,
-        offset: Int? = null,
-        callback: (Result<InstrumentTypesResponse>) -> Unit
+        offset: Int? = null
     ) {
         screenModelScope.launch(Dispatchers.IO) {
-            val query = SearchInstrumentTypesByTermQuery(search, orders, limit, offset)
-
-            val result = try {
+            try {
+                val query = SearchInstrumentTypesByTermQuery(search, orders, limit, offset)
                 Result.success(queryBus.ask<InstrumentTypesResponse>(query))
             } catch (e: Exception) {
-                Result.failure(e.cause!!)
+                _instrumentTypes.value = InstrumentTypesResponse(emptyList(), 0, null, null)
             }
-
-            callback(result)
         }
     }
 
-    fun createInstrumentType(name: String, callback: (Result<Unit>) -> Unit) {
+    fun createInstrumentType(name: String) {
+        _formState.value = FormState.InProgress
         screenModelScope.launch(Dispatchers.IO) {
-            val result = try {
+            try {
                 commandBus.dispatch(CreateInstrumentTypeCommand(name))
-                Result.success(Unit)
+                _formState.value = FormState.SuccessCreate
             } catch (e: Exception) {
-                Result.failure(e.cause!!)
+                _formState.value = FormState.Error(e.cause!!)
             }
-
-            callback(result)
         }
     }
 
-    fun editInstrumentType(instrumentTypeId: String, name: String, callback: (Result<Unit>) -> Unit) {
+    fun editInstrumentType(instrumentTypeId: String, name: String) {
+        _formState.value = FormState.InProgress
         screenModelScope.launch(Dispatchers.IO) {
-            val result = try {
+            try {
                 commandBus.dispatch(UpdateInstrumentTypeCommand(instrumentTypeId, name))
-                Result.success(Unit)
+                _formState.value = FormState.SuccessCreate
             } catch (e: Exception) {
-                Result.failure(e.cause!!)
+                _formState.value = FormState.Error(e.cause!!)
             }
-
-            callback(result)
         }
     }
 
-    fun deleteInstrumentType(instrumentTypeId: String, callback: (Result<Unit>) -> Unit) {
+    fun deleteInstrumentType(instrumentTypeId: String) {
+        _deleteState.value = DeleteState.InProgress
         screenModelScope.launch(Dispatchers.IO) {
-            val result = try {
+            try {
                 commandBus.dispatch(DeleteInstrumentTypeCommand(instrumentTypeId))
-                Result.success(Unit)
+                _deleteState.value = DeleteState.Success
             } catch (e: Exception) {
-                Result.failure(e.cause!!)
+                _deleteState.value = DeleteState.Error(e.cause!!)
             }
-
-            callback(result)
         }
     }
 }

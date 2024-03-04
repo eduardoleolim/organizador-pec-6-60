@@ -11,7 +11,6 @@ import cafe.adriel.voyager.core.screen.Screen
 import com.seanproctor.datatable.paging.rememberPaginatedDataTableState
 import org.eduardoleolim.organizadorPec660.app.home.HomeActions
 import org.eduardoleolim.organizadorPec660.app.home.HomeTitle
-import org.eduardoleolim.organizadorPec660.core.instrumentType.application.InstrumentTypesResponse
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryBus
 
@@ -21,7 +20,6 @@ class InstrumentTypeScreen(private val queryBus: QueryBus, private val commandBu
         val screenModel = rememberScreenModel { InstrumentTypeScreenModel(queryBus, commandBus) }
         val pageSizes = remember { listOf(10, 25, 50, 100) }
         val state = rememberPaginatedDataTableState(pageSizes.first())
-        var instrumentTypesResponse by remember { mutableStateOf(InstrumentTypesResponse(emptyList(), 0, null, null)) }
         var searchValue by remember { mutableStateOf("") }
 
         HomeTitle("Tipos de Instrumento")
@@ -47,7 +45,7 @@ class InstrumentTypeScreen(private val queryBus: QueryBus, private val commandBu
             value = searchValue,
             onValueChange = { searchValue = it },
             pageSizes = pageSizes,
-            data = instrumentTypesResponse,
+            data = screenModel.instrumentTypes.value,
             state = state,
             onSearch = { search, pageIndex, pageSize, orderBy, isAscending ->
                 val orders = orderBy?.let {
@@ -55,22 +53,7 @@ class InstrumentTypeScreen(private val queryBus: QueryBus, private val commandBu
                     arrayOf(hashMapOf("orderBy" to orderBy, "orderType" to orderType))
                 }
 
-                screenModel.searchInstrumentTypes(
-                    search = search,
-                    limit = pageSize,
-                    offset = pageIndex * pageSize,
-                    orders = orders
-                ) { result ->
-                    result.fold(
-                        onSuccess = {
-                            instrumentTypesResponse = it
-                        },
-                        onFailure = {
-                            println(it.localizedMessage)
-                            instrumentTypesResponse = InstrumentTypesResponse(emptyList(), 0, null, null)
-                        }
-                    )
-                }
+                screenModel.searchInstrumentTypes(search, orders, pageSize, pageIndex * pageSize)
             },
             onDeleteRequest = {},
             onEditRequest = {}
