@@ -50,7 +50,7 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
                     .fillMaxHeight()
             ) {
                 Image(
-                    painter = painterResource("assets/img/login_background.png"),
+                    painter = painterResource("drawable/login_background.png"),
                     contentDescription = "Fuente de los 4 ríos",
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.FillWidth

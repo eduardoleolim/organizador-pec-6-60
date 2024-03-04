@@ -81,7 +81,7 @@ class App(
                 SystemTheme.DEFAULT -> if (isSystemInDarkTheme) DarkColors else LightColors
             }
         ) {
-            val icon = painterResource("assets/icon.png")
+            val icon = painterResource("drawable/icon.png")
             CustomWindow(
                 state = state,
                 onCloseRequest = { onCloseRequest() },
@@ -129,7 +129,7 @@ class App(
         MaterialTheme(
             colorScheme = if (isSystemInDarkTheme) DarkColors else LightColors
         ) {
-            val icon = painterResource("assets/icon.png")
+            val icon = painterResource("drawable/icon.png")
             CustomWindow(
                 state = state,
                 onCloseRequest = onCloseRequest,

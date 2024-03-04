@@ -53,13 +53,13 @@ compose.desktop {
             appResourcesRootDir.set(project.layout.projectDirectory.dir("../resources"))
 
             windows {
-                iconFile.set(file("src/main/resources/assets/icon.ico"))
+                iconFile.set(file("src/main/resources/drawable/icon.ico"))
                 dirChooser = true
                 shortcut = true
             }
 
             linux {
-                iconFile.set(file("src/main/resources/assets/icon.png"))
+                iconFile.set(file("src/main/resources/drawable/icon.png"))
             }
 
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
