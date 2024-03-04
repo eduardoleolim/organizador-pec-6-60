@@ -23,6 +23,7 @@ dependencies {
     implementation("cafe.adriel.voyager:voyager-navigator:${properties["voyager.version"]}")
     implementation("cafe.adriel.voyager:voyager-screenmodel:${properties["voyager.version"]}")
     implementation("com.seanproctor:data-table-material3:${properties["dataTable.version"]}")
+    implementation("org.apache.pdfbox:pdfbox:${properties["pdfbox.version"]}")
     implementation("com.github.Dansoftowner:jSystemThemeDetector:${properties["themeDetector.version"]}") {
         exclude("org.slf4j")
     }
