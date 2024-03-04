@@ -22,14 +22,12 @@ import com.seanproctor.datatable.DataColumn
 import com.seanproctor.datatable.TableColumnWidth
 import com.seanproctor.datatable.paging.PaginatedDataTableState
 import org.eduardoleolim.organizadorPec660.app.shared.composables.PaginatedDataTable
-import org.eduardoleolim.organizadorPec660.app.shared.composables.tooltipOnHover
 import org.eduardoleolim.organizadorPec660.core.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorPec660.core.municipality.application.MunicipalitiesResponse
 import org.eduardoleolim.organizadorPec660.core.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorPec660.core.shared.domain.toLocalDateTime
 import java.time.format.DateTimeFormatter
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MunicipalityScreen.MunicipalitiesTable(
     screenModel: MunicipalityScreenModel,
@@ -211,31 +209,16 @@ fun MunicipalityScreen.MunicipalitiesTable(
                     Text(municipality.updatedAt?.toLocalDateTime()?.format(dateTimeFormatter) ?: "N/A")
                 }
                 cell {
-                    val editTooltipState = remember { PlainTooltipState() }
-                    val deleteTooltipState = remember { PlainTooltipState() }
-
-                    PlainTooltipBox(
-                        tooltip = { Text("Editar") },
-                        tooltipState = editTooltipState,
+                    IconButton(
+                        onClick = { onEditRequest(municipality) }
                     ) {
-                        IconButton(
-                            modifier = Modifier.tooltipOnHover(editTooltipState),
-                            onClick = { onEditRequest(municipality) }
-                        ) {
-                            Icon(Icons.Default.Edit, "Editar")
-                        }
+                        Icon(Icons.Default.Edit, "Editar")
                     }
 
-                    PlainTooltipBox(
-                        tooltip = { Text("Eliminar") },
-                        tooltipState = deleteTooltipState
+                    IconButton(
+                        onClick = { onDeleteRequest(municipality) }
                     ) {
-                        IconButton(
-                            modifier = Modifier.tooltipOnHover(deleteTooltipState),
-                            onClick = { onDeleteRequest(municipality) }
-                        ) {
-                            Icon(Icons.Default.Delete, "Eliminar")
-                        }
+                        Icon(Icons.Default.Delete, "Eliminar")
                     }
                 }
             }

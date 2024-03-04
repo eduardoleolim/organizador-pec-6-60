@@ -13,7 +13,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -22,6 +21,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import kotlinx.coroutines.launch
+import org.eduardoleolim.app.generated.resources.Res
+import org.eduardoleolim.app.generated.resources.logo
 import org.eduardoleolim.organizadorPec660.app.main.customWindow.*
 import org.eduardoleolim.organizadorPec660.app.main.router.Router
 import org.eduardoleolim.organizadorPec660.app.shared.theme.DarkColors
@@ -32,6 +33,8 @@ import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.command.Comman
 import org.eduardoleolim.organizadorPec660.core.shared.infrastructure.bus.KtormCommandBus
 import org.eduardoleolim.organizadorPec660.core.shared.infrastructure.bus.KtormQueryBus
 import org.eduardoleolim.organizadorPec660.core.shared.infrastructure.models.SqliteKtormDatabase
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 import java.awt.Dimension
 
 enum class SystemTheme {
@@ -62,6 +65,7 @@ class App(
         }
     }
 
+    @OptIn(ExperimentalResourceApi::class)
     @Composable
     private fun MainWindow(onCloseRequest: () -> Unit) {
         val state = rememberWindowState()
@@ -81,7 +85,7 @@ class App(
                 SystemTheme.DEFAULT -> if (isSystemInDarkTheme) DarkColors else LightColors
             }
         ) {
-            val icon = painterResource("drawable/icon.png")
+            val icon = painterResource(Res.drawable.logo)
             CustomWindow(
                 state = state,
                 onCloseRequest = { onCloseRequest() },
@@ -121,6 +125,7 @@ class App(
         }
     }
 
+    @OptIn(ExperimentalResourceApi::class)
     @Composable
     private fun ConfigWindow(onCloseRequest: () -> Unit, onPasswordSet: (String) -> Unit) {
         val state = rememberWindowState()
@@ -129,7 +134,7 @@ class App(
         MaterialTheme(
             colorScheme = if (isSystemInDarkTheme) DarkColors else LightColors
         ) {
-            val icon = painterResource("drawable/icon.png")
+            val icon = painterResource(Res.drawable.logo)
             CustomWindow(
                 state = state,
                 onCloseRequest = onCloseRequest,

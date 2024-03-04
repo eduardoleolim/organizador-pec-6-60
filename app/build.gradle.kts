@@ -17,6 +17,7 @@ dependencies {
     implementation(compose.desktop.currentOs) {
         exclude("org.jetbrains.compose.material")
     }
+    implementation(compose.components.resources)
     implementation(compose.materialIconsExtended)
     implementation(compose.material3)
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:${properties["coroutines.version"]}")
@@ -54,13 +55,13 @@ compose.desktop {
             appResourcesRootDir.set(project.layout.projectDirectory.dir("../resources"))
 
             windows {
-                iconFile.set(file("src/main/resources/drawable/icon.ico"))
+                iconFile.set(file("src/main/composeResources/drawable/icon.ico"))
                 dirChooser = true
                 shortcut = true
             }
 
             linux {
-                iconFile.set(file("src/main/resources/drawable/icon.png"))
+                iconFile.set(file("src/main/composeResources/drawable/logo.png"))
             }
 
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)

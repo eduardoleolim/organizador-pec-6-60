@@ -13,7 +13,6 @@ import androidx.compose.ui.awt.ComposeWindow
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -25,11 +24,16 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import org.eduardoleolim.app.generated.resources.Res
+import org.eduardoleolim.app.generated.resources.login_background
 import org.eduardoleolim.organizadorPec660.core.auth.domain.InvalidAuthCredentialsError
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryBus
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 import java.awt.Dimension
 
 class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryBus) : Screen {
+    @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
@@ -49,8 +53,9 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
                     .fillMaxWidth(0.5f)
                     .fillMaxHeight()
             ) {
+
                 Image(
-                    painter = painterResource("drawable/login_background.png"),
+                    painter = painterResource(Res.drawable.login_background),
                     contentDescription = "Fuente de los 4 ríos",
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.FillWidth

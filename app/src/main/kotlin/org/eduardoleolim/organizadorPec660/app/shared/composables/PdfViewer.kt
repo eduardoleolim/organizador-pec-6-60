@@ -7,7 +7,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.LastPage
+import androidx.compose.material.icons.filled.ChevronLeft
+import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.FileOpen
+import androidx.compose.material.icons.filled.FirstPage
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -68,12 +72,7 @@ fun PdfViewerTopBar(
                 )
             }
 
-            Divider(
-                modifier = Modifier
-                    .padding(vertical = 5.dp)
-                    .width(1.dp)
-                    .fillMaxHeight()
-            )
+            VerticalDivider()
 
             IconButton(
                 enabled = pdfViewerState != null && pdfViewerState.currentPageIndex > 0,
@@ -119,7 +118,7 @@ fun PdfViewerTopBar(
                 },
             ) {
                 Icon(
-                    imageVector = Icons.Filled.LastPage,
+                    imageVector = Icons.AutoMirrored.Filled.LastPage,
                     contentDescription = "Last"
                 )
             }

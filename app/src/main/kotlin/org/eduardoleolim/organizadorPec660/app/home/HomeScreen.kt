@@ -2,11 +2,11 @@ package org.eduardoleolim.organizadorPec660.app.home
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ListAlt
-import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.icons.automirrored.filled.ListAlt
+import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.automirrored.filled.MenuOpen
+import androidx.compose.material.icons.automirrored.outlined.ListAlt
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.MenuOpen
-import androidx.compose.material.icons.outlined.ListAlt
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -48,27 +48,27 @@ class HomeScreen(
             listOf(
                 Triple(
                     "Instrumentos",
-                    Pair(Icons.Filled.ListAlt, Icons.Outlined.ListAlt),
+                    Pair(Icons.AutoMirrored.Filled.ListAlt, Icons.AutoMirrored.Outlined.ListAlt),
                     MenuTab.INSTRUMENTOS
                 ),
                 Triple(
                     "Entidades Federativas",
-                    Pair(Icons.Filled.ListAlt, Icons.Outlined.ListAlt),
+                    Pair(Icons.AutoMirrored.Filled.ListAlt, Icons.AutoMirrored.Outlined.ListAlt),
                     MenuTab.ENTIDADES_FEDERATIVAS
                 ),
                 Triple(
                     "Municipios",
-                    Pair(Icons.Filled.ListAlt, Icons.Outlined.ListAlt),
+                    Pair(Icons.AutoMirrored.Filled.ListAlt, Icons.AutoMirrored.Outlined.ListAlt),
                     MenuTab.MUNICIPIOS
                 ),
                 Triple(
                     "Tipos de Estadística",
-                    Pair(Icons.Filled.ListAlt, Icons.Outlined.ListAlt),
+                    Pair(Icons.AutoMirrored.Filled.ListAlt, Icons.AutoMirrored.Outlined.ListAlt),
                     MenuTab.TIPOS_DE_ESTADISTICA
                 ),
                 Triple(
                     "Tipos de Instrumento",
-                    Pair(Icons.Filled.ListAlt, Icons.Outlined.ListAlt),
+                    Pair(Icons.AutoMirrored.Filled.ListAlt, Icons.AutoMirrored.Outlined.ListAlt),
                     MenuTab.TIPOS_DE_INSTRUMENTO
                 )
             )
@@ -151,11 +151,15 @@ class HomeScreen(
                 IconButton(
                     onClick = { screenModel.closeNavigationDrawer() }
                 ) {
-                    Icon(Icons.Filled.MenuOpen, contentDescription = null)
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.MenuOpen,
+                        contentDescription = "Menu opened"
+                    )
                 }
             }
 
-            Divider()
+            HorizontalDivider()
+
             items.forEach {
                 val (label, icon, tab) = it
                 NavigationDrawerItem(
@@ -167,18 +171,21 @@ class HomeScreen(
                     },
                     label = { Text(text = label) },
                     selected = selectedTab == tab,
-                    onClick = { onChangeSelectedTab(tab) }
+                    onClick = { onChangeSelectedTab(tab) },
+                    shape = MaterialTheme.shapes.medium
                 )
             }
 
             Spacer(modifier = Modifier.weight(1.0f))
-            Divider()
+
+            HorizontalDivider()
 
             NavigationDrawerItem(
-                icon = { Icon(Icons.Default.Logout, contentDescription = null) },
+                icon = { Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = null) },
                 label = { Text(text = "Cerrar Sesión") },
                 selected = false,
-                onClick = { screenModel.logout() }
+                onClick = { screenModel.logout() },
+                shape = MaterialTheme.shapes.medium
             )
         }
     }

@@ -3,6 +3,7 @@ package org.eduardoleolim.organizadorPec660.app.shared.composables
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.LastPage
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -29,7 +30,7 @@ fun PaginatedDataTable(
     pageSizes: List<Int> = listOf(10, 25, 50, 100),
     columns: List<DataColumn>,
     modifier: Modifier = Modifier,
-    separator: @Composable (rowIndex: Int) -> Unit = { Divider() },
+    separator: @Composable (rowIndex: Int) -> Unit = { HorizontalDivider() },
     header: @Composable RowScope.() -> Unit = {},
     headerHeight: Dp = 56.dp,
     rowHeight: Dp = 52.dp,
@@ -173,7 +174,7 @@ fun PaginatedDataTable(
                         onClick = { state.pageIndex = pageCount - 1 },
                         enabled = state.pageIndex < pageCount - 1
                     ) {
-                        Icon(Icons.Default.LastPage, "Last")
+                        Icon(Icons.AutoMirrored.Filled.LastPage, "Last")
                     }
                 }
             },
