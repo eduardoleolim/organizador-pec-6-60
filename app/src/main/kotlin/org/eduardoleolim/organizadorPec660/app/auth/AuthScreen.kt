@@ -13,13 +13,11 @@ import androidx.compose.ui.awt.ComposeWindow
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -85,8 +83,8 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
         var isUsernameError by remember { mutableStateOf(false) }
         var isPasswordError by remember { mutableStateOf(false) }
         var areInvalidCredentials by remember { mutableStateOf(false) }
-        var usernameSupportingText: (@Composable () -> Unit)? by remember { mutableStateOf(null) }
-        var passwordSupportingText: (@Composable () -> Unit)? by remember { mutableStateOf(null) }
+        var usernameSupportingText by remember { mutableStateOf(null as String?) }
+        var passwordSupportingText by remember { mutableStateOf(null as String?) }
 
         when (val authState = screenModel.authState.value) {
             AuthState.Idle -> {
@@ -113,8 +111,6 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
 
             is AuthState.Error -> {
                 enabled = true
-                var usernameMessage: String? = null
-                var passwordMessage: String? = null
 
                 when (val error = authState.error) {
                     is InvalidAuthCredentialsError -> {
@@ -124,12 +120,12 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
                     is InvalidCredentialsException -> {
                         if (error.isUsernameInvalid) {
                             isUsernameError = true
-                            usernameMessage = "El usuario es requerido"
+                            usernameSupportingText = "El usuario es requerido"
                         }
 
                         if (error.isPasswordInvalid) {
                             isPasswordError = true
-                            passwordMessage = "La contraseña es requerida"
+                            usernameSupportingText = "La contraseña es requerida"
                         }
                     }
 
@@ -137,31 +133,13 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
                         println("Error: ${error.message}")
                     }
                 }
-
-                passwordSupportingText = passwordMessage?.let { message ->
-                    {
-                        Text(
-                            text = message,
-                            color = MaterialTheme.colorScheme.error
-                        )
-                    }
-                }
-
-                usernameSupportingText = usernameMessage?.let { message ->
-                    {
-                        Text(
-                            text = message,
-                            color = MaterialTheme.colorScheme.error
-                        )
-                    }
-                }
             }
         }
 
         Text(
-            text = "Organizador\nPEC-6-60",
+            text = "Organizador PEC-6-60",
             textAlign = TextAlign.Center,
-            style = TextStyle(fontSize = 40.sp, fontWeight = FontWeight.Bold),
+            style = MaterialTheme.typography.displayMedium.copy(fontWeight = FontWeight.Medium),
             modifier = Modifier.padding(bottom = 20.dp)
         )
 
@@ -180,25 +158,29 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
         }
 
         OutlinedTextField(
+            enabled = enabled,
+            label = { Text("Usuario") },
             value = username,
             onValueChange = { username = it },
-            label = { Text("Usuario") },
-            enabled = enabled,
-            isError = isUsernameError || areInvalidCredentials,
-            supportingText = usernameSupportingText,
+            modifier = Modifier.fillMaxWidth(0.8f).padding(bottom = 20.dp),
             singleLine = true,
-            modifier = Modifier.fillMaxWidth(0.8f).padding(bottom = 20.dp)
+            isError = isUsernameError || areInvalidCredentials,
+            supportingText = usernameSupportingText?.let { message ->
+                { Text(text = message, color = MaterialTheme.colorScheme.onError) }
+            }
         )
 
         OutlinedTextField(
+            enabled = enabled,
+            label = { Text("Contraseña") },
             value = password,
             onValueChange = { password = it },
-            label = { Text("Contraseña") },
-            enabled = enabled,
-            isError = isPasswordError || areInvalidCredentials,
-            supportingText = passwordSupportingText,
-            singleLine = true,
             modifier = Modifier.fillMaxWidth(0.8f).padding(bottom = 20.dp),
+            singleLine = true,
+            isError = isPasswordError || areInvalidCredentials,
+            supportingText = passwordSupportingText?.let { message ->
+                { Text(text = message, color = MaterialTheme.colorScheme.onError) }
+            },
             visualTransformation = visualTransformation,
             trailingIcon = {
                 IconButton(
@@ -212,12 +194,10 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
 
         Button(
             enabled = enabled,
-            onClick = {
-                screenModel.login(username, password)
-            },
+            onClick = { screenModel.login(username, password) },
             modifier = Modifier.fillMaxWidth(0.8f)
         ) {
-            Text(text = "Iniciar sesión", fontSize = 16.sp)
+            Text("Iniciar sesión")
         }
     }
 }

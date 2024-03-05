@@ -27,6 +27,7 @@ import org.eduardoleolim.organizadorPec660.app.main.customWindow.*
 import org.eduardoleolim.organizadorPec660.app.main.router.Router
 import org.eduardoleolim.organizadorPec660.app.shared.theme.DarkColors
 import org.eduardoleolim.organizadorPec660.app.shared.theme.LightColors
+import org.eduardoleolim.organizadorPec660.app.shared.theme.MontserratTypography
 import org.eduardoleolim.organizadorPec660.app.shared.utils.AppUtils
 import org.eduardoleolim.organizadorPec660.app.shared.utils.isSystemInDarkTheme
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.command.CommandBus
@@ -79,6 +80,7 @@ class App(
         }
 
         MaterialTheme(
+            typography = MontserratTypography,
             colorScheme = when (selectedTheme) {
                 SystemTheme.DARK -> DarkColors
                 SystemTheme.LIGHT -> LightColors
