@@ -125,7 +125,7 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
 
                         if (error.isPasswordInvalid) {
                             isPasswordError = true
-                            usernameSupportingText = "La contraseña es requerida"
+                            passwordSupportingText = "La contraseña es requerida"
                         }
                     }
 

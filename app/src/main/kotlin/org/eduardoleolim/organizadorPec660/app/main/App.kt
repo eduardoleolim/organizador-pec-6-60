@@ -27,7 +27,7 @@ import org.eduardoleolim.organizadorPec660.app.main.customWindow.*
 import org.eduardoleolim.organizadorPec660.app.main.router.Router
 import org.eduardoleolim.organizadorPec660.app.shared.theme.DarkColors
 import org.eduardoleolim.organizadorPec660.app.shared.theme.LightColors
-import org.eduardoleolim.organizadorPec660.app.shared.theme.MontserratTypography
+import org.eduardoleolim.organizadorPec660.app.shared.theme.RobotoTypography
 import org.eduardoleolim.organizadorPec660.app.shared.utils.AppUtils
 import org.eduardoleolim.organizadorPec660.app.shared.utils.isSystemInDarkTheme
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.command.CommandBus
@@ -48,9 +48,9 @@ class App(
     private var sqliteExtensions: List<String>
 ) {
     fun start() = application {
-        var canInitializeApp by remember { mutableStateOf(SqliteKtormDatabase.exists(databasePath)) }
+        var initializeApp by remember { mutableStateOf(SqliteKtormDatabase.exists(databasePath)) }
 
-        if (canInitializeApp) {
+        if (initializeApp) {
             MainWindow(
                 onCloseRequest = { exitApplication() }
             )
@@ -60,7 +60,7 @@ class App(
                 onPasswordSet = { password ->
                     AppUtils.sqlitePassword(password)
                     sqlitePassword = password
-                    canInitializeApp = true
+                    initializeApp = true
                 }
             )
         }
@@ -80,7 +80,7 @@ class App(
         }
 
         MaterialTheme(
-            typography = MontserratTypography,
+            typography = RobotoTypography,
             colorScheme = when (selectedTheme) {
                 SystemTheme.DARK -> DarkColors
                 SystemTheme.LIGHT -> LightColors
