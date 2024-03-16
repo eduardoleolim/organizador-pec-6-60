@@ -29,11 +29,12 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
         val state = rememberPaginatedDataTableState(pageSizes.first())
         var searchValue by remember { mutableStateOf("") }
 
-        fun resetTable() {
+        fun resetView() {
             searchValue = ""
             state.pageIndex = -1
             state.pageSize = pageSizes.first()
             showDeleteModal = false
+            showFormModal = false
             selectedFederalEntity = null
         }
 
@@ -101,17 +102,13 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
                     screenModel = screenModel,
                     selectedFederalEntity = selectedFederalEntity!!,
                     onSuccess = {
-                        showDeleteModal = false
-                        selectedFederalEntity = null
-                        resetTable()
+                        resetView()
                     },
                     onFail = {
-                        showDeleteModal = false
-                        selectedFederalEntity = null
+                        resetView()
                     },
                     onDismissRequest = {
-                        showDeleteModal = false
-                        selectedFederalEntity = null
+                        resetView()
                     }
                 )
             }
@@ -122,14 +119,10 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
                     screenModel = screenModel,
                     selectedFederalEntity = selectedFederalEntity,
                     onDismissRequest = {
-                        showFormModal = false
-                        selectedFederalEntity = null
-                        resetTable()
+                        resetView()
                     },
                     onSuccess = {
-                        showFormModal = false
-                        selectedFederalEntity = null
-                        resetTable()
+                        resetView()
                     }
                 )
             }

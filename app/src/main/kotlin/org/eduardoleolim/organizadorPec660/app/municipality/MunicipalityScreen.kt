@@ -29,11 +29,12 @@ class MunicipalityScreen(private val queryBus: QueryBus, private val commandBus:
         val pageSizes = remember { listOf(10, 25, 50, 100) }
         val state = rememberPaginatedDataTableState(pageSizes.first())
 
-        fun resetTable() {
+        fun resetView() {
             searchValue = ""
             state.pageIndex = -1
             state.pageSize = pageSizes.first()
             showDeleteModal = false
+            showFormModal = false
             selectedMunicipality = null
             screenModel.searchAllFederalEntities()
         }
@@ -106,14 +107,14 @@ class MunicipalityScreen(private val queryBus: QueryBus, private val commandBus:
                     screenModel = screenModel,
                     selectedMunicipality = selectedMunicipality!!,
                     onSuccess = {
-                        resetTable()
-                        showDeleteModal = false
+                        resetView()
                     },
                     onFail = {
-                        resetTable()
-                        showDeleteModal = false
+                        resetView()
                     },
-                    onDismissRequest = { showDeleteModal = false }
+                    onDismissRequest = {
+                        showDeleteModal = false
+                    }
                 )
             }
 
@@ -123,14 +124,10 @@ class MunicipalityScreen(private val queryBus: QueryBus, private val commandBus:
                     screenModel = screenModel,
                     selectedMunicipality = selectedMunicipality,
                     onDismissRequest = {
-                        resetTable()
-                        showFormModal = false
-                        selectedMunicipality = null
+                        resetView()
                     },
                     onSuccess = {
-                        resetTable()
-                        showFormModal = false
-                        selectedMunicipality = null
+                        resetView()
                     }
                 )
             }

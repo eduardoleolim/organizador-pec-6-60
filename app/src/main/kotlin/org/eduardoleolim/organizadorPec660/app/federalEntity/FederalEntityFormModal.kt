@@ -28,8 +28,8 @@ fun FederalEntityScreen.FederalEntityFormModal(
     var enabled by remember { mutableStateOf(true) }
     var isKeyCodeError by remember { mutableStateOf(false) }
     var isNameError by remember { mutableStateOf(false) }
-    var keyCodeSupportingText: (@Composable () -> Unit)? by remember { mutableStateOf(null) }
-    var nameSupportingText: (@Composable () -> Unit)? by remember { mutableStateOf(null) }
+    var keyCodeSupportingText: String? by remember { mutableStateOf(null) }
+    var nameSupportingText: String? by remember { mutableStateOf(null) }
 
     when (val formState = screenModel.formState.value) {
         FormState.Idle -> {
@@ -60,56 +60,36 @@ fun FederalEntityScreen.FederalEntityFormModal(
 
         is FormState.Error -> {
             enabled = true
-            var keyCodeMessage: String? = null
-            var nameMessage: String? = null
 
             when (val error = formState.error) {
                 is InvalidFederalEntityKeyCodeError -> {
-                    keyCodeMessage = "La clave debe ser un número de dos dígitos"
+                    keyCodeSupportingText = "La clave debe ser un número de dos dígitos"
                     isKeyCodeError = true
                 }
 
                 is InvalidFederalEntityNameError -> {
-                    nameMessage = "El nombre no puede estar vacío"
+                    nameSupportingText = "El nombre no puede estar vacío"
                     isNameError = true
                 }
 
                 is FederalEntityAlreadyExistsError -> {
-                    keyCodeMessage = "Ya existe una entidad federativa con esa clave"
+                    keyCodeSupportingText = "Ya existe una entidad federativa con esa clave"
                     isKeyCodeError = true
                 }
 
                 is EmptyFederalEntityDataException -> {
                     if (error.isKeyCodeEmpty) {
-                        keyCodeMessage = "La clave es requerida."
+                        keyCodeSupportingText = "La clave es requerida."
                         isKeyCodeError = true
                     }
                     if (error.isNameEmpty) {
-                        nameMessage = "El nombre es requerido"
+                        nameSupportingText = "El nombre es requerido"
                         isNameError = true
                     }
                 }
 
                 else -> {
                     println("Error: ${error.message}")
-                }
-            }
-
-            keyCodeSupportingText = keyCodeMessage?.let { message ->
-                {
-                    Text(
-                        text = message,
-                        color = MaterialTheme.colorScheme.error
-                    )
-                }
-            }
-
-            nameSupportingText = nameMessage?.let { message ->
-                {
-                    Text(
-                        text = message,
-                        color = MaterialTheme.colorScheme.error
-                    )
                 }
             }
         }
@@ -135,7 +115,9 @@ fun FederalEntityScreen.FederalEntityFormModal(
                     },
                     singleLine = true,
                     isError = isKeyCodeError,
-                    supportingText = keyCodeSupportingText,
+                    supportingText = keyCodeSupportingText?.let { message ->
+                        { Text(text = message, color = MaterialTheme.colorScheme.error) }
+                    },
                     modifier = Modifier.onFocusChanged {
                         if (!it.isFocused && keyCode.isNotEmpty()) {
                             keyCode = keyCode.padStart(2, '0')
@@ -151,7 +133,9 @@ fun FederalEntityScreen.FederalEntityFormModal(
                     onValueChange = { name = it.uppercase() },
                     singleLine = true,
                     isError = isNameError,
-                    supportingText = nameSupportingText
+                    supportingText = nameSupportingText?.let { message ->
+                        { Text(text = message, color = MaterialTheme.colorScheme.error) }
+                    }
                 )
             }
         },
