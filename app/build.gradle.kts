@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
     id("org.eduardoleolim.organizadorpec660.kotlin-application-conventions")
-    id("org.jetbrains.compose").version("1.6.0")
+    id("org.jetbrains.compose") version "1.6.1"
 }
 
 tasks.named("compileKotlin", KotlinCompilationTask::class) {
