@@ -56,7 +56,7 @@ class InstrumentTypeScreenModel(private val queryBus: QueryBus, private val comm
         screenModelScope.launch(Dispatchers.IO) {
             try {
                 val query = SearchInstrumentTypesByTermQuery(search, orders, limit, offset)
-                Result.success(queryBus.ask<InstrumentTypesResponse>(query))
+                _instrumentTypes.value = queryBus.ask(query)
             } catch (e: Exception) {
                 _instrumentTypes.value = InstrumentTypesResponse(emptyList(), 0, null, null)
             }
@@ -66,6 +66,11 @@ class InstrumentTypeScreenModel(private val queryBus: QueryBus, private val comm
     fun createInstrumentType(name: String) {
         _formState.value = FormState.InProgress
         screenModelScope.launch(Dispatchers.IO) {
+            if (name.isBlank()) {
+                _formState.value = FormState.Error(EmptyInstrumentTypeDataException())
+                return@launch
+            }
+
             try {
                 commandBus.dispatch(CreateInstrumentTypeCommand(name))
                 _formState.value = FormState.SuccessCreate
@@ -78,6 +83,11 @@ class InstrumentTypeScreenModel(private val queryBus: QueryBus, private val comm
     fun editInstrumentType(instrumentTypeId: String, name: String) {
         _formState.value = FormState.InProgress
         screenModelScope.launch(Dispatchers.IO) {
+            if (name.isBlank()) {
+                _formState.value = FormState.Error(EmptyInstrumentTypeDataException())
+                return@launch
+            }
+
             try {
                 commandBus.dispatch(UpdateInstrumentTypeCommand(instrumentTypeId, name))
                 _formState.value = FormState.SuccessCreate

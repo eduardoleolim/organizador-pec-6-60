@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import com.seanproctor.datatable.paging.rememberPaginatedDataTableState
+import org.eduardoleolim.organizadorPec660.core.instrumentType.application.InstrumentTypeResponse
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryBus
 
@@ -21,16 +22,20 @@ class InstrumentTypeScreen(private val queryBus: QueryBus, private val commandBu
     @Composable
     override fun Content() {
         val screenModel = rememberScreenModel { InstrumentTypeScreenModel(queryBus, commandBus) }
+        var showDeleteModal by remember { mutableStateOf(false) }
+        var showFormModal by remember { mutableStateOf(false) }
+        var selectedInstrumentType by remember { mutableStateOf<InstrumentTypeResponse?>(null) }
         val pageSizes = remember { listOf(10, 25, 50, 100) }
         val state = rememberPaginatedDataTableState(pageSizes.first())
         var searchValue by remember { mutableStateOf("") }
 
-        fun resetTable() {
+        fun resetView() {
             searchValue = ""
             state.pageIndex = -1
             state.pageSize = pageSizes.first()
-            // showDeleteModal = false
-            // selectedInstrumentType = null
+            showDeleteModal = false
+            showFormModal = false
+            selectedInstrumentType = null
         }
 
         Column(
@@ -55,7 +60,7 @@ class InstrumentTypeScreen(private val queryBus: QueryBus, private val commandBu
                 )
 
                 SmallFloatingActionButton(
-                    onClick = { println("Crear tipo de instrumento") },
+                    onClick = { showFormModal = true },
                     containerColor = MaterialTheme.colorScheme.secondaryContainer,
                     contentColor = MaterialTheme.colorScheme.secondary
                 ) {
@@ -79,9 +84,46 @@ class InstrumentTypeScreen(private val queryBus: QueryBus, private val commandBu
 
                     screenModel.searchInstrumentTypes(search, orders, pageSize, pageIndex * pageSize)
                 },
-                onDeleteRequest = {},
-                onEditRequest = {}
+                onDeleteRequest = { instrumentType ->
+                    selectedInstrumentType = instrumentType
+                    showDeleteModal = true
+                },
+                onEditRequest = { instrumentType ->
+                    selectedInstrumentType = instrumentType
+                    showFormModal = true
+                }
             )
+
+            if (showDeleteModal && selectedInstrumentType != null) {
+                screenModel.resetDeleteModal()
+                InstrumentTypeDeleteModal(
+                    screenModel = screenModel,
+                    selectedInstrumentType = selectedInstrumentType!!,
+                    onSuccess = {
+                        resetView()
+                    },
+                    onFail = {
+                        resetView()
+                    },
+                    onDismissRequest = {
+                        resetView()
+                    }
+                )
+            }
+
+            if (showFormModal) {
+                screenModel.resetForm()
+                InstrumentTypeFormModal(
+                    screenModel = screenModel,
+                    selectedInstrumentType = selectedInstrumentType,
+                    onSuccess = {
+                        resetView()
+                    },
+                    onDismissRequest = {
+                        resetView()
+                    }
+                )
+            }
         }
     }
 }
