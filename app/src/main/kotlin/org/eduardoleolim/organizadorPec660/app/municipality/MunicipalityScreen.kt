@@ -1,19 +1,22 @@
 package org.eduardoleolim.organizadorPec660.app.municipality
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import com.seanproctor.datatable.paging.rememberPaginatedDataTableState
-import org.eduardoleolim.organizadorPec660.app.home.HomeActions
-import org.eduardoleolim.organizadorPec660.app.home.HomeTitle
 import org.eduardoleolim.organizadorPec660.core.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryBus
@@ -29,21 +32,6 @@ class MunicipalityScreen(private val queryBus: QueryBus, private val commandBus:
         val pageSizes = remember { listOf(10, 25, 50, 100) }
         val state = rememberPaginatedDataTableState(pageSizes.first())
 
-        HomeTitle("Municipios")
-        HomeActions {
-            SmallFloatingActionButton(
-                modifier = Modifier.padding(16.dp),
-                onClick = {
-                    selectedMunicipality = null
-                    showFormModal = true
-                },
-                containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                contentColor = MaterialTheme.colorScheme.secondary
-            ) {
-                Icon(Icons.Filled.Add, "Agregar entidad federativa")
-            }
-        }
-
         fun resetTable() {
             searchValue = ""
             state.pageIndex = -1
@@ -53,64 +41,98 @@ class MunicipalityScreen(private val queryBus: QueryBus, private val commandBus:
             screenModel.searchAllFederalEntities()
         }
 
-        MunicipalitiesTable(
-            screenModel = screenModel,
-            value = searchValue,
-            onValueChange = { searchValue = it },
-            pageSizes = pageSizes,
-            data = screenModel.municipalities.value,
-            state = state,
-            onSearch = { search, federalEntityId, pageIndex, pageSize, orderBy, isAscending ->
-                val orders = orderBy?.let {
-                    val orderType = if (isAscending) "ASC" else "DESC"
-                    arrayOf(hashMapOf("orderBy" to orderBy, "orderType" to orderType))
-                }
+        Column(
+            modifier = Modifier.padding(24.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .padding(
+                        start = 16.dp,
+                        end = 16.dp,
+                        bottom = 16.dp
+                    ),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Municipios",
+                    style = MaterialTheme.typography.titleLarge
+                )
 
-                screenModel.searchMunicipalities(search, federalEntityId, orders, pageSize, pageIndex * pageSize)
-            },
-            onDeleteRequest = { federalEntity ->
-                selectedMunicipality = federalEntity
-                showDeleteModal = true
-            },
-            onEditRequest = { federalEntity ->
-                selectedMunicipality = federalEntity
-                showFormModal = true
+                Spacer(
+                    modifier = Modifier.weight(1.0f)
+                )
+
+                SmallFloatingActionButton(
+                    onClick = {
+                        selectedMunicipality = null
+                        showFormModal = true
+                    },
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    contentColor = MaterialTheme.colorScheme.secondary
+                ) {
+                    Icon(Icons.Filled.Add, "Agregar entidad federativa")
+                }
             }
-        )
 
-        if (showDeleteModal && selectedMunicipality != null) {
-            screenModel.resetDeleteModal()
-            MunicipalityDeleteModal(
+            MunicipalitiesTable(
                 screenModel = screenModel,
-                selectedMunicipality = selectedMunicipality!!,
-                onSuccess = {
-                    resetTable()
-                    showDeleteModal = false
-                },
-                onFail = {
-                    resetTable()
-                    showDeleteModal = false
-                },
-                onDismissRequest = { showDeleteModal = false }
-            )
-        }
+                value = searchValue,
+                onValueChange = { searchValue = it },
+                pageSizes = pageSizes,
+                data = screenModel.municipalities.value,
+                state = state,
+                onSearch = { search, federalEntityId, pageIndex, pageSize, orderBy, isAscending ->
+                    val orders = orderBy?.let {
+                        val orderType = if (isAscending) "ASC" else "DESC"
+                        arrayOf(hashMapOf("orderBy" to orderBy, "orderType" to orderType))
+                    }
 
-        if (showFormModal) {
-            screenModel.resetForm()
-            MunicipalityFormModal(
-                screenModel = screenModel,
-                selectedMunicipality = selectedMunicipality,
-                onDismissRequest = {
-                    resetTable()
-                    showFormModal = false
-                    selectedMunicipality = null
+                    screenModel.searchMunicipalities(search, federalEntityId, orders, pageSize, pageIndex * pageSize)
                 },
-                onSuccess = {
-                    resetTable()
-                    showFormModal = false
-                    selectedMunicipality = null
+                onDeleteRequest = { federalEntity ->
+                    selectedMunicipality = federalEntity
+                    showDeleteModal = true
+                },
+                onEditRequest = { federalEntity ->
+                    selectedMunicipality = federalEntity
+                    showFormModal = true
                 }
             )
+
+            if (showDeleteModal && selectedMunicipality != null) {
+                screenModel.resetDeleteModal()
+                MunicipalityDeleteModal(
+                    screenModel = screenModel,
+                    selectedMunicipality = selectedMunicipality!!,
+                    onSuccess = {
+                        resetTable()
+                        showDeleteModal = false
+                    },
+                    onFail = {
+                        resetTable()
+                        showDeleteModal = false
+                    },
+                    onDismissRequest = { showDeleteModal = false }
+                )
+            }
+
+            if (showFormModal) {
+                screenModel.resetForm()
+                MunicipalityFormModal(
+                    screenModel = screenModel,
+                    selectedMunicipality = selectedMunicipality,
+                    onDismissRequest = {
+                        resetTable()
+                        showFormModal = false
+                        selectedMunicipality = null
+                    },
+                    onSuccess = {
+                        resetTable()
+                        showFormModal = false
+                        selectedMunicipality = null
+                    }
+                )
+            }
         }
     }
 }

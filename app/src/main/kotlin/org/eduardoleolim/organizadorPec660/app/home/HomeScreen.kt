@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.awt.ComposeWindow
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
@@ -43,7 +44,6 @@ class HomeScreen(
         val screenModel = rememberScreenModel { HomeScreenModel(navigator, drawerState, compositionContext) }
         var selectedTab by remember { mutableStateOf(MenuTab.INSTRUMENTOS) }
         val windowSize = rememberWindowSize()
-        val homeConfig = remember { HomeConfig() }
         val items = remember {
             listOf(
                 Triple(
@@ -84,13 +84,42 @@ class HomeScreen(
             }
         }
 
-        CompositionLocalProvider(
-            LocalHomeConfig provides homeConfig
+        ModalNavigationDrawer(
+            drawerState = drawerState,
+            drawerContent = {
+                ModalNavigationDrawerContent(
+                    items = items,
+                    screenModel = screenModel,
+                    selectedTab = selectedTab,
+                    onChangeSelectedTab = {
+                        screenModel.closeNavigationDrawer(
+                            onClosed = { selectedTab = it }
+                        )
+                    }
+                )
+            },
         ) {
-            ModalNavigationDrawer(
-                drawerState = drawerState,
-                drawerContent = {
-                    ModalNavigationDrawerContent(
+            Row {
+                NavigationRail(
+                    modifier = Modifier
+                        .width(116.dp)
+                        .padding(horizontal = 16.dp),
+                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                    header = {
+                        Spacer(
+                            modifier = Modifier.height(24.dp)
+                        )
+                        IconButton(
+                            onClick = { screenModel.openNavigationDrawer() }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Menu,
+                                contentDescription = "Open menu"
+                            )
+                        }
+                    }
+                ) {
+                    NavigationRailContent(
                         items = items,
                         screenModel = screenModel,
                         selectedTab = selectedTab,
@@ -100,31 +129,29 @@ class HomeScreen(
                             )
                         }
                     )
-                },
-            ) {
-                Scaffold(
-                    topBar = {
-                        val actions = homeConfig.actions
-                        val title = homeConfig.title
+                }
 
-                        TopAppBar(
-                            title = { Text(title) },
-                            actions = actions,
-                            navigationIcon = {
-                                IconButton(
-                                    onClick = { screenModel.openNavigationDrawer() },
-                                ) {
-                                    Icon(Icons.Filled.Menu, contentDescription = null)
-                                }
-                            }
-                        )
+                Surface(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(
+                            start = 8.dp,
+                            end = 24.dp,
+                            top = 24.dp,
+                            bottom = 24.dp
+                        ),
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                    shape = MaterialTheme.shapes.large,
+                ) {
+                    screenModel.apply {
+                        when (selectedTab) {
+                            MenuTab.INSTRUMENTOS -> InstrumentView()
+                            MenuTab.ENTIDADES_FEDERATIVAS -> FederalEntityView()
+                            MenuTab.MUNICIPIOS -> MunicipalityView()
+                            MenuTab.TIPOS_DE_ESTADISTICA -> StatisticTypeView()
+                            MenuTab.TIPOS_DE_INSTRUMENTO -> InstrumentTypeView()
+                        }
                     }
-                ) { paddingValues ->
-                    WorkArea(
-                        screenModel = screenModel,
-                        selectedTab = selectedTab,
-                        paddingValues = paddingValues
-                    )
                 }
             }
         }
@@ -137,9 +164,7 @@ class HomeScreen(
         selectedTab: MenuTab,
         onChangeSelectedTab: (MenuTab) -> Unit
     ) {
-        ModalDrawerSheet(
-            modifier = Modifier.width(300.dp)
-        ) {
+        ModalDrawerSheet {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -181,13 +206,53 @@ class HomeScreen(
             HorizontalDivider()
 
             NavigationDrawerItem(
-                icon = { Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = null) },
+                icon = { Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = "logout") },
                 label = { Text(text = "Cerrar Sesión") },
                 selected = false,
                 onClick = { screenModel.logout() },
                 shape = MaterialTheme.shapes.medium
             )
         }
+    }
+
+    @Composable
+    private fun NavigationRailContent(
+        items: List<Triple<String, Pair<ImageVector, ImageVector>, MenuTab>>,
+        screenModel: HomeScreenModel,
+        selectedTab: MenuTab,
+        onChangeSelectedTab: (MenuTab) -> Unit
+    ) {
+        items.forEach {
+            val (label, icon, tab) = it
+            NavigationRailItem(
+                icon = {
+                    Icon(
+                        imageVector = if (selectedTab == tab) icon.first else icon.second,
+                        contentDescription = label
+                    )
+                },
+                label = {
+                    Text(
+                        text = label,
+                        textAlign = TextAlign.Center
+                    )
+                },
+                selected = selectedTab == tab,
+                onClick = { onChangeSelectedTab(tab) },
+            )
+        }
+
+        NavigationRailItem(
+            icon = { Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = "logout") },
+            label = {
+                Text(
+                    text = "Cerrar Sesión",
+                    textAlign = TextAlign.Center
+                )
+            },
+            selected = false,
+            onClick = { screenModel.logout() },
+        )
     }
 
     @Composable
@@ -204,39 +269,6 @@ class HomeScreen(
                     MenuTab.TIPOS_DE_INSTRUMENTO -> InstrumentTypeView()
                 }
             }
-        }
-    }
-}
-
-class HomeConfig {
-    var title by mutableStateOf("")
-    var actions by mutableStateOf<@Composable RowScope.() -> Unit>(@Composable {})
-}
-
-private val LocalHomeConfig = compositionLocalOf<HomeConfig> { error("home actions not provided") }
-
-@Composable
-fun HomeTitle(title: String) {
-    val current = LocalHomeConfig.current
-
-    DisposableEffect(Unit) {
-        current.title = title
-
-        onDispose {
-            current.title = ""
-        }
-    }
-}
-
-@Composable
-fun HomeActions(actions: @Composable RowScope.() -> Unit) {
-    val current = LocalHomeConfig.current
-
-    DisposableEffect(Unit) {
-        current.actions = actions
-
-        onDispose {
-            current.actions = @Composable {}
         }
     }
 }

@@ -1,16 +1,22 @@
 package org.eduardoleolim.organizadorPec660.app.instrumentType
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import com.seanproctor.datatable.paging.rememberPaginatedDataTableState
-import org.eduardoleolim.organizadorPec660.app.home.HomeActions
-import org.eduardoleolim.organizadorPec660.app.home.HomeTitle
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryBus
 
@@ -22,17 +28,6 @@ class InstrumentTypeScreen(private val queryBus: QueryBus, private val commandBu
         val state = rememberPaginatedDataTableState(pageSizes.first())
         var searchValue by remember { mutableStateOf("") }
 
-        HomeTitle("Tipos de Instrumento")
-        HomeActions {
-            SmallFloatingActionButton(
-                onClick = { println("Crear tipo de instrumento") },
-                containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                contentColor = MaterialTheme.colorScheme.secondary
-            ) {
-                Icon(Icons.Filled.Add, "Agregar entidad federativa")
-            }
-        }
-
         fun resetTable() {
             searchValue = ""
             state.pageIndex = -1
@@ -41,22 +36,55 @@ class InstrumentTypeScreen(private val queryBus: QueryBus, private val commandBu
             // selectedInstrumentType = null
         }
 
-        InstrumentTypeTable(
-            value = searchValue,
-            onValueChange = { searchValue = it },
-            pageSizes = pageSizes,
-            data = screenModel.instrumentTypes.value,
-            state = state,
-            onSearch = { search, pageIndex, pageSize, orderBy, isAscending ->
-                val orders = orderBy?.let {
-                    val orderType = if (isAscending) "ASC" else "DESC"
-                    arrayOf(hashMapOf("orderBy" to orderBy, "orderType" to orderType))
-                }
+        Column(
+            modifier = Modifier.padding(24.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .padding(
+                        start = 16.dp,
+                        end = 16.dp,
+                        bottom = 16.dp
+                    ),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Tipos de instrumento",
+                    style = MaterialTheme.typography.titleLarge
+                )
 
-                screenModel.searchInstrumentTypes(search, orders, pageSize, pageIndex * pageSize)
-            },
-            onDeleteRequest = {},
-            onEditRequest = {}
-        )
+                Spacer(
+                    modifier = Modifier.weight(1.0f)
+                )
+
+                SmallFloatingActionButton(
+                    onClick = { println("Crear tipo de instrumento") },
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    contentColor = MaterialTheme.colorScheme.secondary
+                ) {
+                    Icon(Icons.Filled.Add, "Agregar entidad federativa")
+                }
+            }
+
+
+            InstrumentTypeTable(
+                value = searchValue,
+                onValueChange = { searchValue = it },
+                pageSizes = pageSizes,
+                data = screenModel.instrumentTypes.value,
+                state = state,
+                onSearch = { search, pageIndex, pageSize, orderBy, isAscending ->
+                    val orders = orderBy?.let {
+                        val orderType = if (isAscending) "ASC" else "DESC"
+                        arrayOf(hashMapOf("orderBy" to orderBy, "orderType" to orderType))
+                    }
+
+                    screenModel.searchInstrumentTypes(search, orders, pageSize, pageIndex * pageSize)
+                },
+                onDeleteRequest = {},
+                onEditRequest = {}
+            )
+        }
     }
 }
+

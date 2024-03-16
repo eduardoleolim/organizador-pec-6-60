@@ -122,7 +122,12 @@ class App(
                     }
                 }
 
-                Router(commandBus, queryBus)
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.surfaceContainer
+                ) {
+                    Router(commandBus, queryBus)
+                }
             }
         }
     }

@@ -18,7 +18,9 @@ import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryBus
 fun FrameWindowScope.Router(commandBus: CommandBus, queryBus: QueryBus) {
     ScreenRegistry {
         register<MainProvider.AuthScreen> { AuthScreen(window, queryBus) }
-        register<MainProvider.HomeScreen> { HomeScreen(window, it.user) }
+        register<MainProvider.HomeScreen> { provider ->
+            HomeScreen(window, provider.user)
+        }
         register<HomeProvider.FederalEntityScreen> { FederalEntityScreen(queryBus, commandBus) }
         register<HomeProvider.MunicipalityScreen> { MunicipalityScreen(queryBus, commandBus) }
         register<HomeProvider.StatisticTypeScreen> { StatisticTypeScreen(queryBus, commandBus) }
