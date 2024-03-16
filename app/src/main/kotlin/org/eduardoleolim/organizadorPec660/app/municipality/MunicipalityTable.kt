@@ -38,7 +38,8 @@ fun MunicipalityScreen.MunicipalitiesTable(
     state: PaginatedDataTableState,
     onSearch: (search: String, federalEntityId: String?, pageIndex: Int, pageSize: Int, orderBy: String?, isAscending: Boolean) -> Unit,
     onDeleteRequest: (MunicipalityResponse) -> Unit,
-    onEditRequest: (MunicipalityResponse) -> Unit
+    onEditRequest: (MunicipalityResponse) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     var sortColumnIndex by remember { mutableStateOf<Int?>(null) }
     var sortAscending by remember { mutableStateOf(true) }
@@ -101,134 +102,140 @@ fun MunicipalityScreen.MunicipalitiesTable(
         )
     }
 
-    PaginatedDataTable(
-        modifier = Modifier.verticalScroll(rememberScrollState()).fillMaxWidth(),
-        value = value,
-        onValueChange = onValueChange,
-        columns = columns,
-        sortColumnIndex = sortColumnIndex,
-        sortAscending = sortAscending,
-        state = state,
-        pageSizes = pageSizes,
-        onSearch = { search, pageIndex, pageSize, sortBy, isAscending ->
-            onSearch(search, federalEntityId, pageIndex, pageSize, sortBy?.let { orders[it] }, isAscending)
-        },
-        header = {
-            Box {
-                var expanded by remember { mutableStateOf(false) }
-                var selectedFederalEntity by remember { mutableStateOf<FederalEntityResponse?>(null) }
+    Surface(
+        modifier = Modifier.then(modifier),
+        shape = MaterialTheme.shapes.small,
+        color = MaterialTheme.colorScheme.surfaceContainerHighest
+    ) {
+        PaginatedDataTable(
+            modifier = Modifier.verticalScroll(rememberScrollState()).fillMaxWidth(),
+            value = value,
+            onValueChange = onValueChange,
+            columns = columns,
+            sortColumnIndex = sortColumnIndex,
+            sortAscending = sortAscending,
+            state = state,
+            pageSizes = pageSizes,
+            onSearch = { search, pageIndex, pageSize, sortBy, isAscending ->
+                onSearch(search, federalEntityId, pageIndex, pageSize, sortBy?.let { orders[it] }, isAscending)
+            },
+            header = {
+                Box {
+                    var expanded by remember { mutableStateOf(false) }
+                    var selectedFederalEntity by remember { mutableStateOf<FederalEntityResponse?>(null) }
 
-                LaunchedEffect(selectedFederalEntity) {
-                    federalEntityId = selectedFederalEntity?.id
-                    state.pageIndex = -1
-                }
+                    LaunchedEffect(selectedFederalEntity) {
+                        federalEntityId = selectedFederalEntity?.id
+                        state.pageIndex = -1
+                    }
 
-                LaunchedEffect(Unit) {
-                    screenModel.searchAllFederalEntities()
-                }
+                    LaunchedEffect(Unit) {
+                        screenModel.searchAllFederalEntities()
+                    }
 
-                TextButton(
-                    onClick = { expanded = true },
-                ) {
-                    Text(
-                        text = selectedFederalEntity?.let { "${it.keyCode} - ${it.name}" } ?: "Todas las entidades",
-                        fontWeight = FontWeight.Normal,
-                        color = MaterialTheme.colorScheme.onSurface,
-                    )
-                    Icon(
-                        imageVector = if (expanded) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
-                        contentDescription = "Expand"
-                    )
-                }
+                    TextButton(
+                        onClick = { expanded = true },
+                    ) {
+                        Text(
+                            text = selectedFederalEntity?.let { "${it.keyCode} - ${it.name}" } ?: "Todas las entidades",
+                            fontWeight = FontWeight.Normal,
+                            color = MaterialTheme.colorScheme.onSurface,
+                        )
+                        Icon(
+                            imageVector = if (expanded) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
+                            contentDescription = "Expand"
+                        )
+                    }
 
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false },
-                    modifier = Modifier
-                        .heightIn(0.dp, 300.dp)
-                        .background(MaterialTheme.colorScheme.surface)
-                ) {
-                    DropdownMenuItem(
-                        text = {
-                            Text(text = "Todas las entidades", color = MaterialTheme.colorScheme.onSurface)
-                        },
-                        onClick = {
-                            expanded = false
-                            selectedFederalEntity = null
-                        }
-                    )
-
-                    screenModel.federalEntities.value.forEach { federalEntity ->
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false },
+                        modifier = Modifier
+                            .heightIn(0.dp, 300.dp)
+                            .background(MaterialTheme.colorScheme.surface)
+                    ) {
                         DropdownMenuItem(
                             text = {
-                                Text(
-                                    text = "${federalEntity.keyCode} - ${federalEntity.name}",
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
+                                Text(text = "Todas las entidades", color = MaterialTheme.colorScheme.onSurface)
                             },
                             onClick = {
                                 expanded = false
-                                selectedFederalEntity = federalEntity
+                                selectedFederalEntity = null
                             }
                         )
+
+                        screenModel.federalEntities.value.forEach { federalEntity ->
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        text = "${federalEntity.keyCode} - ${federalEntity.name}",
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                },
+                                onClick = {
+                                    expanded = false
+                                    selectedFederalEntity = federalEntity
+                                }
+                            )
+                        }
                     }
                 }
             }
-        }
-    ) {
-        val offset = data.offset ?: 0
-        val filteredRecords = data.filtered
-        val totalRecords = data.total
-        val remainingRows = (totalRecords - offset) - filteredRecords
+        ) {
+            val offset = data.offset ?: 0
+            val filteredRecords = data.filtered
+            val totalRecords = data.total
+            val remainingRows = (totalRecords - offset) - filteredRecords
 
-        // Add necessary rows for pagination
-        repeat(offset) {
-            row {
-                // Necessary to avoid an index out of bounds exception
-                // It is an issue with the library used to create the table
-                cell { }
-            }
-        }
-
-        val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-        data.municipalities.forEach { municipality ->
-            row {
-                cell {
-                    Text(municipality.keyCode)
-                }
-                cell {
-                    Text(municipality.name)
-                }
-                cell {
-                    Text(municipality.federalEntity.name)
-                }
-                cell {
-                    Text(municipality.createdAt.toLocalDateTime().format(dateTimeFormatter))
-                }
-                cell {
-                    Text(municipality.updatedAt?.toLocalDateTime()?.format(dateTimeFormatter) ?: "N/A")
-                }
-                cell {
-                    IconButton(
-                        onClick = { onEditRequest(municipality) }
-                    ) {
-                        Icon(Icons.Default.Edit, "Editar")
-                    }
-
-                    IconButton(
-                        onClick = { onDeleteRequest(municipality) }
-                    ) {
-                        Icon(Icons.Default.Delete, "Eliminar")
-                    }
+            // Add necessary rows for pagination
+            repeat(offset) {
+                row {
+                    // Necessary to avoid an index out of bounds exception
+                    // It is an issue with the library used to create the table
+                    cell { }
                 }
             }
-        }
 
-        repeat(remainingRows) {
-            row {
-                // Necessary to avoid an index out of bounds exception
-                // It is an issue with the library used to create the table
-                cell { }
+            val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+            data.municipalities.forEach { municipality ->
+                row {
+                    cell {
+                        Text(municipality.keyCode)
+                    }
+                    cell {
+                        Text(municipality.name)
+                    }
+                    cell {
+                        Text(municipality.federalEntity.name)
+                    }
+                    cell {
+                        Text(municipality.createdAt.toLocalDateTime().format(dateTimeFormatter))
+                    }
+                    cell {
+                        Text(municipality.updatedAt?.toLocalDateTime()?.format(dateTimeFormatter) ?: "N/A")
+                    }
+                    cell {
+                        IconButton(
+                            onClick = { onEditRequest(municipality) }
+                        ) {
+                            Icon(Icons.Default.Edit, "Editar")
+                        }
+
+                        IconButton(
+                            onClick = { onDeleteRequest(municipality) }
+                        ) {
+                            Icon(Icons.Default.Delete, "Eliminar")
+                        }
+                    }
+                }
+            }
+
+            repeat(remainingRows) {
+                row {
+                    // Necessary to avoid an index out of bounds exception
+                    // It is an issue with the library used to create the table
+                    cell { }
+                }
             }
         }
     }

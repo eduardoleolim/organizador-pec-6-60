@@ -1,9 +1,6 @@
 package org.eduardoleolim.organizadorPec660.app.instrumentType
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
@@ -68,6 +65,7 @@ class InstrumentTypeScreen(private val queryBus: QueryBus, private val commandBu
 
 
             InstrumentTypeTable(
+                modifier = Modifier.fillMaxSize(),
                 value = searchValue,
                 onValueChange = { searchValue = it },
                 pageSizes = pageSizes,

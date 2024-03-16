@@ -1,9 +1,6 @@
 package org.eduardoleolim.organizadorPec660.app.municipality
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
@@ -70,11 +67,15 @@ class MunicipalityScreen(private val queryBus: QueryBus, private val commandBus:
                     containerColor = MaterialTheme.colorScheme.secondaryContainer,
                     contentColor = MaterialTheme.colorScheme.secondary
                 ) {
-                    Icon(Icons.Filled.Add, "Agregar entidad federativa")
+                    Icon(
+                        imageVector = Icons.Filled.Add,
+                        contentDescription = "Agregar entidad federativa"
+                    )
                 }
             }
 
             MunicipalitiesTable(
+                modifier = Modifier.fillMaxSize(),
                 screenModel = screenModel,
                 value = searchValue,
                 onValueChange = { searchValue = it },

@@ -6,9 +6,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,7 +29,8 @@ fun InstrumentTypeScreen.InstrumentTypeTable(
     state: PaginatedDataTableState,
     onSearch: (search: String, pageIndex: Int, pageSize: Int, orderBy: String?, isAscending: Boolean) -> Unit,
     onDeleteRequest: (InstrumentTypeResponse) -> Unit,
-    onEditRequest: (InstrumentTypeResponse) -> Unit
+    onEditRequest: (InstrumentTypeResponse) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState()
     var sortColumnIndex by remember { mutableStateOf<Int?>(null) }
@@ -79,85 +78,91 @@ fun InstrumentTypeScreen.InstrumentTypeTable(
         )
     }
 
-    PaginatedDataTable(
-        value = value,
-        onValueChange = onValueChange,
-        columns = columns,
-        sortColumnIndex = sortColumnIndex,
-        sortAscending = sortAscending,
-        state = state,
-        pageSizes = pageSizes,
-        onSearch = { search, pageIndex, pageSize, sortBy, isAscending ->
-            onSearch(search, pageIndex, pageSize, sortBy?.let { orders[it] }, isAscending)
-        },
-        modifier = Modifier
-            .verticalScroll(scrollState)
-            .fillMaxWidth()
+    Surface(
+        modifier = Modifier.then(modifier),
+        shape = MaterialTheme.shapes.small,
+        color = MaterialTheme.colorScheme.surfaceContainerHighest
     ) {
-        val offset = data.offset ?: 0
-        val filteredRecords = data.filtered
-        val totalRecords = data.total
-        val remainingRows = (totalRecords - offset) - filteredRecords
+        PaginatedDataTable(
+            value = value,
+            onValueChange = onValueChange,
+            columns = columns,
+            sortColumnIndex = sortColumnIndex,
+            sortAscending = sortAscending,
+            state = state,
+            pageSizes = pageSizes,
+            onSearch = { search, pageIndex, pageSize, sortBy, isAscending ->
+                onSearch(search, pageIndex, pageSize, sortBy?.let { orders[it] }, isAscending)
+            },
+            modifier = Modifier
+                .verticalScroll(scrollState)
+                .fillMaxWidth()
+        ) {
+            val offset = data.offset ?: 0
+            val filteredRecords = data.filtered
+            val totalRecords = data.total
+            val remainingRows = (totalRecords - offset) - filteredRecords
 
-        // Add necessary rows for pagination
-        repeat(offset) {
-            row {
-                // Necessary to avoid an index out of bounds exception
-                // It is an issue with the library used to create the table
-                cell { }
+            // Add necessary rows for pagination
+            repeat(offset) {
+                row {
+                    // Necessary to avoid an index out of bounds exception
+                    // It is an issue with the library used to create the table
+                    cell { }
+                }
             }
-        }
 
-        val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-        data.instrumentTypes.forEach { instrumentType ->
-            row {
-                cell {
-                    Text(instrumentType.name)
-                }
-                cell {
-                    Text(
-                        text = instrumentType.createdAt.toLocalDateTime().format(dateTimeFormatter)
-                    )
-                }
-                cell {
-                    Text(
-                        text = instrumentType.updatedAt?.toLocalDateTime()?.format(dateTimeFormatter)
-                            ?: "N/A"
-                    )
-                }
-
-                cell {
-
-                    IconButton(
-                        onClick = {
-                            onEditRequest(instrumentType)
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Edit,
-                            contentDescription = "Edit"
+            val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+            data.instrumentTypes.forEach { instrumentType ->
+                row {
+                    cell {
+                        Text(instrumentType.name)
+                    }
+                    cell {
+                        Text(
+                            text = instrumentType.createdAt.toLocalDateTime().format(dateTimeFormatter)
+                        )
+                    }
+                    cell {
+                        Text(
+                            text = instrumentType.updatedAt?.toLocalDateTime()?.format(dateTimeFormatter)
+                                ?: "N/A"
                         )
                     }
 
-                    IconButton(
-                        onClick = {
-                            onDeleteRequest(instrumentType)
+                    cell {
+
+                        IconButton(
+                            onClick = {
+                                onEditRequest(instrumentType)
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Edit,
+                                contentDescription = "Edit"
+                            )
                         }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Delete,
-                            contentDescription = "Delete"
-                        )
+
+                        IconButton(
+                            onClick = {
+                                onDeleteRequest(instrumentType)
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = "Delete"
+                            )
+                        }
                     }
                 }
             }
-        }
 
-        repeat(remainingRows) {
-            row {
-                // Necessary to avoid an index out of bounds exception
-                // It is an issue with the library used to create the table
-                cell { }
+            repeat(remainingRows) {
+                row {
+                    // Necessary to avoid an index out of bounds exception
+                    // It is an issue with the library used to create the table
+                    cell { }
+                }
             }
         }
     }

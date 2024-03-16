@@ -35,7 +35,6 @@ class HomeScreen(
     private val window: ComposeWindow,
     private val user: AuthUserResponse
 ) : Screen {
-    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
@@ -253,22 +252,5 @@ class HomeScreen(
             selected = false,
             onClick = { screenModel.logout() },
         )
-    }
-
-    @Composable
-    private fun WorkArea(screenModel: HomeScreenModel, selectedTab: MenuTab, paddingValues: PaddingValues) {
-        Box(
-            modifier = Modifier.padding(paddingValues).fillMaxSize()
-        ) {
-            screenModel.apply {
-                when (selectedTab) {
-                    MenuTab.INSTRUMENTOS -> InstrumentView()
-                    MenuTab.ENTIDADES_FEDERATIVAS -> FederalEntityView()
-                    MenuTab.MUNICIPIOS -> MunicipalityView()
-                    MenuTab.TIPOS_DE_ESTADISTICA -> StatisticTypeView()
-                    MenuTab.TIPOS_DE_INSTRUMENTO -> InstrumentTypeView()
-                }
-            }
-        }
     }
 }
