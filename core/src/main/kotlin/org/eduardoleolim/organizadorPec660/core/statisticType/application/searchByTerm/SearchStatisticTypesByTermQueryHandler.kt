@@ -1,7 +1,6 @@
 package org.eduardoleolim.organizadorPec660.core.statisticType.application.searchByTerm
 
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryHandler
-import org.eduardoleolim.organizadorPec660.core.shared.domain.criteria.Order
 import org.eduardoleolim.organizadorPec660.core.statisticType.application.StatisticTypesResponse
 import org.eduardoleolim.organizadorPec660.core.statisticType.application.search.StatisticTypeSearcher
 import org.eduardoleolim.organizadorPec660.core.statisticType.domain.StatisticTypeCriteria
@@ -22,7 +21,7 @@ class SearchStatisticTypesByTermQueryHandler(private val searcher: StatisticType
         offset: Int? = null
     ) = StatisticTypeCriteria.searchCriteria(
         search = search,
-        orders = orders?.map { Order.fromValues(it["orderBy"], it["orderType"]) }?.toMutableList(),
+        orders = orders,
         limit = limit,
         offset = offset
     ).let {

@@ -7,12 +7,19 @@ object InstrumentTypeCriteria {
 
     fun nameCriteria(name: String) = Criteria(SingleFilter.equal("name", name), Orders.none(), 1, null)
 
-    fun searchCriteria(search: String? = null, orders: List<Order>? = null, limit: Int? = null, offset: Int? = null) =
+    fun searchCriteria(
+        search: String? = null,
+        orders: Array<HashMap<String, String>>? = null,
+        limit: Int? = null,
+        offset: Int? = null
+    ) =
         Criteria(
             search?.let {
                 OrFilters(listOf(SingleFilter.contains("name", it)))
             } ?: EmptyFilters(),
-            Orders(orders ?: listOf(Order.asc("name"))),
+            orders?.let {
+                Orders.fromValues(orders)
+            } ?: Orders(listOf(Order.asc("name"))),
             limit,
             offset
         )

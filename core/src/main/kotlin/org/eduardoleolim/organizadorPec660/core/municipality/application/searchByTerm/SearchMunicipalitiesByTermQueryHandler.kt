@@ -8,7 +8,6 @@ import org.eduardoleolim.organizadorPec660.core.municipality.application.Municip
 import org.eduardoleolim.organizadorPec660.core.municipality.application.search.MunicipalitySearcher
 import org.eduardoleolim.organizadorPec660.core.municipality.domain.MunicipalityCriteria
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryHandler
-import org.eduardoleolim.organizadorPec660.core.shared.domain.criteria.Order
 
 class SearchMunicipalitiesByTermQueryHandler(
     private val municipalitySearcher: MunicipalitySearcher,
@@ -48,7 +47,7 @@ class SearchMunicipalitiesByTermQueryHandler(
     ) = MunicipalityCriteria.searchCriteria(
         federalEntityId = federalEntityId,
         search = search,
-        orders = orders?.map { Order.fromValues(it["orderBy"], it["orderType"]) }?.toMutableList(),
+        orders = orders,
         limit = limit,
         offset = offset
     ).let {

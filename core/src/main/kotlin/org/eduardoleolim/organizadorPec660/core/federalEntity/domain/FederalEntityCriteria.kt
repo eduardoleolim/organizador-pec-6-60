@@ -14,12 +14,19 @@ object FederalEntityCriteria {
         null
     )
 
-    fun searchCriteria(search: String? = null, orders: List<Order>? = null, limit: Int? = null, offset: Int? = null) =
+    fun searchCriteria(
+        search: String? = null,
+        orders: Array<HashMap<String, String>>? = null,
+        limit: Int? = null,
+        offset: Int? = null
+    ) =
         Criteria(
             search?.let {
                 OrFilters(listOf(SingleFilter.contains("keyCode", it), SingleFilter.contains("name", it)))
             } ?: EmptyFilters(),
-            Orders(orders ?: listOf(Order.asc("keyCode"))),
+            orders?.let {
+                Orders.fromValues(orders)
+            } ?: Orders(listOf(Order.asc("keyCode"))),
             limit,
             offset
         )

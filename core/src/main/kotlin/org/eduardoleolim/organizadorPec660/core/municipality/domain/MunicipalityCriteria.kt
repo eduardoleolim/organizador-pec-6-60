@@ -34,7 +34,7 @@ object MunicipalityCriteria {
     fun searchCriteria(
         federalEntityId: String? = null,
         search: String? = null,
-        orders: List<Order>? = null,
+        orders: Array<HashMap<String, String>>? = null,
         limit: Int? = null,
         offset: Int? = null
     ) = Criteria(
@@ -55,7 +55,9 @@ object MunicipalityCriteria {
                 } ?: EmptyFilters()
             )
         ),
-        Orders(orders ?: listOf(Order.asc("keyCode"))),
+        orders?.let {
+            Orders.fromValues(orders)
+        } ?: Orders(listOf(Order.asc("federalEntity.id"), Order.asc("keyCode"))),
         limit,
         offset
     )

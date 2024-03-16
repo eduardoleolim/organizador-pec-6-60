@@ -4,7 +4,6 @@ import org.eduardoleolim.organizadorPec660.core.federalEntity.application.Federa
 import org.eduardoleolim.organizadorPec660.core.federalEntity.application.search.FederalEntitySearcher
 import org.eduardoleolim.organizadorPec660.core.federalEntity.domain.FederalEntityCriteria
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryHandler
-import org.eduardoleolim.organizadorPec660.core.shared.domain.criteria.Order
 
 class SearchFederalEntitiesByTermQueryHandler(private val searcher: FederalEntitySearcher) :
     QueryHandler<SearchFederalEntitiesByTermQuery, FederalEntitiesResponse> {
@@ -27,7 +26,7 @@ class SearchFederalEntitiesByTermQueryHandler(private val searcher: FederalEntit
         offset: Int? = null
     ) = FederalEntityCriteria.searchCriteria(
         search = search,
-        orders = orders?.map { Order.fromValues(it["orderBy"], it["orderType"]) }?.toMutableList(),
+        orders = orders,
         limit = limit,
         offset = offset
     ).let {

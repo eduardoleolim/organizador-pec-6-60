@@ -4,7 +4,6 @@ import org.eduardoleolim.organizadorPec660.core.instrumentType.application.Instr
 import org.eduardoleolim.organizadorPec660.core.instrumentType.application.search.InstrumentTypeSearcher
 import org.eduardoleolim.organizadorPec660.core.instrumentType.domain.InstrumentTypeCriteria
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryHandler
-import org.eduardoleolim.organizadorPec660.core.shared.domain.criteria.Order
 
 class SearchInstrumentTypesByTermQueryHandler(private val searcher: InstrumentTypeSearcher) :
     QueryHandler<SearchInstrumentTypesByTermQuery, InstrumentTypesResponse> {
@@ -27,7 +26,7 @@ class SearchInstrumentTypesByTermQueryHandler(private val searcher: InstrumentTy
         offset: Int? = null
     ) = InstrumentTypeCriteria.searchCriteria(
         search = search,
-        orders = orders?.map { Order.fromValues(it["orderBy"], it["orderType"]) }?.toMutableList(),
+        orders = orders,
         limit = limit,
         offset = offset
     ).let {

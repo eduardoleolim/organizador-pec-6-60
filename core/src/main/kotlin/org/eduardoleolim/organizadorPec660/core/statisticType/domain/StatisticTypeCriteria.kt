@@ -14,7 +14,12 @@ object StatisticTypeCriteria {
         null
     )
 
-    fun searchCriteria(search: String? = null, orders: List<Order>? = null, limit: Int? = null, offset: Int? = null) =
+    fun searchCriteria(
+        search: String? = null,
+        orders: Array<HashMap<String, String>>? = null,
+        limit: Int? = null,
+        offset: Int? = null
+    ) =
         Criteria(
             search?.let {
                 OrFilters(
@@ -24,7 +29,9 @@ object StatisticTypeCriteria {
                     )
                 )
             } ?: EmptyFilters(),
-            Orders(orders ?: listOf(Order.asc("keyCode"))),
+            orders?.let {
+                Orders.fromValues(orders)
+            } ?: Orders(listOf(Order.asc("keyCode"))),
             limit,
             offset
         )
