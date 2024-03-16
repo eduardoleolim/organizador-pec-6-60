@@ -51,7 +51,6 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
                     .fillMaxWidth(0.5f)
                     .fillMaxHeight()
             ) {
-
                 Image(
                     painter = painterResource(Res.drawable.login_background),
                     contentDescription = "Fuente de los 4 ríos",
@@ -59,12 +58,12 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
                     contentScale = ContentScale.FillWidth
                 )
             }
+
             Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                screenModel.resetAuthForm()
                 AuthForm(screenModel)
             }
         }
@@ -82,7 +81,7 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
         var enabled by remember { mutableStateOf(true) }
         var isUsernameError by remember { mutableStateOf(false) }
         var isPasswordError by remember { mutableStateOf(false) }
-        var areInvalidCredentials by remember { mutableStateOf(false) }
+        var isCredentialsError by remember { mutableStateOf(false) }
         var usernameSupportingText by remember { mutableStateOf(null as String?) }
         var passwordSupportingText by remember { mutableStateOf(null as String?) }
 
@@ -91,7 +90,7 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
                 enabled = true
                 isPasswordError = false
                 isUsernameError = false
-                areInvalidCredentials = false
+                isCredentialsError = false
                 usernameSupportingText = null
                 passwordSupportingText = null
             }
@@ -100,21 +99,29 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
                 enabled = false
                 isPasswordError = false
                 isUsernameError = false
-                areInvalidCredentials = false
+                isCredentialsError = false
                 usernameSupportingText = null
                 passwordSupportingText = null
             }
 
             is AuthState.Success -> {
-                screenModel.navigateToHome(authState.user)
+                screenModel.HomeView(authState.user)
+                screenModel.resetAuthForm()
             }
 
             is AuthState.Error -> {
                 enabled = true
+                isPasswordError = false
+                isUsernameError = false
+                isCredentialsError = false
+                usernameSupportingText = null
+                passwordSupportingText = null
 
                 when (val error = authState.error) {
                     is InvalidAuthCredentialsError -> {
-                        areInvalidCredentials = true
+                        isCredentialsError = true
+                        isPasswordError = true
+                        isUsernameError = true
                     }
 
                     is InvalidCredentialsException -> {
@@ -149,7 +156,7 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
             modifier = Modifier.padding(bottom = 20.dp)
         )
 
-        if (areInvalidCredentials) {
+        if (isCredentialsError) {
             Text(
                 text = "Credenciales inválidas",
                 color = MaterialTheme.colorScheme.error,
@@ -164,9 +171,9 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
             onValueChange = { username = it },
             modifier = Modifier.fillMaxWidth(0.8f).padding(bottom = 20.dp),
             singleLine = true,
-            isError = isUsernameError || areInvalidCredentials,
+            isError = isUsernameError || isCredentialsError,
             supportingText = usernameSupportingText?.let { message ->
-                { Text(text = message, color = MaterialTheme.colorScheme.onError) }
+                { Text(text = message, color = MaterialTheme.colorScheme.error) }
             }
         )
 
@@ -177,9 +184,9 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
             onValueChange = { password = it },
             modifier = Modifier.fillMaxWidth(0.8f).padding(bottom = 20.dp),
             singleLine = true,
-            isError = isPasswordError || areInvalidCredentials,
+            isError = isPasswordError || isCredentialsError,
             supportingText = passwordSupportingText?.let { message ->
-                { Text(text = message, color = MaterialTheme.colorScheme.onError) }
+                { Text(text = message, color = MaterialTheme.colorScheme.error) }
             },
             visualTransformation = visualTransformation,
             trailingIcon = {
