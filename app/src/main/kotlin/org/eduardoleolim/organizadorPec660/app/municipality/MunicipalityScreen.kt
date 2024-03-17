@@ -70,7 +70,7 @@ class MunicipalityScreen(private val queryBus: QueryBus, private val commandBus:
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Add,
-                        contentDescription = "Agregar entidad federativa"
+                        contentDescription = "Agregar municipio"
                     )
                 }
             }

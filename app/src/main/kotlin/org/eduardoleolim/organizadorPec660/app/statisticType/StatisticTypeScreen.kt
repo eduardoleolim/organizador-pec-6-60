@@ -47,7 +47,10 @@ class StatisticTypeScreen(private val queryBus: QueryBus, private val commandBus
                     containerColor = MaterialTheme.colorScheme.secondaryContainer,
                     contentColor = MaterialTheme.colorScheme.secondary
                 ) {
-                    Icon(Icons.Filled.Add, "Agregar entidad federativa")
+                    Icon(
+                        imageVector = Icons.Filled.Add,
+                        contentDescription = "Agregar tipo de estadística"
+                    )
                 }
             }
 

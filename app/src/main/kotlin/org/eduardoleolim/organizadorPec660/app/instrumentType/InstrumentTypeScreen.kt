@@ -64,7 +64,10 @@ class InstrumentTypeScreen(private val queryBus: QueryBus, private val commandBu
                     containerColor = MaterialTheme.colorScheme.secondaryContainer,
                     contentColor = MaterialTheme.colorScheme.secondary
                 ) {
-                    Icon(Icons.Filled.Add, "Agregar entidad federativa")
+                    Icon(
+                        imageVector = Icons.Filled.Add,
+                        contentDescription = "Agregar tipo de instrumento"
+                    )
                 }
             }
 
