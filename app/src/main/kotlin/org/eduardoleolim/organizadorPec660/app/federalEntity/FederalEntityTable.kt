@@ -1,8 +1,6 @@
 package org.eduardoleolim.organizadorPec660.app.federalEntity
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
@@ -32,7 +30,6 @@ fun FederalEntityScreen.FederalEntitiesTable(
     onEditRequest: (FederalEntityResponse) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val scrollState = rememberScrollState()
     var sortColumnIndex by remember { mutableStateOf<Int?>(null) }
     var sortAscending by remember { mutableStateOf(true) }
     val orders = listOf("keyCode", "name", "createdAt", "updatedAt")
@@ -91,6 +88,7 @@ fun FederalEntityScreen.FederalEntitiesTable(
         color = MaterialTheme.colorScheme.surfaceContainerHighest
     ) {
         PaginatedDataTable(
+            total = data.total,
             value = value,
             onValueChange = onValueChange,
             columns = columns,
@@ -101,23 +99,9 @@ fun FederalEntityScreen.FederalEntitiesTable(
             onSearch = { search, pageIndex, pageSize, sortBy, isAscending ->
                 onSearch(search, pageIndex, pageSize, sortBy?.let { orders[it] }, isAscending)
             },
-            modifier = Modifier
-                .verticalScroll(scrollState)
-                .fillMaxWidth()
+            modifier = Modifier.fillMaxWidth()
         ) {
-            val offset = data.offset ?: 0
-            val filteredRecords = data.filtered
-            val totalRecords = data.total
-            val remainingRows = (totalRecords - offset) - filteredRecords
 
-            // Add necessary rows for pagination
-            repeat(offset) {
-                row {
-                    // Necessary to avoid an index out of bounds exception
-                    // It is an issue with the library used to create the table
-                    cell { }
-                }
-            }
 
             val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
             data.federalEntities.forEach { federalEntity ->
@@ -164,14 +148,6 @@ fun FederalEntityScreen.FederalEntitiesTable(
                             )
                         }
                     }
-                }
-            }
-
-            repeat(remainingRows) {
-                row {
-                    // Necessary to avoid an index out of bounds exception
-                    // It is an issue with the library used to create the table
-                    cell { }
                 }
             }
         }

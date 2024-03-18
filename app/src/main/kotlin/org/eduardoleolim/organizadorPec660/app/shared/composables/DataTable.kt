@@ -2,6 +2,8 @@ package org.eduardoleolim.organizadorPec660.app.shared.composables
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.LastPage
 import androidx.compose.material.icons.filled.*
@@ -9,21 +11,25 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.toSize
+import com.seanproctor.datatable.BasicDataTable
 import com.seanproctor.datatable.DataColumn
 import com.seanproctor.datatable.DataTableScope
 import com.seanproctor.datatable.material3.Material3CellContentProvider
-import com.seanproctor.datatable.paging.BasicPaginatedDataTable
 import com.seanproctor.datatable.paging.PaginatedDataTableState
 import com.seanproctor.datatable.paging.rememberPaginatedDataTableState
 import kotlin.math.min
 
 @Composable
 fun PaginatedDataTable(
+    total: Int,
     value: String,
     onValueChange: (String) -> Unit,
     delayMillis: Long = 500L,
@@ -40,8 +46,10 @@ fun PaginatedDataTable(
     sortAscending: Boolean = true,
     onSearch: (search: String, pageIndex: Int, pageSize: Int, sortBy: Int?, isAscending: Boolean) -> Unit,
     state: PaginatedDataTableState = rememberPaginatedDataTableState(pageSizes.first()),
-    content: DataTableScope.() -> Unit,
+    content: DataTableScope.() -> Unit
 ) {
+    var size by remember { mutableStateOf(Size.Zero) }
+
     value.useDebounce(delayMillis) {
         state.pageIndex = 0
         onSearch(value, state.pageIndex, state.pageSize, sortColumnIndex, sortAscending)
@@ -54,7 +62,10 @@ fun PaginatedDataTable(
     }
 
     Column(
-        modifier = modifier
+        modifier = Modifier
+            .onGloballyPositioned { coordinates ->
+                size = coordinates.size.toSize()
+            }.then(modifier)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -134,54 +145,65 @@ fun PaginatedDataTable(
             )
         }
 
-        BasicPaginatedDataTable(
-            columns = columns,
-            modifier = Modifier.fillMaxSize(),
-            separator = separator,
-            headerHeight = headerHeight,
-            horizontalPadding = horizontalPadding,
-            state = state,
-            footer = {
-                Row(
-                    modifier = Modifier.height(rowHeight).padding(horizontal = 16.dp).fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.End),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    val start = min(state.pageIndex * state.pageSize + 1, state.count)
-                    val end = min(start + state.pageSize - 1, state.count)
-                    val pageCount = (state.count + state.pageSize - 1) / state.pageSize
+        val stateVertical = rememberScrollState(0)
+        val stateHorizontal = rememberScrollState(0)
 
-                    Text("$start-$end de ${state.count}")
-                    IconButton(
-                        onClick = { state.pageIndex = 0 },
-                        enabled = state.pageIndex > 0,
-                    ) {
-                        Icon(Icons.Default.FirstPage, "First")
-                    }
-                    IconButton(
-                        onClick = { state.pageIndex-- },
-                        enabled = state.pageIndex > 0,
-                    ) {
-                        Icon(Icons.Default.ChevronLeft, "Previous")
-                    }
-                    IconButton(
-                        onClick = { state.pageIndex++ },
-                        enabled = state.pageIndex < pageCount - 1
-                    ) {
-                        Icon(Icons.Default.ChevronRight, "Next")
-                    }
-                    IconButton(
-                        onClick = { state.pageIndex = pageCount - 1 },
-                        enabled = state.pageIndex < pageCount - 1
-                    ) {
-                        Icon(Icons.AutoMirrored.Filled.LastPage, "Last")
-                    }
+        Column(
+            modifier = Modifier
+                .weight(1.0f)
+                .padding(8.dp)
+                .verticalScroll(stateVertical)
+        ) {
+            BasicDataTable(
+                modifier = Modifier.fillMaxSize(),
+                columns = columns,
+                separator = separator,
+                headerHeight = headerHeight,
+                horizontalPadding = horizontalPadding,
+                cellContentProvider = Material3CellContentProvider,
+                sortColumnIndex = sortColumnIndex,
+                sortAscending = sortAscending,
+                content = {
+                    state.count = total
+                    content()
                 }
-            },
-            cellContentProvider = Material3CellContentProvider,
-            sortColumnIndex = sortColumnIndex,
-            sortAscending = sortAscending,
-            content = content
-        )
+            )
+        }
+
+        Row(
+            modifier = Modifier.height(rowHeight).padding(horizontal = 16.dp).fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.End),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            val start = min(state.pageIndex * state.pageSize + 1, state.count)
+            val end = min(start + state.pageSize - 1, state.count)
+            val pageCount = (state.count + state.pageSize - 1) / state.pageSize
+
+            Text("$start-$end de ${state.count}")
+            IconButton(
+                onClick = { state.pageIndex = 0 },
+                enabled = state.pageIndex > 0,
+            ) {
+                Icon(Icons.Default.FirstPage, "First")
+            }
+            IconButton(
+                onClick = { state.pageIndex-- },
+                enabled = state.pageIndex > 0,
+            ) {
+                Icon(Icons.Default.ChevronLeft, "Previous")
+            }
+            IconButton(
+                onClick = { state.pageIndex++ },
+                enabled = state.pageIndex < pageCount - 1
+            ) {
+                Icon(Icons.Default.ChevronRight, "Next")
+            }
+            IconButton(
+                onClick = { state.pageIndex = pageCount - 1 },
+                enabled = state.pageIndex < pageCount - 1
+            ) {
+                Icon(Icons.AutoMirrored.Filled.LastPage, "Last")
+            }
+        }
     }
 }

@@ -2,10 +2,7 @@ package org.eduardoleolim.organizadorPec660.app.municipality
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
@@ -108,7 +105,7 @@ fun MunicipalityScreen.MunicipalitiesTable(
         color = MaterialTheme.colorScheme.surfaceContainerHighest
     ) {
         PaginatedDataTable(
-            modifier = Modifier.verticalScroll(rememberScrollState()).fillMaxWidth(),
+            total = data.total,
             value = value,
             onValueChange = onValueChange,
             columns = columns,
@@ -182,20 +179,6 @@ fun MunicipalityScreen.MunicipalitiesTable(
                 }
             }
         ) {
-            val offset = data.offset ?: 0
-            val filteredRecords = data.filtered
-            val totalRecords = data.total
-            val remainingRows = (totalRecords - offset) - filteredRecords
-
-            // Add necessary rows for pagination
-            repeat(offset) {
-                row {
-                    // Necessary to avoid an index out of bounds exception
-                    // It is an issue with the library used to create the table
-                    cell { }
-                }
-            }
-
             val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
             data.municipalities.forEach { municipality ->
                 row {
@@ -227,14 +210,6 @@ fun MunicipalityScreen.MunicipalitiesTable(
                             Icon(Icons.Default.Delete, "Eliminar")
                         }
                     }
-                }
-            }
-
-            repeat(remainingRows) {
-                row {
-                    // Necessary to avoid an index out of bounds exception
-                    // It is an issue with the library used to create the table
-                    cell { }
                 }
             }
         }

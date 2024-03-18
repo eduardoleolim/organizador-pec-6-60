@@ -84,6 +84,7 @@ fun InstrumentTypeScreen.InstrumentTypeTable(
         color = MaterialTheme.colorScheme.surfaceContainerHighest
     ) {
         PaginatedDataTable(
+            total = data.total,
             value = value,
             onValueChange = onValueChange,
             columns = columns,
@@ -98,19 +99,7 @@ fun InstrumentTypeScreen.InstrumentTypeTable(
                 .verticalScroll(scrollState)
                 .fillMaxWidth()
         ) {
-            val offset = data.offset ?: 0
-            val filteredRecords = data.filtered
-            val totalRecords = data.total
-            val remainingRows = (totalRecords - offset) - filteredRecords
 
-            // Add necessary rows for pagination
-            repeat(offset) {
-                row {
-                    // Necessary to avoid an index out of bounds exception
-                    // It is an issue with the library used to create the table
-                    cell { }
-                }
-            }
 
             val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
             data.instrumentTypes.forEach { instrumentType ->
@@ -154,14 +143,6 @@ fun InstrumentTypeScreen.InstrumentTypeTable(
                             )
                         }
                     }
-                }
-            }
-
-            repeat(remainingRows) {
-                row {
-                    // Necessary to avoid an index out of bounds exception
-                    // It is an issue with the library used to create the table
-                    cell { }
                 }
             }
         }
