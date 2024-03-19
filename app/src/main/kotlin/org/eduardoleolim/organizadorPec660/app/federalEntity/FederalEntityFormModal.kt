@@ -17,13 +17,13 @@ import org.eduardoleolim.organizadorPec660.core.federalEntity.domain.InvalidFede
 @Composable
 fun FederalEntityScreen.FederalEntityFormModal(
     screenModel: FederalEntityScreenModel,
-    selectedFederalEntity: FederalEntityResponse?,
+    federalEntity: FederalEntityResponse?,
     onSuccess: () -> Unit,
     onDismissRequest: () -> Unit
 ) {
-    val federalEntityId = remember { selectedFederalEntity?.id }
-    var keyCode by remember { mutableStateOf(selectedFederalEntity?.keyCode ?: "") }
-    var name by remember { mutableStateOf(selectedFederalEntity?.name ?: "") }
+    val federalEntityId = remember { federalEntity?.id }
+    var keyCode by remember { mutableStateOf(federalEntity?.keyCode ?: "") }
+    var name by remember { mutableStateOf(federalEntity?.name ?: "") }
 
     var enabled by remember { mutableStateOf(true) }
     var isKeyCodeError by remember { mutableStateOf(false) }
@@ -101,7 +101,7 @@ fun FederalEntityScreen.FederalEntityFormModal(
         ),
         onDismissRequest = onDismissRequest,
         title = {
-            Text(selectedFederalEntity?.let { "Editar entidad federativa" } ?: "Agregar entidad federativa")
+            Text(federalEntity?.let { "Editar entidad federativa" } ?: "Agregar entidad federativa")
         },
         text = {
             Column {
@@ -143,7 +143,7 @@ fun FederalEntityScreen.FederalEntityFormModal(
             TextButton(
                 enabled = enabled,
                 onClick = {
-                    if (selectedFederalEntity != null) {
+                    if (federalEntity != null) {
                         screenModel.editFederalEntity(federalEntityId!!, keyCode, name)
                     } else {
                         screenModel.createFederalEntity(keyCode, name)

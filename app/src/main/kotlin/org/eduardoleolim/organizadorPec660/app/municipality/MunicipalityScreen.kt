@@ -105,16 +105,10 @@ class MunicipalityScreen(private val queryBus: QueryBus, private val commandBus:
                 screenModel.resetDeleteModal()
                 MunicipalityDeleteModal(
                     screenModel = screenModel,
-                    selectedMunicipality = selectedMunicipality!!,
-                    onSuccess = {
-                        resetView()
-                    },
-                    onFail = {
-                        resetView()
-                    },
-                    onDismissRequest = {
-                        showDeleteModal = false
-                    }
+                    municipality = selectedMunicipality!!,
+                    onSuccess = { resetView() },
+                    onFail = { resetView() },
+                    onDismissRequest = { resetView() }
                 )
             }
 
@@ -122,13 +116,9 @@ class MunicipalityScreen(private val queryBus: QueryBus, private val commandBus:
                 screenModel.resetForm()
                 MunicipalityFormModal(
                     screenModel = screenModel,
-                    selectedMunicipality = selectedMunicipality,
-                    onDismissRequest = {
-                        resetView()
-                    },
-                    onSuccess = {
-                        resetView()
-                    }
+                    municipality = selectedMunicipality,
+                    onDismissRequest = { resetView() },
+                    onSuccess = { resetView() }
                 )
             }
         }

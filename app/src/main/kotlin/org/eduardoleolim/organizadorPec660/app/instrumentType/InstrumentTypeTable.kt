@@ -99,8 +99,6 @@ fun InstrumentTypeScreen.InstrumentTypeTable(
                 .verticalScroll(scrollState)
                 .fillMaxWidth()
         ) {
-
-
             val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
             data.instrumentTypes.forEach { instrumentType ->
                 row {

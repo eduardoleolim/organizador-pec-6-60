@@ -101,8 +101,6 @@ fun FederalEntityScreen.FederalEntitiesTable(
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-
-
             val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
             data.federalEntities.forEach { federalEntity ->
                 row {

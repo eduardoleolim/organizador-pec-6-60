@@ -101,16 +101,10 @@ class InstrumentTypeScreen(private val queryBus: QueryBus, private val commandBu
                 screenModel.resetDeleteModal()
                 InstrumentTypeDeleteModal(
                     screenModel = screenModel,
-                    selectedInstrumentType = selectedInstrumentType!!,
-                    onSuccess = {
-                        resetView()
-                    },
-                    onFail = {
-                        resetView()
-                    },
-                    onDismissRequest = {
-                        resetView()
-                    }
+                    instrumentType = selectedInstrumentType!!,
+                    onSuccess = { resetView() },
+                    onFail = { resetView() },
+                    onDismissRequest = { resetView() }
                 )
             }
 
@@ -118,13 +112,9 @@ class InstrumentTypeScreen(private val queryBus: QueryBus, private val commandBu
                 screenModel.resetForm()
                 InstrumentTypeFormModal(
                     screenModel = screenModel,
-                    selectedInstrumentType = selectedInstrumentType,
-                    onSuccess = {
-                        resetView()
-                    },
-                    onDismissRequest = {
-                        resetView()
-                    }
+                    instrumentType = selectedInstrumentType,
+                    onSuccess = { resetView() },
+                    onDismissRequest = { resetView() }
                 )
             }
         }

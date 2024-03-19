@@ -20,14 +20,14 @@ import org.eduardoleolim.organizadorPec660.core.municipality.domain.Municipality
 @Composable
 fun MunicipalityScreen.MunicipalityFormModal(
     screenModel: MunicipalityScreenModel,
-    selectedMunicipality: MunicipalityResponse?,
+    municipality: MunicipalityResponse?,
     onDismissRequest: () -> Unit,
     onSuccess: () -> Unit
 ) {
-    val municipalityId by remember { mutableStateOf(selectedMunicipality?.id) }
-    var federalEntity by remember { mutableStateOf(selectedMunicipality?.federalEntity) }
-    var keyCode by remember { mutableStateOf(selectedMunicipality?.keyCode ?: "") }
-    var name by remember { mutableStateOf(selectedMunicipality?.name ?: "") }
+    val municipalityId by remember { mutableStateOf(municipality?.id) }
+    var federalEntity by remember { mutableStateOf(municipality?.federalEntity) }
+    var keyCode by remember { mutableStateOf(municipality?.keyCode ?: "") }
+    var name by remember { mutableStateOf(municipality?.name ?: "") }
 
     var enabled by remember { mutableStateOf(true) }
     var isFederalEntityError by remember { mutableStateOf(false) }
@@ -156,7 +156,7 @@ fun MunicipalityScreen.MunicipalityFormModal(
         ),
         onDismissRequest = onDismissRequest,
         title = {
-            Text(selectedMunicipality?.let { "Editar municipio" } ?: "Agregar municipio")
+            Text(municipality?.let { "Editar municipio" } ?: "Agregar municipio")
         },
         text = {
             Column {

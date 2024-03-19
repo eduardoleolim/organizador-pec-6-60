@@ -11,12 +11,12 @@ import org.eduardoleolim.organizadorPec660.core.instrumentType.domain.InvalidIns
 @Composable
 fun InstrumentTypeScreen.InstrumentTypeFormModal(
     screenModel: InstrumentTypeScreenModel,
-    selectedInstrumentType: InstrumentTypeResponse?,
+    instrumentType: InstrumentTypeResponse?,
     onSuccess: () -> Unit,
     onDismissRequest: () -> Unit
 ) {
-    val instrumentTypeId = remember { selectedInstrumentType?.id }
-    var name by remember { mutableStateOf(selectedInstrumentType?.name ?: "") }
+    val instrumentTypeId = remember { instrumentType?.id }
+    var name by remember { mutableStateOf(instrumentType?.name ?: "") }
 
     var enabled by remember { mutableStateOf(true) }
     var isNameError by remember { mutableStateOf(false) }
@@ -77,7 +77,7 @@ fun InstrumentTypeScreen.InstrumentTypeFormModal(
         ),
         onDismissRequest = onDismissRequest,
         title = {
-            Text(selectedInstrumentType?.let { "Editar tipo de instrumento" } ?: "Agregar tipo de instrumento")
+            Text(instrumentType?.let { "Editar tipo de instrumento" } ?: "Agregar tipo de instrumento")
         },
         text = {
             Column {
@@ -97,7 +97,7 @@ fun InstrumentTypeScreen.InstrumentTypeFormModal(
             TextButton(
                 enabled = enabled,
                 onClick = {
-                    if (selectedInstrumentType != null) {
+                    if (instrumentType != null) {
                         screenModel.editInstrumentType(instrumentTypeId!!, name)
                     } else {
                         screenModel.createInstrumentType(name)

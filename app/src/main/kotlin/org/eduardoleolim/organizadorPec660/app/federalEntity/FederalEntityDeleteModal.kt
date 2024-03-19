@@ -8,7 +8,7 @@ import org.eduardoleolim.organizadorPec660.core.federalEntity.application.Federa
 @Composable
 fun FederalEntityScreen.FederalEntityDeleteModal(
     screenModel: FederalEntityScreenModel,
-    selectedFederalEntity: FederalEntityResponse,
+    federalEntity: FederalEntityResponse,
     onSuccess: () -> Unit,
     onFail: () -> Unit,
     onDismissRequest: () -> Unit
@@ -37,10 +37,10 @@ fun FederalEntityScreen.FederalEntityDeleteModal(
             Text("Eliminar entidad federativa")
         },
         text = {
-            Text("¿Estás seguro de que deseas eliminar la entidad federativa ${selectedFederalEntity.name}?")
+            Text("¿Estás seguro de que deseas eliminar la entidad federativa ${federalEntity.name}?")
         },
         onConfirmRequest = {
-            screenModel.deleteFederalEntity(selectedFederalEntity.id)
+            screenModel.deleteFederalEntity(federalEntity.id)
         },
         onDismissRequest = {
             onDismissRequest()

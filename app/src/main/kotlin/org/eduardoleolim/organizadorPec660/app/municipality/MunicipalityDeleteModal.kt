@@ -8,7 +8,7 @@ import org.eduardoleolim.organizadorPec660.core.municipality.application.Municip
 @Composable
 fun MunicipalityScreen.MunicipalityDeleteModal(
     screenModel: MunicipalityScreenModel,
-    selectedMunicipality: MunicipalityResponse,
+    municipality: MunicipalityResponse,
     onSuccess: () -> Unit,
     onFail: () -> Unit,
     onDismissRequest: () -> Unit
@@ -37,10 +37,10 @@ fun MunicipalityScreen.MunicipalityDeleteModal(
             Text("Eliminar municipio")
         },
         text = {
-            Text("¿Estás seguro que deseas eliminar el municipio ${selectedMunicipality.name}?")
+            Text("¿Estás seguro que deseas eliminar el municipio ${municipality.name}?")
         },
         onConfirmRequest = {
-            screenModel.deleteMunicipality(selectedMunicipality.id)
+            screenModel.deleteMunicipality(municipality.id)
         },
         onDismissRequest = onDismissRequest
     )

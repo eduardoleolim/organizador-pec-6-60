@@ -8,7 +8,7 @@ import org.eduardoleolim.organizadorPec660.core.instrumentType.application.Instr
 @Composable
 fun InstrumentTypeScreen.InstrumentTypeDeleteModal(
     screenModel: InstrumentTypeScreenModel,
-    selectedInstrumentType: InstrumentTypeResponse,
+    instrumentType: InstrumentTypeResponse,
     onSuccess: () -> Unit,
     onFail: () -> Unit,
     onDismissRequest: () -> Unit
@@ -37,10 +37,10 @@ fun InstrumentTypeScreen.InstrumentTypeDeleteModal(
             Text("Eliminar entidad federativa")
         },
         text = {
-            Text("¿Estás seguro de que deseas eliminar la entidad federativa ${selectedInstrumentType.name}?")
+            Text("¿Estás seguro de que deseas eliminar la entidad federativa ${instrumentType.name}?")
         },
         onConfirmRequest = {
-            screenModel.deleteInstrumentType(selectedInstrumentType.id)
+            screenModel.deleteInstrumentType(instrumentType.id)
         },
         onDismissRequest = {
             onDismissRequest()

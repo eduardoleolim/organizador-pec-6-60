@@ -100,16 +100,10 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
                 screenModel.resetDeleteModal()
                 FederalEntityDeleteModal(
                     screenModel = screenModel,
-                    selectedFederalEntity = selectedFederalEntity!!,
-                    onSuccess = {
-                        resetView()
-                    },
-                    onFail = {
-                        resetView()
-                    },
-                    onDismissRequest = {
-                        resetView()
-                    }
+                    federalEntity = selectedFederalEntity!!,
+                    onSuccess = { resetView() },
+                    onFail = { resetView() },
+                    onDismissRequest = { resetView() }
                 )
             }
 
@@ -117,13 +111,9 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
                 screenModel.resetForm()
                 FederalEntityFormModal(
                     screenModel = screenModel,
-                    selectedFederalEntity = selectedFederalEntity,
-                    onDismissRequest = {
-                        resetView()
-                    },
-                    onSuccess = {
-                        resetView()
-                    }
+                    federalEntity = selectedFederalEntity,
+                    onDismissRequest = { resetView() },
+                    onSuccess = { resetView() }
                 )
             }
         }
