@@ -5,10 +5,15 @@ import org.eduardoleolim.organizadorPec660.core.statisticType.domain.StatisticTy
 
 class StatisticTypesResponse(
     val statisticTypes: List<StatisticTypeResponse>,
-    val totalRecords: Int
+    val total: Int,
+    val limit: Int?,
+    val offset: Int?
 ) : Response {
+    val filtered: Int
+        get() = statisticTypes.size
+
     companion object {
-        fun fromAggregate(statisticTypes: List<StatisticType>, totalRecords: Int) =
-            StatisticTypesResponse(statisticTypes.map(StatisticTypeResponse::fromAggregate), totalRecords)
+        fun fromAggregate(statisticTypes: List<StatisticType>, total: Int, limit: Int?, offset: Int?) =
+            StatisticTypesResponse(statisticTypes.map(StatisticTypeResponse::fromAggregate), total, limit, offset)
     }
 }

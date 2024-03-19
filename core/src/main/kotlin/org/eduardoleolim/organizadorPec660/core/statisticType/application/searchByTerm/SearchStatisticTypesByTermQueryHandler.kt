@@ -11,7 +11,7 @@ class SearchStatisticTypesByTermQueryHandler(private val searcher: StatisticType
         val statisticTypes = searchStatisticTypes(query.search(), query.orders(), query.limit(), query.offset())
         val totalStatisticTypes = countStatisticTypes(query.search())
 
-        return StatisticTypesResponse.fromAggregate(statisticTypes, totalStatisticTypes)
+        return StatisticTypesResponse.fromAggregate(statisticTypes, totalStatisticTypes, query.limit(), query.offset())
     }
 
     private fun searchStatisticTypes(
