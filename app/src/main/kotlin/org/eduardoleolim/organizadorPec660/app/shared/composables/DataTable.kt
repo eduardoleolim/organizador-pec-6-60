@@ -121,10 +121,7 @@ fun PaginatedDataTable(
                 value = value,
                 onValueChange = onValueChange,
                 label = {
-                    Text(
-                        text = "Buscar",
-                        fontSize = MaterialTheme.typography.bodyMedium.fontSize
-                    )
+                    Text("Buscar")
                 },
                 textStyle = MaterialTheme.typography.bodyMedium,
                 leadingIcon = { Icon(Icons.Default.Search, "Buscar") },

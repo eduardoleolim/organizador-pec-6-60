@@ -1,5 +1,6 @@
 package org.eduardoleolim.organizadorPec660.app.statisticType
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -13,11 +14,13 @@ import com.seanproctor.datatable.DataColumn
 import com.seanproctor.datatable.TableColumnWidth
 import com.seanproctor.datatable.paging.PaginatedDataTableState
 import org.eduardoleolim.organizadorPec660.app.shared.composables.PaginatedDataTable
+import org.eduardoleolim.organizadorPec660.app.shared.composables.PlainTextTooltip
 import org.eduardoleolim.organizadorPec660.core.shared.domain.toLocalDateTime
 import org.eduardoleolim.organizadorPec660.core.statisticType.application.StatisticTypeResponse
 import org.eduardoleolim.organizadorPec660.core.statisticType.application.StatisticTypesResponse
 import java.time.format.DateTimeFormatter
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun StatisticTypeScreen.StatisticTypeTable(
     value: String,
@@ -124,26 +127,30 @@ fun StatisticTypeScreen.StatisticTypeTable(
                     }
 
                     cell {
-                        IconButton(
-                            onClick = {
-                                onEditRequest(statisticType)
-                            }
+                        PlainTextTooltip(
+                            tooltip = { Text("Editar") }
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.Edit,
-                                contentDescription = "Edit"
-                            )
+                            IconButton(
+                                onClick = { onEditRequest(statisticType) }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Edit,
+                                    contentDescription = "Edit"
+                                )
+                            }
                         }
 
-                        IconButton(
-                            onClick = {
-                                onDeleteRequest(statisticType)
-                            }
+                        PlainTextTooltip(
+                            tooltip = { Text("Eliminar") }
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.Delete,
-                                contentDescription = "Delete"
-                            )
+                            IconButton(
+                                onClick = { onDeleteRequest(statisticType) }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Delete,
+                                    contentDescription = "Delete"
+                                )
+                            }
                         }
                     }
                 }

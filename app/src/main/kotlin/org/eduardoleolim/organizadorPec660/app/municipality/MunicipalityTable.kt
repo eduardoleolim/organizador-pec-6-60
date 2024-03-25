@@ -1,5 +1,6 @@
 package org.eduardoleolim.organizadorPec660.app.municipality
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.heightIn
@@ -19,12 +20,14 @@ import com.seanproctor.datatable.DataColumn
 import com.seanproctor.datatable.TableColumnWidth
 import com.seanproctor.datatable.paging.PaginatedDataTableState
 import org.eduardoleolim.organizadorPec660.app.shared.composables.PaginatedDataTable
+import org.eduardoleolim.organizadorPec660.app.shared.composables.PlainTextTooltip
 import org.eduardoleolim.organizadorPec660.core.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorPec660.core.municipality.application.MunicipalitiesResponse
 import org.eduardoleolim.organizadorPec660.core.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorPec660.core.shared.domain.toLocalDateTime
 import java.time.format.DateTimeFormatter
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MunicipalityScreen.MunicipalitiesTable(
     screenModel: MunicipalityScreenModel,
@@ -191,23 +194,39 @@ fun MunicipalityScreen.MunicipalitiesTable(
                     cell {
                         Text(municipality.federalEntity.name)
                     }
+
                     cell {
                         Text(municipality.createdAt.toLocalDateTime().format(dateTimeFormatter))
                     }
                     cell {
                         Text(municipality.updatedAt?.toLocalDateTime()?.format(dateTimeFormatter) ?: "N/A")
                     }
+
                     cell {
-                        IconButton(
-                            onClick = { onEditRequest(municipality) }
+                        PlainTextTooltip(
+                            tooltip = { Text("Editar") }
                         ) {
-                            Icon(Icons.Default.Edit, "Editar")
+                            IconButton(
+                                onClick = { onEditRequest(municipality) }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Edit,
+                                    contentDescription = "Editar"
+                                )
+                            }
                         }
 
-                        IconButton(
-                            onClick = { onDeleteRequest(municipality) }
+                        PlainTextTooltip(
+                            tooltip = { Text("Eliminar") }
                         ) {
-                            Icon(Icons.Default.Delete, "Eliminar")
+                            IconButton(
+                                onClick = { onDeleteRequest(municipality) }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Delete,
+                                    contentDescription = "Eliminar"
+                                )
+                            }
                         }
                     }
                 }

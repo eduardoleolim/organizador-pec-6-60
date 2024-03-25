@@ -1,5 +1,6 @@
 package org.eduardoleolim.organizadorPec660.app.instrumentType
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -15,11 +16,13 @@ import com.seanproctor.datatable.DataColumn
 import com.seanproctor.datatable.TableColumnWidth
 import com.seanproctor.datatable.paging.PaginatedDataTableState
 import org.eduardoleolim.organizadorPec660.app.shared.composables.PaginatedDataTable
+import org.eduardoleolim.organizadorPec660.app.shared.composables.PlainTextTooltip
 import org.eduardoleolim.organizadorPec660.core.instrumentType.application.InstrumentTypeResponse
 import org.eduardoleolim.organizadorPec660.core.instrumentType.application.InstrumentTypesResponse
 import org.eduardoleolim.organizadorPec660.core.shared.domain.toLocalDateTime
 import java.time.format.DateTimeFormatter
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun InstrumentTypeScreen.InstrumentTypeTable(
     value: String,
@@ -118,27 +121,30 @@ fun InstrumentTypeScreen.InstrumentTypeTable(
                     }
 
                     cell {
-
-                        IconButton(
-                            onClick = {
-                                onEditRequest(instrumentType)
-                            }
+                        PlainTextTooltip(
+                            tooltip = { Text("Editar") }
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.Edit,
-                                contentDescription = "Edit"
-                            )
+                            IconButton(
+                                onClick = { onEditRequest(instrumentType) }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Edit,
+                                    contentDescription = "Edit"
+                                )
+                            }
                         }
 
-                        IconButton(
-                            onClick = {
-                                onDeleteRequest(instrumentType)
-                            }
+                        PlainTextTooltip(
+                            tooltip = { Text("Eliminar") }
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.Delete,
-                                contentDescription = "Delete"
-                            )
+                            IconButton(
+                                onClick = { onDeleteRequest(instrumentType) }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Delete,
+                                    contentDescription = "Delete"
+                                )
+                            }
                         }
                     }
                 }
