@@ -4,13 +4,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.window.FrameWindowScope
 import cafe.adriel.voyager.core.registry.ScreenRegistry
 import cafe.adriel.voyager.navigator.Navigator
-import org.eduardoleolim.organizadorPec660.app.auth.AuthScreen
-import org.eduardoleolim.organizadorPec660.app.federalEntity.FederalEntityScreen
-import org.eduardoleolim.organizadorPec660.app.home.HomeScreen
-import org.eduardoleolim.organizadorPec660.app.instrument.InstrumentScreen
-import org.eduardoleolim.organizadorPec660.app.instrumentType.InstrumentTypeScreen
-import org.eduardoleolim.organizadorPec660.app.municipality.MunicipalityScreen
-import org.eduardoleolim.organizadorPec660.app.statisticType.StatisticTypeScreen
+import org.eduardoleolim.organizadorPec660.app.auth.views.AuthScreen
+import org.eduardoleolim.organizadorPec660.app.federalEntity.views.FederalEntityScreen
+import org.eduardoleolim.organizadorPec660.app.home.views.HomeScreen
+import org.eduardoleolim.organizadorPec660.app.instrument.views.InstrumentScreen
+import org.eduardoleolim.organizadorPec660.app.instrumentType.views.InstrumentTypeScreen
+import org.eduardoleolim.organizadorPec660.app.municipality.views.MunicipalityScreen
+import org.eduardoleolim.organizadorPec660.app.statisticType.views.StatisticTypeScreen
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryBus
 
