@@ -19,7 +19,7 @@ class KtormFederalEntityRepository(private val database: Database) : FederalEnti
     private val federalEntities = FederalEntities("f")
 
     override fun matching(criteria: Criteria): List<FederalEntity> {
-        return KtormFederalEntitiesCriteriaParser.select(database, federalEntities, criteria).map { rowSet ->
+        return KtormFederalEntitiesCriteriaParser.parse(database, federalEntities, criteria).map { rowSet ->
             federalEntities.createEntity(rowSet).let {
                 FederalEntity.from(it.id, it.keyCode, it.name, it.createdAt.toDate(), it.updatedAt?.toDate())
             }
@@ -27,11 +27,7 @@ class KtormFederalEntityRepository(private val database: Database) : FederalEnti
     }
 
     override fun count(criteria: Criteria): Int {
-        return KtormFederalEntitiesCriteriaParser.count(database, federalEntities, criteria)
-            .rowSet.let {
-                it.next()
-                it.getInt(1)
-            }
+        return KtormFederalEntitiesCriteriaParser.parse(database, federalEntities, criteria).totalRecordsInAllPages
     }
 
 

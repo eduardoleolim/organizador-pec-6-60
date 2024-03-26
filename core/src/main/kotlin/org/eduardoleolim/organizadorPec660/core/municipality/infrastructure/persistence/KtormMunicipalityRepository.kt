@@ -21,7 +21,7 @@ class KtormMunicipalityRepository(private val database: Database) : Municipality
     private val federalEntities = FederalEntities("f")
 
     override fun matching(criteria: Criteria): List<Municipality> {
-        return KtormMunicipalitiesCriteriaParser.select(database, municipalities, federalEntities, criteria)
+        return KtormMunicipalitiesCriteriaParser.parse(database, municipalities, federalEntities, criteria)
             .map { rowSet ->
                 municipalities.createEntity(rowSet).let {
                     Municipality.from(
@@ -37,10 +37,12 @@ class KtormMunicipalityRepository(private val database: Database) : Municipality
     }
 
     override fun count(criteria: Criteria): Int {
-        return KtormMunicipalitiesCriteriaParser.count(database, municipalities, federalEntities, criteria)
-            .rowSet.apply {
-                next()
-            }.getInt(1)
+        return KtormMunicipalitiesCriteriaParser.parse(
+            database,
+            municipalities,
+            federalEntities,
+            criteria
+        ).totalRecordsInAllPages
     }
 
     override fun save(municipality: Municipality) {

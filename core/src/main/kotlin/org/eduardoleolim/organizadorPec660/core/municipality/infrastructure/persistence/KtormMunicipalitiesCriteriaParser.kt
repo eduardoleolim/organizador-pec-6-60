@@ -13,7 +13,7 @@ import java.time.Instant
 import java.time.LocalDateTime
 
 object KtormMunicipalitiesCriteriaParser {
-    fun select(
+    fun parse(
         database: Database,
         municipalities: Municipalities,
         federalEntities: FederalEntities,
@@ -24,19 +24,6 @@ object KtormMunicipalitiesCriteriaParser {
             .select().let {
                 addOrdersToQuery(it, municipalities, federalEntities, criteria)
             }.let {
-                addConditionsToQuery(it, municipalities, federalEntities, criteria)
-            }.limit(criteria.offset, criteria.limit)
-    }
-
-    fun count(
-        database: Database,
-        municipalities: Municipalities,
-        federalEntities: FederalEntities,
-        criteria: Criteria
-    ): Query {
-        return database.from(municipalities)
-            .innerJoin(federalEntities, municipalities.federalEntityId eq federalEntities.id)
-            .select(count()).let {
                 addConditionsToQuery(it, municipalities, federalEntities, criteria)
             }.limit(criteria.offset, criteria.limit)
     }

@@ -12,16 +12,10 @@ import java.time.Instant
 import java.time.LocalDateTime
 
 object KtormFederalEntitiesCriteriaParser {
-    fun select(database: Database, federalEntities: FederalEntities, criteria: Criteria): Query {
+    fun parse(database: Database, federalEntities: FederalEntities, criteria: Criteria): Query {
         return database.from(federalEntities).select().let {
             addOrdersToQuery(it, federalEntities, criteria)
         }.let {
-            addConditionsToQuery(it, federalEntities, criteria)
-        }.limit(criteria.offset, criteria.limit)
-    }
-
-    fun count(database: Database, federalEntities: FederalEntities, criteria: Criteria): Query {
-        return database.from(federalEntities).select(count()).let {
             addConditionsToQuery(it, federalEntities, criteria)
         }.limit(criteria.offset, criteria.limit)
     }

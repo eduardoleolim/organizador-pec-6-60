@@ -19,7 +19,7 @@ class KtormInstrumentTypeRepository(private val database: Database) : Instrument
     private val instrumentTypes = InstrumentTypes("it")
 
     override fun matching(criteria: Criteria): List<InstrumentType> {
-        return KtormInstrumentTypesCriteriaParser.select(database, instrumentTypes, criteria).map { rowSet ->
+        return KtormInstrumentTypesCriteriaParser.parse(database, instrumentTypes, criteria).map { rowSet ->
             instrumentTypes.createEntity(rowSet).let {
                 InstrumentType.from(it.id, it.name, it.createdAt.toDate(), it.updatedAt?.toDate())
             }
@@ -27,11 +27,7 @@ class KtormInstrumentTypeRepository(private val database: Database) : Instrument
     }
 
     override fun count(criteria: Criteria): Int {
-        return KtormInstrumentTypesCriteriaParser.count(database, instrumentTypes, criteria)
-            .rowSet.let {
-                it.next()
-                it.getInt(1)
-            }
+        return KtormInstrumentTypesCriteriaParser.parse(database, instrumentTypes, criteria).totalRecordsInAllPages
     }
 
     override fun save(instrumentType: InstrumentType) {

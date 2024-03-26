@@ -12,7 +12,7 @@ import java.time.Instant
 import java.time.LocalDateTime
 
 object KtormInstrumentTypesCriteriaParser {
-    fun select(
+    fun parse(
         database: Database,
         instrumentTypes: InstrumentTypes,
         criteria: Criteria
@@ -21,17 +21,6 @@ object KtormInstrumentTypesCriteriaParser {
             .select().let {
                 addOrdersToQuery(it, instrumentTypes, criteria)
             }.let {
-                addConditionsToQuery(it, instrumentTypes, criteria)
-            }.limit(criteria.offset, criteria.limit)
-    }
-
-    fun count(
-        database: Database,
-        instrumentTypes: InstrumentTypes,
-        criteria: Criteria
-    ): Query {
-        return database.from(instrumentTypes)
-            .select(count()).let {
                 addConditionsToQuery(it, instrumentTypes, criteria)
             }.limit(criteria.offset, criteria.limit)
     }
