@@ -14,7 +14,7 @@ import java.time.Instant
 import java.time.LocalDateTime
 
 object KtormStatisticTypeCriteriaParser {
-    fun select(
+    fun parse(
         database: Database,
         statisticTypes: StatisticTypes,
         instrumentTypes: InstrumentTypes,
@@ -27,29 +27,12 @@ object KtormStatisticTypeCriteriaParser {
                 on = statisticTypes.id eq instrumentTypesOfStatisticTypes.statisticTypeId
             )
             .leftJoin(instrumentTypes, on = instrumentTypes.id eq instrumentTypesOfStatisticTypes.instrumentTypeId)
-            .select(statisticTypes.columns).let {
+            .selectDistinct(statisticTypes.columns).let {
                 addOrdersToQuery(it, statisticTypes, instrumentTypes, criteria)
             }.let {
+                it.totalRecordsInAllPages
                 addConditionsToQuery(it, statisticTypes, instrumentTypes, criteria)
-            }.limit(criteria.limit, criteria.offset)
-    }
-
-    fun count(
-        database: Database,
-        statisticTypes: StatisticTypes,
-        instrumentTypes: InstrumentTypes,
-        instrumentTypesOfStatisticTypes: InstrumentTypesOfStatisticTypes,
-        criteria: Criteria
-    ): Query {
-        return database.from(statisticTypes)
-            .leftJoin(
-                instrumentTypesOfStatisticTypes,
-                on = statisticTypes.id eq instrumentTypesOfStatisticTypes.statisticTypeId
-            )
-            .leftJoin(instrumentTypes, on = instrumentTypes.id eq instrumentTypesOfStatisticTypes.instrumentTypeId)
-            .select(count()).let {
-                addConditionsToQuery(it, statisticTypes, instrumentTypes, criteria)
-            }.limit(criteria.limit, criteria.offset)
+            }.limit(criteria.offset, criteria.limit)
     }
 
     private fun addOrdersToQuery(

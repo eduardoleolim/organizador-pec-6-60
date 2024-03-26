@@ -19,7 +19,7 @@ class KtormStatisticTypeRepository(private val database: Database) : StatisticTy
     private val instrumentTypesOfStatisticTypes = InstrumentTypesOfStatisticTypes("st_it")
 
     override fun matching(criteria: Criteria): List<StatisticType> {
-        return KtormStatisticTypeCriteriaParser.select(
+        return KtormStatisticTypeCriteriaParser.parse(
             database,
             statisticTypes,
             instrumentTypes,
@@ -47,15 +47,13 @@ class KtormStatisticTypeRepository(private val database: Database) : StatisticTy
     }
 
     override fun count(criteria: Criteria): Int {
-        return KtormStatisticTypeCriteriaParser.count(
+        return KtormStatisticTypeCriteriaParser.parse(
             database,
             statisticTypes,
             instrumentTypes,
             instrumentTypesOfStatisticTypes,
             criteria
-        ).rowSet.apply {
-            next()
-        }.getInt(1)
+        ).totalRecordsInAllPages
     }
 
     override fun save(statisticType: StatisticType) {
