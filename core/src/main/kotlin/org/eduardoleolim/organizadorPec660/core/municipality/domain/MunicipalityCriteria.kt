@@ -17,8 +17,14 @@ object MunicipalityCriteria {
         null
     )
 
-    fun anotherKeyCodeCriteria(id: String, keyCode: String) = Criteria(
-        AndFilters(listOf(SingleFilter.notEqual("id", id), SingleFilter.equal("keyCode", keyCode))),
+    fun anotherKeyCodeCriteria(municipalityId: String, keyCode: String, federalEntityId: String) = Criteria(
+        AndFilters(
+            listOf(
+                SingleFilter.notEqual("id", municipalityId),
+                SingleFilter.equal("keyCode", keyCode),
+                SingleFilter.equal("federalEntity.id", federalEntityId)
+            )
+        ),
         Orders.none(),
         1,
         null

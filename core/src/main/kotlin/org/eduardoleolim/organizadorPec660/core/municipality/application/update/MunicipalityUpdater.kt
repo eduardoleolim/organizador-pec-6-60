@@ -15,11 +15,11 @@ class MunicipalityUpdater(
     fun update(municipalityId: String, keyCode: String, name: String, federalEntityId: String) {
         val municipality = searchMunicipality(municipalityId) ?: throw MunicipalityNotFoundError(municipalityId)
 
-        if (existsAnotherSameKeyCode(municipalityId, keyCode))
-            throw MunicipalityAlreadyExistsError(keyCode)
-
-        if (!existsFederalEntity(federalEntityId))
+        if (existsFederalEntity(federalEntityId).not())
             throw FederalEntityNotFoundError(federalEntityId)
+
+        if (existsAnotherSameKeyCode(municipalityId, keyCode, federalEntityId))
+            throw MunicipalityAlreadyExistsError(keyCode)
 
         municipality.apply {
             changeKeyCode(keyCode)
@@ -34,8 +34,8 @@ class MunicipalityUpdater(
         municipalityRepository.matching(it).firstOrNull()
     }
 
-    private fun existsAnotherSameKeyCode(municipalityId: String, keyCode: String) =
-        MunicipalityCriteria.anotherKeyCodeCriteria(municipalityId, keyCode).let {
+    private fun existsAnotherSameKeyCode(municipalityId: String, keyCode: String, federalEntityId: String) =
+        MunicipalityCriteria.anotherKeyCodeCriteria(municipalityId, keyCode, federalEntityId).let {
             municipalityRepository.count(it) > 0
         }
 
