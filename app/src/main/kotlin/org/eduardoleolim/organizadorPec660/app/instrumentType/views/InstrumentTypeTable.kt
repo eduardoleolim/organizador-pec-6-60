@@ -8,7 +8,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -17,6 +18,8 @@ import com.seanproctor.datatable.TableColumnWidth
 import com.seanproctor.datatable.paging.PaginatedDataTableState
 import org.eduardoleolim.organizadorPec660.app.shared.composables.PaginatedDataTable
 import org.eduardoleolim.organizadorPec660.app.shared.composables.PlainTextTooltip
+import org.eduardoleolim.organizadorPec660.app.shared.composables.sortAscending
+import org.eduardoleolim.organizadorPec660.app.shared.composables.sortColumnIndex
 import org.eduardoleolim.organizadorPec660.core.instrumentType.application.InstrumentTypeResponse
 import org.eduardoleolim.organizadorPec660.core.instrumentType.application.InstrumentTypesResponse
 import org.eduardoleolim.organizadorPec660.core.shared.domain.toLocalDateTime
@@ -36,14 +39,12 @@ fun InstrumentTypeScreen.InstrumentTypeTable(
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState()
-    var sortColumnIndex by remember { mutableStateOf<Int?>(null) }
-    var sortAscending by remember { mutableStateOf(true) }
     val orders = listOf("name", "createdAt", "updatedAt")
 
-    val columns = remember(sortColumnIndex, sortAscending) {
+    val columns = remember {
         fun onSort(index: Int, ascending: Boolean) {
-            sortColumnIndex = index
-            sortAscending = ascending
+            state.sortColumnIndex = index
+            state.sortAscending = ascending
         }
 
         listOf(
@@ -91,8 +92,8 @@ fun InstrumentTypeScreen.InstrumentTypeTable(
             value = value,
             onValueChange = onValueChange,
             columns = columns,
-            sortColumnIndex = sortColumnIndex,
-            sortAscending = sortAscending,
+            sortColumnIndex = state.sortColumnIndex,
+            sortAscending = state.sortAscending,
             state = state,
             pageSizes = pageSizes,
             onSearch = { search, pageIndex, pageSize, sortBy, isAscending ->

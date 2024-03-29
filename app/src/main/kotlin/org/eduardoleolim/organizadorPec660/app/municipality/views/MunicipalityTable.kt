@@ -22,6 +22,8 @@ import com.seanproctor.datatable.paging.PaginatedDataTableState
 import org.eduardoleolim.organizadorPec660.app.municipality.model.MunicipalityScreenModel
 import org.eduardoleolim.organizadorPec660.app.shared.composables.PaginatedDataTable
 import org.eduardoleolim.organizadorPec660.app.shared.composables.PlainTextTooltip
+import org.eduardoleolim.organizadorPec660.app.shared.composables.sortAscending
+import org.eduardoleolim.organizadorPec660.app.shared.composables.sortColumnIndex
 import org.eduardoleolim.organizadorPec660.core.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorPec660.core.municipality.application.MunicipalitiesResponse
 import org.eduardoleolim.organizadorPec660.core.municipality.application.MunicipalityResponse
@@ -42,15 +44,13 @@ fun MunicipalityScreen.MunicipalitiesTable(
     onEditRequest: (MunicipalityResponse) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var sortColumnIndex by remember { mutableStateOf<Int?>(null) }
-    var sortAscending by remember { mutableStateOf(true) }
     val orders = listOf("keyCode", "name", "federalEntity.name", "createdAt", "updatedAt")
     var federalEntityId by remember { mutableStateOf<String?>(null) }
 
-    val columns = remember(sortColumnIndex, sortAscending) {
+    val columns = remember {
         fun onSort(index: Int, ascending: Boolean) {
-            sortColumnIndex = index
-            sortAscending = ascending
+            state.sortColumnIndex = index
+            state.sortAscending = ascending
         }
 
         listOf(
@@ -113,8 +113,8 @@ fun MunicipalityScreen.MunicipalitiesTable(
             value = value,
             onValueChange = onValueChange,
             columns = columns,
-            sortColumnIndex = sortColumnIndex,
-            sortAscending = sortAscending,
+            sortColumnIndex = state.sortColumnIndex,
+            sortAscending = state.sortAscending,
             state = state,
             pageSizes = pageSizes,
             onSearch = { search, pageIndex, pageSize, sortBy, isAscending ->

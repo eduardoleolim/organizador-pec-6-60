@@ -27,6 +27,18 @@ import com.seanproctor.datatable.paging.PaginatedDataTableState
 import com.seanproctor.datatable.paging.rememberPaginatedDataTableState
 import kotlin.math.min
 
+var PaginatedDataTableState.sortColumnIndex by mutableStateOf<Int?>(null)
+
+var PaginatedDataTableState.sortAscending by mutableStateOf(true)
+
+fun PaginatedDataTableState.reset(pageSize: Int = 10) {
+    this.sortColumnIndex = null
+    this.sortAscending = true
+    this.pageIndex = 0
+    this.pageSize = pageSize
+    this.count = 0
+}
+
 @Composable
 fun PaginatedDataTable(
     total: Int,

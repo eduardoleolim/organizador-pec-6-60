@@ -15,6 +15,7 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import com.seanproctor.datatable.paging.rememberPaginatedDataTableState
 import org.eduardoleolim.organizadorPec660.app.municipality.model.MunicipalityScreenModel
+import org.eduardoleolim.organizadorPec660.app.shared.composables.reset
 import org.eduardoleolim.organizadorPec660.core.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryBus
@@ -25,6 +26,7 @@ class MunicipalityScreen(private val queryBus: QueryBus, private val commandBus:
         val screenModel = rememberScreenModel { MunicipalityScreenModel(queryBus, commandBus) }
         var showDeleteModal by remember { mutableStateOf(false) }
         var showFormModal by remember { mutableStateOf(false) }
+        var selectedFederalEntityId by remember { mutableStateOf<String?>(null) }
         var selectedMunicipality by remember { mutableStateOf<MunicipalityResponse?>(null) }
         var searchValue by remember { mutableStateOf("") }
         val pageSizes = remember { listOf(10, 25, 50, 100) }
@@ -32,12 +34,18 @@ class MunicipalityScreen(private val queryBus: QueryBus, private val commandBus:
 
         fun resetView() {
             searchValue = ""
-            state.pageIndex = -1
-            state.pageSize = pageSizes.first()
+            state.reset(pageSizes.first())
+            screenModel.searchMunicipalities(
+                searchValue,
+                selectedFederalEntityId,
+                null,
+                state.pageSize,
+                state.pageIndex * state.pageSize
+            )
+            screenModel.searchAllFederalEntities()
             showDeleteModal = false
             showFormModal = false
             selectedMunicipality = null
-            screenModel.searchAllFederalEntities()
         }
 
         Column(
@@ -85,6 +93,7 @@ class MunicipalityScreen(private val queryBus: QueryBus, private val commandBus:
                 data = screenModel.municipalities.value,
                 state = state,
                 onSearch = { search, federalEntityId, pageIndex, pageSize, orderBy, isAscending ->
+                    selectedFederalEntityId = federalEntityId
                     val orders = orderBy?.let {
                         val orderType = if (isAscending) "ASC" else "DESC"
                         arrayOf(hashMapOf("orderBy" to orderBy, "orderType" to orderType))

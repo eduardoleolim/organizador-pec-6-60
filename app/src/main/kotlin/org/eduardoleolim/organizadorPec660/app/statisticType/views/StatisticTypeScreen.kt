@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import com.seanproctor.datatable.paging.rememberPaginatedDataTableState
+import org.eduardoleolim.organizadorPec660.app.shared.composables.reset
 import org.eduardoleolim.organizadorPec660.app.statisticType.model.StatisticTypeScreenModel
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryBus
@@ -32,8 +33,8 @@ class StatisticTypeScreen(private val queryBus: QueryBus, private val commandBus
 
         fun resetView() {
             searchValue = ""
-            state.pageIndex = -1
-            state.pageSize = pageSizes.first()
+            state.reset(pageSizes.first())
+            screenModel.searchStatisticTypes(searchValue, null, state.pageSize, state.pageIndex * state.pageSize)
             showDeleteModal = false
             showFormModal = false
             selectedStatisticType = null

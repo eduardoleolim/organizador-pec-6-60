@@ -15,6 +15,7 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import com.seanproctor.datatable.paging.rememberPaginatedDataTableState
 import org.eduardoleolim.organizadorPec660.app.federalEntity.model.FederalEntityScreenModel
+import org.eduardoleolim.organizadorPec660.app.shared.composables.reset
 import org.eduardoleolim.organizadorPec660.core.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryBus
@@ -32,8 +33,8 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
 
         fun resetView() {
             searchValue = ""
-            state.pageIndex = -1
-            state.pageSize = pageSizes.first()
+            state.reset(pageSizes.first())
+            screenModel.searchFederalEntities(searchValue, null, state.pageSize, state.pageIndex * state.pageSize)
             showDeleteModal = false
             showFormModal = false
             selectedFederalEntity = null
@@ -61,7 +62,10 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
                 )
 
                 SmallFloatingActionButton(
-                    onClick = { showFormModal = true },
+                    onClick = {
+                        selectedFederalEntity = null
+                        showFormModal = true
+                    },
                     containerColor = MaterialTheme.colorScheme.secondaryContainer,
                     contentColor = MaterialTheme.colorScheme.secondary
                 ) {

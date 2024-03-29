@@ -15,6 +15,7 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import com.seanproctor.datatable.paging.rememberPaginatedDataTableState
 import org.eduardoleolim.organizadorPec660.app.instrumentType.model.InstrumentTypeScreenModel
+import org.eduardoleolim.organizadorPec660.app.shared.composables.reset
 import org.eduardoleolim.organizadorPec660.core.instrumentType.application.InstrumentTypeResponse
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryBus
@@ -32,9 +33,8 @@ class InstrumentTypeScreen(private val queryBus: QueryBus, private val commandBu
 
         fun resetView() {
             searchValue = ""
-            state.pageIndex = -1
-            state.pageSize = pageSizes.first()
-            showDeleteModal = false
+            state.reset(pageSizes.first())
+            screenModel.searchInstrumentTypes(searchValue, null, state.pageSize, state.pageIndex * state.pageSize)
             showFormModal = false
             selectedInstrumentType = null
         }
