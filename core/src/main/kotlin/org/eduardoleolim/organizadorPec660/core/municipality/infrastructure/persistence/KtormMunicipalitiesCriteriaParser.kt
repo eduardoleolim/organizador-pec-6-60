@@ -1,5 +1,6 @@
 package org.eduardoleolim.organizadorPec660.core.municipality.infrastructure.persistence
 
+import org.eduardoleolim.organizadorPec660.core.municipality.domain.MunicipalityFields
 import org.eduardoleolim.organizadorPec660.core.shared.domain.InvalidArgumentError
 import org.eduardoleolim.organizadorPec660.core.shared.domain.criteria.*
 import org.eduardoleolim.organizadorPec660.core.shared.infrastructure.models.FederalEntities
@@ -49,19 +50,20 @@ object KtormMunicipalitiesCriteriaParser {
     ): OrderByExpression? {
         val orderBy = order.orderBy.value
         val orderType = order.orderType
+        val field = MunicipalityFields.entries.firstOrNull { it.value == orderBy }
 
-        return when (orderBy) {
-            "id" -> parseOrderType(orderType, municipalities.id)
-            "keyCode" -> parseOrderType(orderType, municipalities.keyCode)
-            "name" -> parseOrderType(orderType, municipalities.name)
-            "createdAt" -> parseOrderType(orderType, municipalities.createdAt)
-            "updatedAt" -> parseOrderType(orderType, municipalities.updatedAt)
-            "federalEntity.id" -> parseOrderType(orderType, federalEntities.id)
-            "federalEntity.keyCode" -> parseOrderType(orderType, federalEntities.keyCode)
-            "federalEntity.name" -> parseOrderType(orderType, federalEntities.name)
-            "federalEntity.createdAt" -> parseOrderType(orderType, federalEntities.createdAt)
-            "federalEntity.updatedAt" -> parseOrderType(orderType, federalEntities.updatedAt)
-            else -> throw InvalidArgumentError()
+        return when (field) {
+            MunicipalityFields.Id -> parseOrderType(orderType, municipalities.id)
+            MunicipalityFields.KeyCode -> parseOrderType(orderType, municipalities.keyCode)
+            MunicipalityFields.Name -> parseOrderType(orderType, municipalities.name)
+            MunicipalityFields.CreatedAt -> parseOrderType(orderType, municipalities.createdAt)
+            MunicipalityFields.UpdatedAt -> parseOrderType(orderType, municipalities.updatedAt)
+            MunicipalityFields.FederalEntityId -> parseOrderType(orderType, federalEntities.id)
+            MunicipalityFields.FederalEntityKeyCode -> parseOrderType(orderType, federalEntities.keyCode)
+            MunicipalityFields.FederalEntityName -> parseOrderType(orderType, federalEntities.name)
+            MunicipalityFields.FederalEntityCreatedAt -> parseOrderType(orderType, federalEntities.createdAt)
+            MunicipalityFields.FederalEntityUpdatedAt -> parseOrderType(orderType, federalEntities.updatedAt)
+            null -> throw InvalidArgumentError()
         }
     }
 
@@ -120,12 +122,12 @@ object KtormMunicipalitiesCriteriaParser {
         federalEntities: FederalEntities,
         filter: Filter
     ): ColumnDeclaring<Boolean>? {
-        val field = filter.field.value
+        val field = MunicipalityFields.entries.firstOrNull { it.value == filter.field.value }
         val value = filter.value.value
         val operator = filter.operator
 
         return when (field) {
-            "id" -> {
+            MunicipalityFields.Id -> {
                 when (operator) {
                     FilterOperator.EQUAL -> municipalities.id eq value
                     FilterOperator.NOT_EQUAL -> municipalities.id notEq value
@@ -133,7 +135,7 @@ object KtormMunicipalitiesCriteriaParser {
                 }
             }
 
-            "keyCode" -> {
+            MunicipalityFields.KeyCode -> {
                 when (operator) {
                     FilterOperator.EQUAL -> municipalities.keyCode eq value
                     FilterOperator.NOT_EQUAL -> municipalities.keyCode notEq value
@@ -146,7 +148,7 @@ object KtormMunicipalitiesCriteriaParser {
                 }
             }
 
-            "name" -> {
+            MunicipalityFields.Name -> {
                 when (operator) {
                     FilterOperator.EQUAL -> municipalities.name eq value
                     FilterOperator.NOT_EQUAL -> municipalities.name notEq value
@@ -159,7 +161,7 @@ object KtormMunicipalitiesCriteriaParser {
                 }
             }
 
-            "createdAt" -> {
+            MunicipalityFields.CreatedAt -> {
                 val date = LocalDateTime.from(Instant.parse(value))
                 when (operator) {
                     FilterOperator.EQUAL -> municipalities.createdAt eq date
@@ -172,7 +174,7 @@ object KtormMunicipalitiesCriteriaParser {
                 }
             }
 
-            "updatedAt" -> {
+            MunicipalityFields.UpdatedAt -> {
                 val date = LocalDateTime.from(Instant.parse(value))
                 when (operator) {
                     FilterOperator.EQUAL -> municipalities.updatedAt eq date
@@ -185,7 +187,7 @@ object KtormMunicipalitiesCriteriaParser {
                 }
             }
 
-            "federalEntity.id" -> {
+            MunicipalityFields.FederalEntityId -> {
                 when (operator) {
                     FilterOperator.EQUAL -> federalEntities.id eq value
                     FilterOperator.NOT_EQUAL -> federalEntities.id notEq value
@@ -193,7 +195,7 @@ object KtormMunicipalitiesCriteriaParser {
                 }
             }
 
-            "federalEntity.keyCode" -> {
+            MunicipalityFields.FederalEntityKeyCode -> {
                 when (operator) {
                     FilterOperator.EQUAL -> federalEntities.keyCode eq value
                     FilterOperator.NOT_EQUAL -> federalEntities.keyCode notEq value
@@ -206,7 +208,7 @@ object KtormMunicipalitiesCriteriaParser {
                 }
             }
 
-            "federalEntity.name" -> {
+            MunicipalityFields.FederalEntityName -> {
                 when (operator) {
                     FilterOperator.EQUAL -> federalEntities.name eq value
                     FilterOperator.NOT_EQUAL -> federalEntities.name notEq value
@@ -219,7 +221,7 @@ object KtormMunicipalitiesCriteriaParser {
                 }
             }
 
-            "federalEntity.createdAt" -> {
+            MunicipalityFields.FederalEntityCreatedAt -> {
                 val date = LocalDateTime.from(Instant.parse(value))
                 when (operator) {
                     FilterOperator.EQUAL -> federalEntities.createdAt eq date
@@ -232,7 +234,7 @@ object KtormMunicipalitiesCriteriaParser {
                 }
             }
 
-            "federalEntity.updatedAt" -> {
+            MunicipalityFields.FederalEntityUpdatedAt -> {
                 val date = LocalDateTime.from(Instant.parse(value))
                 when (operator) {
                     FilterOperator.EQUAL -> federalEntities.updatedAt eq date
@@ -245,7 +247,7 @@ object KtormMunicipalitiesCriteriaParser {
                 }
             }
 
-            else -> throw InvalidArgumentError()
+            null -> throw InvalidArgumentError()
         }
     }
 }
