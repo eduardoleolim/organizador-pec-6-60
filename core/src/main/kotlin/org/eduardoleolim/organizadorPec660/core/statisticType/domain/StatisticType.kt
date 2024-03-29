@@ -125,7 +125,7 @@ data class StatisticTypeKeyCode(val value: String) {
     }
 
     private fun validate() {
-        if (Regex("[0-9]{2}").matches(value).not()) {
+        if (Regex("[0-9]{3}").matches(value).not()) {
             throw InvalidStatisticTypeKeyCodeError(value)
         }
     }

@@ -7,10 +7,13 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.eduardoleolim.organizadorPec660.app.statisticType.data.EmptyStatisticTypeDataException
-import org.eduardoleolim.organizadorPec660.core.federalEntity.application.create.CreateFederalEntityCommand
+import org.eduardoleolim.organizadorPec660.core.instrumentType.application.InstrumentTypeResponse
+import org.eduardoleolim.organizadorPec660.core.instrumentType.application.InstrumentTypesResponse
+import org.eduardoleolim.organizadorPec660.core.instrumentType.application.searchByTerm.SearchInstrumentTypesByTermQuery
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryBus
 import org.eduardoleolim.organizadorPec660.core.statisticType.application.StatisticTypesResponse
+import org.eduardoleolim.organizadorPec660.core.statisticType.application.create.CreateStatisticTypeCommand
 import org.eduardoleolim.organizadorPec660.core.statisticType.application.delete.DeleteStatisticTypeCommand
 import org.eduardoleolim.organizadorPec660.core.statisticType.application.searchByTerm.SearchStatisticTypesByTermQuery
 import org.eduardoleolim.organizadorPec660.core.statisticType.application.update.UpdateStatisticTypeCommand
@@ -35,6 +38,9 @@ sealed class DeleteState {
 class StatisticTypeScreenModel(private val queryBus: QueryBus, private val commandBus: CommandBus) : ScreenModel {
     private var _statisticTypes = mutableStateOf(StatisticTypesResponse(emptyList(), 0, null, null))
     val statisticTypes: State<StatisticTypesResponse> get() = _statisticTypes
+
+    private var _instrumentTypes = mutableStateOf(emptyList<InstrumentTypeResponse>())
+    val instrumentTypes: State<List<InstrumentTypeResponse>> get() = _instrumentTypes
 
     private var _formState = mutableStateOf<FormState>(FormState.Idle)
     val formState: State<FormState> get() = _formState
@@ -66,7 +72,18 @@ class StatisticTypeScreenModel(private val queryBus: QueryBus, private val comma
         }
     }
 
-    fun createFederalEntity(keyCode: String, name: String, instrumentTypeIds: List<String>) {
+    fun searchAllInstrumentTypes() {
+        screenModelScope.launch(Dispatchers.IO) {
+            try {
+                val query = SearchInstrumentTypesByTermQuery()
+                _instrumentTypes.value = queryBus.ask<InstrumentTypesResponse>(query).instrumentTypes
+            } catch (e: Exception) {
+                _instrumentTypes.value = emptyList()
+            }
+        }
+    }
+
+    fun createStatisticType(keyCode: String, name: String, instrumentTypeIds: List<String>) {
         _formState.value = FormState.InProgress
         screenModelScope.launch(Dispatchers.IO) {
             val isKeyCodeBlank = keyCode.isBlank()
@@ -81,7 +98,7 @@ class StatisticTypeScreenModel(private val queryBus: QueryBus, private val comma
             }
 
             try {
-                commandBus.dispatch(CreateFederalEntityCommand(keyCode, name))
+                commandBus.dispatch(CreateStatisticTypeCommand(keyCode, name, instrumentTypeIds))
                 _formState.value = FormState.SuccessCreate
             } catch (e: Exception) {
                 _formState.value = FormState.Error(e.cause!!)

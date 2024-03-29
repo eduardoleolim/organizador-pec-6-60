@@ -62,7 +62,10 @@ class StatisticTypeScreen(private val queryBus: QueryBus, private val commandBus
                 )
 
                 SmallFloatingActionButton(
-                    onClick = { println("Crear tipo de estadística") },
+                    onClick = {
+                        selectedStatisticType = null
+                        showFormModal = true
+                    },
                     containerColor = MaterialTheme.colorScheme.secondaryContainer,
                     contentColor = MaterialTheme.colorScheme.secondary
                 ) {
@@ -97,6 +100,16 @@ class StatisticTypeScreen(private val queryBus: QueryBus, private val commandBus
                     showFormModal = true
                 }
             )
+
+            if (showFormModal) {
+                screenModel.resetForm()
+                StatisticTypeFormModal(
+                    screenModel = screenModel,
+                    statisticType = selectedStatisticType,
+                    onDismissRequest = { resetView() },
+                    onSuccess = { resetView() }
+                )
+            }
         }
     }
 }
