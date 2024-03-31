@@ -11,25 +11,32 @@ import org.ktorm.schema.ColumnDeclaring
 import java.time.Instant
 import java.time.LocalDateTime
 
-object KtormFederalEntitiesCriteriaParser {
-    fun parse(database: Database, federalEntities: FederalEntities, criteria: Criteria): Query {
-        return database.from(federalEntities).select().let {
-            addOrdersToQuery(it, federalEntities, criteria)
+class KtormFederalEntitiesCriteriaParser(private val database: Database, private val federalEntities: FederalEntities) {
+    fun selectQuery(criteria: Criteria): Query {
+        return database.from(federalEntities).selectDistinct().let {
+            addOrdersToQuery(it, criteria)
         }.let {
-            addConditionsToQuery(it, federalEntities, criteria)
+            addConditionsToQuery(it, criteria)
         }.limit(criteria.offset, criteria.limit)
     }
 
-    private fun addOrdersToQuery(query: Query, federalEntities: FederalEntities, criteria: Criteria): Query {
+    fun countQuery(criteria: Criteria): Query {
+        val baseQuery = selectQuery(criteria)
+        val querySource = QuerySource(database, federalEntities, baseQuery.expression)
+
+        return querySource.select(count())
+    }
+
+    private fun addOrdersToQuery(query: Query, criteria: Criteria): Query {
         if (!criteria.hasOrders())
             return query
 
-        return query.orderBy(criteria.orders.orders.mapNotNull {
-            parseOrder(federalEntities, it)
+        return query.orderBy(criteria.orders.orders.mapNotNull { order ->
+            parseOrder(order)
         })
     }
 
-    private fun parseOrder(federalEntities: FederalEntities, order: Order): OrderByExpression? {
+    private fun parseOrder(order: Order): OrderByExpression? {
         val orderBy = order.orderBy.value
         val orderType = order.orderType
 
@@ -51,32 +58,29 @@ object KtormFederalEntitiesCriteriaParser {
         }
     }
 
-    private fun addConditionsToQuery(query: Query, federalEntities: FederalEntities, criteria: Criteria): Query {
+    private fun addConditionsToQuery(query: Query, criteria: Criteria): Query {
         criteria.filters.let {
             return when (it) {
                 is EmptyFilters -> query
-                is SingleFilter -> parseFilter(federalEntities, it.filter)?.let { conditions ->
+                is SingleFilter -> parseFilter(it.filter)?.let { conditions ->
                     query.where(conditions)
                 } ?: query
 
-                is MultipleFilters -> parseMultipleFilters(federalEntities, it)?.let { conditions ->
+                is MultipleFilters -> parseMultipleFilters(it)?.let { conditions ->
                     query.where(conditions)
                 } ?: query
             }
         }
     }
 
-    private fun parseMultipleFilters(
-        federalEntities: FederalEntities,
-        filters: MultipleFilters
-    ): ColumnDeclaring<Boolean>? {
+    private fun parseMultipleFilters(filters: MultipleFilters): ColumnDeclaring<Boolean>? {
         if (filters.isEmpty())
             return null
 
         val filterConditions = filters.filters.mapNotNull {
             when (it) {
-                is SingleFilter -> parseFilter(federalEntities, it.filter)
-                is MultipleFilters -> parseMultipleFilters(federalEntities, it)
+                is SingleFilter -> parseFilter(it.filter)
+                is MultipleFilters -> parseMultipleFilters(it)
                 else -> null
             }
         }
@@ -87,7 +91,7 @@ object KtormFederalEntitiesCriteriaParser {
         }
     }
 
-    private fun parseFilter(federalEntities: FederalEntities, filter: Filter): ColumnDeclaring<Boolean>? {
+    private fun parseFilter(filter: Filter): ColumnDeclaring<Boolean>? {
         val field = filter.field.value
         val value = filter.value.value
         val operator = filter.operator

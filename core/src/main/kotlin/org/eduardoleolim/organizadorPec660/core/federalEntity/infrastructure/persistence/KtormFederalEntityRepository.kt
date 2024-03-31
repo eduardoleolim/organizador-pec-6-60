@@ -17,9 +17,12 @@ import java.time.LocalDateTime
 
 class KtormFederalEntityRepository(private val database: Database) : FederalEntityRepository {
     private val federalEntities = FederalEntities("f")
+    private val criteriaParser = KtormFederalEntitiesCriteriaParser(database, federalEntities)
 
     override fun matching(criteria: Criteria): List<FederalEntity> {
-        return KtormFederalEntitiesCriteriaParser.parse(database, federalEntities, criteria).map { rowSet ->
+        val query = criteriaParser.selectQuery(criteria)
+
+        return query.map { rowSet ->
             federalEntities.createEntity(rowSet).let {
                 FederalEntity.from(it.id, it.keyCode, it.name, it.createdAt.toDate(), it.updatedAt?.toDate())
             }
@@ -27,7 +30,12 @@ class KtormFederalEntityRepository(private val database: Database) : FederalEnti
     }
 
     override fun count(criteria: Criteria): Int {
-        return KtormFederalEntitiesCriteriaParser.parse(database, federalEntities, criteria).totalRecordsInAllPages
+        val query = criteriaParser.countQuery(criteria)
+
+        return query.rowSet.let {
+            it.next()
+            it.getInt(1)
+        }
     }
 
 
