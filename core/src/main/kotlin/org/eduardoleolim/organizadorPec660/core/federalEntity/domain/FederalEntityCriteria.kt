@@ -2,13 +2,27 @@ package org.eduardoleolim.organizadorPec660.core.federalEntity.domain
 
 import org.eduardoleolim.organizadorPec660.core.shared.domain.criteria.*
 
-object FederalEntityCriteria {
-    fun idCriteria(id: String) = Criteria(SingleFilter.equal("id", id), Orders.none(), 1, null)
+enum class FederalEntityFields(val value: String) {
+    Id("id"),
+    KeyCode("keyCode"),
+    Name("name"),
+    CreatedAt("createdAt"),
+    UpdatedAt("updatedAt")
+}
 
-    fun keyCodeCriteria(keyCode: String) = Criteria(SingleFilter.equal("keyCode", keyCode), Orders.none(), 1, null)
+object FederalEntityCriteria {
+    fun idCriteria(id: String) = Criteria(SingleFilter.equal(FederalEntityFields.Id.value, id), Orders.none(), 1, null)
+
+    fun keyCodeCriteria(keyCode: String) =
+        Criteria(SingleFilter.equal(FederalEntityFields.KeyCode.value, keyCode), Orders.none(), 1, null)
 
     fun anotherKeyCodeCriteria(id: String, keyCode: String) = Criteria(
-        AndFilters(listOf(SingleFilter.notEqual("id", id), SingleFilter.equal("keyCode", keyCode))),
+        AndFilters(
+            listOf(
+                SingleFilter.notEqual(FederalEntityFields.Id.value, id),
+                SingleFilter.equal(FederalEntityFields.KeyCode.value, keyCode)
+            )
+        ),
         Orders.none(),
         1,
         null
@@ -22,11 +36,16 @@ object FederalEntityCriteria {
     ) =
         Criteria(
             search?.let {
-                OrFilters(listOf(SingleFilter.contains("keyCode", it), SingleFilter.contains("name", it)))
+                OrFilters(
+                    listOf(
+                        SingleFilter.contains(FederalEntityFields.KeyCode.value, it),
+                        SingleFilter.contains(FederalEntityFields.Name.value, it)
+                    )
+                )
             } ?: EmptyFilters(),
             orders?.let {
                 Orders.fromValues(orders)
-            } ?: Orders(listOf(Order.asc("keyCode"))),
+            } ?: Orders(listOf(Order.asc(FederalEntityFields.KeyCode.value))),
             limit,
             offset
         )

@@ -1,5 +1,6 @@
 package org.eduardoleolim.organizadorPec660.core.federalEntity.infrastructure.persistence
 
+import org.eduardoleolim.organizadorPec660.core.federalEntity.domain.FederalEntityFields
 import org.eduardoleolim.organizadorPec660.core.shared.domain.InvalidArgumentError
 import org.eduardoleolim.organizadorPec660.core.shared.domain.criteria.*
 import org.eduardoleolim.organizadorPec660.core.shared.infrastructure.models.FederalEntities
@@ -39,14 +40,15 @@ class KtormFederalEntitiesCriteriaParser(private val database: Database, private
     private fun parseOrder(order: Order): OrderByExpression? {
         val orderBy = order.orderBy.value
         val orderType = order.orderType
+        val field = FederalEntityFields.entries.firstOrNull { it.value == orderBy }
 
-        return when (orderBy) {
-            "id" -> parseOrderType(orderType, federalEntities.id)
-            "keyCode" -> parseOrderType(orderType, federalEntities.keyCode)
-            "name" -> parseOrderType(orderType, federalEntities.name)
-            "createdAt" -> parseOrderType(orderType, federalEntities.createdAt)
-            "updatedAt" -> parseOrderType(orderType, federalEntities.updatedAt)
-            else -> throw InvalidArgumentError()
+        return when (field) {
+            FederalEntityFields.Id -> parseOrderType(orderType, federalEntities.id)
+            FederalEntityFields.KeyCode -> parseOrderType(orderType, federalEntities.keyCode)
+            FederalEntityFields.Name -> parseOrderType(orderType, federalEntities.name)
+            FederalEntityFields.CreatedAt -> parseOrderType(orderType, federalEntities.createdAt)
+            FederalEntityFields.UpdatedAt -> parseOrderType(orderType, federalEntities.updatedAt)
+            null -> throw InvalidArgumentError()
         }
     }
 
@@ -77,7 +79,7 @@ class KtormFederalEntitiesCriteriaParser(private val database: Database, private
         if (filters.isEmpty())
             return null
 
-        val filterConditions = filters.filters.mapNotNull {
+        val conditions = filters.filters.mapNotNull {
             when (it) {
                 is SingleFilter -> parseFilter(it.filter)
                 is MultipleFilters -> parseMultipleFilters(it)
@@ -86,18 +88,18 @@ class KtormFederalEntitiesCriteriaParser(private val database: Database, private
         }
 
         return when (filters.operator) {
-            FiltersOperator.AND -> filterConditions.reduce { acc, columnDeclaring -> acc and columnDeclaring }
-            FiltersOperator.OR -> filterConditions.reduce { acc, columnDeclaring -> acc or columnDeclaring }
+            FiltersOperator.AND -> conditions.reduceOrNull { left, right -> left and right }
+            FiltersOperator.OR -> conditions.reduceOrNull { left, right -> left or right }
         }
     }
 
     private fun parseFilter(filter: Filter): ColumnDeclaring<Boolean>? {
-        val field = filter.field.value
+        val field = FederalEntityFields.entries.firstOrNull { it.value == filter.field.value }
         val value = filter.value.value
         val operator = filter.operator
 
         return when (field) {
-            "id" -> {
+            FederalEntityFields.Id -> {
                 when (operator) {
                     FilterOperator.EQUAL -> federalEntities.id eq value
                     FilterOperator.NOT_EQUAL -> federalEntities.id notEq value
@@ -105,7 +107,7 @@ class KtormFederalEntitiesCriteriaParser(private val database: Database, private
                 }
             }
 
-            "keyCode" -> {
+            FederalEntityFields.KeyCode -> {
                 when (operator) {
                     FilterOperator.EQUAL -> federalEntities.keyCode eq value
                     FilterOperator.NOT_EQUAL -> federalEntities.keyCode notEq value
@@ -118,7 +120,7 @@ class KtormFederalEntitiesCriteriaParser(private val database: Database, private
                 }
             }
 
-            "name" -> {
+            FederalEntityFields.Name -> {
                 when (operator) {
                     FilterOperator.EQUAL -> federalEntities.name eq value
                     FilterOperator.NOT_EQUAL -> federalEntities.name notEq value
@@ -131,7 +133,7 @@ class KtormFederalEntitiesCriteriaParser(private val database: Database, private
                 }
             }
 
-            "createdAt" -> {
+            FederalEntityFields.CreatedAt -> {
                 val date = LocalDateTime.from(Instant.parse(value))
                 when (operator) {
                     FilterOperator.EQUAL -> federalEntities.createdAt eq date
@@ -144,7 +146,7 @@ class KtormFederalEntitiesCriteriaParser(private val database: Database, private
                 }
             }
 
-            "updatedAt" -> {
+            FederalEntityFields.UpdatedAt -> {
                 val date = LocalDateTime.from(Instant.parse(value))
                 when (operator) {
                     FilterOperator.EQUAL -> federalEntities.updatedAt eq date
@@ -157,7 +159,7 @@ class KtormFederalEntitiesCriteriaParser(private val database: Database, private
                 }
             }
 
-            else -> throw InvalidArgumentError()
+            null -> throw InvalidArgumentError()
         }
     }
 }
