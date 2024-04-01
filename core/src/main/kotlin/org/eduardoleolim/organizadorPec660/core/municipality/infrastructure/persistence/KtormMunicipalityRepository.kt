@@ -19,30 +19,32 @@ import java.time.LocalDateTime
 class KtormMunicipalityRepository(private val database: Database) : MunicipalityRepository {
     private val municipalities = Municipalities("m")
     private val federalEntities = FederalEntities("f")
+    private val criteriaParser = KtormMunicipalitiesCriteriaParser(database, municipalities, federalEntities)
 
     override fun matching(criteria: Criteria): List<Municipality> {
-        return KtormMunicipalitiesCriteriaParser.parse(database, municipalities, federalEntities, criteria)
-            .map { rowSet ->
-                municipalities.createEntity(rowSet).let {
-                    Municipality.from(
-                        it.id,
-                        it.keyCode,
-                        it.name,
-                        it.federalEntity.id,
-                        it.createdAt.toDate(),
-                        it.updatedAt?.toDate()
-                    )
-                }
+        val query = criteriaParser.selectQuery(criteria)
+
+        return query.map { rowSet ->
+            municipalities.createEntity(rowSet).let {
+                Municipality.from(
+                    it.id,
+                    it.keyCode,
+                    it.name,
+                    it.federalEntity.id,
+                    it.createdAt.toDate(),
+                    it.updatedAt?.toDate()
+                )
             }
+        }
     }
 
     override fun count(criteria: Criteria): Int {
-        return KtormMunicipalitiesCriteriaParser.parse(
-            database,
-            municipalities,
-            federalEntities,
-            criteria
-        ).totalRecordsInAllPages
+        val query = criteriaParser.countQuery(criteria)
+
+        return query.rowSet.let {
+            it.next()
+            it.getInt(1)
+        }
     }
 
     override fun save(municipality: Municipality) {

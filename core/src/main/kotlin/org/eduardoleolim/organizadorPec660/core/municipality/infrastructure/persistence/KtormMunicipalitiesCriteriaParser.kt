@@ -13,41 +13,38 @@ import org.ktorm.schema.ColumnDeclaring
 import java.time.Instant
 import java.time.LocalDateTime
 
-object KtormMunicipalitiesCriteriaParser {
-    fun parse(
-        database: Database,
-        municipalities: Municipalities,
-        federalEntities: FederalEntities,
-        criteria: Criteria
-    ): Query {
+class KtormMunicipalitiesCriteriaParser(
+    private val database: Database,
+    private val municipalities: Municipalities,
+    private val federalEntities: FederalEntities
+) {
+    fun selectQuery(criteria: Criteria): Query {
         return database.from(municipalities)
             .innerJoin(federalEntities, on = municipalities.federalEntityId eq federalEntities.id)
             .select().let {
-                addOrdersToQuery(it, municipalities, federalEntities, criteria)
+                addOrdersToQuery(it, criteria)
             }.let {
-                addConditionsToQuery(it, municipalities, federalEntities, criteria)
+                addConditionsToQuery(it, criteria)
             }.limit(criteria.offset, criteria.limit)
     }
 
-    private fun addOrdersToQuery(
-        query: Query,
-        municipalities: Municipalities,
-        federalEntities: FederalEntities,
-        criteria: Criteria
-    ): Query {
+    fun countQuery(criteria: Criteria): Query {
+        val baseQuery = selectQuery(criteria)
+        val querySource = QuerySource(database, municipalities, baseQuery.expression)
+
+        return querySource.select(count())
+    }
+
+    private fun addOrdersToQuery(query: Query, criteria: Criteria): Query {
         if (!criteria.hasOrders())
             return query
 
         return query.orderBy(criteria.orders.orders.mapNotNull {
-            parseOrder(municipalities, federalEntities, it)
+            parseOrder(it)
         })
     }
 
-    private fun parseOrder(
-        municipalities: Municipalities,
-        federalEntities: FederalEntities,
-        order: Order
-    ): OrderByExpression? {
+    private fun parseOrder(order: Order): OrderByExpression? {
         val orderBy = order.orderBy.value
         val orderType = order.orderType
         val field = MunicipalityFields.entries.firstOrNull { it.value == orderBy }
@@ -75,53 +72,40 @@ object KtormMunicipalitiesCriteriaParser {
         }
     }
 
-    private fun addConditionsToQuery(
-        query: Query,
-        municipalities: Municipalities,
-        federalEntities: FederalEntities,
-        criteria: Criteria
-    ): Query {
+    private fun addConditionsToQuery(query: Query, criteria: Criteria): Query {
         criteria.filters.let {
             return when (it) {
                 is EmptyFilters -> query
-                is SingleFilter -> parseFilter(municipalities, federalEntities, it.filter)?.let { conditions ->
+                is SingleFilter -> parseFilter(it.filter)?.let { conditions ->
                     query.where(conditions)
                 } ?: query
 
-                is MultipleFilters -> parseMultipleFilters(municipalities, federalEntities, it)?.let { conditions ->
+                is MultipleFilters -> parseMultipleFilters(it)?.let { conditions ->
                     query.where(conditions)
                 } ?: query
             }
         }
     }
 
-    private fun parseMultipleFilters(
-        municipalities: Municipalities,
-        federalEntities: FederalEntities,
-        filters: MultipleFilters
-    ): ColumnDeclaring<Boolean>? {
+    private fun parseMultipleFilters(filters: MultipleFilters): ColumnDeclaring<Boolean>? {
         if (filters.isEmpty())
             return null
 
-        val filterConditions = filters.filters.mapNotNull {
+        val conditions = filters.filters.mapNotNull {
             when (it) {
-                is SingleFilter -> parseFilter(municipalities, federalEntities, it.filter)
-                is MultipleFilters -> parseMultipleFilters(municipalities, federalEntities, it)
+                is SingleFilter -> parseFilter(it.filter)
+                is MultipleFilters -> parseMultipleFilters(it)
                 else -> null
             }
         }
 
         return when (filters.operator) {
-            FiltersOperator.AND -> filterConditions.reduceOrNull { leftCondition, rightCondition -> leftCondition and rightCondition }
-            FiltersOperator.OR -> filterConditions.reduceOrNull { leftCondition, rightCondition -> leftCondition or rightCondition }
+            FiltersOperator.AND -> conditions.reduceOrNull { left, right -> left and right }
+            FiltersOperator.OR -> conditions.reduceOrNull { left, right -> left or right }
         }
     }
 
-    private fun parseFilter(
-        municipalities: Municipalities,
-        federalEntities: FederalEntities,
-        filter: Filter
-    ): ColumnDeclaring<Boolean>? {
+    private fun parseFilter(filter: Filter): ColumnDeclaring<Boolean>? {
         val field = MunicipalityFields.entries.firstOrNull { it.value == filter.field.value }
         val value = filter.value.value
         val operator = filter.operator
