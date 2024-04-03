@@ -1,33 +1,19 @@
 package org.eduardoleolim.organizadorPec660.core.statisticType.domain
 
-import org.eduardoleolim.organizadorPec660.core.instrumentType.domain.InstrumentTypeId
 import java.util.*
 
 class StatisticType private constructor(
     private val id: StatisticTypeId,
     private var keyCode: StatisticTypeKeyCode,
     private var name: StatisticTypeName,
-    private var instrumentTypeIds: MutableList<InstrumentTypeId>,
     private val createdAt: StatisticTypeCreateDate,
     private var updatedAt: StatisticTypeUpdateDate?
 ) {
-    init {
-        instrumentTypeIds = instrumentTypeIds.distinct().toMutableList()
-        validate()
-    }
-
-    private fun validate() {
-        if (instrumentTypeIds.isEmpty()) {
-            throw NotEnoughInstrumentTypesError()
-        }
-    }
-
     companion object {
-        fun create(keyCode: String, name: String, instrumentTypeIds: MutableList<String>) = StatisticType(
+        fun create(keyCode: String, name: String) = StatisticType(
             StatisticTypeId.random(),
             StatisticTypeKeyCode(keyCode),
             StatisticTypeName(name),
-            instrumentTypeIds.map(InstrumentTypeId::fromString).toMutableList(),
             StatisticTypeCreateDate.now(),
             null
         )
@@ -36,14 +22,12 @@ class StatisticType private constructor(
             id: String,
             keyCode: String,
             name: String,
-            instrumentTypeIds: MutableList<String>,
             createdAt: Date,
             updatedAt: Date?
         ) = StatisticType(
             StatisticTypeId.fromString(id),
             StatisticTypeKeyCode(keyCode),
             StatisticTypeName(name),
-            instrumentTypeIds.map(InstrumentTypeId::fromString).toMutableList(),
             StatisticTypeCreateDate(createdAt),
             updatedAt?.let {
                 if (it.before(createdAt))
@@ -60,8 +44,6 @@ class StatisticType private constructor(
 
     fun name() = name.value
 
-    fun instrumentTypeIds() = instrumentTypeIds.map { it.value.toString() }.toList()
-
     fun createdAt() = createdAt.value
 
     fun updatedAt() = updatedAt?.value
@@ -74,36 +56,6 @@ class StatisticType private constructor(
     fun changeName(name: String) {
         this.name = StatisticTypeName(name)
         this.updatedAt = StatisticTypeUpdateDate.now()
-    }
-
-    fun addInstrumentTypeId(id: String) {
-        InstrumentTypeId.fromString(id).let {
-            if (instrumentTypeIds.contains(it))
-                return
-
-            if (instrumentTypeIds.add(it))
-                this.updatedAt = StatisticTypeUpdateDate.now()
-        }
-    }
-
-    fun removeInstrumentTypeId(id: String) {
-        if (instrumentTypeIds.size == 1 && instrumentTypeIds.first().toString() == id)
-            throw NotEnoughInstrumentTypesError()
-
-        if (instrumentTypeIds.removeIf { it.value.toString() == id }) {
-            this.updatedAt = StatisticTypeUpdateDate.now()
-        }
-    }
-
-    fun changeInstrumentTypeIds(instrumentTypeIds: List<String>) {
-        instrumentTypeIds.distinct().let {
-            if (it.isEmpty())
-                throw NotEnoughInstrumentTypesError()
-
-            this.instrumentTypeIds.clear()
-            this.instrumentTypeIds.addAll(it.map(InstrumentTypeId::fromString))
-            this.updatedAt = StatisticTypeUpdateDate.now()
-        }
     }
 }
 

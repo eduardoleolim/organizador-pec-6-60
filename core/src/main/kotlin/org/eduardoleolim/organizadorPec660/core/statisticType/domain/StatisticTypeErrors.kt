@@ -22,5 +22,3 @@ class StatisticTypeNotFoundError(val id: String) :
 
 class StatisticTypeAlreadyExistsError(val keyCode: String) :
     StatisticTypeError("The statistic type with key code <$keyCode> already exists")
-
-class NotEnoughInstrumentTypesError : StatisticTypeError("The statistic type must have at least one instrument type")

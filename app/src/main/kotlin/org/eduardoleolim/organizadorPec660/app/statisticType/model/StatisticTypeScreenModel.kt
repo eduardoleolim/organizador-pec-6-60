@@ -83,22 +83,21 @@ class StatisticTypeScreenModel(private val queryBus: QueryBus, private val comma
         }
     }
 
-    fun createStatisticType(keyCode: String, name: String, instrumentTypeIds: List<String>) {
+    fun createStatisticType(keyCode: String, name: String) {
         _formState.value = FormState.InProgress
         screenModelScope.launch(Dispatchers.IO) {
             val isKeyCodeBlank = keyCode.isBlank()
             val isNameBlank = name.isBlank()
-            val isInstrumentTypesBlank = instrumentTypeIds.isEmpty()
 
             if (isKeyCodeBlank || isNameBlank) {
                 _formState.value = FormState.Error(
-                    EmptyStatisticTypeDataException(isKeyCodeBlank, isNameBlank, isInstrumentTypesBlank)
+                    EmptyStatisticTypeDataException(isKeyCodeBlank, isNameBlank)
                 )
                 return@launch
             }
 
             try {
-                commandBus.dispatch(CreateStatisticTypeCommand(keyCode, name, instrumentTypeIds))
+                commandBus.dispatch(CreateStatisticTypeCommand(keyCode, name))
                 _formState.value = FormState.SuccessCreate
             } catch (e: Exception) {
                 _formState.value = FormState.Error(e.cause!!)
@@ -106,22 +105,21 @@ class StatisticTypeScreenModel(private val queryBus: QueryBus, private val comma
         }
     }
 
-    fun editStatisticType(statisticTypeId: String, keyCode: String, name: String, instrumentTypeIds: List<String>) {
+    fun editStatisticType(statisticTypeId: String, keyCode: String, name: String) {
         _formState.value = FormState.InProgress
         screenModelScope.launch(Dispatchers.IO) {
             val isKeyCodeBlank = keyCode.isBlank()
             val isNameBlank = name.isBlank()
-            val isInstrumentTypesBlank = instrumentTypeIds.isEmpty()
 
             if (isKeyCodeBlank || isNameBlank) {
                 _formState.value = FormState.Error(
-                    EmptyStatisticTypeDataException(isKeyCodeBlank, isNameBlank, isInstrumentTypesBlank)
+                    EmptyStatisticTypeDataException(isKeyCodeBlank, isNameBlank)
                 )
                 return@launch
             }
 
             try {
-                commandBus.dispatch(UpdateStatisticTypeCommand(statisticTypeId, keyCode, name, instrumentTypeIds))
+                commandBus.dispatch(UpdateStatisticTypeCommand(statisticTypeId, keyCode, name))
                 _formState.value = FormState.SuccessEdit
             } catch (e: Exception) {
                 _formState.value = FormState.Error(e.cause!!)

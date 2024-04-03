@@ -5,6 +5,6 @@ import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.command.Comman
 class UpdateStatisticTypeCommandHandler(private val updater: StatisticTypeUpdater) :
     CommandHandler<UpdateStatisticTypeCommand> {
     override fun handle(command: UpdateStatisticTypeCommand) {
-        updater.update(command.statisticTypeId(), command.keyCode(), command.name(), command.instrumentTypeIds())
+        updater.update(command.statisticTypeId(), command.keyCode(), command.name())
     }
 }

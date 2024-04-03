@@ -3,7 +3,6 @@ package org.eduardoleolim.organizadorPec660.core.statisticType.infrastructure.pe
 import org.eduardoleolim.organizadorPec660.core.shared.domain.InvalidArgumentError
 import org.eduardoleolim.organizadorPec660.core.shared.domain.criteria.*
 import org.eduardoleolim.organizadorPec660.core.shared.infrastructure.models.InstrumentTypes
-import org.eduardoleolim.organizadorPec660.core.shared.infrastructure.models.InstrumentTypesOfStatisticTypes
 import org.eduardoleolim.organizadorPec660.core.shared.infrastructure.models.StatisticTypes
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
@@ -18,15 +17,9 @@ object KtormStatisticTypeCriteriaParser {
         database: Database,
         statisticTypes: StatisticTypes,
         instrumentTypes: InstrumentTypes,
-        instrumentTypesOfStatisticTypes: InstrumentTypesOfStatisticTypes,
         criteria: Criteria
     ): Query {
         return database.from(statisticTypes)
-            .leftJoin(
-                instrumentTypesOfStatisticTypes,
-                on = statisticTypes.id eq instrumentTypesOfStatisticTypes.statisticTypeId
-            )
-            .leftJoin(instrumentTypes, on = instrumentTypes.id eq instrumentTypesOfStatisticTypes.instrumentTypeId)
             .selectDistinct(statisticTypes.columns).let {
                 addOrdersToQuery(it, statisticTypes, instrumentTypes, criteria)
             }.let {

@@ -1,9 +1,10 @@
 package org.eduardoleolim.organizadorPec660.app.statisticType.views
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.unit.dp
@@ -22,7 +23,6 @@ fun StatisticTypeScreen.StatisticTypeFormModal(
     val statisticTypeId = remember { statisticType?.id }
     var keyCode by remember { mutableStateOf(statisticType?.keyCode ?: "") }
     var name by remember { mutableStateOf(statisticType?.name ?: "") }
-    val instrumentTypeIds = remember { statisticType?.instrumentTypeIds?.toMutableList() ?: mutableListOf() }
 
     var enabled by remember { mutableStateOf(true) }
     var isKeyCodeError by remember { mutableStateOf(false) }
@@ -120,42 +120,6 @@ fun StatisticTypeScreen.StatisticTypeFormModal(
                         { Text(text = message, color = MaterialTheme.colorScheme.error) }
                     }
                 )
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                Text(
-                    text = "Tipos de instrumento",
-                    style = MaterialTheme.typography.bodyLarge
-                )
-
-                Column {
-                    screenModel.instrumentTypes.value.forEach { instrumentType ->
-                        var checked by remember { mutableStateOf(instrumentTypeIds.contains(instrumentType.id)) }
-
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(16.dp)
-                        ) {
-                            Checkbox(
-                                checked = checked,
-                                onCheckedChange = {
-                                    if (!checked) {
-                                        instrumentTypeIds.add(instrumentType.id)
-                                    } else {
-                                        instrumentTypeIds.removeAll { it == instrumentType.id }
-                                    }
-
-                                    checked = !checked
-                                }
-                            )
-
-                            Text(
-                                text = instrumentType.name,
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        }
-                    }
-                }
             }
         },
         confirmButton = {
@@ -163,9 +127,9 @@ fun StatisticTypeScreen.StatisticTypeFormModal(
                 enabled = enabled,
                 onClick = {
                     if (statisticType != null) {
-                        screenModel.editStatisticType(statisticTypeId!!, keyCode, name, instrumentTypeIds)
+                        screenModel.editStatisticType(statisticTypeId!!, keyCode, name)
                     } else {
-                        screenModel.createStatisticType(keyCode, name, instrumentTypeIds)
+                        screenModel.createStatisticType(keyCode, name)
                     }
                 }
             ) {

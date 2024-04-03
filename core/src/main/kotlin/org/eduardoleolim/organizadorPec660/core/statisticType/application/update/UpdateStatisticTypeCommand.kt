@@ -2,16 +2,10 @@ package org.eduardoleolim.organizadorPec660.core.statisticType.application.updat
 
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.command.Command
 
-class UpdateStatisticTypeCommand(
-    statisticTypeId: String,
-    keyCode: String,
-    name: String,
-    instrumentTypeIds: List<String>
-) : Command {
+class UpdateStatisticTypeCommand(statisticTypeId: String, keyCode: String, name: String) : Command {
     private val statisticTypeId: String = statisticTypeId.trim()
     private val keyCode: String = keyCode.trim().uppercase()
     private val name: String = name.trim().uppercase()
-    private val instrumentTypeIds: List<String> = instrumentTypeIds.distinct().map { it.trim() }
 
     fun statisticTypeId(): String {
         return statisticTypeId
@@ -23,9 +17,5 @@ class UpdateStatisticTypeCommand(
 
     fun name(): String {
         return name
-    }
-
-    fun instrumentTypeIds(): List<String> {
-        return instrumentTypeIds
     }
 }

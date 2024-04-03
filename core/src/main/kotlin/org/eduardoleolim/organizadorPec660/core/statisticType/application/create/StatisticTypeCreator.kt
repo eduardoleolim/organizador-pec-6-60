@@ -11,13 +11,11 @@ class StatisticTypeCreator(
     private val statisticTypeRepository: StatisticTypeRepository,
     private val instrumentTypeRepository: InstrumentTypeRepository
 ) {
-    fun create(keyCode: String, name: String, instrumentTypeIds: List<String>) {
+    fun create(keyCode: String, name: String) {
         if (existsStatisticType(keyCode))
             throw StatisticTypeAlreadyExistsError(keyCode)
 
-        val filteredInstrumentTypeIds = filterInstrumentTypeIds(instrumentTypeIds)
-
-        StatisticType.create(keyCode, name, filteredInstrumentTypeIds).let {
+        StatisticType.create(keyCode, name).let {
             statisticTypeRepository.save(it)
         }
     }
@@ -30,7 +28,4 @@ class StatisticTypeCreator(
         InstrumentTypeCriteria.idCriteria(instrumentTypeId).let {
             instrumentTypeRepository.count(it) > 0
         }
-
-    private fun filterInstrumentTypeIds(instrumentTypeIds: List<String>) =
-        instrumentTypeIds.distinct().filter { existsInstrumentType(it) }.toMutableList()
 }

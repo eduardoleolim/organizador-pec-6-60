@@ -8,7 +8,6 @@ class StatisticTypeResponse(
     val id: String,
     val keyCode: String,
     val name: String,
-    val instrumentTypeIds: List<String>,
     val createdAt: Date,
     val updatedAt: Date?
 ) : Response {
@@ -18,7 +17,6 @@ class StatisticTypeResponse(
                 statisticType.id().toString(),
                 statisticType.keyCode(),
                 statisticType.name(),
-                statisticType.instrumentTypeIds(),
                 statisticType.createdAt(),
                 statisticType.updatedAt(),
             )

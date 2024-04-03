@@ -23,16 +23,3 @@ class StatisticTypes(alias: String? = null) : Table<StatisticType>("statisticTyp
 
     override fun aliased(alias: String) = StatisticTypes(alias)
 }
-
-interface InstrumentTypeOfStatisticType : Entity<InstrumentTypeOfStatisticType> {
-    val instrumentType: InstrumentType
-    val statisticType: StatisticType
-}
-
-class InstrumentTypesOfStatisticTypes(alias: String? = null) :
-    Table<InstrumentTypeOfStatisticType>("statisticType_instrumentType", alias) {
-    val instrumentTypeId = varchar("instrumentTypeId").references(InstrumentTypes()) { it.instrumentType }
-    val statisticTypeId = varchar("statisticTypeId").references(StatisticTypes()) { it.statisticType }
-
-    override fun aliased(alias: String) = InstrumentTypesOfStatisticTypes(alias)
-}

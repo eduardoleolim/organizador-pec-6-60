@@ -82,7 +82,7 @@ object KtormAppModule {
         single { StatisticTypeCreator(get(), get()) }
         single { StatisticTypeDeleter(get()) }
         single { StatisticTypeSearcher(get()) }
-        single { StatisticTypeUpdater(get(), get()) }
+        single { StatisticTypeUpdater(get()) }
 
         // User services
         single { UserSearcher(get()) }
