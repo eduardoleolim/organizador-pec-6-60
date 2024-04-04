@@ -1,21 +1,23 @@
 package org.eduardoleolim.organizadorPec660.core.shared.infrastructure.models
 
 import org.ktorm.entity.Entity
-import org.ktorm.schema.Table
-import org.ktorm.schema.boolean
-import org.ktorm.schema.int
-import org.ktorm.schema.varchar
+import org.ktorm.schema.*
+import java.time.LocalDateTime
 
 interface Agency : Entity<Agency> {
     val id: String
     val name: String
     val consecutive: Int
+    val createdAt: LocalDateTime
+    val updatedAt: LocalDateTime?
 }
 
 class Agencies(alias: String? = null) : Table<Agency>("agency", alias) {
     val id = varchar("agencyId").primaryKey().bindTo { it.id }
     val name = varchar("name").bindTo { it.name }
     val consecutive = int("consecutive").bindTo { it.consecutive }
+    val createdAt = datetime("createdAt").bindTo { it.createdAt }
+    val updatedAt = datetime("updatedAt").bindTo { it.updatedAt }
 
     override fun aliased(alias: String) = Agencies(alias)
 }

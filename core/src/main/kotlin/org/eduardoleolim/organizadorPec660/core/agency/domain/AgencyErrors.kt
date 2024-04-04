@@ -1,5 +1,7 @@
 package org.eduardoleolim.organizadorPec660.core.agency.domain
 
+import java.util.*
+
 sealed class AgencyError(override val message: String, override val cause: Throwable? = null) :
     RuntimeException(message, cause)
 
@@ -14,3 +16,6 @@ class InvalidAgencyConsecutiveError(val consecutive: Int) :
 class InvalidAgencyMunicipalitiesError : AgencyError("The agency must to have at least a municipality association")
 
 class InvalidAgencyStatisticTypesError : AgencyError("The agency must to have at least a statistic type association")
+
+class InvalidAgencyUpdateDateError(val updatedAt: Date, val createdAt: Date) :
+    AgencyError("The update date <$updatedAt> is not valid because it is before the create date <$createdAt>")

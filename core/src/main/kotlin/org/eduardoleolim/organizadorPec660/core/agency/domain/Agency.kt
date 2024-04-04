@@ -7,7 +7,9 @@ class Agency private constructor(
     private var name: AgencyName,
     private var consecutive: AgencyConsecutive,
     private val municipalities: MutableList<AgencyMunicipalityAssociation>,
-    private val statisticTypes: MutableList<AgencyStatisticTypeAssociation>
+    private val statisticTypes: MutableList<AgencyStatisticTypeAssociation>,
+    private val createdAt: AgencyCreateDate,
+    private var updatedAt: AgencyUpdateDate?
 ) {
     companion object {
         fun create(
@@ -45,7 +47,9 @@ class Agency private constructor(
                 agencyName,
                 agencyConsecutive,
                 municipalityAssociations.toMutableList(),
-                statisticTypeAssociations.toMutableList()
+                statisticTypeAssociations.toMutableList(),
+                AgencyCreateDate.now(),
+                null
             )
         }
 
@@ -54,7 +58,9 @@ class Agency private constructor(
             name: String,
             consecutive: Int,
             municipalities: List<Pair<String, Boolean>>,
-            statisticTypes: List<Pair<String, String>>
+            statisticTypes: List<Pair<String, String>>,
+            createdAt: Date,
+            updatedAt: Date?
         ): Agency {
             val agencyId = AgencyId.fromString(id)
             val agencyName = AgencyName(name)
@@ -85,7 +91,14 @@ class Agency private constructor(
                 agencyName,
                 agencyConsecutive,
                 municipalityAssociations.toMutableList(),
-                statisticTypeAssociations.toMutableList()
+                statisticTypeAssociations.toMutableList(),
+                AgencyCreateDate(createdAt),
+                updatedAt?.let {
+                    if (it.before(createdAt))
+                        throw InvalidAgencyUpdateDateError(it, createdAt)
+
+                    AgencyUpdateDate(it)
+                }
             )
         }
     }
@@ -96,16 +109,22 @@ class Agency private constructor(
 
     fun consecutive() = consecutive.value
 
+    fun createdAt() = createdAt.value
+
+    fun updatedAt() = updatedAt?.value
+
     fun municipalities() = municipalities.toList()
 
     fun statisticTypes() = statisticTypes.toList()
 
     fun changeName(name: String) {
         this.name = AgencyName(name)
+        this.updatedAt = AgencyUpdateDate.now()
     }
 
     fun changeConsecutive(consecutive: Int) {
         this.consecutive = AgencyConsecutive(consecutive)
+        this.updatedAt = AgencyUpdateDate.now()
     }
 
     fun addMunicipality(municipalityId: String, isOwner: Boolean) {
@@ -122,14 +141,23 @@ class Agency private constructor(
                 )
             )
         }
+
+        this.updatedAt = AgencyUpdateDate.now()
     }
 
     fun removeMunicipality(municipalityId: String) {
-        municipalities.removeAll { it.municipalityId().toString() == municipalityId }
+        val removed = municipalities.removeAll { it.municipalityId().toString() == municipalityId }
+
+        if (removed) {
+            this.updatedAt = AgencyUpdateDate.now()
+        }
     }
 
     fun changeMunicipalityOwner(municipalityId: String, isOwner: Boolean) {
-        municipalities.firstOrNull { it.municipalityId().toString() == municipalityId }?.changeOwner(isOwner)
+        municipalities.firstOrNull { it.municipalityId().toString() == municipalityId }?.let {
+            it.changeOwner(isOwner)
+            this.updatedAt = AgencyUpdateDate.now()
+        }
     }
 
     fun addStatisticType(statisticTypeId: String, instrumentTypeId: String) {
@@ -146,15 +174,23 @@ class Agency private constructor(
                 )
             )
         }
+
+        this.updatedAt = AgencyUpdateDate.now()
     }
 
     fun removeStatisticType(statisticType: String) {
-        statisticTypes.removeAll { it.statisticTypeId().toString() == statisticType }
+        val removed = statisticTypes.removeAll { it.statisticTypeId().toString() == statisticType }
+
+        if (removed) {
+            this.updatedAt = AgencyUpdateDate.now()
+        }
     }
 
     fun changeStatisticTypeInstrumentType(statisticTypeId: String, instrumentTypeId: String) {
-        statisticTypes.firstOrNull { it.statisticTypeId().toString() == statisticTypeId }
-            ?.changeInstrumentTypeId(instrumentTypeId)
+        statisticTypes.firstOrNull { it.statisticTypeId().toString() == statisticTypeId }?.let {
+            it.changeInstrumentTypeId(instrumentTypeId)
+            this.updatedAt = AgencyUpdateDate.now()
+        }
     }
 }
 
@@ -191,5 +227,17 @@ data class AgencyConsecutive(val value: Int) {
         if (value <= 0) {
             throw InvalidAgencyConsecutiveError(value)
         }
+    }
+}
+
+data class AgencyCreateDate(val value: Date) {
+    companion object {
+        fun now() = AgencyCreateDate(Date())
+    }
+}
+
+data class AgencyUpdateDate(val value: Date) {
+    companion object {
+        fun now() = AgencyUpdateDate(Date())
     }
 }

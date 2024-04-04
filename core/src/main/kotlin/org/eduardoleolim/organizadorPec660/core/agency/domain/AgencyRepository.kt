@@ -7,7 +7,7 @@ interface AgencyRepository {
 
     fun count(criteria: Criteria): Int
 
-    fun save(federalEntity: Agency)
+    fun save(agency: Agency)
 
-    fun delete(federalEntityId: String)
+    fun delete(agencyId: String)
 }

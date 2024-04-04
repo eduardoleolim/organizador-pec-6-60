@@ -53,6 +53,8 @@ create table if not exists agency
     agencyId    text    not null,
     name        text    not null,
     consecutive integer not null,
+    createdAt   integer not null,
+    updatedAt   integer,
 
     constraint agencyId_Pk primary key (agencyId)
 );
