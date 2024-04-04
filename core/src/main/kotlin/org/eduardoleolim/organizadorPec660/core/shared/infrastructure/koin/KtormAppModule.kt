@@ -1,5 +1,7 @@
 package org.eduardoleolim.organizadorPec660.core.shared.infrastructure.koin
 
+import org.eduardoleolim.organizadorPec660.core.agency.domain.AgencyRepository
+import org.eduardoleolim.organizadorPec660.core.agency.infrastructure.persistence.KtormAgencyRepository
 import org.eduardoleolim.organizadorPec660.core.auth.application.authenticate.UserAuthenticator
 import org.eduardoleolim.organizadorPec660.core.auth.domain.AuthRepository
 import org.eduardoleolim.organizadorPec660.core.auth.infrastructure.persistence.KtormAuthRepository
@@ -41,6 +43,7 @@ object KtormAppModule {
         single<Database> { database }
 
         // Repositories
+        single<AgencyRepository> { KtormAgencyRepository(get()) }
         single<AuthRepository> { KtormAuthRepository(get()) }
         single<FederalEntityRepository> { KtormFederalEntityRepository(get()) }
         // single<InstrumentFileRepository> {  }

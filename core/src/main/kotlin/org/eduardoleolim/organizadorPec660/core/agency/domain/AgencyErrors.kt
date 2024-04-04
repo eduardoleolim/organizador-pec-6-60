@@ -19,3 +19,5 @@ class InvalidAgencyStatisticTypesError : AgencyError("The agency must to have at
 
 class InvalidAgencyUpdateDateError(val updatedAt: Date, val createdAt: Date) :
     AgencyError("The update date <$updatedAt> is not valid because it is before the create date <$createdAt>")
+
+class AgencyNotFoundError(val id: String) : AgencyError("The agency with id <$id> was not found")
