@@ -1,123 +1,144 @@
 -- Sqlite3 sqlite schema for the application
 
-CREATE TABLE IF NOT EXISTS federalEntity
+create table if not exists federalEntity
 (
-    federalEntityId TEXT    NOT NULL,
-    keyCode         TEXT    NOT NULL,
-    name            TEXT    NOT NULL,
-    createdAt       INTEGER NOT NULL,
-    updatedAt       INTEGER,
+    federalEntityId text    not null,
+    keyCode         text    not null,
+    name            text    not null,
+    createdAt       integer not null,
+    updatedAt       integer,
 
-    CONSTRAINT federalEntity_Pk PRIMARY KEY (federalEntityId),
-    CONSTRAINT keyCode_Unq UNIQUE (keyCode)
+    constraint federalEntity_Pk primary key (federalEntityId),
+    constraint keyCode_Unq unique (keyCode)
 );
 
-CREATE TABLE IF NOT EXISTS municipality
+create table if not exists municipality
 (
-    municipalityId  TEXT    NOT NULL,
-    keyCode         TEXT    NOT NULL,
-    name            TEXT    NOT NULL,
-    createdAt       INTEGER NOT NULL,
-    updatedAt       INTEGER,
-    federalEntityId TEXT    NOT NULL,
+    municipalityId  text    not null,
+    keyCode         text    not null,
+    name            text    not null,
+    createdAt       integer not null,
+    updatedAt       integer,
+    federalEntityId text    not null,
 
-    CONSTRAINT municipality_Pk PRIMARY KEY (municipalityId),
-    CONSTRAINT keyCode_federalEntityId_Unq UNIQUE (keyCode, federalEntityId),
-    CONSTRAINT federalEntityId_Fk FOREIGN KEY (federalEntityId) REFERENCES federalEntity (federalEntityId)
+    constraint municipality_Pk primary key (municipalityId),
+    constraint keyCode_federalEntityId_Unq unique (keyCode, federalEntityId),
+    constraint federalEntityId_Fk foreign key (federalEntityId) references federalEntity (federalEntityId)
 );
 
-CREATE TABLE IF NOT EXISTS instrumentType
+create table if not exists instrumentType
 (
-    instrumentTypeId TEXT    NOT NULL,
-    name             TEXT    NOT NULL,
-    createdAt        INTEGER NOT NULL,
-    updatedAt        INTEGER,
+    instrumentTypeId text    not null,
+    name             text    not null,
+    createdAt        integer not null,
+    updatedAt        integer,
 
-    CONSTRAINT instrumentType_Pk PRIMARY KEY (instrumentTypeId)
+    constraint instrumentType_Pk primary key (instrumentTypeId)
 );
 
-CREATE TABLE IF NOT EXISTS statisticType
+create table if not exists statisticType
 (
-    statisticTypeId TEXT    NOT NULL,
-    keyCode         TEXT    NOT NULL,
-    name            TEXT    NOT NULL,
-    createdAt       INTEGER NOT NULL,
-    updatedAt       INTEGER,
+    statisticTypeId text    not null,
+    keyCode         text    not null,
+    name            text    not null,
+    createdAt       integer not null,
+    updatedAt       integer,
 
-    CONSTRAINT statisticType_Pk PRIMARY KEY (statisticTypeId),
-    CONSTRAINT keyCode_Unq UNIQUE (keyCode)
+    constraint statisticType_Pk primary key (statisticTypeId),
+    constraint keyCode_Unq unique (keyCode)
 );
 
-CREATE TABLE IF NOT EXISTS statisticType_instrumentType
+create table if not exists agency
 (
-    statisticTypeId  TEXT NOT NULL,
-    instrumentTypeId TEXT NOT NULL,
+    agencyId    text    not null,
+    name        text    not null,
+    consecutive integer not null,
 
-    CONSTRAINT statisticType_instrumentType_PK PRIMARY KEY (statisticTypeId, instrumentTypeId),
-    CONSTRAINT idStatisticType_Fk FOREIGN KEY (statisticTypeId) REFERENCES statisticType (statisticTypeId),
-    CONSTRAINT idInstrumentType_Fk FOREIGN KEY (instrumentTypeId) REFERENCES instrumentType (instrumentTypeId)
+    constraint agencyId_Pk primary key (agencyId)
 );
 
-CREATE TABLE IF NOT EXISTS instrumentFile
+create table if not exists agency_municipality
 (
-    instrumentFileId TEXT    NOT NULL,
-    content          BLOB    NOT NULL,
+    agencyId        text    not null,
+    municipalityId  text    not null,
+    isOWner         integer not null,
 
-    CONSTRAINT instrumentFile_Pk PRIMARY KEY (instrumentFileId)
+    constraint agency_municipality_Unq unique (agencyId, municipalityId),
+    constraint agencyId_Fk foreign key (agencyId) references agency (agencyId),
+    constraint municipalityId_Fk foreign key (municipalityId) references municipality (municipalityId)
 );
 
-CREATE TABLE IF NOT EXISTS instrument
+create table if not exists statisticType_agency
 (
-    instrumentId     TEXT    NOT NULL,
-    statisticYear    INTEGER NOT NULL,
-    statisticMonth   INTEGER NOT NULL,
-    consecutive      TEXT    NOT NULL,
-    saved            INTEGER NOT NULL,
-    createdAt        INTEGER NOT NULL,
-    updatedAt        INTEGER,
-    instrumentTypeId TEXT    NOT NULL,
-    statisticTypeId  TEXT    NOT NULL,
-    municipalityId   TEXT    NOT NULL,
-    instrumentFileId TEXT    NOT NULL,
+    agencyId        text not null,
+    statisticTypeId text not null,
+    intrumentTypeId text not null,
 
-    CONSTRAINT instrument_Pk PRIMARY KEY (instrumentId),
-    CONSTRAINT instrument_Unq UNIQUE (statisticYear, statisticMonth, consecutive, instrumentTypeId, statisticTypeId,
+    constraint statisticType_agency_Unq unique (agencyId, statisticTypeId),
+    constraint agencyId_Fk foreign key (agencyId) references agency (agencyId),
+    constraint statisticTypeId_Fk foreign key (statisticTypeId) references statisticType (statisticTypeId)
+);
+
+create table if not exists instrumentFile
+(
+    instrumentFileId text    not null,
+    content          blob    not null,
+
+    constraint instrumentFile_Pk primary key (instrumentFileId)
+);
+
+create table if not exists instrument
+(
+    instrumentId     text    not null,
+    statisticYear    integer not null,
+    statisticMonth   integer not null,
+    consecutive      text    not null,
+    saved            integer not null,
+    createdAt        integer not null,
+    updatedAt        integer,
+    instrumentTypeId text    not null,
+    statisticTypeId  text    not null,
+    municipalityId   text    not null,
+    instrumentFileId text    not null,
+
+    constraint instrument_Pk primary key (instrumentId),
+    constraint instrument_Unq unique (statisticYear, statisticMonth, consecutive, instrumentTypeId, statisticTypeId,
                                       municipalityId),
-    CONSTRAINT instrumentTypeId_Fk FOREIGN KEY (instrumentTypeId) REFERENCES instrumentType (instrumentTypeId),
-    CONSTRAINT statisticTypeId_Fk FOREIGN KEY (statisticTypeId) REFERENCES statisticType (statisticTypeId),
-    CONSTRAINT municipalityId_Fk FOREIGN KEY (municipalityId) REFERENCES municipality (municipalityId),
-    CONSTRAINT instrumentFileId_Fk FOREIGN KEY (instrumentFileId) REFERENCES instrumentFile (instrumentFileId)
+    constraint instrumentTypeId_Fk foreign key (instrumentTypeId) references instrumentType (instrumentTypeId),
+    constraint statisticTypeId_Fk foreign key (statisticTypeId) references statisticType (statisticTypeId),
+    constraint municipalityId_Fk foreign key (municipalityId) references municipality (municipalityId),
+    constraint instrumentFileId_Fk foreign key (instrumentFileId) references instrumentFile (instrumentFileId)
 );
 
-CREATE TABLE IF NOT EXISTS role
+create table if not exists role
 (
-    roleId TEXT NOT NULL,
-    name   TEXT NOT NULL,
+    roleId text not null,
+    name   text not null,
 
-    CONSTRAINT roleId_Pk PRIMARY KEY (roleId)
+    constraint roleId_Pk primary key (roleId)
 );
 
-CREATE TABLE IF NOT EXISTS user
+create table if not exists user
 (
-    userId    TEXT NOT NULL,
-    firstname TEXT NOT NULL,
-    lastname  TEXT,
-    roleId    TEXT NOT NULL,
-    createdAt INTEGER NOT NULL,
-    updatedAt INTEGER,
+    userId    text not null,
+    firstname text not null,
+    lastname  text,
+    roleId    text not null,
+    createdAt integer not null,
+    updatedAt integer,
 
-    CONSTRAINT user_Pk PRIMARY KEY (userId),
-    CONSTRAINT roleId_Fk FOREIGN KEY (roleId) REFERENCES role (roleId)
+    constraint user_Pk primary key (userId),
+    constraint roleId_Fk foreign key (roleId) references role (roleId)
 );
 
-CREATE TABLE IF NOT EXISTS credentials
+create table if not exists credentials
 (
-    userId   TEXT NOT NULL,
-    email    TEXT NOT NULL,
-    username TEXT NOT NULL,
-    password TEXT NOT NULL,
+    userId   text not null,
+    email    text not null,
+    username text not null,
+    password text not null,
 
-    CONSTRAINT password_Unq UNIQUE (email),
-    CONSTRAINT username_Unq UNIQUE (username),
-    CONSTRAINT userId_FK FOREIGN KEY (userId) REFERENCES user (userId)
+    constraint password_Unq unique (email),
+    constraint username_Unq unique (username),
+    constraint userId_FK foreign key (userId) references user (userId)
 );
