@@ -59,7 +59,7 @@ compose.desktop {
 
             includeAllModules = true
 
-            appResourcesRootDir.set(project.layout.projectDirectory.dir("../resources"))
+            appResourcesRootDir.set(project.layout.projectDirectory.dir("resources"))
 
             windows {
                 iconFile.set(file("src/main/composeResources/drawable/icon.ico"))
