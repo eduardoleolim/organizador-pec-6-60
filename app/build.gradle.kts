@@ -32,7 +32,7 @@ dependencies {
 
 compose.desktop {
     application {
-        mainClass = "org.eduardoleolim.organizadorPec660.app.MainKt"
+        mainClass = "MainKt"
         jvmArgs("-Dfile.encoding=UTF-8")
 
         val taskNames = project.gradle.startParameter.taskNames

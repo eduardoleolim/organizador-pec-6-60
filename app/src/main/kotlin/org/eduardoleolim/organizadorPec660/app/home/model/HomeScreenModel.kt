@@ -11,7 +11,7 @@ import cafe.adriel.voyager.core.stack.popUntil
 import cafe.adriel.voyager.navigator.Navigator
 import kotlinx.coroutines.launch
 import org.eduardoleolim.organizadorPec660.app.auth.views.AuthScreen
-import org.eduardoleolim.organizadorPec660.app.main.router.HomeProvider
+import org.eduardoleolim.organizadorPec660.app.router.HomeProvider
 
 class HomeScreenModel(
     private val navigator: Navigator,

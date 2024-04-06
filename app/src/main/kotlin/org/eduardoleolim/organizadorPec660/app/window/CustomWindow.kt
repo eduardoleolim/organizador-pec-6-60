@@ -1,4 +1,4 @@
-package org.eduardoleolim.organizadorPec660.app.main.customWindow
+package org.eduardoleolim.organizadorPec660.app.window
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -19,8 +19,8 @@ import androidx.compose.ui.window.FrameWindowScope
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.WindowState
-import org.eduardoleolim.organizadorPec660.app.main.customWindow.utils.CustomWindowDecorationAccessing
-import org.eduardoleolim.organizadorPec660.app.main.customWindow.utils.WindowSize
+import org.eduardoleolim.organizadorPec660.app.window.utils.CustomWindowDecorationAccessing
+import org.eduardoleolim.organizadorPec660.app.window.utils.WindowSize
 
 @Composable
 fun rememberWindowSize(): WindowSize {

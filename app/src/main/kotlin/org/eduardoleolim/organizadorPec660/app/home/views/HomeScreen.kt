@@ -20,7 +20,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import org.eduardoleolim.organizadorPec660.app.home.model.HomeScreenModel
-import org.eduardoleolim.organizadorPec660.app.main.customWindow.rememberWindowSize
+import org.eduardoleolim.organizadorPec660.app.window.rememberWindowSize
 import org.eduardoleolim.organizadorPec660.core.auth.application.AuthUserResponse
 import java.awt.Dimension
 

@@ -1,6 +1,4 @@
-package org.eduardoleolim.organizadorPec660.app
-
-import org.eduardoleolim.organizadorPec660.app.main.App
+import org.eduardoleolim.organizadorPec660.app.App
 import org.eduardoleolim.organizadorPec660.app.shared.utils.AppUtils
 
 fun main(args: Array<String>) {

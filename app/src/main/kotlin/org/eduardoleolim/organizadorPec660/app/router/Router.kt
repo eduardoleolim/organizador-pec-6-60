@@ -1,4 +1,4 @@
-package org.eduardoleolim.organizadorPec660.app.main.router
+package org.eduardoleolim.organizadorPec660.app.router
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.window.FrameWindowScope

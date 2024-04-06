@@ -9,7 +9,7 @@ import cafe.adriel.voyager.navigator.Navigator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.eduardoleolim.organizadorPec660.app.auth.data.InvalidCredentialsException
-import org.eduardoleolim.organizadorPec660.app.main.router.MainProvider
+import org.eduardoleolim.organizadorPec660.app.router.MainProvider
 import org.eduardoleolim.organizadorPec660.core.auth.application.AuthUserResponse
 import org.eduardoleolim.organizadorPec660.core.auth.application.authenticate.AuthenticateUserQuery
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryBus

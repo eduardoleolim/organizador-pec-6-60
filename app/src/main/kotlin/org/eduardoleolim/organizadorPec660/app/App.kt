@@ -1,4 +1,4 @@
-package org.eduardoleolim.organizadorPec660.app.main
+package org.eduardoleolim.organizadorPec660.app
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -23,13 +23,13 @@ import androidx.compose.ui.window.rememberWindowState
 import kotlinx.coroutines.launch
 import org.eduardoleolim.app.generated.resources.Res
 import org.eduardoleolim.app.generated.resources.logo
-import org.eduardoleolim.organizadorPec660.app.main.customWindow.*
-import org.eduardoleolim.organizadorPec660.app.main.router.Router
+import org.eduardoleolim.organizadorPec660.app.router.Router
 import org.eduardoleolim.organizadorPec660.app.shared.theme.DarkColors
 import org.eduardoleolim.organizadorPec660.app.shared.theme.LightColors
 import org.eduardoleolim.organizadorPec660.app.shared.theme.RobotoTypography
 import org.eduardoleolim.organizadorPec660.app.shared.utils.AppUtils
 import org.eduardoleolim.organizadorPec660.app.shared.utils.isSystemInDarkTheme
+import org.eduardoleolim.organizadorPec660.app.window.*
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorPec660.core.shared.infrastructure.bus.KtormCommandBus
 import org.eduardoleolim.organizadorPec660.core.shared.infrastructure.bus.KtormQueryBus
