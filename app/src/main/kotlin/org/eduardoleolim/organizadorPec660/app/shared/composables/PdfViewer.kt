@@ -49,7 +49,7 @@ fun PdfViewerTopBar(
             .padding(start = 20.dp, end = 20.dp, top = 20.dp, bottom = 10.dp)
             .then(modifier),
         shape = MaterialTheme.shapes.small,
-        tonalElevation = 40.dp
+        color = MaterialTheme.colorScheme.surfaceContainerHighest
     ) {
         Row(
             modifier = Modifier.height(IntrinsicSize.Min),
@@ -137,7 +137,7 @@ fun PdfViewerContent(
             .padding(start = 20.dp, end = 20.dp, top = 10.dp, bottom = 20.dp)
             .then(modifier),
         shape = MaterialTheme.shapes.extraSmall,
-        tonalElevation = 60.dp
+        contentColor = MaterialTheme.colorScheme.surfaceContainerHigh
     ) {
         val verticalScrollState = rememberScrollState()
         val horizontalScrollState = rememberScrollState()
@@ -197,7 +197,7 @@ fun PdfViewer(
     Surface(
         modifier = Modifier.fillMaxSize().then(modifier),
         shape = MaterialTheme.shapes.medium,
-        tonalElevation = 10.dp
+        color = MaterialTheme.colorScheme.surfaceContainer
     ) {
         Column {
             PdfViewerTopBar(
