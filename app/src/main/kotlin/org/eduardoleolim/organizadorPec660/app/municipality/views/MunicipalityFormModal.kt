@@ -8,7 +8,12 @@ import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.input.key.*
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import org.eduardoleolim.organizadorPec660.app.municipality.data.EmptyMunicipalityDataException
@@ -165,6 +170,7 @@ fun MunicipalityScreen.MunicipalityFormModal(
             Column {
                 Box {
                     var expanded by remember { mutableStateOf(false) }
+                    val focusManager = LocalFocusManager.current
 
                     OutlinedTextField(
                         enabled = true,
@@ -177,6 +183,7 @@ fun MunicipalityScreen.MunicipalityFormModal(
                         trailingIcon = {
                             IconButton(
                                 onClick = { expanded = true },
+                                modifier = Modifier.pointerHoverIcon(PointerIcon.Default),
                                 content = {
                                     Icon(
                                         imageVector = if (expanded) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
@@ -184,6 +191,57 @@ fun MunicipalityScreen.MunicipalityFormModal(
                                     )
                                 }
                             )
+                        },
+                        modifier = Modifier.onPreviewKeyEvent {
+                            when {
+                                (it.key == Key.DirectionDown && it.type == KeyEventType.KeyDown) -> {
+                                    val federalEntities = screenModel.federalEntities.value
+                                    if (federalEntity != null) {
+                                        val federalEntityIndex = federalEntities.indexOf(federalEntity)
+                                        val nextIndex = federalEntityIndex + 1
+
+                                        if (nextIndex < federalEntities.size) {
+                                            federalEntity = federalEntities[nextIndex]
+
+                                            true
+                                        } else {
+                                            false
+                                        }
+                                    } else {
+                                        federalEntity = federalEntities.firstOrNull()
+
+                                        true
+                                    }
+                                }
+
+                                (it.key == Key.DirectionUp && it.type == KeyEventType.KeyDown) -> {
+                                    val federalEntities = screenModel.federalEntities.value
+                                    if (federalEntity != null) {
+                                        val federalEntityIndex = federalEntities.indexOf(federalEntity)
+                                        val prevIndex = federalEntityIndex - 1
+
+                                        if (prevIndex >= 0) {
+                                            federalEntity = federalEntities[prevIndex]
+
+                                            true
+                                        } else {
+                                            federalEntity = null
+
+                                            true
+                                        }
+                                    } else {
+                                        false
+                                    }
+                                }
+
+                                (it.key == Key.Tab && it.type == KeyEventType.KeyDown) -> {
+                                    focusManager.moveFocus(FocusDirection.Down)
+
+                                    true
+                                }
+
+                                else -> false
+                            }
                         }
                     )
 
