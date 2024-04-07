@@ -1,7 +1,33 @@
 # https://docs.gradle.org/current/userguide/platforms.html#sub::toml-dependencies-format
 
 [versions]
-kotlin-gradle-plugin = "1.9.22"
+kotlin = "1.9.23"
+compose = "1.6.1"
+data-table-material3 = "0.5.1"
+voyager = "1.0.0"
+jSystemThemeDetector = "3.8"
+pdfbox = "3.0.1"
+kotlinx-coroutines = "1.8.0"
+ktorm = "3.6.0"
+sqlite = "3.45.1.0"
+koin = "3.5.3"
+slf4j = "2.0.9"
+jasypt = "1.9.3"
+
+[plugins]
+compose = { id = "org.jetbrains.compose", version.ref = "compose" }
 
 [libraries]
-kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin-gradle-plugin" }
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
+voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
+voyager-screenmodel = { module = "cafe.adriel.voyager:voyager-screenmodel", version.ref = "voyager" }
+material3-datatable = { module = "com.seanproctor:data-table-material3", version.ref = "data-table-material3" }
+pdfbox = { module = "org.apache.pdfbox:pdfbox", version.ref = "pdfbox" }
+jSystemThemeDetector = { module = "com.github.Dansoftowner:jSystemThemeDetector", version.ref = "jSystemThemeDetector" }
+ktorm-core = { module = "org.ktorm:ktorm-core", version.ref = "ktorm" }
+ktorm-sqlite = { module = "org.ktorm:ktorm-support-sqlite", version.ref = "ktorm" }
+jdbc-sqlite = { module = "io.github.willena:sqlite-jdbc", version.ref = "sqlite" }
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
+jasypt = { module = "org.jasypt:jasypt", version.ref = "jasypt" }

@@ -1,14 +1,14 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("org.eduardoleolim.organizadorpec660.kotlin-application-conventions")
-    id("org.jetbrains.compose") version "1.6.1"
+    alias(libs.plugins.compose)
 }
 
-tasks.named("compileKotlin", KotlinCompilationTask::class) {
-    compilerOptions {
-        freeCompilerArgs.addAll("-Xcontext-receivers=true")
+tasks.withType<KotlinCompile>().configureEach {
+    kotlinOptions {
+        freeCompilerArgs = freeCompilerArgs + "-Xcontext-receivers"
     }
 }
 
@@ -20,14 +20,14 @@ dependencies {
     implementation(compose.components.resources)
     implementation(compose.materialIconsExtended)
     implementation(compose.material3)
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:${properties["coroutines.version"]}")
-    implementation("cafe.adriel.voyager:voyager-navigator:${properties["voyager.version"]}")
-    implementation("cafe.adriel.voyager:voyager-screenmodel:${properties["voyager.version"]}")
-    implementation("com.seanproctor:data-table-material3:${properties["dataTable.version"]}")
-    implementation("org.apache.pdfbox:pdfbox:${properties["pdfbox.version"]}") {
+    implementation(libs.kotlinx.coroutines.swing)
+    implementation(libs.voyager.navigator)
+    implementation(libs.voyager.screenmodel)
+    implementation(libs.material3.datatable)
+    implementation(libs.pdfbox) {
         exclude("org.junit.jupiter")
     }
-    implementation("com.github.Dansoftowner:jSystemThemeDetector:${properties["themeDetector.version"]}") {
+    implementation(libs.jSystemThemeDetector) {
         exclude("org.slf4j")
     }
 }
@@ -74,10 +74,6 @@ compose.desktop {
             }
 
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-        }
-
-        buildTypes.release.proguard {
-            configurationFiles.from("compose-desktop.pro")
         }
     }
 }
