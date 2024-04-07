@@ -1,5 +1,5 @@
-import org.eduardoleolim.organizadorPec660.app.App
-import org.eduardoleolim.organizadorPec660.app.shared.utils.AppUtils
+import org.eduardoleolim.organizadorpec660.app.App
+import org.eduardoleolim.organizadorpec660.app.shared.utils.AppUtils
 
 fun main(args: Array<String>) {
     try {
