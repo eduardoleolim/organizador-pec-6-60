@@ -22,6 +22,7 @@ import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import kotlinx.coroutines.launch
 import org.eduardoleolim.app.generated.resources.Res
+import org.eduardoleolim.app.generated.resources.app_name
 import org.eduardoleolim.app.generated.resources.logo
 import org.eduardoleolim.organizadorPec660.app.router.Router
 import org.eduardoleolim.organizadorPec660.app.shared.theme.DarkColors
@@ -36,6 +37,7 @@ import org.eduardoleolim.organizadorPec660.core.shared.infrastructure.bus.KtormQ
 import org.eduardoleolim.organizadorPec660.core.shared.infrastructure.models.SqliteKtormDatabase
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import java.awt.Dimension
 
 enum class SystemTheme {
@@ -91,7 +93,7 @@ class App(
             CustomWindow(
                 state = state,
                 onCloseRequest = { onCloseRequest() },
-                defaultTitle = "Organizador PEC-6-60",
+                defaultTitle = stringResource(Res.string.app_name),
                 defaultIcon = icon
             ) {
                 WindowIcon(icon) {}
@@ -146,7 +148,7 @@ class App(
                 state = state,
                 onCloseRequest = onCloseRequest,
                 onRequestToggleMaximize = null,
-                defaultTitle = "Organizador PEC-6-60",
+                defaultTitle = stringResource(Res.string.app_name),
                 defaultIcon = icon
             ) {
                 LaunchedEffect(Unit) {

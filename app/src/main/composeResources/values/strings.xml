@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Organizador PEC-6-60</string>
+
+    <!-- AuthScreen -->
+    <string name="auth_enter">Enter</string>
+    <string name="auth_password">Password</string>
+    <string name="auth_username">Username</string>
+    <string name="auth_login">Log in</string>
+    <string name="auth_invalid_credentials">Invalid credentials</string>
+    <string name="auth_username_required">Username required</string>
+    <string name="auth_password_required">Password required</string>
+</resources>

@@ -22,8 +22,7 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import org.eduardoleolim.app.generated.resources.Res
-import org.eduardoleolim.app.generated.resources.login_background
+import org.eduardoleolim.app.generated.resources.*
 import org.eduardoleolim.organizadorPec660.app.auth.data.InvalidCredentialsException
 import org.eduardoleolim.organizadorPec660.app.auth.model.AuthScreenModel
 import org.eduardoleolim.organizadorPec660.app.auth.model.AuthState
@@ -31,6 +30,7 @@ import org.eduardoleolim.organizadorPec660.core.auth.domain.InvalidAuthCredentia
 import org.eduardoleolim.organizadorPec660.core.shared.domain.bus.query.QueryBus
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import java.awt.Dimension
 
 class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryBus) : Screen {
@@ -56,7 +56,7 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
             ) {
                 Image(
                     painter = painterResource(Res.drawable.login_background),
-                    contentDescription = "Fuente de los 4 ríos",
+                    contentDescription = "Fountain of the Four Rivers",
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.FillWidth
                 )
@@ -72,6 +72,7 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
         }
     }
 
+    @OptIn(ExperimentalResourceApi::class)
     @Composable
     private fun AuthForm(screenModel: AuthScreenModel) {
         var username by remember { mutableStateOf("") }
@@ -130,12 +131,12 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
                     is InvalidCredentialsException -> {
                         if (error.isUsernameInvalid) {
                             isUsernameError = true
-                            usernameSupportingText = "El usuario es requerido"
+                            usernameSupportingText = stringResource(Res.string.auth_username_required)
                         }
 
                         if (error.isPasswordInvalid) {
                             isPasswordError = true
-                            passwordSupportingText = "La contraseña es requerida"
+                            passwordSupportingText = stringResource(Res.string.auth_password_required)
                         }
                     }
 
@@ -147,21 +148,21 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
         }
 
         Text(
-            text = "Organizador PEC-6-60",
+            text = stringResource(Res.string.app_name),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.displayMedium.copy(fontWeight = FontWeight.Medium),
             modifier = Modifier.padding(bottom = 20.dp)
         )
 
         Text(
-            text = "Ingresar",
+            text = stringResource(Res.string.auth_enter),
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.padding(bottom = 20.dp)
         )
 
         if (isCredentialsError) {
             Text(
-                text = "Credenciales inválidas",
+                text = stringResource(Res.string.auth_invalid_credentials),
                 color = MaterialTheme.colorScheme.error,
                 modifier = Modifier.padding(bottom = 20.dp)
             )
@@ -169,7 +170,7 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
 
         OutlinedTextField(
             enabled = enabled,
-            label = { Text("Usuario") },
+            label = { Text(stringResource(Res.string.auth_username)) },
             value = username,
             onValueChange = { username = it },
             modifier = Modifier.fillMaxWidth(0.8f).padding(bottom = 20.dp),
@@ -182,7 +183,7 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
 
         OutlinedTextField(
             enabled = enabled,
-            label = { Text("Contraseña") },
+            label = { Text(stringResource(Res.string.auth_password)) },
             value = password,
             onValueChange = { password = it },
             modifier = Modifier.fillMaxWidth(0.8f).padding(bottom = 20.dp),
@@ -207,7 +208,7 @@ class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryB
             onClick = { screenModel.login(username, password) },
             modifier = Modifier.fillMaxWidth(0.8f)
         ) {
-            Text("Iniciar sesión")
+            Text(stringResource(Res.string.auth_login))
         }
     }
 }
