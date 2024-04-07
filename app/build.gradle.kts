@@ -24,7 +24,9 @@ dependencies {
     implementation("cafe.adriel.voyager:voyager-navigator:${properties["voyager.version"]}")
     implementation("cafe.adriel.voyager:voyager-screenmodel:${properties["voyager.version"]}")
     implementation("com.seanproctor:data-table-material3:${properties["dataTable.version"]}")
-    implementation("org.apache.pdfbox:pdfbox:${properties["pdfbox.version"]}")
+    implementation("org.apache.pdfbox:pdfbox:${properties["pdfbox.version"]}") {
+        exclude("org.junit.jupiter")
+    }
     implementation("com.github.Dansoftowner:jSystemThemeDetector:${properties["themeDetector.version"]}") {
         exclude("org.slf4j")
     }
@@ -72,6 +74,10 @@ compose.desktop {
             }
 
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+        }
+
+        buildTypes.release.proguard {
+            configurationFiles.from("compose-desktop.pro")
         }
     }
 }
