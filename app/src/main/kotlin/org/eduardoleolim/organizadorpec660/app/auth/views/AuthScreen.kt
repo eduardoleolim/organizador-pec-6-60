@@ -9,7 +9,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.awt.ComposeWindow
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.layout.ContentScale
@@ -26,6 +25,7 @@ import org.eduardoleolim.organizadorpec660.app.auth.data.InvalidCredentialsExcep
 import org.eduardoleolim.organizadorpec660.app.auth.model.AuthScreenModel
 import org.eduardoleolim.organizadorpec660.app.auth.model.AuthState
 import org.eduardoleolim.organizadorpec660.app.generated.resources.*
+import org.eduardoleolim.organizadorpec660.app.window.LocalWindow
 import org.eduardoleolim.organizadorpec660.core.auth.domain.InvalidAuthCredentialsError
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -33,11 +33,12 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import java.awt.Dimension
 
-class AuthScreen(private val window: ComposeWindow, private val queryBus: QueryBus) : Screen {
+class AuthScreen(private val queryBus: QueryBus) : Screen {
     @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
+        val window = LocalWindow.current
         val screenModel = rememberScreenModel { AuthScreenModel(navigator, queryBus) }
 
         LaunchedEffect(Unit) {

@@ -11,7 +11,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.awt.ComposeWindow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -36,10 +35,7 @@ enum class MenuTab {
     INSTRUMENTS_TYPES
 }
 
-class HomeScreen(
-    private val window: ComposeWindow,
-    private val user: AuthUserResponse
-) : Screen {
+class HomeScreen(private val user: AuthUserResponse) : Screen {
     @OptIn(ExperimentalResourceApi::class)
     private val items: List<Triple<String, Pair<ImageVector, ImageVector>, MenuTab>>
         @Composable get() = listOf(

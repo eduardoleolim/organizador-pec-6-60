@@ -1,7 +1,6 @@
 package org.eduardoleolim.organizadorpec660.app.router
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.window.FrameWindowScope
 import cafe.adriel.voyager.core.registry.ScreenRegistry
 import cafe.adriel.voyager.navigator.Navigator
 import org.eduardoleolim.organizadorpec660.app.auth.views.AuthScreen
@@ -15,11 +14,11 @@ import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.Comman
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
 
 @Composable
-fun FrameWindowScope.Router(commandBus: CommandBus, queryBus: QueryBus) {
+fun Router(commandBus: CommandBus, queryBus: QueryBus) {
     ScreenRegistry {
-        register<MainProvider.AuthScreen> { AuthScreen(window, queryBus) }
+        register<MainProvider.AuthScreen> { AuthScreen(queryBus) }
         register<MainProvider.HomeScreen> { provider ->
-            HomeScreen(window, provider.user)
+            HomeScreen(provider.user)
         }
         register<HomeProvider.FederalEntityScreen> { FederalEntityScreen(queryBus, commandBus) }
         register<HomeProvider.MunicipalityScreen> { MunicipalityScreen(queryBus, commandBus) }
