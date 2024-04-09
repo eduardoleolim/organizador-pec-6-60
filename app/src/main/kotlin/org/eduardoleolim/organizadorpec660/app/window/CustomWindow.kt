@@ -241,6 +241,7 @@ fun CustomWindow(
         onCloseRequest = onCloseRequest,
     ) {
         val title = windowController.title ?: defaultTitle
+        val icon = windowController.icon ?: defaultIcon
 
         LaunchedEffect(title) {
             window.title = title
@@ -250,7 +251,6 @@ fun CustomWindow(
             LocalWindowController provides windowController,
             LocalWindowState provides state,
         ) {
-            val icon by rememberUpdatedState(windowController.icon)
             // val onIconClick by rememberUpdatedState(windowController.onIconClick)
 
             CustomWindowFrame(

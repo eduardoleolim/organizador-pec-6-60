@@ -30,7 +30,10 @@ import org.eduardoleolim.organizadorpec660.app.shared.theme.LightColors
 import org.eduardoleolim.organizadorpec660.app.shared.theme.RobotoTypography
 import org.eduardoleolim.organizadorpec660.app.shared.utils.AppUtils
 import org.eduardoleolim.organizadorpec660.app.shared.utils.isSystemInDarkTheme
-import org.eduardoleolim.organizadorpec660.app.window.*
+import org.eduardoleolim.organizadorpec660.app.window.CustomWindow
+import org.eduardoleolim.organizadorpec660.app.window.HitSpots
+import org.eduardoleolim.organizadorpec660.app.window.WindowCenter
+import org.eduardoleolim.organizadorpec660.app.window.windowFrameItem
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.bus.KtormCommandBus
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.bus.KtormQueryBus
@@ -96,7 +99,6 @@ class App(
                 defaultTitle = stringResource(Res.string.app_name),
                 defaultIcon = icon
             ) {
-                WindowIcon(icon) {}
                 WindowCenter {
                     Row(
                         Modifier.fillMaxWidth().padding(start = 16.dp),
@@ -158,8 +160,6 @@ class App(
                         setLocationRelativeTo(null)
                     }
                 }
-
-                WindowIcon(icon) {}
 
                 Column(
                     modifier = Modifier
