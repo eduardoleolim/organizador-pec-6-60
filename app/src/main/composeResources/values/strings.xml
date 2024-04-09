@@ -1,6 +1,17 @@
 <resources>
     <string name="app_name">Organizador PEC-6-60</string>
 
+    <!-- Common -->
+    <string name="table_col_actions">Actions</string>
+    <string name="table_show_items">Show %1$s items</string>
+    <string name="table_search">Search</string>
+    <string name="table_pagination">%1$s-%2$s of %3$s</string>
+
+    <string name="edit">Edit</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+
     <!-- Auth -->
     <string name="auth_enter">Enter</string>
     <string name="auth_password">Password</string>

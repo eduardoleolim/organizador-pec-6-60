@@ -25,6 +25,12 @@ import com.seanproctor.datatable.DataTableScope
 import com.seanproctor.datatable.material3.Material3CellContentProvider
 import com.seanproctor.datatable.paging.PaginatedDataTableState
 import com.seanproctor.datatable.paging.rememberPaginatedDataTableState
+import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
+import org.eduardoleolim.organizadorpec660.app.generated.resources.table_pagination
+import org.eduardoleolim.organizadorpec660.app.generated.resources.table_search
+import org.eduardoleolim.organizadorpec660.app.generated.resources.table_show_items
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.stringResource
 import kotlin.math.min
 
 var PaginatedDataTableState.sortColumnIndex by mutableStateOf<Int?>(null)
@@ -39,6 +45,7 @@ fun PaginatedDataTableState.reset(pageSize: Int = 10) {
     this.count = 0
 }
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun PaginatedDataTable(
     total: Int,
@@ -96,7 +103,7 @@ fun PaginatedDataTable(
                     enabled = state.pageSize > 1,
                 ) {
                     Text(
-                        text = "Mostrar ${state.pageSize} items",
+                        text = stringResource(Res.string.table_show_items, state.pageSize),
                         fontWeight = FontWeight.Normal,
                         color = MaterialTheme.colorScheme.onSurface,
                     )
@@ -133,10 +140,12 @@ fun PaginatedDataTable(
                 value = value,
                 onValueChange = onValueChange,
                 label = {
-                    Text("Buscar")
+                    Text(stringResource(Res.string.table_search))
                 },
                 textStyle = MaterialTheme.typography.bodyMedium,
-                leadingIcon = { Icon(Icons.Default.Search, "Buscar") },
+                leadingIcon = {
+                    Icon(Icons.Default.Search, stringResource(Res.string.table_search))
+                },
                 singleLine = true,
                 modifier = Modifier.width(250.dp),
                 shape = MaterialTheme.shapes.extraLarge,
@@ -188,7 +197,7 @@ fun PaginatedDataTable(
             val end = min(start + state.pageSize - 1, state.count)
             val pageCount = (state.count + state.pageSize - 1) / state.pageSize
 
-            Text("$start-$end de ${state.count}")
+            Text(stringResource(Res.string.table_pagination, start, end, state.count))
             IconButton(
                 onClick = { state.pageIndex = 0 },
                 enabled = state.pageIndex > 0,
