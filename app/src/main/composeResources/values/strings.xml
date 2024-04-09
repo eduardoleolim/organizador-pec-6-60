@@ -15,9 +15,16 @@
 
     <!-- Instrument -->
     <string name="instruments">Instruments</string>
+
+    <!-- Federal entity -->
     <string name="federal_entities">Federal Entities</string>
+    <string name="delete_title">Delete federal entity?</string>
+    <string name="delete_text">The federal entity %1$s will be permanently removed from application</string>
+
     <string name="municipalities">Municipalities</string>
+
     <string name="statistic_types">Statistic Types</string>
+
     <string name="instrument_types">Instrument Types</string>
 
 </resources>
