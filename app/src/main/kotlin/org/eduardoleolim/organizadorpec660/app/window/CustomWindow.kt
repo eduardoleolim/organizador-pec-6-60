@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.awt.ComposeWindow
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.text.style.TextOverflow
@@ -56,6 +57,7 @@ class WindowController {
     var center: (@Composable () -> Unit)? by mutableStateOf(null)
 }
 
+val LocalWindow = compositionLocalOf<ComposeWindow> { error("window not provided") }
 private val LocalWindowController = compositionLocalOf<WindowController> { error("window controller not provided") }
 private val LocalWindowState = compositionLocalOf<WindowState> { error("window controller not provided") }
 
@@ -250,6 +252,7 @@ fun CustomWindow(
         CompositionLocalProvider(
             LocalWindowController provides windowController,
             LocalWindowState provides state,
+            LocalWindow provides window
         ) {
             // val onIconClick by rememberUpdatedState(windowController.onIconClick)
 
