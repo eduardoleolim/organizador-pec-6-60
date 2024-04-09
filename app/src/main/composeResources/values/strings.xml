@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Organizador PEC-6-60</string>
 
-    <!-- AuthScreen -->
+    <!-- Auth -->
     <string name="auth_enter">Enter</string>
     <string name="auth_password">Password</string>
     <string name="auth_username">Username</string>
@@ -9,4 +9,15 @@
     <string name="auth_invalid_credentials">Invalid credentials</string>
     <string name="auth_username_required">Username required</string>
     <string name="auth_password_required">Password required</string>
+
+    <!-- Home -->
+    <string name="logout">Logout</string>
+
+    <!-- Instrument -->
+    <string name="instruments">Instruments</string>
+    <string name="federal_entities">Federal Entities</string>
+    <string name="municipalities">Municipalities</string>
+    <string name="statistic_types">Statistic Types</string>
+    <string name="instrument_types">Instrument Types</string>
+
 </resources>

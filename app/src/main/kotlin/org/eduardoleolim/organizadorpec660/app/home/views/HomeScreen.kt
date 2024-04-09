@@ -19,60 +19,66 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import org.eduardoleolim.organizadorpec660.app.generated.resources.*
 import org.eduardoleolim.organizadorpec660.app.home.model.HomeScreenModel
+import org.eduardoleolim.organizadorpec660.app.window.LocalWindow
 import org.eduardoleolim.organizadorpec660.app.window.rememberWindowSize
 import org.eduardoleolim.organizadorpec660.core.auth.application.AuthUserResponse
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.stringResource
 import java.awt.Dimension
 
 enum class MenuTab {
-    INSTRUMENTOS,
-    ENTIDADES_FEDERATIVAS,
-    MUNICIPIOS,
-    TIPOS_DE_ESTADISTICA,
-    TIPOS_DE_INSTRUMENTO
+    INSTRUMENTS,
+    FEDERAL_ENTITIES,
+    MUNICIPALITIES,
+    STATISTIC_TYPES,
+    INSTRUMENTS_TYPES
 }
 
 class HomeScreen(
     private val window: ComposeWindow,
     private val user: AuthUserResponse
 ) : Screen {
+    @OptIn(ExperimentalResourceApi::class)
+    private val items: List<Triple<String, Pair<ImageVector, ImageVector>, MenuTab>>
+        @Composable get() = listOf(
+            Triple(
+                stringResource(Res.string.instruments),
+                Pair(Icons.AutoMirrored.Filled.ListAlt, Icons.AutoMirrored.Outlined.ListAlt),
+                MenuTab.INSTRUMENTS
+            ),
+            Triple(
+                stringResource(Res.string.federal_entities),
+                Pair(Icons.AutoMirrored.Filled.ListAlt, Icons.AutoMirrored.Outlined.ListAlt),
+                MenuTab.FEDERAL_ENTITIES
+            ),
+            Triple(
+                stringResource(Res.string.municipalities),
+                Pair(Icons.AutoMirrored.Filled.ListAlt, Icons.AutoMirrored.Outlined.ListAlt),
+                MenuTab.MUNICIPALITIES
+            ),
+            Triple(
+                stringResource(Res.string.statistic_types),
+                Pair(Icons.AutoMirrored.Filled.ListAlt, Icons.AutoMirrored.Outlined.ListAlt),
+                MenuTab.STATISTIC_TYPES
+            ),
+            Triple(
+                stringResource(Res.string.instrument_types),
+                Pair(Icons.AutoMirrored.Filled.ListAlt, Icons.AutoMirrored.Outlined.ListAlt),
+                MenuTab.INSTRUMENTS_TYPES
+            )
+        )
+
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
+        val window = LocalWindow.current
         val compositionContext = rememberCompositionContext()
         val drawerState = rememberDrawerState(DrawerValue.Closed)
         val screenModel = rememberScreenModel { HomeScreenModel(navigator, drawerState, compositionContext) }
-        var selectedTab by remember { mutableStateOf(MenuTab.INSTRUMENTOS) }
+        var selectedTab by remember { mutableStateOf(MenuTab.INSTRUMENTS) }
         val windowSize = rememberWindowSize()
-        val items = remember {
-            listOf(
-                Triple(
-                    "Instrumentos",
-                    Pair(Icons.AutoMirrored.Filled.ListAlt, Icons.AutoMirrored.Outlined.ListAlt),
-                    MenuTab.INSTRUMENTOS
-                ),
-                Triple(
-                    "Entidades Federativas",
-                    Pair(Icons.AutoMirrored.Filled.ListAlt, Icons.AutoMirrored.Outlined.ListAlt),
-                    MenuTab.ENTIDADES_FEDERATIVAS
-                ),
-                Triple(
-                    "Municipios",
-                    Pair(Icons.AutoMirrored.Filled.ListAlt, Icons.AutoMirrored.Outlined.ListAlt),
-                    MenuTab.MUNICIPIOS
-                ),
-                Triple(
-                    "Tipos de Estadística",
-                    Pair(Icons.AutoMirrored.Filled.ListAlt, Icons.AutoMirrored.Outlined.ListAlt),
-                    MenuTab.TIPOS_DE_ESTADISTICA
-                ),
-                Triple(
-                    "Tipos de Instrumento",
-                    Pair(Icons.AutoMirrored.Filled.ListAlt, Icons.AutoMirrored.Outlined.ListAlt),
-                    MenuTab.TIPOS_DE_INSTRUMENTO
-                )
-            )
-        }
 
         LaunchedEffect(Unit) {
             val dimension = Dimension(900, 640)
@@ -145,11 +151,11 @@ class HomeScreen(
                 ) {
                     screenModel.apply {
                         when (selectedTab) {
-                            MenuTab.INSTRUMENTOS -> InstrumentView()
-                            MenuTab.ENTIDADES_FEDERATIVAS -> FederalEntityView()
-                            MenuTab.MUNICIPIOS -> MunicipalityView()
-                            MenuTab.TIPOS_DE_ESTADISTICA -> StatisticTypeView()
-                            MenuTab.TIPOS_DE_INSTRUMENTO -> InstrumentTypeView()
+                            MenuTab.INSTRUMENTS -> InstrumentView()
+                            MenuTab.FEDERAL_ENTITIES -> FederalEntityView()
+                            MenuTab.MUNICIPALITIES -> MunicipalityView()
+                            MenuTab.STATISTIC_TYPES -> StatisticTypeView()
+                            MenuTab.INSTRUMENTS_TYPES -> InstrumentTypeView()
                         }
                     }
                 }
@@ -157,6 +163,7 @@ class HomeScreen(
         }
     }
 
+    @OptIn(ExperimentalResourceApi::class)
     @Composable
     private fun ModalNavigationDrawerContent(
         items: List<Triple<String, Pair<ImageVector, ImageVector>, MenuTab>>,
@@ -171,7 +178,7 @@ class HomeScreen(
                     .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Organizador PEC-6-60")
+                Text(stringResource(Res.string.app_name))
                 Spacer(modifier = Modifier.weight(1.0f))
                 IconButton(
                     onClick = { screenModel.closeNavigationDrawer() }
@@ -194,7 +201,7 @@ class HomeScreen(
                             contentDescription = label
                         )
                     },
-                    label = { Text(text = label) },
+                    label = { Text(label) },
                     selected = selectedTab == tab,
                     onClick = { onChangeSelectedTab(tab) },
                     shape = MaterialTheme.shapes.medium
@@ -207,7 +214,7 @@ class HomeScreen(
 
             NavigationDrawerItem(
                 icon = { Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = "logout") },
-                label = { Text(text = "Cerrar Sesión") },
+                label = { Text(stringResource(Res.string.logout)) },
                 selected = false,
                 onClick = { screenModel.logout() },
                 shape = MaterialTheme.shapes.medium
@@ -215,6 +222,7 @@ class HomeScreen(
         }
     }
 
+    @OptIn(ExperimentalResourceApi::class)
     @Composable
     private fun NavigationRailContent(
         items: List<Triple<String, Pair<ImageVector, ImageVector>, MenuTab>>,
@@ -246,7 +254,7 @@ class HomeScreen(
             icon = { Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = "logout") },
             label = {
                 Text(
-                    text = "Cerrar Sesión",
+                    text = stringResource(Res.string.logout),
                     textAlign = TextAlign.Center
                 )
             },
