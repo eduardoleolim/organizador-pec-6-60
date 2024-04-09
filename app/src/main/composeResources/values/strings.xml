@@ -29,8 +29,19 @@
 
     <!-- Federal entity -->
     <string name="federal_entities">Federal Entities</string>
-    <string name="delete_title">Delete federal entity?</string>
-    <string name="delete_text">The federal entity %1$s will be permanently removed from application</string>
+    <string name="fe_keycode">KeyCode</string>
+    <string name="fe_name">Name</string>
+    <string name="fe_created_at">Created at</string>
+    <string name="fe_updated_at">Updated at</string>
+    <string name="fe_delete_title">Delete federal entity?</string>
+    <string name="fe_delete_text">The federal entity %1$s will be permanently removed from application</string>
+    <string name="fe_form_add_title">Add federal entity</string>
+    <string name="fe_form_edit_title">Edit federal entity</string>
+    <string name="fe_form_keycode_required">KeyCode required</string>
+    <string name="fe_form_name_required">Name required</string>
+    <string name="fe_form_keycode_format">The KeyCode must be a two-digit number</string>
+    <string name="fe_form_name_format">The name cannot be empty</string>
+    <string name="fe_form_already_exists">A federal entity already exists with that KeyCode</string>
 
     <string name="municipalities">Municipalities</string>
 

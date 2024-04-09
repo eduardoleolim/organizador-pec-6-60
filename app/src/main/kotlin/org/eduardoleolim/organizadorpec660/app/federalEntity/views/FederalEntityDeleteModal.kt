@@ -11,8 +11,8 @@ import androidx.compose.ui.unit.dp
 import org.eduardoleolim.organizadorpec660.app.federalEntity.model.DeleteState
 import org.eduardoleolim.organizadorpec660.app.federalEntity.model.FederalEntityScreenModel
 import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
-import org.eduardoleolim.organizadorpec660.app.generated.resources.delete_text
-import org.eduardoleolim.organizadorpec660.app.generated.resources.delete_title
+import org.eduardoleolim.organizadorpec660.app.generated.resources.fe_delete_text
+import org.eduardoleolim.organizadorpec660.app.generated.resources.fe_delete_title
 import org.eduardoleolim.organizadorpec660.app.shared.composables.QuestionDialog
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntityResponse
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -55,10 +55,10 @@ fun FederalEntityScreen.FederalEntityDeleteModal(
             )
         },
         title = {
-            Text(stringResource(Res.string.delete_title))
+            Text(stringResource(Res.string.fe_delete_title))
         },
         text = {
-            Text(stringResource(Res.string.delete_text, federalEntity.name))
+            Text(stringResource(Res.string.fe_delete_text, federalEntity.name))
         },
         onConfirmRequest = {
             screenModel.deleteFederalEntity(federalEntity.id)

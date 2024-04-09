@@ -14,6 +14,7 @@ import androidx.compose.ui.text.style.TextAlign
 import com.seanproctor.datatable.DataColumn
 import com.seanproctor.datatable.TableColumnWidth
 import com.seanproctor.datatable.paging.PaginatedDataTableState
+import org.eduardoleolim.organizadorpec660.app.generated.resources.*
 import org.eduardoleolim.organizadorpec660.app.shared.composables.PaginatedDataTable
 import org.eduardoleolim.organizadorpec660.app.shared.composables.PlainTextTooltip
 import org.eduardoleolim.organizadorpec660.app.shared.composables.sortAscending
@@ -21,9 +22,11 @@ import org.eduardoleolim.organizadorpec660.app.shared.composables.sortColumnInde
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntitiesResponse
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorpec660.core.shared.domain.toLocalDateTime
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.stringResource
 import java.time.format.DateTimeFormatter
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalResourceApi::class)
 @Composable
 fun FederalEntityScreen.FederalEntitiesTable(
     value: String,
@@ -37,6 +40,11 @@ fun FederalEntityScreen.FederalEntitiesTable(
     modifier: Modifier = Modifier
 ) {
     val orders = listOf("keyCode", "name", "createdAt", "updatedAt")
+    val keyCodeColumnName = stringResource(Res.string.fe_keycode)
+    val nameColumnName = stringResource(Res.string.fe_name)
+    val createdAtColumnName = stringResource(Res.string.fe_created_at)
+    val updatedAtColumnName = stringResource(Res.string.fe_updated_at)
+    val actionsColumnName = stringResource(Res.string.table_col_actions)
 
     val columns = remember {
         fun onSort(index: Int, ascending: Boolean) {
@@ -50,12 +58,12 @@ fun FederalEntityScreen.FederalEntitiesTable(
                 alignment = Alignment.CenterHorizontally,
                 width = TableColumnWidth.MinIntrinsic
             ) {
-                Text("Clave")
+                Text(keyCodeColumnName)
             },
             DataColumn(
                 onSort = ::onSort,
             ) {
-                Text("Nombre")
+                Text(nameColumnName)
             },
             DataColumn(
                 onSort = ::onSort,
@@ -63,7 +71,7 @@ fun FederalEntityScreen.FederalEntitiesTable(
                 width = TableColumnWidth.Fraction(0.2f)
             ) {
                 Text(
-                    text = "Fecha de registro",
+                    text = createdAtColumnName,
                     textAlign = TextAlign.Center
                 )
             },
@@ -73,7 +81,7 @@ fun FederalEntityScreen.FederalEntitiesTable(
                 width = TableColumnWidth.Fraction(0.2f)
             ) {
                 Text(
-                    text = "Última actualización",
+                    text = updatedAtColumnName,
                     textAlign = TextAlign.Center
                 )
             },
@@ -81,7 +89,7 @@ fun FederalEntityScreen.FederalEntitiesTable(
                 alignment = Alignment.CenterHorizontally,
                 width = TableColumnWidth.Fraction(0.2f)
             ) {
-                Text("Acciones")
+                Text(actionsColumnName)
             }
         )
     }
@@ -124,7 +132,7 @@ fun FederalEntityScreen.FederalEntitiesTable(
 
                     cell {
                         PlainTextTooltip(
-                            tooltip = { Text("Editar") }
+                            tooltip = { Text(stringResource(Res.string.edit)) }
                         ) {
                             IconButton(
                                 onClick = { onEditRequest(federalEntity) }
@@ -137,7 +145,7 @@ fun FederalEntityScreen.FederalEntitiesTable(
                         }
 
                         PlainTextTooltip(
-                            tooltip = { Text("Eliminar") }
+                            tooltip = { Text(stringResource(Res.string.delete)) }
                         ) {
                             IconButton(
                                 onClick = { onDeleteRequest(federalEntity) }

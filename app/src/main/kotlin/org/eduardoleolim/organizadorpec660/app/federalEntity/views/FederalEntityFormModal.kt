@@ -12,11 +12,15 @@ import androidx.compose.ui.window.DialogProperties
 import org.eduardoleolim.organizadorpec660.app.federalEntity.data.EmptyFederalEntityDataException
 import org.eduardoleolim.organizadorpec660.app.federalEntity.model.FederalEntityScreenModel
 import org.eduardoleolim.organizadorpec660.app.federalEntity.model.FormState
+import org.eduardoleolim.organizadorpec660.app.generated.resources.*
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityAlreadyExistsError
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.InvalidFederalEntityKeyCodeError
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.InvalidFederalEntityNameError
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.stringResource
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun FederalEntityScreen.FederalEntityFormModal(
     screenModel: FederalEntityScreenModel,
@@ -66,27 +70,27 @@ fun FederalEntityScreen.FederalEntityFormModal(
 
             when (val error = formState.error) {
                 is InvalidFederalEntityKeyCodeError -> {
-                    keyCodeSupportingText = "La clave debe ser un número de dos dígitos"
+                    keyCodeSupportingText = stringResource(Res.string.fe_form_keycode_format)
                     isKeyCodeError = true
                 }
 
                 is InvalidFederalEntityNameError -> {
-                    nameSupportingText = "El nombre no puede estar vacío"
+                    nameSupportingText = stringResource(Res.string.fe_form_name_format)
                     isNameError = true
                 }
 
                 is FederalEntityAlreadyExistsError -> {
-                    keyCodeSupportingText = "Ya existe una entidad federativa con esa clave"
+                    keyCodeSupportingText = stringResource(Res.string.fe_form_already_exists)
                     isKeyCodeError = true
                 }
 
                 is EmptyFederalEntityDataException -> {
                     if (error.isKeyCodeEmpty) {
-                        keyCodeSupportingText = "La clave es requerida."
+                        keyCodeSupportingText = stringResource(Res.string.fe_form_keycode_required)
                         isKeyCodeError = true
                     }
                     if (error.isNameEmpty) {
-                        nameSupportingText = "El nombre es requerido"
+                        nameSupportingText = stringResource(Res.string.fe_form_name_required)
                         isNameError = true
                     }
                 }
@@ -104,12 +108,18 @@ fun FederalEntityScreen.FederalEntityFormModal(
         ),
         onDismissRequest = onDismissRequest,
         title = {
-            Text(federalEntity?.let { "Editar entidad federativa" } ?: "Agregar entidad federativa")
+            val textTitle = if (federalEntity == null) {
+                stringResource(Res.string.fe_form_add_title)
+            } else {
+                stringResource(Res.string.fe_form_edit_title)
+            }
+
+            Text(textTitle)
         },
         text = {
             Column {
                 OutlinedTextField(
-                    label = { Text("Clave") },
+                    label = { Text(stringResource(Res.string.fe_keycode)) },
                     value = keyCode,
                     onValueChange = {
                         if (Regex("[0-9]{0,2}").matches(it)) {
@@ -131,7 +141,7 @@ fun FederalEntityScreen.FederalEntityFormModal(
                 Spacer(modifier = Modifier.height(32.dp))
 
                 OutlinedTextField(
-                    label = { Text("Nombre") },
+                    label = { Text(stringResource(Res.string.fe_name)) },
                     value = name,
                     onValueChange = { name = it.uppercase() },
                     singleLine = true,
@@ -153,7 +163,7 @@ fun FederalEntityScreen.FederalEntityFormModal(
                     }
                 }
             ) {
-                Text("Guardar")
+                Text(stringResource(Res.string.save))
             }
         },
         dismissButton = {
@@ -161,7 +171,7 @@ fun FederalEntityScreen.FederalEntityFormModal(
                 enabled = enabled,
                 onClick = onDismissRequest,
             ) {
-                Text("Cancelar")
+                Text(stringResource(Res.string.cancel))
             }
         }
     )
