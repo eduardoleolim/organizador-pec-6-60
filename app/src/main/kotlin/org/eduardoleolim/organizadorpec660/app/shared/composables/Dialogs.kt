@@ -3,14 +3,12 @@ package org.eduardoleolim.organizadorpec660.app.shared.composables
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
-import androidx.compose.material.icons.filled.QuestionMark
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -53,7 +51,7 @@ fun ErrorDialog(
 @Composable
 fun QuestionDialog(
     modifier: Modifier = Modifier,
-    icon: ImageVector = Icons.Default.QuestionMark,
+    icon: @Composable (() -> Unit)? = null,
     title: @Composable () -> Unit,
     text: @Composable () -> Unit,
     onDismissRequest: () -> Unit,
@@ -62,13 +60,7 @@ fun QuestionDialog(
     AlertDialog(
         onDismissRequest = onDismissRequest,
         modifier = modifier,
-        icon = {
-            Icon(
-                imageVector = icon,
-                contentDescription = "Error",
-                modifier = Modifier.width(24.dp)
-            )
-        },
+        icon = icon,
         title = title,
         text = text,
         confirmButton = {
