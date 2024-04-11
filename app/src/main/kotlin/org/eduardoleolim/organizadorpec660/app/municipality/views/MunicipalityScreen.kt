@@ -14,13 +14,18 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import com.seanproctor.datatable.paging.rememberPaginatedDataTableState
+import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
+import org.eduardoleolim.organizadorpec660.app.generated.resources.municipalities
 import org.eduardoleolim.organizadorpec660.app.municipality.model.MunicipalityScreenModel
 import org.eduardoleolim.organizadorpec660.app.shared.composables.reset
 import org.eduardoleolim.organizadorpec660.core.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.stringResource
 
 class MunicipalityScreen(private val queryBus: QueryBus, private val commandBus: CommandBus) : Screen {
+    @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun Content() {
         val screenModel = rememberScreenModel { MunicipalityScreenModel(queryBus, commandBus) }
@@ -61,7 +66,7 @@ class MunicipalityScreen(private val queryBus: QueryBus, private val commandBus:
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Municipios",
+                    text = stringResource(Res.string.municipalities),
                     style = MaterialTheme.typography.titleLarge
                 )
 
@@ -79,7 +84,7 @@ class MunicipalityScreen(private val queryBus: QueryBus, private val commandBus:
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Add,
-                        contentDescription = "Agregar municipio"
+                        contentDescription = "Add municipality"
                     )
                 }
             }

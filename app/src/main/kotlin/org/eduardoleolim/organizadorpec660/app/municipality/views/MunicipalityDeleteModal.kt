@@ -2,11 +2,17 @@ package org.eduardoleolim.organizadorpec660.app.municipality.views
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
+import org.eduardoleolim.organizadorpec660.app.generated.resources.mun_delete_text
+import org.eduardoleolim.organizadorpec660.app.generated.resources.mun_delete_title
 import org.eduardoleolim.organizadorpec660.app.municipality.model.DeleteState
 import org.eduardoleolim.organizadorpec660.app.municipality.model.MunicipalityScreenModel
 import org.eduardoleolim.organizadorpec660.app.shared.composables.QuestionDialog
 import org.eduardoleolim.organizadorpec660.core.municipality.application.MunicipalityResponse
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.stringResource
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun MunicipalityScreen.MunicipalityDeleteModal(
     screenModel: MunicipalityScreenModel,
@@ -36,10 +42,10 @@ fun MunicipalityScreen.MunicipalityDeleteModal(
 
     QuestionDialog(
         title = {
-            Text("Eliminar municipio")
+            Text(stringResource(Res.string.mun_delete_title))
         },
         text = {
-            Text("¿Estás seguro que deseas eliminar el municipio ${municipality.name}?")
+            Text(stringResource(Res.string.mun_delete_text, municipality.name))
         },
         onConfirmRequest = {
             screenModel.deleteMunicipality(municipality.id)

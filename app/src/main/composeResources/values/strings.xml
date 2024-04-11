@@ -43,7 +43,25 @@
     <string name="fe_form_name_format">The name cannot be empty</string>
     <string name="fe_form_already_exists">A federal entity already exists with that KeyCode</string>
 
+    <!-- Federal entity -->
     <string name="municipalities">Municipalities</string>
+    <string name="mun_federal_entity">Federal entity</string>
+    <string name="mun_keycode">KeyCode</string>
+    <string name="mun_name">Name</string>
+    <string name="mun_created_at">Created at</string>
+    <string name="mun_updated_at">Updated at</string>
+    <string name="mun_delete_title">Delete municipality?</string>
+    <string name="mun_delete_text">The municipality %1$s will be permanently removed from application</string>
+    <string name="mun_form_add_title">Add municipality</string>
+    <string name="mun_form_edit_title">Edit municipality</string>
+    <string name="mun_form_federal_entity_required">Federal entity required</string>
+    <string name="mun_form_keycode_required">KeyCode required</string>
+    <string name="mun_form_name_required">Name required</string>
+    <string name="mun_form_keycode_format">The KeyCode must be a two-digit number</string>
+    <string name="mun_form_name_format">The name cannot be empty</string>
+    <string name="mun_form_already_exists">A municipality already exists with that KeyCode</string>
+    <string name="mun_form_federal_entity_does_not_exist">The federal entity doesn't exist</string>
+    <string name="mun_form_select_federal_entity">Select a federal entity</string>
 
     <string name="statistic_types">Statistic Types</string>
 

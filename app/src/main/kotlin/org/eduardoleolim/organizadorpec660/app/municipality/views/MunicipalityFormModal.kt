@@ -16,6 +16,7 @@ import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import org.eduardoleolim.organizadorpec660.app.generated.resources.*
 import org.eduardoleolim.organizadorpec660.app.municipality.data.EmptyMunicipalityDataException
 import org.eduardoleolim.organizadorpec660.app.municipality.model.FormState
 import org.eduardoleolim.organizadorpec660.app.municipality.model.MunicipalityScreenModel
@@ -24,7 +25,10 @@ import org.eduardoleolim.organizadorpec660.core.municipality.application.Municip
 import org.eduardoleolim.organizadorpec660.core.municipality.domain.InvalidMunicipalityKeyCodeError
 import org.eduardoleolim.organizadorpec660.core.municipality.domain.InvalidMunicipalityNameError
 import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityAlreadyExistsError
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.stringResource
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun MunicipalityScreen.MunicipalityFormModal(
     screenModel: MunicipalityScreenModel,
@@ -41,9 +45,9 @@ fun MunicipalityScreen.MunicipalityFormModal(
     var isFederalEntityError by remember { mutableStateOf(false) }
     var isKeyCodeError by remember { mutableStateOf(false) }
     var isNameError by remember { mutableStateOf(false) }
-    var federalEntitySupportingText: (@Composable () -> Unit)? by remember { mutableStateOf(null) }
-    var keyCodeSupportingText: (@Composable () -> Unit)? by remember { mutableStateOf(null) }
-    var nameSupportingText: (@Composable () -> Unit)? by remember { mutableStateOf(null) }
+    var federalEntitySupportingText: String? by remember { mutableStateOf(null) }
+    var keyCodeSupportingText: String? by remember { mutableStateOf(null) }
+    var nameSupportingText: String? by remember { mutableStateOf(null) }
 
     LaunchedEffect(Unit) {
         screenModel.searchAllFederalEntities()
@@ -82,77 +86,48 @@ fun MunicipalityScreen.MunicipalityFormModal(
 
         is FormState.Error -> {
             enabled = true
-            var federalEntityMessage: String? = null
-            var keyCodeMessage: String? = null
-            var nameMessage: String? = null
 
             when (val error = formState.error) {
                 is FederalEntityNotFoundError -> {
+                    federalEntitySupportingText = stringResource(Res.string.mun_form_federal_entity_does_not_exist)
                     isFederalEntityError = true
-                    federalEntityMessage = "La entidad federativa no existe"
                 }
 
                 is MunicipalityAlreadyExistsError -> {
+                    val message = stringResource(Res.string.mun_form_already_exists)
+                    federalEntitySupportingText = message
+                    keyCodeSupportingText = message
                     isFederalEntityError = true
-                    federalEntityMessage = "Ya existe una municipio con la clave $keyCode"
                     isKeyCodeError = true
-                    keyCodeMessage = "Ya existe una municipio con la clave $keyCode"
                 }
 
                 is InvalidMunicipalityKeyCodeError -> {
+                    keyCodeSupportingText = stringResource(Res.string.mun_form_keycode_format)
                     isKeyCodeError = true
-                    keyCodeMessage = "La clave debe ser un número de 3 dígitos"
                 }
 
                 is InvalidMunicipalityNameError -> {
+                    nameSupportingText = stringResource(Res.string.mun_form_name_format)
                     isNameError = true
-                    nameMessage = "El nombre no puede estar vacio"
                 }
 
                 is EmptyMunicipalityDataException -> {
                     if (error.isFederalEntityEmpty) {
+                        federalEntitySupportingText = stringResource(Res.string.mun_form_federal_entity_required)
                         isFederalEntityError = true
-                        federalEntityMessage = "La entidad federativa es requerida"
                     }
                     if (error.isKeyCodeEmpty) {
-                        keyCodeMessage = "La clave es requerida."
+                        keyCodeSupportingText = stringResource(Res.string.mun_form_keycode_required)
                         isKeyCodeError = true
                     }
                     if (error.isNameEmpty) {
-                        nameMessage = "El nombre es requerido"
+                        nameSupportingText = stringResource(Res.string.mun_form_name_required)
                         isNameError = true
                     }
                 }
 
                 else -> {
                     println("Error: ${error.message}")
-                }
-            }
-
-            federalEntitySupportingText = federalEntityMessage?.let { message ->
-                {
-                    Text(
-                        text = message,
-                        color = MaterialTheme.colorScheme.error
-                    )
-                }
-            }
-
-            keyCodeSupportingText = keyCodeMessage?.let { message ->
-                {
-                    Text(
-                        text = message,
-                        color = MaterialTheme.colorScheme.error
-                    )
-                }
-            }
-
-            nameSupportingText = nameMessage?.let { message ->
-                {
-                    Text(
-                        text = message,
-                        color = MaterialTheme.colorScheme.error
-                    )
                 }
             }
         }
@@ -164,7 +139,13 @@ fun MunicipalityScreen.MunicipalityFormModal(
         ),
         onDismissRequest = onDismissRequest,
         title = {
-            Text(municipality?.let { "Editar municipio" } ?: "Agregar municipio")
+            val textTitle = if (municipality == null) {
+                stringResource(Res.string.mun_form_add_title)
+            } else {
+                stringResource(Res.string.mun_form_edit_title)
+            }
+
+            Text(textTitle)
         },
         text = {
             Column {
@@ -174,12 +155,14 @@ fun MunicipalityScreen.MunicipalityFormModal(
 
                     OutlinedTextField(
                         enabled = true,
-                        value = federalEntity?.let { "${it.keyCode} - ${it.name}" }
-                            ?: "Selecciona una entidad federativa",
-                        onValueChange = {},
+                        label = { Text(stringResource(Res.string.mun_federal_entity)) },
+                        value = federalEntity?.let { "${it.keyCode} - ${it.name}" } ?: "",
+                        onValueChange = { },
                         readOnly = true,
                         isError = isFederalEntityError,
-                        supportingText = federalEntitySupportingText,
+                        supportingText = federalEntitySupportingText?.let { message ->
+                            { Text(text = message, color = MaterialTheme.colorScheme.error) }
+                        },
                         trailingIcon = {
                             IconButton(
                                 onClick = { expanded = true },
@@ -255,7 +238,7 @@ fun MunicipalityScreen.MunicipalityFormModal(
                         DropdownMenuItem(
                             text = {
                                 Text(
-                                    text = "Selecciona una entidad federativa",
+                                    text = stringResource(Res.string.mun_form_select_federal_entity),
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
                             },
@@ -286,7 +269,7 @@ fun MunicipalityScreen.MunicipalityFormModal(
 
                 OutlinedTextField(
                     enabled = true,
-                    label = { Text("Clave") },
+                    label = { Text(stringResource(Res.string.mun_keycode)) },
                     value = keyCode,
                     onValueChange = {
                         if (Regex("[0-9]{0,3}").matches(it)) {
@@ -295,7 +278,9 @@ fun MunicipalityScreen.MunicipalityFormModal(
                     },
                     singleLine = true,
                     isError = isKeyCodeError,
-                    supportingText = keyCodeSupportingText,
+                    supportingText = keyCodeSupportingText?.let { message ->
+                        { Text(text = message, color = MaterialTheme.colorScheme.error) }
+                    },
                     modifier = Modifier.onFocusChanged {
                         if (!it.isFocused && keyCode.isNotEmpty()) {
                             keyCode = keyCode.padStart(3, '0')
@@ -307,12 +292,14 @@ fun MunicipalityScreen.MunicipalityFormModal(
 
                 OutlinedTextField(
                     enabled = true,
-                    label = { Text("Nombre") },
+                    label = { Text(stringResource(Res.string.mun_name)) },
                     value = name,
                     onValueChange = { name = it.uppercase() },
                     singleLine = true,
                     isError = isNameError,
-                    supportingText = nameSupportingText
+                    supportingText = nameSupportingText?.let { message ->
+                        { Text(text = message, color = MaterialTheme.colorScheme.error) }
+                    }
                 )
             }
         },
@@ -327,7 +314,7 @@ fun MunicipalityScreen.MunicipalityFormModal(
                     }
                 }
             ) {
-                Text("Guardar")
+                Text(stringResource(Res.string.save))
             }
         },
         dismissButton = {
@@ -335,7 +322,7 @@ fun MunicipalityScreen.MunicipalityFormModal(
                 enabled = true,
                 onClick = onDismissRequest
             ) {
-                Text("Cancelar")
+                Text(stringResource(Res.string.cancel))
             }
         }
     )
