@@ -85,9 +85,9 @@ fun InstrumentTypeScreen.InstrumentTypeFormModal(
         onDismissRequest = onDismissRequest,
         title = {
             val textTitle = if (instrumentType == null) {
-                stringResource(Res.string.mun_form_add_title)
+                stringResource(Res.string.it_form_add_title)
             } else {
-                stringResource(Res.string.mun_form_edit_title)
+                stringResource(Res.string.it_form_edit_title)
             }
 
             Text(textTitle)
