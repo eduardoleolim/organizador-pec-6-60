@@ -62,6 +62,7 @@
     <string name="mun_form_already_exists">A municipality already exists with that KeyCode</string>
     <string name="mun_form_federal_entity_does_not_exist">The federal entity doesn't exist</string>
     <string name="mun_form_select_federal_entity">Select a federal entity</string>
+    <string name="mun_form_select_all">All federal entities</string>
 
     <string name="statistic_types">Statistic Types</string>
 

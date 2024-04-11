@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.seanproctor.datatable.DataColumn
 import com.seanproctor.datatable.TableColumnWidth
 import com.seanproctor.datatable.paging.PaginatedDataTableState
+import org.eduardoleolim.organizadorpec660.app.generated.resources.*
 import org.eduardoleolim.organizadorpec660.app.municipality.model.MunicipalityScreenModel
 import org.eduardoleolim.organizadorpec660.app.shared.composables.PaginatedDataTable
 import org.eduardoleolim.organizadorpec660.app.shared.composables.PlainTextTooltip
@@ -28,9 +29,11 @@ import org.eduardoleolim.organizadorpec660.core.federalEntity.application.Federa
 import org.eduardoleolim.organizadorpec660.core.municipality.application.MunicipalitiesResponse
 import org.eduardoleolim.organizadorpec660.core.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorpec660.core.shared.domain.toLocalDateTime
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.stringResource
 import java.time.format.DateTimeFormatter
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalResourceApi::class)
 @Composable
 fun MunicipalityScreen.MunicipalitiesTable(
     screenModel: MunicipalityScreenModel,
@@ -45,7 +48,14 @@ fun MunicipalityScreen.MunicipalitiesTable(
     modifier: Modifier = Modifier
 ) {
     val orders = listOf("keyCode", "name", "federalEntity.name", "createdAt", "updatedAt")
+    val keyCodeColumnName = stringResource(Res.string.mun_keycode)
+    val nameColumnName = stringResource(Res.string.mun_name)
+    val federalEntityColumnName = stringResource(Res.string.mun_federal_entity)
+    val createdAtColumnName = stringResource(Res.string.mun_created_at)
+    val updatedAtColumnName = stringResource(Res.string.mun_updated_at)
+    val actionsColumnName = stringResource(Res.string.table_col_actions)
     var federalEntityId by remember { mutableStateOf<String?>(null) }
+
 
     val columns = remember {
         fun onSort(index: Int, ascending: Boolean) {
@@ -59,18 +69,18 @@ fun MunicipalityScreen.MunicipalitiesTable(
                 alignment = Alignment.CenterHorizontally,
                 width = TableColumnWidth.MinIntrinsic
             ) {
-                Text("Clave")
+                Text(keyCodeColumnName)
             },
             DataColumn(
                 onSort = ::onSort,
             ) {
-                Text("Nombre")
+                Text(nameColumnName)
             },
             DataColumn(
                 onSort = ::onSort
             ) {
                 Text(
-                    text = "Entidad federativa",
+                    text = federalEntityColumnName,
                     textAlign = TextAlign.Center
                 )
             },
@@ -80,7 +90,7 @@ fun MunicipalityScreen.MunicipalitiesTable(
                 width = TableColumnWidth.Fraction(0.18f)
             ) {
                 Text(
-                    text = "Fecha de registro",
+                    text = createdAtColumnName,
                     textAlign = TextAlign.Center
                 )
             },
@@ -90,7 +100,7 @@ fun MunicipalityScreen.MunicipalitiesTable(
                 width = TableColumnWidth.Fraction(0.18f)
             ) {
                 Text(
-                    text = "Última actualización",
+                    text = updatedAtColumnName,
                     textAlign = TextAlign.Center
                 )
             },
@@ -98,7 +108,7 @@ fun MunicipalityScreen.MunicipalitiesTable(
                 alignment = Alignment.CenterHorizontally,
                 width = TableColumnWidth.Fraction(0.2f)
             ) {
-                Text("Acciones")
+                Text(actionsColumnName)
             }
         )
     }
@@ -138,7 +148,8 @@ fun MunicipalityScreen.MunicipalitiesTable(
                         onClick = { expanded = true },
                     ) {
                         Text(
-                            text = selectedFederalEntity?.let { "${it.keyCode} - ${it.name}" } ?: "Todas las entidades",
+                            text = selectedFederalEntity?.let { "${it.keyCode} - ${it.name}" }
+                                ?: stringResource(Res.string.mun_form_select_all),
                             fontWeight = FontWeight.Normal,
                             color = MaterialTheme.colorScheme.onSurface,
                         )
@@ -157,7 +168,10 @@ fun MunicipalityScreen.MunicipalitiesTable(
                     ) {
                         DropdownMenuItem(
                             text = {
-                                Text(text = "Todas las entidades", color = MaterialTheme.colorScheme.onSurface)
+                                Text(
+                                    text = stringResource(Res.string.mun_form_select_all),
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
                             },
                             onClick = {
                                 expanded = false
@@ -205,27 +219,27 @@ fun MunicipalityScreen.MunicipalitiesTable(
 
                     cell {
                         PlainTextTooltip(
-                            tooltip = { Text("Editar") }
+                            tooltip = { Text(stringResource(Res.string.edit)) }
                         ) {
                             IconButton(
                                 onClick = { onEditRequest(municipality) }
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Edit,
-                                    contentDescription = "Editar"
+                                    contentDescription = "Edit"
                                 )
                             }
                         }
 
                         PlainTextTooltip(
-                            tooltip = { Text("Eliminar") }
+                            tooltip = { Text(stringResource(Res.string.delete)) }
                         ) {
                             IconButton(
                                 onClick = { onDeleteRequest(municipality) }
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Delete,
-                                    contentDescription = "Eliminar"
+                                    contentDescription = "Delete"
                                 )
                             }
                         }
