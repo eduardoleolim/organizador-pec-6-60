@@ -108,12 +108,12 @@ class StatisticTypeScreenModel(private val queryBus: QueryBus, private val comma
     fun editStatisticType(statisticTypeId: String, keyCode: String, name: String) {
         _formState.value = FormState.InProgress
         screenModelScope.launch(Dispatchers.IO) {
-            val isKeyCodeBlank = keyCode.isBlank()
-            val isNameBlank = name.isBlank()
+            val isKeyCodeEmpty = keyCode.isEmpty()
+            val isNameEmpty = name.isEmpty()
 
-            if (isKeyCodeBlank || isNameBlank) {
+            if (isKeyCodeEmpty || isNameEmpty) {
                 _formState.value = FormState.Error(
-                    EmptyStatisticTypeDataException(isKeyCodeBlank, isNameBlank)
+                    EmptyStatisticTypeDataException(isKeyCodeEmpty, isNameEmpty)
                 )
                 return@launch
             }

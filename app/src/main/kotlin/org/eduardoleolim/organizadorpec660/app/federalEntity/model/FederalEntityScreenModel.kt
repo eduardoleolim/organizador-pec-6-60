@@ -68,11 +68,11 @@ class FederalEntityScreenModel(private val queryBus: QueryBus, private val comma
     fun createFederalEntity(keyCode: String, name: String) {
         _formState.value = FormState.InProgress
         screenModelScope.launch(Dispatchers.IO) {
-            val isKeyCodeEmpty = keyCode.isBlank()
-            val isNameBlank = name.isBlank()
+            val isKeyCodeEmpty = keyCode.isEmpty()
+            val isNameEmpty = name.isEmpty()
 
-            if (isKeyCodeEmpty || isNameBlank) {
-                _formState.value = FormState.Error(EmptyFederalEntityDataException(isKeyCodeEmpty, isNameBlank))
+            if (isKeyCodeEmpty || isNameEmpty) {
+                _formState.value = FormState.Error(EmptyFederalEntityDataException(isKeyCodeEmpty, isNameEmpty))
                 return@launch
             }
 
@@ -88,11 +88,11 @@ class FederalEntityScreenModel(private val queryBus: QueryBus, private val comma
     fun editFederalEntity(federalEntityId: String, keyCode: String, name: String) {
         _formState.value = FormState.InProgress
         screenModelScope.launch(Dispatchers.IO) {
-            val isKeyCodeEmpty = keyCode.isBlank()
-            val isNameBlank = name.isBlank()
+            val isKeyCodeEmpty = keyCode.isEmpty()
+            val isNameEmpty = name.isEmpty()
 
-            if (isKeyCodeEmpty || isNameBlank) {
-                _formState.value = FormState.Error(EmptyFederalEntityDataException(isKeyCodeEmpty, isNameBlank))
+            if (isKeyCodeEmpty || isNameEmpty) {
+                _formState.value = FormState.Error(EmptyFederalEntityDataException(isKeyCodeEmpty, isNameEmpty))
                 return@launch
             }
 

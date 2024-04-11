@@ -1,7 +1,13 @@
 package org.eduardoleolim.organizadorpec660.app.municipality.views
 
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
 import org.eduardoleolim.organizadorpec660.app.generated.resources.mun_delete_text
 import org.eduardoleolim.organizadorpec660.app.generated.resources.mun_delete_title
@@ -41,6 +47,13 @@ fun MunicipalityScreen.MunicipalityDeleteModal(
     }
 
     QuestionDialog(
+        icon = {
+            Icon(
+                imageVector = Icons.Default.Delete,
+                contentDescription = "Delete",
+                modifier = Modifier.size(32.dp)
+            )
+        },
         title = {
             Text(stringResource(Res.string.mun_delete_title))
         },
