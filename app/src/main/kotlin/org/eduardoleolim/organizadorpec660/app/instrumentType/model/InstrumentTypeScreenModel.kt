@@ -67,7 +67,7 @@ class InstrumentTypeScreenModel(private val queryBus: QueryBus, private val comm
     fun createInstrumentType(name: String) {
         _formState.value = FormState.InProgress
         screenModelScope.launch(Dispatchers.IO) {
-            if (name.isBlank()) {
+            if (name.isEmpty()) {
                 _formState.value = FormState.Error(EmptyInstrumentTypeDataException())
                 return@launch
             }
@@ -84,7 +84,7 @@ class InstrumentTypeScreenModel(private val queryBus: QueryBus, private val comm
     fun editInstrumentType(instrumentTypeId: String, name: String) {
         _formState.value = FormState.InProgress
         screenModelScope.launch(Dispatchers.IO) {
-            if (name.isBlank()) {
+            if (name.isEmpty()) {
                 _formState.value = FormState.Error(EmptyInstrumentTypeDataException())
                 return@launch
             }

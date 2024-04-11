@@ -14,13 +14,18 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import com.seanproctor.datatable.paging.rememberPaginatedDataTableState
+import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
+import org.eduardoleolim.organizadorpec660.app.generated.resources.instrument_types
 import org.eduardoleolim.organizadorpec660.app.instrumentType.model.InstrumentTypeScreenModel
 import org.eduardoleolim.organizadorpec660.app.shared.composables.reset
 import org.eduardoleolim.organizadorpec660.core.instrumentType.application.InstrumentTypeResponse
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.stringResource
 
 class InstrumentTypeScreen(private val queryBus: QueryBus, private val commandBus: CommandBus) : Screen {
+    @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun Content() {
         val screenModel = rememberScreenModel { InstrumentTypeScreenModel(queryBus, commandBus) }
@@ -52,7 +57,7 @@ class InstrumentTypeScreen(private val queryBus: QueryBus, private val commandBu
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Tipos de instrumento",
+                    text = stringResource(Res.string.instrument_types),
                     style = MaterialTheme.typography.titleLarge
                 )
 
@@ -67,7 +72,7 @@ class InstrumentTypeScreen(private val queryBus: QueryBus, private val commandBu
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Add,
-                        contentDescription = "Agregar tipo de instrumento"
+                        contentDescription = "Add instrument type"
                     )
                 }
             }
