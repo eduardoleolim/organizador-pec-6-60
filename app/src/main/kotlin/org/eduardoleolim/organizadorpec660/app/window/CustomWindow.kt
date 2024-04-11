@@ -2,6 +2,8 @@ package org.eduardoleolim.organizadorpec660.app.window
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.window.WindowDraggableArea
 import androidx.compose.material3.LocalContentColor
@@ -120,10 +122,23 @@ private fun FrameWindowScope.FrameContent(
     ) {
         Spacer(Modifier.width(16.dp))
         windowIcon?.let {
+            val onIconClick = LocalWindowController.current.onIconClick
+
             Image(
                 painter = it,
                 contentDescription = "Window Icon",
-                modifier = Modifier.size(16.dp)
+                modifier = Modifier
+                    .windowFrameItem("icon-window", HitSpots.OTHER_HIT_SPOT)
+                    .size(16.dp)
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = {
+                            if (onIconClick != null) {
+                                onIconClick()
+                            }
+                        }
+                    )
             )
             Spacer(Modifier.width(16.dp))
         }
