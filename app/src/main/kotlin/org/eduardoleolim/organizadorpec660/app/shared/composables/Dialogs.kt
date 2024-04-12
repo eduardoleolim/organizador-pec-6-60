@@ -10,7 +10,14 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
+import org.eduardoleolim.organizadorpec660.app.generated.resources.accept
+import org.eduardoleolim.organizadorpec660.app.generated.resources.cancel
+import org.eduardoleolim.organizadorpec660.app.generated.resources.confirm
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.stringResource
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ErrorDialog(
     modifier: Modifier = Modifier,
@@ -26,7 +33,7 @@ fun ErrorDialog(
             Icon(
                 imageVector = Icons.Default.Error,
                 contentDescription = "Error",
-                modifier = Modifier.width(24.dp)
+                modifier = Modifier.width(32.dp)
             )
         },
         title = title,
@@ -35,19 +42,20 @@ fun ErrorDialog(
             TextButton(
                 onClick = onConfirmRequest
             ) {
-                Text("Aceptar")
+                Text(stringResource(Res.string.accept))
             }
         },
         dismissButton = {
             TextButton(
                 onClick = onDismissRequest
             ) {
-                Text("Cancelar")
+                Text(stringResource(Res.string.cancel))
             }
         }
     )
 }
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun QuestionDialog(
     modifier: Modifier = Modifier,
@@ -67,14 +75,14 @@ fun QuestionDialog(
             TextButton(
                 onClick = onConfirmRequest
             ) {
-                Text("Confirmar")
+                Text(stringResource(Res.string.confirm))
             }
         },
         dismissButton = {
             TextButton(
                 onClick = onDismissRequest
             ) {
-                Text("Cancelar")
+                Text(stringResource(Res.string.cancel))
             }
         },
     )
