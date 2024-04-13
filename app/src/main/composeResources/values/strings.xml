@@ -95,4 +95,6 @@
     <string name="it_form_name_format">The name cannot be empty</string>
     <string name="it_form_already_exists">A instrument type already exists with that Name</string>
 
+    <!-- Agency -->
+    <string name="agencies">Agencies</string>
 </resources>

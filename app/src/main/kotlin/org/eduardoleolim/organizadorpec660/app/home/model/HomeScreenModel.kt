@@ -59,6 +59,11 @@ class HomeScreenModel(
         Navigator(ScreenRegistry.get(HomeProvider.InstrumentTypeScreen))
     }
 
+    @Composable
+    fun AgencyScreen() {
+        Navigator(ScreenRegistry.get(HomeProvider.AgencyScreen))
+    }
+
     fun logout() {
         navigator.popUntil<AuthScreen, Screen>()
     }

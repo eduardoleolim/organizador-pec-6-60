@@ -12,4 +12,6 @@ sealed class HomeProvider : ScreenProvider {
     data object InstrumentTypeScreen : HomeProvider()
 
     data object InstrumentScreen : HomeProvider()
+
+    data object AgencyScreen : HomeProvider()
 }

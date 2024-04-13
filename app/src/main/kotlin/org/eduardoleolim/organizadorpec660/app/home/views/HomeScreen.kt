@@ -6,7 +6,11 @@ import androidx.compose.material.icons.automirrored.filled.ListAlt
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.automirrored.filled.MenuOpen
 import androidx.compose.material.icons.automirrored.outlined.ListAlt
-import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.Apartment
+import androidx.compose.material.icons.outlined.BarChart
+import androidx.compose.material.icons.outlined.Description
+import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -32,7 +36,8 @@ enum class MenuTab {
     FEDERAL_ENTITIES,
     MUNICIPALITIES,
     STATISTIC_TYPES,
-    INSTRUMENTS_TYPES
+    INSTRUMENTS_TYPES,
+    AGENCIES
 }
 
 class HomeScreen(private val user: AuthUserResponse) : Screen {
@@ -41,7 +46,7 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
         @Composable get() = listOf(
             Triple(
                 stringResource(Res.string.instruments),
-                Pair(Icons.AutoMirrored.Filled.ListAlt, Icons.AutoMirrored.Outlined.ListAlt),
+                Pair(Icons.Filled.Description, Icons.Outlined.Description),
                 MenuTab.INSTRUMENTS
             ),
             Triple(
@@ -56,13 +61,18 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
             ),
             Triple(
                 stringResource(Res.string.statistic_types),
-                Pair(Icons.AutoMirrored.Filled.ListAlt, Icons.AutoMirrored.Outlined.ListAlt),
+                Pair(Icons.Filled.BarChart, Icons.Outlined.BarChart),
                 MenuTab.STATISTIC_TYPES
             ),
             Triple(
                 stringResource(Res.string.instrument_types),
-                Pair(Icons.AutoMirrored.Filled.ListAlt, Icons.AutoMirrored.Outlined.ListAlt),
+                Pair(Icons.Filled.Folder, Icons.Outlined.Folder),
                 MenuTab.INSTRUMENTS_TYPES
+            ),
+            Triple(
+                stringResource(Res.string.agencies),
+                Pair(Icons.Filled.Apartment, Icons.Outlined.Apartment),
+                MenuTab.AGENCIES
             )
         )
 
@@ -152,6 +162,7 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
                             MenuTab.MUNICIPALITIES -> MunicipalityView()
                             MenuTab.STATISTIC_TYPES -> StatisticTypeView()
                             MenuTab.INSTRUMENTS_TYPES -> InstrumentTypeView()
+                            MenuTab.AGENCIES -> AgencyScreen()
                         }
                     }
                 }
