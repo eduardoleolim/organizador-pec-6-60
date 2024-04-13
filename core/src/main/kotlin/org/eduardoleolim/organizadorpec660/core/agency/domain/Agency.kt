@@ -36,6 +36,10 @@ class Agency private constructor(
                 AgencyMunicipalityAssociation.from(agencyId.value.toString(), municipalityId, isOwner)
             }.distinctBy { it.municipalityId() }
 
+            val belongJustOne = municipalityAssociations.count { it.isOwner() }
+            if (belongJustOne != 1)
+                throw InvalidAgencyMunicipalityOwnerError()
+
             val statisticTypeAssociations = statisticTypes.map { association ->
                 val (statisticTypeId, instrumentTypeId) = association
 
@@ -79,6 +83,10 @@ class Agency private constructor(
 
                 AgencyMunicipalityAssociation.from(agencyId.value.toString(), municipalityId, isOwner)
             }.distinctBy { it.municipalityId() }
+
+            val belongJustOne = municipalityAssociations.count { it.isOwner() }
+            if (belongJustOne != 1)
+                throw InvalidAgencyMunicipalityOwnerError()
 
             val statisticTypeAssociations = statisticTypes.map { association ->
                 val (statisticTypeId, instrumentTypeId) = association

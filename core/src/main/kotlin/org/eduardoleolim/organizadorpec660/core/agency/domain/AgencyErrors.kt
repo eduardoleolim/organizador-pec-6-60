@@ -15,9 +15,13 @@ class InvalidAgencyConsecutiveError(val consecutive: Int) :
 
 class InvalidAgencyMunicipalitiesError : AgencyError("The agency must to have at least a municipality association")
 
+class InvalidAgencyMunicipalityOwnerError : AgencyError("The agency must belong just to a municipality")
+
 class InvalidAgencyStatisticTypesError : AgencyError("The agency must to have at least a statistic type association")
 
 class InvalidAgencyUpdateDateError(val updatedAt: Date, val createdAt: Date) :
     AgencyError("The update date <$updatedAt> is not valid because it is before the create date <$createdAt>")
+
+class AgencyAlreadyExists(consecutive: Int) : AgencyError("The agency with consecutive <$consecutive> already exists")
 
 class AgencyNotFoundError(val id: String) : AgencyError("The agency with id <$id> was not found")

@@ -58,6 +58,7 @@ class KtormAgenciesCriteriaParser(
             AgencyFields.Consecutive -> parseOrderType(orderType, agencies.consecutive)
             AgencyFields.CreatedAt -> parseOrderType(orderType, agencies.createdAt)
             AgencyFields.UpdatedAt -> parseOrderType(orderType, agencies.updatedAt)
+            AgencyFields.MunicipalityId -> parseOrderType(orderType, agenciesOfMunicipalities.municipalityId)
             null -> throw InvalidArgumentError()
         }
     }
@@ -165,6 +166,14 @@ class KtormAgenciesCriteriaParser(
                     FilterOperator.GTE -> agencies.updatedAt greaterEq date
                     FilterOperator.LT -> agencies.updatedAt less date
                     FilterOperator.LTE -> agencies.updatedAt lessEq date
+                    else -> null
+                }
+            }
+
+            AgencyFields.MunicipalityId -> {
+                when (operator) {
+                    FilterOperator.EQUAL -> agenciesOfMunicipalities.municipalityId eq value
+                    FilterOperator.NOT_EQUAL -> agenciesOfMunicipalities.municipalityId notEq value
                     else -> null
                 }
             }

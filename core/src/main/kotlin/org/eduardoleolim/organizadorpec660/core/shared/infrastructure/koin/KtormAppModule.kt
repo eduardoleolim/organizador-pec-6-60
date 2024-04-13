@@ -1,5 +1,6 @@
 package org.eduardoleolim.organizadorpec660.core.shared.infrastructure.koin
 
+import org.eduardoleolim.organizadorpec660.core.agency.application.create.AgencyCreator
 import org.eduardoleolim.organizadorpec660.core.agency.domain.AgencyRepository
 import org.eduardoleolim.organizadorpec660.core.agency.infrastructure.persistence.KtormAgencyRepository
 import org.eduardoleolim.organizadorpec660.core.auth.application.authenticate.UserAuthenticator
@@ -37,7 +38,6 @@ import org.eduardoleolim.organizadorpec660.core.user.infrastructure.persistence.
 import org.koin.dsl.module
 import org.ktorm.database.Database
 
-
 object KtormAppModule {
     fun buildModule(database: Database) = module {
         single<Database> { database }
@@ -53,6 +53,9 @@ object KtormAppModule {
         // single<RoleRepository> { KtormRoleRepository(get()) }
         single<StatisticTypeRepository> { KtormStatisticTypeRepository(get()) }
         single<UserRepository> { KtormUserRepository(get()) }
+
+        // Agency services
+        single { AgencyCreator(get(), get(), get(), get()) }
 
         // Auth services
         single { UserAuthenticator(get()) }
