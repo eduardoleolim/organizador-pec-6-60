@@ -104,8 +104,6 @@ fun FederalEntityScreen.FederalEntitiesTable(
             value = value,
             onValueChange = onValueChange,
             columns = columns,
-            sortColumnIndex = state.sortColumnIndex,
-            sortAscending = state.sortAscending,
             state = state,
             pageSizes = pageSizes,
             onSearch = { search, pageIndex, pageSize, sortBy, isAscending ->

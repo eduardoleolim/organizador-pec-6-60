@@ -61,8 +61,6 @@ fun PaginatedDataTable(
     rowHeight: Dp = 52.dp,
     horizontalPadding: Dp = 16.dp,
     verticalPadding: Dp = 16.dp,
-    sortColumnIndex: Int? = null,
-    sortAscending: Boolean = true,
     onSearch: (search: String, pageIndex: Int, pageSize: Int, sortBy: Int?, isAscending: Boolean) -> Unit,
     state: PaginatedDataTableState = rememberPaginatedDataTableState(pageSizes.first()),
     content: DataTableScope.() -> Unit
@@ -71,13 +69,13 @@ fun PaginatedDataTable(
 
     value.useDebounce(delayMillis) {
         state.pageIndex = 0
-        onSearch(value, state.pageIndex, state.pageSize, sortColumnIndex, sortAscending)
+        onSearch(value, state.pageIndex, state.pageSize, state.sortColumnIndex, state.sortAscending)
     }
 
-    LaunchedEffect(state.pageIndex, state.pageSize, sortColumnIndex, sortAscending) {
+    LaunchedEffect(state.pageIndex, state.pageSize, state.sortColumnIndex, state.sortAscending) {
         if (state.pageIndex < 0) state.pageIndex = 0
 
-        onSearch(value, state.pageIndex, state.pageSize, sortColumnIndex, sortAscending)
+        onSearch(value, state.pageIndex, state.pageSize, state.sortColumnIndex, state.sortAscending)
     }
 
     Column(
@@ -179,8 +177,8 @@ fun PaginatedDataTable(
                 headerHeight = headerHeight,
                 horizontalPadding = horizontalPadding,
                 cellContentProvider = Material3CellContentProvider,
-                sortColumnIndex = sortColumnIndex,
-                sortAscending = sortAscending,
+                sortColumnIndex = state.sortColumnIndex,
+                sortAscending = state.sortAscending,
                 content = {
                     state.count = total
                     content()
