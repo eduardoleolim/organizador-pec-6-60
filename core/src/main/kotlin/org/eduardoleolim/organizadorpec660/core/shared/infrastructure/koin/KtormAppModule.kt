@@ -82,7 +82,7 @@ object KtormAppModule {
         // Role services
 
         // Statistic type services
-        single { StatisticTypeCreator(get(), get()) }
+        single { StatisticTypeCreator(get()) }
         single { StatisticTypeDeleter(get()) }
         single { StatisticTypeSearcher(get()) }
         single { StatisticTypeUpdater(get()) }
