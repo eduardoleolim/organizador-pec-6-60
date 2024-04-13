@@ -38,7 +38,7 @@ fun FederalEntityScreen.FederalEntityFormModal(
     var keyCodeSupportingText: String? by remember { mutableStateOf(null) }
     var nameSupportingText: String? by remember { mutableStateOf(null) }
 
-    when (val formState = screenModel.formState.value) {
+    when (val formState = screenModel.formState) {
         FormState.Idle -> {
             enabled = true
             isKeyCodeError = false

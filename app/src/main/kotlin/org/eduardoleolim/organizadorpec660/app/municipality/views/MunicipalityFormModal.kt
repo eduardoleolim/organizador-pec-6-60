@@ -53,7 +53,7 @@ fun MunicipalityScreen.MunicipalityFormModal(
         screenModel.searchAllFederalEntities()
     }
 
-    when (val formState = screenModel.formState.value) {
+    when (val formState = screenModel.formState) {
         FormState.Idle -> {
             enabled = true
             isFederalEntityError = false
@@ -178,7 +178,7 @@ fun MunicipalityScreen.MunicipalityFormModal(
                         modifier = Modifier.onPreviewKeyEvent {
                             when {
                                 (it.key == Key.DirectionDown && it.type == KeyEventType.KeyDown) -> {
-                                    val federalEntities = screenModel.federalEntities.value
+                                    val federalEntities = screenModel.federalEntities
                                     if (federalEntity != null) {
                                         val federalEntityIndex = federalEntities.indexOf(federalEntity)
                                         val nextIndex = federalEntityIndex + 1
@@ -198,7 +198,7 @@ fun MunicipalityScreen.MunicipalityFormModal(
                                 }
 
                                 (it.key == Key.DirectionUp && it.type == KeyEventType.KeyDown) -> {
-                                    val federalEntities = screenModel.federalEntities.value
+                                    val federalEntities = screenModel.federalEntities
                                     if (federalEntity != null) {
                                         val federalEntityIndex = federalEntities.indexOf(federalEntity)
                                         val prevIndex = federalEntityIndex - 1
@@ -248,7 +248,7 @@ fun MunicipalityScreen.MunicipalityFormModal(
                             }
                         )
 
-                        screenModel.federalEntities.value.forEach {
+                        screenModel.federalEntities.forEach {
                             DropdownMenuItem(
                                 text = {
                                     Text(
@@ -305,7 +305,7 @@ fun MunicipalityScreen.MunicipalityFormModal(
         },
         confirmButton = {
             TextButton(
-                enabled = true,
+                enabled = enabled,
                 onClick = {
                     if (municipalityId == null) {
                         screenModel.createMunicipality(keyCode, name, federalEntity?.id)
@@ -319,7 +319,7 @@ fun MunicipalityScreen.MunicipalityFormModal(
         },
         dismissButton = {
             TextButton(
-                enabled = true,
+                enabled = enabled,
                 onClick = onDismissRequest
             ) {
                 Text(stringResource(Res.string.cancel))

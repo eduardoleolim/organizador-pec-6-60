@@ -27,7 +27,7 @@ fun InstrumentTypeScreen.InstrumentTypeDeleteModal(
     onFail: () -> Unit,
     onDismissRequest: () -> Unit
 ) {
-    when (val deleteState = screenModel.deleteState.value) {
+    when (val deleteState = screenModel.deleteState) {
         DeleteState.Idle -> {
 
         }

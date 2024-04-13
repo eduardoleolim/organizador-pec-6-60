@@ -1,10 +1,12 @@
 package org.eduardoleolim.organizadorpec660.app.municipality.model
 
-import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.eduardoleolim.organizadorpec660.app.municipality.data.EmptyMunicipalityDataException
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntitiesResponse
@@ -34,24 +36,24 @@ sealed class DeleteState {
 }
 
 class MunicipalityScreenModel(private val queryBus: QueryBus, private val commandBus: CommandBus) : ScreenModel {
-    private var _municipalities = mutableStateOf(MunicipalitiesResponse(emptyList(), 0, null, null))
-    val municipalities: State<MunicipalitiesResponse> get() = _municipalities
+    var municipalities by mutableStateOf(MunicipalitiesResponse(emptyList(), 0, null, null))
+        private set
 
-    private var _federalEntities = mutableStateOf(emptyList<FederalEntityResponse>())
-    val federalEntities: State<List<FederalEntityResponse>> get() = _federalEntities
+    var federalEntities by mutableStateOf(emptyList<FederalEntityResponse>())
+        private set
 
-    private var _formState = mutableStateOf<FormState>(FormState.Idle)
-    val formState: State<FormState> get() = _formState
+    var formState by mutableStateOf<FormState>(FormState.Idle)
+        private set
 
-    private var _deleteState = mutableStateOf<DeleteState>(DeleteState.Idle)
-    val deleteState: State<DeleteState> get() = _deleteState
+    var deleteState by mutableStateOf<DeleteState>(DeleteState.Idle)
+        private set
 
     fun resetForm() {
-        _formState.value = FormState.Idle
+        formState = FormState.Idle
     }
 
     fun resetDeleteModal() {
-        _deleteState.value = DeleteState.Idle
+        deleteState = DeleteState.Idle
     }
 
     fun searchMunicipalities(
@@ -64,9 +66,9 @@ class MunicipalityScreenModel(private val queryBus: QueryBus, private val comman
         screenModelScope.launch(Dispatchers.IO) {
             try {
                 val query = SearchMunicipalitiesByTermQuery(federalEntityId, search, orders, limit, offset)
-                _municipalities.value = queryBus.ask(query)
+                municipalities = queryBus.ask(query)
             } catch (e: Exception) {
-                _municipalities.value = MunicipalitiesResponse(emptyList(), 0, null, null)
+                municipalities = MunicipalitiesResponse(emptyList(), 0, null, null)
             }
         }
     }
@@ -75,65 +77,71 @@ class MunicipalityScreenModel(private val queryBus: QueryBus, private val comman
         screenModelScope.launch(Dispatchers.IO) {
             try {
                 val query = SearchFederalEntitiesByTermQuery()
-                _federalEntities.value = queryBus.ask<FederalEntitiesResponse>(query).federalEntities
+                federalEntities = queryBus.ask<FederalEntitiesResponse>(query).federalEntities
             } catch (e: Exception) {
-                _federalEntities.value = emptyList()
+                federalEntities = emptyList()
             }
         }
     }
 
     fun createMunicipality(keyCode: String, name: String, federalEntityId: String?) {
-        _formState.value = FormState.InProgress
         screenModelScope.launch(Dispatchers.IO) {
+            formState = FormState.InProgress
+            delay(500)
+
             val isFederalEntityEmpty = federalEntityId.isNullOrBlank()
             val isKeyCodeEmpty = keyCode.isEmpty()
             val isNameEmpty = name.isEmpty()
 
             if (isFederalEntityEmpty || isKeyCodeEmpty || isNameEmpty) {
-                _formState.value =
+                formState =
                     FormState.Error(EmptyMunicipalityDataException(isFederalEntityEmpty, isKeyCodeEmpty, isNameEmpty))
                 return@launch
             }
 
             try {
                 commandBus.dispatch(CreateMunicipalityCommand(keyCode, name, federalEntityId!!))
-                _formState.value = FormState.SuccessCreate
+                formState = FormState.SuccessCreate
             } catch (e: Exception) {
-                _formState.value = FormState.Error(e.cause!!)
+                formState = FormState.Error(e.cause!!)
             }
         }
     }
 
     fun editMunicipality(municipalityId: String, keyCode: String, name: String, federalEntityId: String?) {
-        _formState.value = FormState.InProgress
         screenModelScope.launch(Dispatchers.IO) {
+            formState = FormState.InProgress
+            delay(500)
+
             val isFederalEntityEmpty = federalEntityId.isNullOrBlank()
             val isKeyCodeEmpty = keyCode.isEmpty()
             val isNameEmpty = name.isEmpty()
 
             if (isFederalEntityEmpty || isKeyCodeEmpty || isNameEmpty) {
-                _formState.value =
+                formState =
                     FormState.Error(EmptyMunicipalityDataException(isFederalEntityEmpty, isKeyCodeEmpty, isNameEmpty))
                 return@launch
             }
 
             try {
                 commandBus.dispatch(UpdateMunicipalityCommand(municipalityId, keyCode, name, federalEntityId!!))
-                _formState.value = FormState.SuccessEdit
+                formState = FormState.SuccessEdit
             } catch (e: Exception) {
-                _formState.value = FormState.Error(e.cause!!)
+                formState = FormState.Error(e.cause!!)
             }
         }
     }
 
     fun deleteMunicipality(municipalityId: String) {
-        _deleteState.value = DeleteState.InProgress
         screenModelScope.launch(Dispatchers.IO) {
+            deleteState = DeleteState.InProgress
+            delay(500)
+
             try {
                 commandBus.dispatch(DeleteMunicipalityCommand(municipalityId))
-                _deleteState.value = DeleteState.Success
+                deleteState = DeleteState.Success
             } catch (e: Exception) {
-                _deleteState.value = DeleteState.Error(e.cause!!)
+                deleteState = DeleteState.Error(e.cause!!)
             }
         }
     }

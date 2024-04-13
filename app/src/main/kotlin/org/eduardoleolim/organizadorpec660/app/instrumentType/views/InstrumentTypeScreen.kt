@@ -83,7 +83,7 @@ class InstrumentTypeScreen(private val queryBus: QueryBus, private val commandBu
                 value = searchValue,
                 onValueChange = { searchValue = it },
                 pageSizes = pageSizes,
-                data = screenModel.instrumentTypes.value,
+                data = screenModel.instrumentTypes,
                 state = state,
                 onSearch = { search, pageIndex, pageSize, orderBy, isAscending ->
                     val orders = orderBy?.let {

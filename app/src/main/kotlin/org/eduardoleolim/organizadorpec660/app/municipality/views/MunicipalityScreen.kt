@@ -95,7 +95,7 @@ class MunicipalityScreen(private val queryBus: QueryBus, private val commandBus:
                 value = searchValue,
                 onValueChange = { searchValue = it },
                 pageSizes = pageSizes,
-                data = screenModel.municipalities.value,
+                data = screenModel.municipalities,
                 state = state,
                 onSearch = { search, federalEntityId, pageIndex, pageSize, orderBy, isAscending ->
                     selectedFederalEntityId = federalEntityId

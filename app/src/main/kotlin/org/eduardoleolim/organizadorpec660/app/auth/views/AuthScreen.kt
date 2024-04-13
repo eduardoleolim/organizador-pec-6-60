@@ -90,7 +90,7 @@ class AuthScreen(private val queryBus: QueryBus) : Screen {
         var usernameSupportingText by remember { mutableStateOf(null as String?) }
         var passwordSupportingText by remember { mutableStateOf(null as String?) }
 
-        when (val authState = screenModel.authState.value) {
+        when (val authState = screenModel.authState) {
             AuthState.Idle -> {
                 enabled = true
                 isPasswordError = false
@@ -116,11 +116,6 @@ class AuthScreen(private val queryBus: QueryBus) : Screen {
 
             is AuthState.Error -> {
                 enabled = true
-                isPasswordError = false
-                isUsernameError = false
-                isCredentialsError = false
-                usernameSupportingText = null
-                passwordSupportingText = null
 
                 when (val error = authState.error) {
                     is InvalidAuthCredentialsError -> {
@@ -130,12 +125,12 @@ class AuthScreen(private val queryBus: QueryBus) : Screen {
                     }
 
                     is InvalidCredentialsException -> {
-                        if (error.isUsernameInvalid) {
+                        if (error.isUsernameEmpty) {
                             isUsernameError = true
                             usernameSupportingText = stringResource(Res.string.auth_username_required)
                         }
 
-                        if (error.isPasswordInvalid) {
+                        if (error.isPasswordEmpty) {
                             isPasswordError = true
                             passwordSupportingText = stringResource(Res.string.auth_password_required)
                         }

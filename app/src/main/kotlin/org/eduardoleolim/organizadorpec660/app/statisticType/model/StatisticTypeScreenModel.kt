@@ -1,10 +1,12 @@
 package org.eduardoleolim.organizadorpec660.app.statisticType.model
 
-import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.eduardoleolim.organizadorpec660.app.statisticType.data.EmptyStatisticTypeDataException
 import org.eduardoleolim.organizadorpec660.core.instrumentType.application.InstrumentTypeResponse
@@ -36,24 +38,24 @@ sealed class DeleteState {
 
 
 class StatisticTypeScreenModel(private val queryBus: QueryBus, private val commandBus: CommandBus) : ScreenModel {
-    private var _statisticTypes = mutableStateOf(StatisticTypesResponse(emptyList(), 0, null, null))
-    val statisticTypes: State<StatisticTypesResponse> get() = _statisticTypes
+    var statisticTypes by mutableStateOf(StatisticTypesResponse(emptyList(), 0, null, null))
+        private set
 
-    private var _instrumentTypes = mutableStateOf(emptyList<InstrumentTypeResponse>())
-    val instrumentTypes: State<List<InstrumentTypeResponse>> get() = _instrumentTypes
+    var instrumentTypes by mutableStateOf(emptyList<InstrumentTypeResponse>())
+        private set
 
-    private var _formState = mutableStateOf<FormState>(FormState.Idle)
-    val formState: State<FormState> get() = _formState
+    var formState by mutableStateOf<FormState>(FormState.Idle)
+        private set
 
-    private var _deleteState = mutableStateOf<DeleteState>(DeleteState.Idle)
-    val deleteState: State<DeleteState> get() = _deleteState
+    var deleteState by mutableStateOf<DeleteState>(DeleteState.Idle)
+        private set
 
     fun resetForm() {
-        _formState.value = FormState.Idle
+        formState = FormState.Idle
     }
 
     fun resetDeleteModal() {
-        _deleteState.value = DeleteState.Idle
+        deleteState = DeleteState.Idle
     }
 
     fun searchStatisticTypes(
@@ -65,9 +67,9 @@ class StatisticTypeScreenModel(private val queryBus: QueryBus, private val comma
         screenModelScope.launch(Dispatchers.IO) {
             try {
                 val query = SearchStatisticTypesByTermQuery(search, orders, limit, offset)
-                _statisticTypes.value = queryBus.ask(query)
+                statisticTypes = queryBus.ask(query)
             } catch (e: Exception) {
-                _statisticTypes.value = StatisticTypesResponse(emptyList(), 0, null, null)
+                statisticTypes = StatisticTypesResponse(emptyList(), 0, null, null)
             }
         }
     }
@@ -76,65 +78,65 @@ class StatisticTypeScreenModel(private val queryBus: QueryBus, private val comma
         screenModelScope.launch(Dispatchers.IO) {
             try {
                 val query = SearchInstrumentTypesByTermQuery()
-                _instrumentTypes.value = queryBus.ask<InstrumentTypesResponse>(query).instrumentTypes
+                instrumentTypes = queryBus.ask<InstrumentTypesResponse>(query).instrumentTypes
             } catch (e: Exception) {
-                _instrumentTypes.value = emptyList()
+                instrumentTypes = emptyList()
             }
         }
     }
 
     fun createStatisticType(keyCode: String, name: String) {
-        _formState.value = FormState.InProgress
+        formState = FormState.InProgress
         screenModelScope.launch(Dispatchers.IO) {
             val isKeyCodeBlank = keyCode.isBlank()
             val isNameBlank = name.isBlank()
 
             if (isKeyCodeBlank || isNameBlank) {
-                _formState.value = FormState.Error(
-                    EmptyStatisticTypeDataException(isKeyCodeBlank, isNameBlank)
-                )
+                formState = FormState.Error(EmptyStatisticTypeDataException(isKeyCodeBlank, isNameBlank))
                 return@launch
             }
 
             try {
                 commandBus.dispatch(CreateStatisticTypeCommand(keyCode, name))
-                _formState.value = FormState.SuccessCreate
+                formState = FormState.SuccessCreate
             } catch (e: Exception) {
-                _formState.value = FormState.Error(e.cause!!)
+                formState = FormState.Error(e.cause!!)
             }
         }
     }
 
     fun editStatisticType(statisticTypeId: String, keyCode: String, name: String) {
-        _formState.value = FormState.InProgress
         screenModelScope.launch(Dispatchers.IO) {
+            formState = FormState.InProgress
+            delay(500)
+
             val isKeyCodeEmpty = keyCode.isEmpty()
             val isNameEmpty = name.isEmpty()
 
             if (isKeyCodeEmpty || isNameEmpty) {
-                _formState.value = FormState.Error(
-                    EmptyStatisticTypeDataException(isKeyCodeEmpty, isNameEmpty)
-                )
+                formState = FormState.Error(EmptyStatisticTypeDataException(isKeyCodeEmpty, isNameEmpty))
                 return@launch
             }
 
             try {
                 commandBus.dispatch(UpdateStatisticTypeCommand(statisticTypeId, keyCode, name))
-                _formState.value = FormState.SuccessEdit
+                formState = FormState.SuccessEdit
             } catch (e: Exception) {
-                _formState.value = FormState.Error(e.cause!!)
+                formState = FormState.Error(e.cause!!)
             }
         }
     }
 
     fun deleteStatisticType(statisticTypeId: String) {
-        _deleteState.value = DeleteState.InProgress
         screenModelScope.launch(Dispatchers.IO) {
+            deleteState = DeleteState.InProgress
+            delay(500)
+
             try {
                 commandBus.dispatch(DeleteStatisticTypeCommand(statisticTypeId))
-                _deleteState.value = DeleteState.Success
+                deleteState = DeleteState.Success
             } catch (e: Exception) {
-                _deleteState.value = DeleteState.Error(e.cause!!)
+                deleteState = DeleteState.Error(e.cause!!)
             }
         }
     }

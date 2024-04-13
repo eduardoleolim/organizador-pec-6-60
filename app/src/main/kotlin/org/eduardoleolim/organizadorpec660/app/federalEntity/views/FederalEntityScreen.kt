@@ -87,7 +87,7 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
                 onValueChange = { searchValue = it },
                 pageSizes = pageSizes,
                 state = state,
-                data = screenModel.federalEntities.value,
+                data = screenModel.federalEntities,
                 onSearch = { search, pageIndex, pageSize, orderBy, isAscending ->
                     val orders = orderBy?.let {
                         val orderType = if (isAscending) "ASC" else "DESC"

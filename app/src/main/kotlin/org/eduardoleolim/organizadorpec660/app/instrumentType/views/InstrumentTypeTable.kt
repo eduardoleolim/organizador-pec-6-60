@@ -117,15 +117,10 @@ fun InstrumentTypeScreen.InstrumentTypeTable(
                         Text(instrumentType.name)
                     }
                     cell {
-                        Text(
-                            text = instrumentType.createdAt.toLocalDateTime().format(dateTimeFormatter)
-                        )
+                        Text(instrumentType.createdAt.toLocalDateTime().format(dateTimeFormatter))
                     }
                     cell {
-                        Text(
-                            text = instrumentType.updatedAt?.toLocalDateTime()?.format(dateTimeFormatter)
-                                ?: "N/A"
-                        )
+                        Text(instrumentType.updatedAt?.toLocalDateTime()?.format(dateTimeFormatter) ?: "N/A")
                     }
 
                     cell {

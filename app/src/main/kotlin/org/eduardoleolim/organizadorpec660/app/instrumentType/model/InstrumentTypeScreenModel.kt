@@ -1,10 +1,12 @@
 package org.eduardoleolim.organizadorpec660.app.instrumentType.model
 
-import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.eduardoleolim.organizadorpec660.app.instrumentType.data.EmptyInstrumentTypeDataException
 import org.eduardoleolim.organizadorpec660.core.instrumentType.application.InstrumentTypesResponse
@@ -31,21 +33,21 @@ sealed class DeleteState {
 }
 
 class InstrumentTypeScreenModel(private val queryBus: QueryBus, private val commandBus: CommandBus) : ScreenModel {
-    private var _instrumentTypes = mutableStateOf(InstrumentTypesResponse(emptyList(), 0, null, null))
-    val instrumentTypes: State<InstrumentTypesResponse> get() = _instrumentTypes
+    var instrumentTypes by mutableStateOf(InstrumentTypesResponse(emptyList(), 0, null, null))
+        private set
 
-    private var _formState = mutableStateOf<FormState>(FormState.Idle)
-    val formState: State<FormState> get() = _formState
+    var formState by mutableStateOf<FormState>(FormState.Idle)
+        private set
 
-    private var _deleteState = mutableStateOf<DeleteState>(DeleteState.Idle)
-    val deleteState: State<DeleteState> get() = _deleteState
+    var deleteState by mutableStateOf<DeleteState>(DeleteState.Idle)
+        private set
 
     fun resetForm() {
-        _formState.value = FormState.Idle
+        formState = FormState.Idle
     }
 
     fun resetDeleteModal() {
-        _deleteState.value = DeleteState.Idle
+        deleteState = DeleteState.Idle
     }
 
     fun searchInstrumentTypes(
@@ -57,55 +59,61 @@ class InstrumentTypeScreenModel(private val queryBus: QueryBus, private val comm
         screenModelScope.launch(Dispatchers.IO) {
             try {
                 val query = SearchInstrumentTypesByTermQuery(search, orders, limit, offset)
-                _instrumentTypes.value = queryBus.ask(query)
+                instrumentTypes = queryBus.ask(query)
             } catch (e: Exception) {
-                _instrumentTypes.value = InstrumentTypesResponse(emptyList(), 0, null, null)
+                instrumentTypes = InstrumentTypesResponse(emptyList(), 0, null, null)
             }
         }
     }
 
     fun createInstrumentType(name: String) {
-        _formState.value = FormState.InProgress
         screenModelScope.launch(Dispatchers.IO) {
+            formState = FormState.InProgress
+            delay(500)
+
             if (name.isEmpty()) {
-                _formState.value = FormState.Error(EmptyInstrumentTypeDataException())
+                formState = FormState.Error(EmptyInstrumentTypeDataException())
                 return@launch
             }
 
             try {
                 commandBus.dispatch(CreateInstrumentTypeCommand(name))
-                _formState.value = FormState.SuccessCreate
+                formState = FormState.SuccessCreate
             } catch (e: Exception) {
-                _formState.value = FormState.Error(e.cause!!)
+                formState = FormState.Error(e.cause!!)
             }
         }
     }
 
     fun editInstrumentType(instrumentTypeId: String, name: String) {
-        _formState.value = FormState.InProgress
         screenModelScope.launch(Dispatchers.IO) {
+            formState = FormState.InProgress
+            delay(500)
+
             if (name.isEmpty()) {
-                _formState.value = FormState.Error(EmptyInstrumentTypeDataException())
+                formState = FormState.Error(EmptyInstrumentTypeDataException())
                 return@launch
             }
 
             try {
                 commandBus.dispatch(UpdateInstrumentTypeCommand(instrumentTypeId, name))
-                _formState.value = FormState.SuccessCreate
+                formState = FormState.SuccessCreate
             } catch (e: Exception) {
-                _formState.value = FormState.Error(e.cause!!)
+                formState = FormState.Error(e.cause!!)
             }
         }
     }
 
     fun deleteInstrumentType(instrumentTypeId: String) {
-        _deleteState.value = DeleteState.InProgress
         screenModelScope.launch(Dispatchers.IO) {
+            deleteState = DeleteState.InProgress
+            delay(500)
+
             try {
                 commandBus.dispatch(DeleteInstrumentTypeCommand(instrumentTypeId))
-                _deleteState.value = DeleteState.Success
+                deleteState = DeleteState.Success
             } catch (e: Exception) {
-                _deleteState.value = DeleteState.Error(e.cause!!)
+                deleteState = DeleteState.Error(e.cause!!)
             }
         }
     }

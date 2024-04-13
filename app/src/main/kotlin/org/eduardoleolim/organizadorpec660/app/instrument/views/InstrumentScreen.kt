@@ -15,10 +15,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
+import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
+import org.eduardoleolim.organizadorpec660.app.generated.resources.instruments
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.stringResource
 
 class InstrumentScreen(private val queryBus: QueryBus, private val commandBus: CommandBus) : Screen {
+    @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun Content() {
         Column(
@@ -34,7 +39,7 @@ class InstrumentScreen(private val queryBus: QueryBus, private val commandBus: C
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Instrumentos",
+                    text = stringResource(Res.string.instruments),
                     style = MaterialTheme.typography.titleLarge
                 )
 
@@ -49,7 +54,7 @@ class InstrumentScreen(private val queryBus: QueryBus, private val commandBus: C
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Add,
-                        contentDescription = "Agregar instrumento"
+                        contentDescription = "Add instrument"
                     )
                 }
             }

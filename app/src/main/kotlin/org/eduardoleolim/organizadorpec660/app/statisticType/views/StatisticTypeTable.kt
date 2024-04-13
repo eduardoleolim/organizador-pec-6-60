@@ -116,15 +116,10 @@ fun StatisticTypeScreen.StatisticTypeTable(
                     }
 
                     cell {
-                        Text(
-                            text = statisticType.createdAt.toLocalDateTime().format(dateTimeFormatter)
-                        )
+                        Text(statisticType.createdAt.toLocalDateTime().format(dateTimeFormatter))
                     }
                     cell {
-                        Text(
-                            text = statisticType.updatedAt?.toLocalDateTime()?.format(dateTimeFormatter)
-                                ?: "N/A"
-                        )
+                        Text(statisticType.updatedAt?.toLocalDateTime()?.format(dateTimeFormatter) ?: "N/A")
                     }
 
                     cell {

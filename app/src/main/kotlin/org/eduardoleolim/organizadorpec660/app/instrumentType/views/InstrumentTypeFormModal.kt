@@ -29,7 +29,7 @@ fun InstrumentTypeScreen.InstrumentTypeFormModal(
     var isNameError by remember { mutableStateOf(false) }
     var nameSupportingText: String? by remember { mutableStateOf(null) }
 
-    when (val formState = screenModel.formState.value) {
+    when (val formState = screenModel.formState) {
         FormState.Idle -> {
             enabled = true
             isNameError = false

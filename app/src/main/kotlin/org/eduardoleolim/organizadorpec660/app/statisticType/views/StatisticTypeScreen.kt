@@ -82,7 +82,7 @@ class StatisticTypeScreen(private val queryBus: QueryBus, private val commandBus
                 onValueChange = { searchValue = it },
                 pageSizes = pageSizes,
                 state = state,
-                data = screenModel.statisticTypes.value,
+                data = screenModel.statisticTypes,
                 onSearch = { search, pageIndex, pageSize, orderBy, isAscending ->
                     val orders = orderBy?.let {
                         val orderType = if (isAscending) "ASC" else "DESC"

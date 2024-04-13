@@ -36,7 +36,7 @@ fun StatisticTypeScreen.StatisticTypeFormModal(
         screenModel.searchAllInstrumentTypes()
     }
 
-    when (val formState = screenModel.formState.value) {
+    when (val formState = screenModel.formState) {
         FormState.Idle -> {
             enabled = true
             isKeyCodeError = false

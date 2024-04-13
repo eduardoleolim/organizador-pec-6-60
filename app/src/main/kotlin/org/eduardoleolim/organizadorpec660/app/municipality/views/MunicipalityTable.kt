@@ -56,7 +56,6 @@ fun MunicipalityScreen.MunicipalitiesTable(
     val actionsColumnName = stringResource(Res.string.table_col_actions)
     var federalEntityId by remember { mutableStateOf<String?>(null) }
 
-
     val columns = remember {
         fun onSort(index: Int, ascending: Boolean) {
             state.sortColumnIndex = index
@@ -179,7 +178,7 @@ fun MunicipalityScreen.MunicipalitiesTable(
                             }
                         )
 
-                        screenModel.federalEntities.value.forEach { federalEntity ->
+                        screenModel.federalEntities.forEach { federalEntity ->
                             DropdownMenuItem(
                                 text = {
                                     Text(
