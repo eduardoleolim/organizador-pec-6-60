@@ -86,8 +86,10 @@ class StatisticTypeScreenModel(private val queryBus: QueryBus, private val comma
     }
 
     fun createStatisticType(keyCode: String, name: String) {
-        formState = FormState.InProgress
         screenModelScope.launch(Dispatchers.IO) {
+            formState = FormState.InProgress
+            delay(500)
+
             val isKeyCodeBlank = keyCode.isBlank()
             val isNameBlank = name.isBlank()
 

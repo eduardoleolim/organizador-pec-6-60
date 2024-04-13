@@ -14,6 +14,7 @@ import androidx.compose.ui.text.style.TextAlign
 import com.seanproctor.datatable.DataColumn
 import com.seanproctor.datatable.TableColumnWidth
 import com.seanproctor.datatable.paging.PaginatedDataTableState
+import org.eduardoleolim.organizadorpec660.app.generated.resources.*
 import org.eduardoleolim.organizadorpec660.app.shared.composables.PaginatedDataTable
 import org.eduardoleolim.organizadorpec660.app.shared.composables.PlainTextTooltip
 import org.eduardoleolim.organizadorpec660.app.shared.composables.sortAscending
@@ -21,9 +22,11 @@ import org.eduardoleolim.organizadorpec660.app.shared.composables.sortColumnInde
 import org.eduardoleolim.organizadorpec660.core.shared.domain.toLocalDateTime
 import org.eduardoleolim.organizadorpec660.core.statisticType.application.StatisticTypeResponse
 import org.eduardoleolim.organizadorpec660.core.statisticType.application.StatisticTypesResponse
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.stringResource
 import java.time.format.DateTimeFormatter
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalResourceApi::class)
 @Composable
 fun StatisticTypeScreen.StatisticTypeTable(
     value: String,
@@ -37,6 +40,11 @@ fun StatisticTypeScreen.StatisticTypeTable(
     modifier: Modifier = Modifier
 ) {
     val orders = listOf("keyCode", "name", "createdAt", "updatedAt")
+    val keyCodeColumnName = stringResource(Res.string.st_keycode)
+    val nameColumnName = stringResource(Res.string.st_name)
+    val createdAtColumnName = stringResource(Res.string.st_created_at)
+    val updatedAtColumnName = stringResource(Res.string.st_updated_at)
+    val actionsColumnName = stringResource(Res.string.table_col_actions)
 
     val columns = remember {
         fun onSort(index: Int, ascending: Boolean) {
@@ -50,12 +58,12 @@ fun StatisticTypeScreen.StatisticTypeTable(
                 alignment = Alignment.CenterHorizontally,
                 width = TableColumnWidth.MinIntrinsic
             ) {
-                Text("Clave")
+                Text(keyCodeColumnName)
             },
             DataColumn(
                 onSort = ::onSort,
             ) {
-                Text("Nombre")
+                Text(nameColumnName)
             },
             DataColumn(
                 onSort = ::onSort,
@@ -63,7 +71,7 @@ fun StatisticTypeScreen.StatisticTypeTable(
                 width = TableColumnWidth.Fraction(0.2f)
             ) {
                 Text(
-                    text = "Fecha de registro",
+                    text = createdAtColumnName,
                     textAlign = TextAlign.Center
                 )
             },
@@ -73,7 +81,7 @@ fun StatisticTypeScreen.StatisticTypeTable(
                 width = TableColumnWidth.Fraction(0.2f)
             ) {
                 Text(
-                    text = "Última actualización",
+                    text = updatedAtColumnName,
                     textAlign = TextAlign.Center
                 )
             },
@@ -81,7 +89,7 @@ fun StatisticTypeScreen.StatisticTypeTable(
                 alignment = Alignment.CenterHorizontally,
                 width = TableColumnWidth.Fraction(0.2f)
             ) {
-                Text("Acciones")
+                Text(actionsColumnName)
             }
         )
     }
@@ -122,7 +130,7 @@ fun StatisticTypeScreen.StatisticTypeTable(
 
                     cell {
                         PlainTextTooltip(
-                            tooltip = { Text("Editar") }
+                            tooltip = { Text(stringResource(Res.string.edit)) }
                         ) {
                             IconButton(
                                 onClick = { onEditRequest(statisticType) }
@@ -135,7 +143,7 @@ fun StatisticTypeScreen.StatisticTypeTable(
                         }
 
                         PlainTextTooltip(
-                            tooltip = { Text("Eliminar") }
+                            tooltip = { Text(stringResource(Res.string.delete)) }
                         ) {
                             IconButton(
                                 onClick = { onDeleteRequest(statisticType) }

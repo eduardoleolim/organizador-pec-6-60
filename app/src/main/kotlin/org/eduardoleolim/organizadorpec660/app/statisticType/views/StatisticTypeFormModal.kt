@@ -9,10 +9,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import org.eduardoleolim.organizadorpec660.app.generated.resources.*
+import org.eduardoleolim.organizadorpec660.app.statisticType.data.EmptyStatisticTypeDataException
 import org.eduardoleolim.organizadorpec660.app.statisticType.model.FormState
 import org.eduardoleolim.organizadorpec660.app.statisticType.model.StatisticTypeScreenModel
 import org.eduardoleolim.organizadorpec660.core.statisticType.application.StatisticTypeResponse
+import org.eduardoleolim.organizadorpec660.core.statisticType.domain.InvalidStatisticTypeKeyCodeError
+import org.eduardoleolim.organizadorpec660.core.statisticType.domain.InvalidStatisticTypeNameError
+import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeAlreadyExistsError
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.stringResource
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun StatisticTypeScreen.StatisticTypeFormModal(
     screenModel: StatisticTypeScreenModel,
@@ -27,10 +35,8 @@ fun StatisticTypeScreen.StatisticTypeFormModal(
     var enabled by remember { mutableStateOf(true) }
     var isKeyCodeError by remember { mutableStateOf(false) }
     var isNameError by remember { mutableStateOf(false) }
-    var isInstrumentTypeIdsError by remember { mutableStateOf(false) }
     var keyCodeSupportingText: String? by remember { mutableStateOf(null) }
     var nameSupportingText: String? by remember { mutableStateOf(null) }
-    var instrumentTypeIdsSupportingText: String? by remember { mutableStateOf(null) }
 
     LaunchedEffect(Unit) {
         screenModel.searchAllInstrumentTypes()
@@ -41,20 +47,16 @@ fun StatisticTypeScreen.StatisticTypeFormModal(
             enabled = true
             isKeyCodeError = false
             isNameError = false
-            isInstrumentTypeIdsError = false
             keyCodeSupportingText = null
             nameSupportingText = null
-            instrumentTypeIdsSupportingText = null
         }
 
         FormState.InProgress -> {
             enabled = false
             isKeyCodeError = false
             isNameError = false
-            isInstrumentTypeIdsError = false
             keyCodeSupportingText = null
             nameSupportingText = null
-            instrumentTypeIdsSupportingText = null
         }
 
         FormState.SuccessCreate -> {
@@ -71,8 +73,35 @@ fun StatisticTypeScreen.StatisticTypeFormModal(
             enabled = true
 
             when (val error = formState.error) {
+                is StatisticTypeAlreadyExistsError -> {
+                    keyCodeSupportingText = stringResource(Res.string.st_form_already_exists)
+                    isKeyCodeError = true
+                }
+
+                is InvalidStatisticTypeKeyCodeError -> {
+                    keyCodeSupportingText = stringResource(Res.string.st_form_keycode_format)
+                    isKeyCodeError = true
+                }
+
+                is InvalidStatisticTypeNameError -> {
+                    nameSupportingText = stringResource(Res.string.st_form_name_required)
+                    isNameError = true
+                }
+
+                is EmptyStatisticTypeDataException -> {
+                    if (error.isKeyCodeEmpty) {
+                        keyCodeSupportingText = stringResource(Res.string.st_form_keycode_required)
+                        isKeyCodeError = true
+                    }
+
+                    if (error.isNameEmpty) {
+                        nameSupportingText = stringResource(Res.string.st_form_name_required)
+                        isNameError = true
+                    }
+                }
+
                 else -> {
-                    println("Error: ${error.message}")
+                    println(error)
                 }
             }
         }
@@ -84,12 +113,18 @@ fun StatisticTypeScreen.StatisticTypeFormModal(
         ),
         onDismissRequest = onDismissRequest,
         title = {
-            Text(statisticType?.let { "Editar tipo de estadística" } ?: "Agregar tipo de estadística")
+            val textTitle = if (statisticType == null) {
+                stringResource(Res.string.st_form_add_title)
+            } else {
+                stringResource(Res.string.st_form_edit_title)
+            }
+
+            Text(textTitle)
         },
         text = {
             Column {
                 OutlinedTextField(
-                    label = { Text("Clave") },
+                    label = { Text(stringResource(Res.string.st_keycode)) },
                     value = keyCode,
                     onValueChange = {
                         if (Regex("[0-9]{0,3}").matches(it)) {
@@ -111,7 +146,7 @@ fun StatisticTypeScreen.StatisticTypeFormModal(
                 Spacer(modifier = Modifier.height(32.dp))
 
                 OutlinedTextField(
-                    label = { Text("Nombre") },
+                    label = { Text(stringResource(Res.string.st_name)) },
                     value = name,
                     onValueChange = { name = it.uppercase() },
                     singleLine = true,

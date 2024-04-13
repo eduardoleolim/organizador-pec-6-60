@@ -14,13 +14,18 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import com.seanproctor.datatable.paging.rememberPaginatedDataTableState
+import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
+import org.eduardoleolim.organizadorpec660.app.generated.resources.statistic_types
 import org.eduardoleolim.organizadorpec660.app.shared.composables.reset
 import org.eduardoleolim.organizadorpec660.app.statisticType.model.StatisticTypeScreenModel
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
 import org.eduardoleolim.organizadorpec660.core.statisticType.application.StatisticTypeResponse
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.stringResource
 
 class StatisticTypeScreen(private val queryBus: QueryBus, private val commandBus: CommandBus) : Screen {
+    @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun Content() {
         val screenModel = rememberScreenModel { StatisticTypeScreenModel(queryBus, commandBus) }
@@ -53,7 +58,7 @@ class StatisticTypeScreen(private val queryBus: QueryBus, private val commandBus
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Tipos de estadística",
+                    text = stringResource(Res.string.statistic_types),
                     style = MaterialTheme.typography.titleLarge
                 )
 
@@ -71,7 +76,7 @@ class StatisticTypeScreen(private val queryBus: QueryBus, private val commandBus
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Add,
-                        contentDescription = "Agregar tipo de estadística"
+                        contentDescription = "Add statistic type"
                     )
                 }
             }
@@ -91,15 +96,26 @@ class StatisticTypeScreen(private val queryBus: QueryBus, private val commandBus
 
                     screenModel.searchStatisticTypes(search, orders, pageSize, pageIndex * pageSize)
                 },
-                onDeleteRequest = { federalEntity ->
-                    selectedStatisticType = federalEntity
+                onDeleteRequest = { statisticType ->
+                    selectedStatisticType = statisticType
                     showDeleteModal = true
                 },
-                onEditRequest = { federalEntity ->
-                    selectedStatisticType = federalEntity
+                onEditRequest = { statisticType ->
+                    selectedStatisticType = statisticType
                     showFormModal = true
                 }
             )
+
+            if (showDeleteModal && selectedStatisticType != null) {
+                screenModel.resetDeleteModal()
+                StatisticTypeDeleteModal(
+                    screenModel = screenModel,
+                    statisticType = selectedStatisticType!!,
+                    onSuccess = { resetView() },
+                    onFail = { resetView() },
+                    onDismissRequest = { resetView() }
+                )
+            }
 
             if (showFormModal) {
                 screenModel.resetForm()

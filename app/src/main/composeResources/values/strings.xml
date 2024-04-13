@@ -45,7 +45,7 @@
     <string name="fe_form_name_format">The name cannot be empty</string>
     <string name="fe_form_already_exists">A federal entity already exists with that KeyCode</string>
 
-    <!-- Federal entity -->
+    <!-- Municipality -->
     <string name="municipalities">Municipalities</string>
     <string name="mun_federal_entity">Federal entity</string>
     <string name="mun_keycode">KeyCode</string>
@@ -59,14 +59,28 @@
     <string name="mun_form_federal_entity_required">Federal entity required</string>
     <string name="mun_form_keycode_required">KeyCode required</string>
     <string name="mun_form_name_required">Name required</string>
-    <string name="mun_form_keycode_format">The KeyCode must be a two-digit number</string>
+    <string name="mun_form_keycode_format">The KeyCode must be a three-digit number</string>
     <string name="mun_form_name_format">The name cannot be empty</string>
     <string name="mun_form_already_exists">A municipality already exists with that KeyCode</string>
     <string name="mun_form_federal_entity_does_not_exist">The federal entity doesn't exist</string>
     <string name="mun_form_select_federal_entity">Select a federal entity</string>
     <string name="mun_form_select_all">All federal entities</string>
 
+    <!-- Statistic type -->
     <string name="statistic_types">Statistic Types</string>
+    <string name="st_keycode">KeyCode</string>
+    <string name="st_name">Name</string>
+    <string name="st_created_at">Created at</string>
+    <string name="st_updated_at">Updated at</string>
+    <string name="st_delete_title">Delete statistic type?</string>
+    <string name="st_delete_text">The statistic type %1$s will be permanently removed from application</string>
+    <string name="st_form_add_title">Add statistic type</string>
+    <string name="st_form_edit_title">Edit statistic type</string>
+    <string name="st_form_keycode_required">KeyCode required</string>
+    <string name="st_form_name_required">Name required</string>
+    <string name="st_form_keycode_format">The KeyCode must be a three-digit number</string>
+    <string name="st_form_name_format">The name cannot be empty</string>
+    <string name="st_form_already_exists">A statistic type already exists with that KeyCode</string>
 
     <!-- Instrument type -->
     <string name="instrument_types">Instrument Types</string>
