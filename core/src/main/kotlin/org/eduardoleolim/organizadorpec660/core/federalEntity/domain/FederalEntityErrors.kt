@@ -20,5 +20,7 @@ class InvalidFederalEntityUpdateDateError(val updatedAt: Date, val createdAt: Da
 class FederalEntityNotFoundError(val id: String) :
     FederalEntityError("The federal entity with id <$id> was not found")
 
+class FederalEntityHasMunicipalitiesError : FederalEntityError("The federal entity has municipalities")
+
 class FederalEntityAlreadyExistsError(val keyCode: String) :
     FederalEntityError("The federal entity with key code <$keyCode> already exists")

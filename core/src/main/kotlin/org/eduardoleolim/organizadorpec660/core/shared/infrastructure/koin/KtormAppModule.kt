@@ -62,7 +62,7 @@ object KtormAppModule {
 
         // Federal Entity services
         single { FederalEntityCreator(get()) }
-        single { FederalEntityDeleter(get()) }
+        single { FederalEntityDeleter(get(), get()) }
         single { FederalEntitySearcher(get()) }
         single { FederalEntityUpdater(get()) }
 

@@ -3,6 +3,7 @@ package org.eduardoleolim.organizadorpec660.app.federalEntity.views
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -131,11 +132,12 @@ fun FederalEntityScreen.FederalEntityFormModal(
                     supportingText = keyCodeSupportingText?.let { message ->
                         { Text(text = message, color = MaterialTheme.colorScheme.error) }
                     },
-                    modifier = Modifier.onFocusChanged {
-                        if (!it.isFocused && keyCode.isNotEmpty()) {
-                            keyCode = keyCode.padStart(2, '0')
+                    modifier = Modifier.width(300.dp)
+                        .onFocusChanged {
+                            if (!it.isFocused && keyCode.isNotEmpty()) {
+                                keyCode = keyCode.padStart(2, '0')
+                            }
                         }
-                    }
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -148,7 +150,8 @@ fun FederalEntityScreen.FederalEntityFormModal(
                     isError = isNameError,
                     supportingText = nameSupportingText?.let { message ->
                         { Text(text = message, color = MaterialTheme.colorScheme.error) }
-                    }
+                    },
+                    modifier = Modifier.width(300.dp)
                 )
             }
         },
