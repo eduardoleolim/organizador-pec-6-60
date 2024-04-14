@@ -3,6 +3,7 @@ package org.eduardoleolim.organizadorpec660.app.statisticType.views
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -136,11 +137,12 @@ fun StatisticTypeScreen.StatisticTypeFormModal(
                     supportingText = keyCodeSupportingText?.let { message ->
                         { Text(text = message, color = MaterialTheme.colorScheme.error) }
                     },
-                    modifier = Modifier.onFocusChanged {
-                        if (!it.isFocused && keyCode.isNotEmpty()) {
-                            keyCode = keyCode.padStart(3, '0')
+                    modifier = Modifier.width(300.dp)
+                        .onFocusChanged {
+                            if (!it.isFocused && keyCode.isNotEmpty()) {
+                                keyCode = keyCode.padStart(3, '0')
+                            }
                         }
-                    }
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -153,7 +155,8 @@ fun StatisticTypeScreen.StatisticTypeFormModal(
                     isError = isNameError,
                     supportingText = nameSupportingText?.let { message ->
                         { Text(text = message, color = MaterialTheme.colorScheme.error) }
-                    }
+                    },
+                    modifier = Modifier.width(300.dp)
                 )
             }
         },

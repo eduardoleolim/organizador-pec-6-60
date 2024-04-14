@@ -175,63 +175,64 @@ fun MunicipalityScreen.MunicipalityFormModal(
                                 }
                             )
                         },
-                        modifier = Modifier.onPreviewKeyEvent {
-                            when {
-                                (it.key == Key.DirectionDown && it.type == KeyEventType.KeyDown) -> {
-                                    val federalEntities = screenModel.federalEntities
-                                    if (federalEntity != null) {
-                                        val federalEntityIndex = federalEntities.indexOf(federalEntity)
-                                        val nextIndex = federalEntityIndex + 1
+                        modifier = Modifier.width(300.dp)
+                            .onPreviewKeyEvent {
+                                when {
+                                    (it.key == Key.DirectionDown && it.type == KeyEventType.KeyDown) -> {
+                                        val federalEntities = screenModel.federalEntities
+                                        if (federalEntity != null) {
+                                            val federalEntityIndex = federalEntities.indexOf(federalEntity)
+                                            val nextIndex = federalEntityIndex + 1
 
-                                        if (nextIndex < federalEntities.size) {
-                                            federalEntity = federalEntities[nextIndex]
+                                            if (nextIndex < federalEntities.size) {
+                                                federalEntity = federalEntities[nextIndex]
+
+                                                true
+                                            } else {
+                                                false
+                                            }
+                                        } else {
+                                            federalEntity = federalEntities.firstOrNull()
 
                                             true
+                                        }
+                                    }
+
+                                    (it.key == Key.DirectionUp && it.type == KeyEventType.KeyDown) -> {
+                                        val federalEntities = screenModel.federalEntities
+                                        if (federalEntity != null) {
+                                            val federalEntityIndex = federalEntities.indexOf(federalEntity)
+                                            val prevIndex = federalEntityIndex - 1
+
+                                            if (prevIndex >= 0) {
+                                                federalEntity = federalEntities[prevIndex]
+
+                                                true
+                                            } else {
+                                                federalEntity = null
+
+                                                true
+                                            }
                                         } else {
                                             false
                                         }
-                                    } else {
-                                        federalEntity = federalEntities.firstOrNull()
+                                    }
+
+                                    (it.key == Key.Tab && it.type == KeyEventType.KeyDown) -> {
+                                        focusManager.moveFocus(FocusDirection.Down)
 
                                         true
                                     }
+
+                                    else -> false
                                 }
-
-                                (it.key == Key.DirectionUp && it.type == KeyEventType.KeyDown) -> {
-                                    val federalEntities = screenModel.federalEntities
-                                    if (federalEntity != null) {
-                                        val federalEntityIndex = federalEntities.indexOf(federalEntity)
-                                        val prevIndex = federalEntityIndex - 1
-
-                                        if (prevIndex >= 0) {
-                                            federalEntity = federalEntities[prevIndex]
-
-                                            true
-                                        } else {
-                                            federalEntity = null
-
-                                            true
-                                        }
-                                    } else {
-                                        false
-                                    }
-                                }
-
-                                (it.key == Key.Tab && it.type == KeyEventType.KeyDown) -> {
-                                    focusManager.moveFocus(FocusDirection.Down)
-
-                                    true
-                                }
-
-                                else -> false
                             }
-                        }
                     )
 
                     DropdownMenu(
                         expanded = expanded,
                         onDismissRequest = { expanded = false },
-                        modifier = Modifier
+                        modifier = Modifier.width(300.dp)
                             .heightIn(0.dp, 300.dp)
                             .background(MaterialTheme.colorScheme.surface)
                     ) {
@@ -281,11 +282,12 @@ fun MunicipalityScreen.MunicipalityFormModal(
                     supportingText = keyCodeSupportingText?.let { message ->
                         { Text(text = message, color = MaterialTheme.colorScheme.error) }
                     },
-                    modifier = Modifier.onFocusChanged {
-                        if (!it.isFocused && keyCode.isNotEmpty()) {
-                            keyCode = keyCode.padStart(3, '0')
+                    modifier = Modifier.width(300.dp)
+                        .onFocusChanged {
+                            if (!it.isFocused && keyCode.isNotEmpty()) {
+                                keyCode = keyCode.padStart(3, '0')
+                            }
                         }
-                    }
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -299,7 +301,8 @@ fun MunicipalityScreen.MunicipalityFormModal(
                     isError = isNameError,
                     supportingText = nameSupportingText?.let { message ->
                         { Text(text = message, color = MaterialTheme.colorScheme.error) }
-                    }
+                    },
+                    modifier = Modifier.width(300.dp)
                 )
             }
         },

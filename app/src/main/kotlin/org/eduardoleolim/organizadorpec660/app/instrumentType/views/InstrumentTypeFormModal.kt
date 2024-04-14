@@ -1,8 +1,11 @@
 package org.eduardoleolim.organizadorpec660.app.instrumentType.views
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import org.eduardoleolim.organizadorpec660.app.generated.resources.*
 import org.eduardoleolim.organizadorpec660.app.instrumentType.data.EmptyInstrumentTypeDataException
@@ -102,7 +105,8 @@ fun InstrumentTypeScreen.InstrumentTypeFormModal(
                     isError = isNameError,
                     supportingText = nameSupportingText?.let { message ->
                         { Text(text = message, color = MaterialTheme.colorScheme.error) }
-                    }
+                    },
+                    modifier = Modifier.width(300.dp)
                 )
             }
         },
