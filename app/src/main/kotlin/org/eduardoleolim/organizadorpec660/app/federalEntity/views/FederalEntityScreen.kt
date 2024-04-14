@@ -112,7 +112,6 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
                     screenModel = screenModel,
                     federalEntity = selectedFederalEntity!!,
                     onSuccess = { resetView() },
-                    onFail = { resetView() },
                     onDismissRequest = { resetView() }
                 )
             }

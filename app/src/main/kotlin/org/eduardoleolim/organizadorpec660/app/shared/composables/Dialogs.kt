@@ -10,10 +10,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
-import org.eduardoleolim.organizadorpec660.app.generated.resources.accept
-import org.eduardoleolim.organizadorpec660.app.generated.resources.cancel
-import org.eduardoleolim.organizadorpec660.app.generated.resources.confirm
+import org.eduardoleolim.organizadorpec660.app.generated.resources.*
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 
@@ -21,7 +18,9 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun ErrorDialog(
     modifier: Modifier = Modifier,
-    title: @Composable () -> Unit,
+    title: @Composable () -> Unit = {
+        Text(stringResource(Res.string.dialog_error_title))
+    },
     text: @Composable () -> Unit,
     onDismissRequest: () -> Unit,
     onConfirmRequest: () -> Unit,

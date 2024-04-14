@@ -6,6 +6,7 @@
     <string name="table_show_items">Show %1$s items</string>
     <string name="table_search">Search</string>
     <string name="table_pagination">%1$s-%2$s of %3$s</string>
+    <string name="dialog_error_title">An error occurred</string>
 
     <string name="accept">Accept</string>
     <string name="confirm">Confirm</string>
@@ -37,6 +38,8 @@
     <string name="fe_updated_at">Updated at</string>
     <string name="fe_delete_title">Delete federal entity?</string>
     <string name="fe_delete_text">The federal entity %1$s will be permanently removed from application</string>
+    <string name="fe_delete_error_default">A error occurred when trying to delete the federal entity</string>
+    <string name="fe_delete_error_has_municipalities">The federal entity can't be delete because it has municipalities associated</string>
     <string name="fe_form_add_title">Add federal entity</string>
     <string name="fe_form_edit_title">Edit federal entity</string>
     <string name="fe_form_keycode_required">KeyCode required</string>
