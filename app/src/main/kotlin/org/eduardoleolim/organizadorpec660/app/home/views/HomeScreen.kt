@@ -1,5 +1,6 @@
 package org.eduardoleolim.organizadorpec660.app.home.views
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ListAlt
@@ -156,13 +157,17 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
                     shape = MaterialTheme.shapes.large,
                 ) {
                     screenModel.apply {
-                        when (selectedTab) {
-                            MenuTab.INSTRUMENTS -> InstrumentView()
-                            MenuTab.FEDERAL_ENTITIES -> FederalEntityView()
-                            MenuTab.MUNICIPALITIES -> MunicipalityView()
-                            MenuTab.STATISTIC_TYPES -> StatisticTypeView()
-                            MenuTab.INSTRUMENTS_TYPES -> InstrumentTypeView()
-                            MenuTab.AGENCIES -> AgencyScreen()
+                        AnimatedContent(
+                            targetState = selectedTab
+                        ) { targetState ->
+                            when (targetState) {
+                                MenuTab.INSTRUMENTS -> InstrumentView()
+                                MenuTab.FEDERAL_ENTITIES -> FederalEntityView()
+                                MenuTab.MUNICIPALITIES -> MunicipalityView()
+                                MenuTab.STATISTIC_TYPES -> StatisticTypeView()
+                                MenuTab.INSTRUMENTS_TYPES -> InstrumentTypeView()
+                                MenuTab.AGENCIES -> AgencyScreen()
+                            }
                         }
                     }
                 }
