@@ -1,9 +1,7 @@
 package org.eduardoleolim.organizadorpec660.core.agency.domain
 
-import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.AndFilters
-import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.Criteria
-import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.Orders
-import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.SingleFilter
+import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityFields
+import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.*
 
 enum class AgencyFields(val value: String) {
     Id("id"),
@@ -29,4 +27,26 @@ object AgencyCriteria {
         1,
         null
     )
+
+    fun searchCriteria(
+        search: String? = null,
+        orders: Array<HashMap<String, String>>? = null,
+        limit: Int? = null,
+        offset: Int? = null
+    ) =
+        Criteria(
+            search?.let {
+                OrFilters(
+                    listOf(
+                        SingleFilter.contains(AgencyFields.Name.value, it),
+                        SingleFilter.contains(AgencyFields.Consecutive.value, it)
+                    )
+                )
+            } ?: EmptyFilters(),
+            orders?.let {
+                Orders.fromValues(orders)
+            } ?: Orders(listOf(Order.asc(FederalEntityFields.KeyCode.value))),
+            limit,
+            offset
+        )
 }
