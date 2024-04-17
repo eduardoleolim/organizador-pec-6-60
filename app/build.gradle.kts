@@ -6,8 +6,8 @@ plugins {
 }
 
 tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions {
-        freeCompilerArgs = freeCompilerArgs + "-Xcontext-receivers"
+    compilerOptions {
+        freeCompilerArgs.addAll("-Xcontext-receivers")
     }
 }
 

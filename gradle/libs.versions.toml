@@ -1,7 +1,7 @@
 # https://docs.gradle.org/current/userguide/platforms.html#sub::toml-dependencies-format
 
 [versions]
-kotlin = "1.9.23"
+kotlin = "2.0.0-RC1"
 compose = "1.6.2"
 data-table-material3 = "0.5.1"
 voyager = "1.0.0"
@@ -13,9 +13,6 @@ sqlite = "3.45.1.0"
 koin = "3.5.3"
 slf4j = "2.0.9"
 jasypt = "1.9.3"
-
-[plugins]
-compose = { id = "org.jetbrains.compose", version.ref = "compose" }
 
 [libraries]
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
