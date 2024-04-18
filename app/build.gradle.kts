@@ -36,21 +36,7 @@ compose.desktop {
         mainClass = "MainKt"
         jvmArgs("-Dfile.encoding=UTF-8")
 
-        val taskNames = project.gradle.startParameter.taskNames
-        val runTasks = listOf(
-            "run",
-            "${project.name}:run",
-            ":${project.name}:run",
-            "runRelease",
-            "${project.name}:runRelease",
-            ":${project.name}:runRelease"
-        )
-
-        if (runTasks.any { it in taskNames }) {
-            args("--database=../data/organizador-pec-6-60.db")
-        } else {
-            args("--database=./data/organizador-pec-6-60.db")
-        }
+        args("--database=./data/organizador-pec-6-60.db")
 
         nativeDistributions {
             packageName = "Organizador PEC-6-60"
