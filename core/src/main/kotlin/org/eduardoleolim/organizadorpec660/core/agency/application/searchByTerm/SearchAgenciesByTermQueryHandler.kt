@@ -45,6 +45,10 @@ class SearchAgenciesByTermQueryHandler(
 
             AgencyResponse.fromAggregate(agency, municipalities, statisticTypesAndInstrumentTypes)
         }.let {
+            municipalitiesCache.clear()
+            statisticTypesCache.clear()
+            instrumentTypesCache.clear()
+
             AgenciesResponse(it, totalAgencies, query.limit(), query.offset())
         }
     }
