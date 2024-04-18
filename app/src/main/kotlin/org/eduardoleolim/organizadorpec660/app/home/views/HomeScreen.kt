@@ -26,7 +26,6 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import org.eduardoleolim.organizadorpec660.app.generated.resources.*
 import org.eduardoleolim.organizadorpec660.app.home.model.HomeScreenModel
 import org.eduardoleolim.organizadorpec660.app.window.LocalWindow
-import org.eduardoleolim.organizadorpec660.app.window.rememberWindowSize
 import org.eduardoleolim.organizadorpec660.core.auth.application.AuthUserResponse
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
@@ -77,104 +76,6 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
             )
         )
 
-    @Composable
-    override fun Content() {
-        val navigator = LocalNavigator.currentOrThrow
-        val window = LocalWindow.current
-        val compositionContext = rememberCompositionContext()
-        val drawerState = rememberDrawerState(DrawerValue.Closed)
-        val screenModel = rememberScreenModel { HomeScreenModel(navigator, drawerState, compositionContext) }
-        var selectedTab by remember { mutableStateOf(MenuTab.INSTRUMENTS) }
-        val windowSize = rememberWindowSize()
-
-        LaunchedEffect(Unit) {
-            val dimension = Dimension(900, 640)
-            window.apply {
-                isResizable = true
-                size = dimension
-                minimumSize = dimension
-                setLocationRelativeTo(null)
-            }
-        }
-
-        ModalNavigationDrawer(
-            drawerState = drawerState,
-            drawerContent = {
-                ModalNavigationDrawerContent(
-                    items = items,
-                    screenModel = screenModel,
-                    selectedTab = selectedTab,
-                    onChangeSelectedTab = {
-                        screenModel.closeNavigationDrawer(
-                            onClosed = { selectedTab = it }
-                        )
-                    }
-                )
-            },
-        ) {
-            Row {
-                NavigationRail(
-                    modifier = Modifier
-                        .width(116.dp)
-                        .padding(horizontal = 16.dp),
-                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                    header = {
-                        Spacer(
-                            modifier = Modifier.height(24.dp)
-                        )
-                        IconButton(
-                            onClick = { screenModel.openNavigationDrawer() }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Menu,
-                                contentDescription = "Open menu"
-                            )
-                        }
-                    }
-                ) {
-                    NavigationRailContent(
-                        items = items,
-                        screenModel = screenModel,
-                        selectedTab = selectedTab,
-                        onChangeSelectedTab = {
-                            screenModel.closeNavigationDrawer(
-                                onClosed = { selectedTab = it }
-                            )
-                        }
-                    )
-                }
-
-                Surface(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(
-                            start = 8.dp,
-                            end = 24.dp,
-                            top = 24.dp,
-                            bottom = 24.dp
-                        ),
-                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                    shape = MaterialTheme.shapes.large,
-                ) {
-                    screenModel.apply {
-                        AnimatedContent(
-                            targetState = selectedTab
-                        ) { targetState ->
-                            when (targetState) {
-                                MenuTab.INSTRUMENTS -> InstrumentView()
-                                MenuTab.FEDERAL_ENTITIES -> FederalEntityView()
-                                MenuTab.MUNICIPALITIES -> MunicipalityView()
-                                MenuTab.STATISTIC_TYPES -> StatisticTypeView()
-                                MenuTab.INSTRUMENTS_TYPES -> InstrumentTypeView()
-                                MenuTab.AGENCIES -> AgencyScreen()
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     @OptIn(ExperimentalResourceApi::class)
     @Composable
     private fun ModalNavigationDrawerContent(
@@ -191,7 +92,9 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(stringResource(Res.string.app_name))
-                Spacer(modifier = Modifier.weight(1.0f))
+
+                Spacer(Modifier.weight(1.0f))
+
                 IconButton(
                     onClick = { screenModel.closeNavigationDrawer() }
                 ) {
@@ -220,7 +123,7 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
                 )
             }
 
-            Spacer(modifier = Modifier.weight(1.0f))
+            Spacer(Modifier.weight(1.0f))
 
             HorizontalDivider()
 
@@ -273,5 +176,101 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
             selected = false,
             onClick = { screenModel.logout() },
         )
+    }
+
+    @Composable
+    override fun Content() {
+        val navigator = LocalNavigator.currentOrThrow
+        val window = LocalWindow.current
+        val compositionContext = rememberCompositionContext()
+        val drawerState = rememberDrawerState(DrawerValue.Closed)
+        val screenModel = rememberScreenModel { HomeScreenModel(navigator, drawerState, compositionContext) }
+        var selectedTab by remember { mutableStateOf(MenuTab.INSTRUMENTS) }
+
+        LaunchedEffect(Unit) {
+            val dimension = Dimension(900, 640)
+            window.apply {
+                isResizable = true
+                size = dimension
+                minimumSize = dimension
+                setLocationRelativeTo(null)
+            }
+        }
+
+        ModalNavigationDrawer(
+            drawerState = drawerState,
+            drawerContent = {
+                ModalNavigationDrawerContent(
+                    items = items,
+                    screenModel = screenModel,
+                    selectedTab = selectedTab,
+                    onChangeSelectedTab = {
+                        screenModel.closeNavigationDrawer(
+                            onClosed = { selectedTab = it }
+                        )
+                    }
+                )
+            },
+        ) {
+            Row {
+                NavigationRail(
+                    modifier = Modifier
+                        .width(116.dp)
+                        .padding(horizontal = 16.dp),
+                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                    header = {
+                        Spacer(Modifier.height(24.dp))
+
+                        IconButton(
+                            onClick = { screenModel.openNavigationDrawer() }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Menu,
+                                contentDescription = "Open menu"
+                            )
+                        }
+                    }
+                ) {
+                    NavigationRailContent(
+                        items = items,
+                        screenModel = screenModel,
+                        selectedTab = selectedTab,
+                        onChangeSelectedTab = {
+                            screenModel.closeNavigationDrawer(
+                                onClosed = { selectedTab = it }
+                            )
+                        }
+                    )
+                }
+
+                Surface(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(
+                            start = 8.dp,
+                            end = 24.dp,
+                            top = 24.dp,
+                            bottom = 24.dp
+                        ),
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                    shape = MaterialTheme.shapes.large,
+                ) {
+                    AnimatedContent(
+                        targetState = selectedTab
+                    ) { targetState ->
+                        screenModel.apply {
+                            when (targetState) {
+                                MenuTab.INSTRUMENTS -> InstrumentView()
+                                MenuTab.FEDERAL_ENTITIES -> FederalEntityView()
+                                MenuTab.MUNICIPALITIES -> MunicipalityView()
+                                MenuTab.STATISTIC_TYPES -> StatisticTypeView()
+                                MenuTab.INSTRUMENTS_TYPES -> InstrumentTypeView()
+                                MenuTab.AGENCIES -> AgencyScreen()
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
