@@ -1,5 +1,6 @@
 package org.eduardoleolim.organizadorpec660.core.shared.infrastructure.bus
 
+import org.eduardoleolim.organizadorpec660.core.agency.infrastructure.bus.KtormAgencyQueryHandlers
 import org.eduardoleolim.organizadorpec660.core.auth.infrastructure.bus.KtormAuthQueryHandlers
 import org.eduardoleolim.organizadorpec660.core.federalEntity.infrastructure.bus.KtormFederalEntityQueryHandlers
 import org.eduardoleolim.organizadorpec660.core.instrumentType.infrastructure.bus.KtormInstrumentTypeQueryHandlers
@@ -14,6 +15,7 @@ class KtormQueryBus(database: Database) : QueryBus {
     private val context = KtormAppKoinContext(database)
 
     private val queryHandlers = HashMap<KClass<out Query>, QueryHandler<out Query, out Response>>().apply {
+        putAll(KtormAgencyQueryHandlers(context).handlers)
         putAll(KtormAuthQueryHandlers(context).handlers)
         putAll(KtormFederalEntityQueryHandlers(context).handlers)
         putAll(KtormInstrumentTypeQueryHandlers(context).handlers)
