@@ -110,7 +110,7 @@ class AuthScreen(private val queryBus: QueryBus) : Screen {
             }
 
             is AuthState.Success -> {
-                screenModel.HomeView(authState.user)
+                screenModel.navigateToHomeView(authState.user)
                 screenModel.resetAuthForm()
             }
 
@@ -204,7 +204,11 @@ class AuthScreen(private val queryBus: QueryBus) : Screen {
             onClick = { screenModel.login(username, password) },
             modifier = Modifier.fillMaxWidth(0.8f)
         ) {
-            Text(stringResource(Res.string.auth_login))
+            if (screenModel.authState != AuthState.InProgress && enabled) {
+                Text(stringResource(Res.string.auth_login))
+            } else {
+                CircularProgressIndicator(Modifier.size(16.dp))
+            }
         }
     }
 }

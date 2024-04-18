@@ -54,7 +54,7 @@ class AuthScreenModel(private val navigator: Navigator, private val queryBus: Qu
         }
     }
 
-    fun HomeView(user: AuthUserResponse) {
+    fun navigateToHomeView(user: AuthUserResponse) {
         navigator.push(ScreenRegistry.get(MainProvider.HomeScreen(user)))
     }
 }
