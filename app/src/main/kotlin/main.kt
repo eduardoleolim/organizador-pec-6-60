@@ -1,7 +1,7 @@
 import org.eduardoleolim.organizadorpec660.app.App
-import org.eduardoleolim.organizadorpec660.app.shared.utils.AppUtils
+import org.eduardoleolim.organizadorpec660.app.shared.utils.AppConfig
 
-fun main(args: Array<String>) {
+fun main() {
     try {
         val osName = System.getProperty("os.name").lowercase()
 
@@ -12,11 +12,12 @@ fun main(args: Array<String>) {
         }
 
         System.setProperty("skiko.renderApi", renderApi)
-        val databasePath = AppUtils.databasePath(args) ?: throw Exception("Database path not found")
-        val sqlitePassword = AppUtils.sqlitePassword() ?: throw Exception("Database password not found")
-        val sqliteExtensions = AppUtils.sqliteExtensions()
+        val databasePath = AppConfig.getProperty("database.path") ?: throw Exception("Database path not found")
+        val password = AppConfig.getProperty("database.password") ?: throw Exception("Database password not found")
+        val extensionsPath =
+            AppConfig.getProperty("database.extensions.path") ?: throw Exception("Database extension path not found")
 
-        App(databasePath, sqlitePassword, sqliteExtensions).start()
+        App(databasePath, password, extensionsPath).start()
     } catch (e: Exception) {
         println(e.localizedMessage)
     }

@@ -28,7 +28,7 @@ import org.eduardoleolim.organizadorpec660.app.router.Router
 import org.eduardoleolim.organizadorpec660.app.shared.theme.DarkColors
 import org.eduardoleolim.organizadorpec660.app.shared.theme.LightColors
 import org.eduardoleolim.organizadorpec660.app.shared.theme.RobotoTypography
-import org.eduardoleolim.organizadorpec660.app.shared.utils.AppUtils
+import org.eduardoleolim.organizadorpec660.app.shared.utils.AppConfig
 import org.eduardoleolim.organizadorpec660.app.shared.utils.isSystemInDarkTheme
 import org.eduardoleolim.organizadorpec660.app.window.CustomWindow
 import org.eduardoleolim.organizadorpec660.app.window.HitSpots
@@ -42,6 +42,7 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import java.awt.Dimension
+import java.io.File
 
 enum class SystemTheme {
     DARK, LIGHT, DEFAULT
@@ -49,9 +50,11 @@ enum class SystemTheme {
 
 class App(
     private val databasePath: String,
-    private var sqlitePassword: String,
-    private var sqliteExtensions: List<String>
+    private var databasePassword: String,
+    private val databaseExtensionPath: String
 ) {
+    private val sqliteExtensions = File(databaseExtensionPath).listFiles()?.map { it.absolutePath } ?: emptyList()
+
     fun start() = application {
         var initializeApp by remember { mutableStateOf(SqliteKtormDatabase.exists(databasePath)) }
 
@@ -63,8 +66,8 @@ class App(
             ConfigWindow(
                 onCloseRequest = { exitApplication() },
                 onPasswordSet = { password ->
-                    AppUtils.sqlitePassword(password)
-                    sqlitePassword = password
+                    AppConfig.setProperty("database.password", password)
+                    databasePassword = password
                     initializeApp = true
                 }
             )
@@ -78,10 +81,10 @@ class App(
         var selectedTheme by remember { mutableStateOf(SystemTheme.DEFAULT) }
         val isSystemInDarkTheme = isSystemInDarkTheme()
         val commandBus: CommandBus = remember {
-            KtormCommandBus(SqliteKtormDatabase.connect(databasePath, sqlitePassword, sqliteExtensions))
+            KtormCommandBus(SqliteKtormDatabase.connect(databasePath, databasePassword, sqliteExtensions))
         }
         val queryBus = remember {
-            KtormQueryBus(SqliteKtormDatabase.connectReadOnly(databasePath, sqlitePassword, sqliteExtensions))
+            KtormQueryBus(SqliteKtormDatabase.connectReadOnly(databasePath, databasePassword, sqliteExtensions))
         }
 
         MaterialTheme(

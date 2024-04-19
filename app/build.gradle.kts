@@ -36,8 +36,6 @@ compose.desktop {
         mainClass = "MainKt"
         jvmArgs("-Dfile.encoding=UTF-8")
 
-        args("--database=./data/organizador-pec-6-60.db")
-
         nativeDistributions {
             packageName = "Organizador PEC-6-60"
             description = "Organizador de formatos PEC-6-60"
