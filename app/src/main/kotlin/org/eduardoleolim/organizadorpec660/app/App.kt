@@ -21,13 +21,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import kotlinx.coroutines.launch
-import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
-import org.eduardoleolim.organizadorpec660.app.generated.resources.app_name
-import org.eduardoleolim.organizadorpec660.app.generated.resources.logo
+import org.eduardoleolim.organizadorpec660.app.generated.resources.*
 import org.eduardoleolim.organizadorpec660.app.router.Router
-import org.eduardoleolim.organizadorpec660.app.shared.theme.DarkColors
-import org.eduardoleolim.organizadorpec660.app.shared.theme.LightColors
-import org.eduardoleolim.organizadorpec660.app.shared.theme.RobotoTypography
+import org.eduardoleolim.organizadorpec660.app.shared.theme.AppTheme
 import org.eduardoleolim.organizadorpec660.app.shared.utils.AppConfig
 import org.eduardoleolim.organizadorpec660.app.shared.utils.isSystemInDarkTheme
 import org.eduardoleolim.organizadorpec660.app.window.CustomWindow
@@ -87,12 +83,11 @@ class App(
             KtormQueryBus(SqliteKtormDatabase.connectReadOnly(databasePath, databasePassword, sqliteExtensions))
         }
 
-        MaterialTheme(
-            typography = RobotoTypography,
-            colorScheme = when (selectedTheme) {
-                SystemTheme.DARK -> DarkColors
-                SystemTheme.LIGHT -> LightColors
-                SystemTheme.DEFAULT -> if (isSystemInDarkTheme) DarkColors else LightColors
+        AppTheme(
+            darkTheme = when (selectedTheme) {
+                SystemTheme.DARK -> true
+                SystemTheme.LIGHT -> false
+                SystemTheme.DEFAULT -> isSystemInDarkTheme
             }
         ) {
             val icon = painterResource(Res.drawable.logo)
@@ -145,8 +140,8 @@ class App(
         val state = rememberWindowState()
         val isSystemInDarkTheme = isSystemInDarkTheme()
 
-        MaterialTheme(
-            colorScheme = if (isSystemInDarkTheme) DarkColors else LightColors
+        AppTheme(
+            darkTheme = isSystemInDarkTheme
         ) {
             val icon = painterResource(Res.drawable.logo)
             CustomWindow(

@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 import org.apache.pdfbox.Loader
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.rendering.PDFRenderer
-import org.eduardoleolim.organizadorpec660.app.shared.theme.DarkColors
+import org.eduardoleolim.organizadorpec660.app.shared.theme.AppTheme
 import java.awt.image.BufferedImage
 import java.io.File
 import javax.swing.JFileChooser
@@ -222,8 +222,8 @@ fun PdfViewer(
 @Preview
 @Composable
 fun Preview() {
-    MaterialTheme(
-        colorScheme = DarkColors
+    AppTheme(
+        darkTheme = true
     ) {
         PdfViewer(
             modifier = Modifier.padding(20.dp)
