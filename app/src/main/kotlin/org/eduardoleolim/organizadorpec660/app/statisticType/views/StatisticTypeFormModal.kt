@@ -171,7 +171,7 @@ fun StatisticTypeScreen.StatisticTypeFormModal(
                     }
                 }
             ) {
-                Text("Guardar")
+                Text(stringResource(Res.string.save))
             }
         },
         dismissButton = {
@@ -179,7 +179,7 @@ fun StatisticTypeScreen.StatisticTypeFormModal(
                 enabled = enabled,
                 onClick = onDismissRequest,
             ) {
-                Text("Cancelar")
+                Text(stringResource(Res.string.cancel))
             }
         }
     )
