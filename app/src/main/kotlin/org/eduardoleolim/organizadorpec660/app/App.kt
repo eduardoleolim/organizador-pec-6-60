@@ -179,7 +179,7 @@ class App(
                         )
                     )
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(Modifier.height(16.dp))
 
                     Text(
                         text = "Para comenzar, establezca una contraseña para la base de datos",
@@ -191,15 +191,15 @@ class App(
                         )
                     )
 
-                    Spacer(modifier = Modifier.height(32.dp))
+                    Spacer(Modifier.height(32.dp))
 
                     OutlinedTextField(
                         value = password,
                         onValueChange = { password = it },
-                        label = { Text("Contraseña") }
+                        label = { Text(stringResource(Res.string.password)) }
                     )
 
-                    Spacer(modifier = Modifier.height(32.dp))
+                    Spacer(Modifier.height(32.dp))
 
                     Button(
                         onClick = {
@@ -211,7 +211,7 @@ class App(
                         modifier = Modifier.width(200.dp)
                     ) {
                         Text(
-                            text = "Guardar",
+                            text = stringResource(Res.string.save),
                             fontSize = 16.sp
                         )
                     }

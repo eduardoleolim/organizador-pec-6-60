@@ -14,6 +14,7 @@
     <string name="save">Save</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
+    <string name="password">Password</string>
 
     <!-- Auth -->
     <string name="auth_enter">Enter</string>
