@@ -49,8 +49,6 @@ class App(
     private var databasePassword: String,
     private val databaseExtensionPath: String
 ) {
-    private val sqliteExtensions = File(databaseExtensionPath).listFiles()?.map { it.absolutePath } ?: emptyList()
-
     fun start() = application {
         var initializeApp by remember { mutableStateOf(SqliteKtormDatabase.exists(databasePath)) }
 
@@ -76,6 +74,10 @@ class App(
         val state = rememberWindowState()
         var selectedTheme by remember { mutableStateOf(SystemTheme.DEFAULT) }
         val isSystemInDarkTheme = isSystemInDarkTheme()
+
+        val sqliteExtensions = remember {
+            File(databaseExtensionPath).listFiles()?.map { it.absolutePath } ?: emptyList()
+        }
         val commandBus: CommandBus = remember {
             KtormCommandBus(SqliteKtormDatabase.connect(databasePath, databasePassword, sqliteExtensions))
         }
