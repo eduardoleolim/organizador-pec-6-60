@@ -62,13 +62,14 @@ fun FederalEntityScreen.FederalEntitiesTable(
             },
             DataColumn(
                 onSort = ::onSort,
+                width = TableColumnWidth.Fraction(0.3f)
             ) {
                 Text(nameColumnName)
             },
             DataColumn(
                 onSort = ::onSort,
                 alignment = Alignment.CenterHorizontally,
-                width = TableColumnWidth.Fraction(0.2f)
+                width = TableColumnWidth.Fraction(0.18f)
             ) {
                 Text(
                     text = createdAtColumnName,
@@ -78,7 +79,7 @@ fun FederalEntityScreen.FederalEntitiesTable(
             DataColumn(
                 onSort = ::onSort,
                 alignment = Alignment.CenterHorizontally,
-                width = TableColumnWidth.Fraction(0.2f)
+                width = TableColumnWidth.Fraction(0.18f)
             ) {
                 Text(
                     text = updatedAtColumnName,
@@ -87,7 +88,7 @@ fun FederalEntityScreen.FederalEntitiesTable(
             },
             DataColumn(
                 alignment = Alignment.CenterHorizontally,
-                width = TableColumnWidth.Fraction(0.2f)
+                width = TableColumnWidth.Fraction(0.18f)
             ) {
                 Text(actionsColumnName)
             }
