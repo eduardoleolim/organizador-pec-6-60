@@ -79,7 +79,7 @@ object MunicipalityCriteria {
             Orders.fromValues(orders)
         } ?: Orders(
             listOf(
-                Order.asc(MunicipalityFields.FederalEntityId.value),
+                Order.asc(MunicipalityFields.FederalEntityKeyCode.value),
                 Order.asc(MunicipalityFields.KeyCode.value)
             )
         ),
