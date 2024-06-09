@@ -2,16 +2,16 @@
 
 [versions]
 kotlin = "2.0.0"
-compose = "1.6.10"
+compose = "1.6.11"
 data-table-material3 = "0.5.1"
 voyager = "1.0.0"
-jSystemThemeDetector = "3.8"
+jSystemThemeDetector = "3.9.1"
 pdfbox = "3.0.2"
-kotlinx-coroutines = "1.8.0"
-ktorm = "3.6.0"
+kotlinx-coroutines = "1.9.0-RC"
+ktorm = "4.0.0"
 sqlite = "3.45.2.0"
-koin = "3.5.3"
-slf4j = "2.0.9"
+koin = "3.5.6"
+slf4j = "2.0.13"
 jasypt = "1.9.3"
 
 [libraries]
