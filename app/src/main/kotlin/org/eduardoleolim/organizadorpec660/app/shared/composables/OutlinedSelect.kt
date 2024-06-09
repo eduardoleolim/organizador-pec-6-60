@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun <T> OutlinedSelect(
     values: List<T>,
-    onValueSelected: (T?) -> Unit,
+    onValueSelected: (Int?, T?) -> Unit,
     valueIndex: Int? = null,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
@@ -39,11 +39,13 @@ fun <T> OutlinedSelect(
     shape: Shape = OutlinedTextFieldDefaults.shape,
     colors: TextFieldColors = OutlinedTextFieldDefaults.colors()
 ) {
-    var selectedIndex by remember { mutableStateOf(valueIndex) }
-    var selectedValue by remember(selectedIndex) { mutableStateOf(selectedIndex?.let { values[it] }) }
+    var selectedIndex by remember(valueIndex) { mutableStateOf(valueIndex) }
+    var selectedValue by remember(valueIndex) { mutableStateOf(valueIndex?.let { values[it] }) }
+
+    val value = remember(selectedValue) { selectedValue?.let { visualTransformation(it) } ?: "" }
 
     LaunchedEffect(selectedValue) {
-        onValueSelected(selectedValue)
+        onValueSelected(selectedValue?.let { values.indexOf(selectedValue) }, selectedValue)
     }
 
     Box {
@@ -54,7 +56,7 @@ fun <T> OutlinedSelect(
         var supportingTextSize by remember(supportingText) { mutableStateOf(IntSize.Zero) }
 
         OutlinedTextField(
-            value = selectedValue?.let { visualTransformation(it) } ?: "",
+            value = value,
             onValueChange = { },
             modifier = modifier.onGloballyPositioned { coordinates ->
                 textFieldSize = coordinates.size
