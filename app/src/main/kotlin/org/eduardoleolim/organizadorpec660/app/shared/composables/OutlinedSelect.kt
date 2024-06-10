@@ -104,6 +104,7 @@ fun <T> OutlinedSelect(
             leadingIcon = leadingIcon,
             trailingIcon = {
                 IconButton(
+                    enabled = enabled,
                     onClick = { expanded = true },
                     modifier = Modifier.pointerHoverIcon(PointerIcon.Default),
                     content = {
