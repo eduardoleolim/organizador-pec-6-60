@@ -1,34 +1,27 @@
 package org.eduardoleolim.organizadorpec660.app.municipality.views
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.ArrowDropUp
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.input.key.*
-import androidx.compose.ui.input.pointer.PointerIcon
-import androidx.compose.ui.input.pointer.pointerHoverIcon
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import org.eduardoleolim.organizadorpec660.app.generated.resources.*
 import org.eduardoleolim.organizadorpec660.app.municipality.data.EmptyMunicipalityDataException
 import org.eduardoleolim.organizadorpec660.app.municipality.model.FormState
 import org.eduardoleolim.organizadorpec660.app.municipality.model.MunicipalityScreenModel
+import org.eduardoleolim.organizadorpec660.app.shared.composables.OutlinedSelect
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityNotFoundError
 import org.eduardoleolim.organizadorpec660.core.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorpec660.core.municipality.domain.InvalidMunicipalityKeyCodeError
 import org.eduardoleolim.organizadorpec660.core.municipality.domain.InvalidMunicipalityNameError
 import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityAlreadyExistsError
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun MunicipalityScreen.MunicipalityFormModal(
     screenModel: MunicipalityScreenModel,
@@ -149,122 +142,19 @@ fun MunicipalityScreen.MunicipalityFormModal(
         },
         text = {
             Column {
-                Box {
-                    var expanded by remember { mutableStateOf(false) }
-                    val focusManager = LocalFocusManager.current
-
-                    OutlinedTextField(
-                        enabled = true,
-                        label = { Text(stringResource(Res.string.mun_federal_entity)) },
-                        value = federalEntity?.let { "${it.keyCode} - ${it.name}" } ?: "",
-                        onValueChange = { },
-                        readOnly = true,
-                        isError = isFederalEntityError,
-                        supportingText = federalEntitySupportingText?.let { message ->
-                            { Text(text = message, color = MaterialTheme.colorScheme.error) }
-                        },
-                        trailingIcon = {
-                            IconButton(
-                                onClick = { expanded = true },
-                                modifier = Modifier.pointerHoverIcon(PointerIcon.Default),
-                                content = {
-                                    Icon(
-                                        imageVector = if (expanded) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
-                                        contentDescription = "Expand"
-                                    )
-                                }
-                            )
-                        },
-                        modifier = Modifier.width(300.dp)
-                            .onPreviewKeyEvent {
-                                when {
-                                    (it.key == Key.DirectionDown && it.type == KeyEventType.KeyDown) -> {
-                                        val federalEntities = screenModel.federalEntities
-                                        if (federalEntity != null) {
-                                            val federalEntityIndex = federalEntities.indexOf(federalEntity)
-                                            val nextIndex = federalEntityIndex + 1
-
-                                            if (nextIndex < federalEntities.size) {
-                                                federalEntity = federalEntities[nextIndex]
-
-                                                true
-                                            } else {
-                                                false
-                                            }
-                                        } else {
-                                            federalEntity = federalEntities.firstOrNull()
-
-                                            true
-                                        }
-                                    }
-
-                                    (it.key == Key.DirectionUp && it.type == KeyEventType.KeyDown) -> {
-                                        val federalEntities = screenModel.federalEntities
-                                        if (federalEntity != null) {
-                                            val federalEntityIndex = federalEntities.indexOf(federalEntity)
-                                            val prevIndex = federalEntityIndex - 1
-
-                                            if (prevIndex >= 0) {
-                                                federalEntity = federalEntities[prevIndex]
-
-                                                true
-                                            } else {
-                                                federalEntity = null
-
-                                                true
-                                            }
-                                        } else {
-                                            false
-                                        }
-                                    }
-
-                                    (it.key == Key.Tab && it.type == KeyEventType.KeyDown) -> {
-                                        focusManager.moveFocus(FocusDirection.Down)
-
-                                        true
-                                    }
-
-                                    else -> false
-                                }
-                            }
-                    )
-
-                    DropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false },
-                        modifier = Modifier.width(300.dp)
-                            .heightIn(0.dp, 300.dp)
-                            .background(MaterialTheme.colorScheme.surface)
-                    ) {
-                        DropdownMenuItem(
-                            text = {
-                                Text(
-                                    text = stringResource(Res.string.mun_form_select_federal_entity),
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
-                            },
-                            onClick = {
-                                expanded = false
-                                federalEntity = null
-                            }
-                        )
-
-                        screenModel.federalEntities.forEach {
-                            DropdownMenuItem(
-                                text = {
-                                    Text(
-                                        text = "${it.keyCode} - ${it.name}",
-                                        color = MaterialTheme.colorScheme.onSurface
-                                    )
-                                },
-                                onClick = {
-                                    expanded = false
-                                    federalEntity = it
-                                }
-                            )
-                        }
-                    }
-                }
+                OutlinedSelect(
+                    values = screenModel.federalEntities,
+                    onValueSelected = { _, item ->
+                        federalEntity = item
+                    },
+                    visualTransformation = { "${it.keyCode} - ${it.name}" },
+                    label = { Text(stringResource(Res.string.mun_federal_entity)) },
+                    isError = isFederalEntityError,
+                    supportingText = federalEntitySupportingText?.let { message ->
+                        { Text(text = message, color = MaterialTheme.colorScheme.error) }
+                    },
+                    modifier = Modifier.width(300.dp)
+                )
 
                 Spacer(modifier = Modifier.height(32.dp))
 
