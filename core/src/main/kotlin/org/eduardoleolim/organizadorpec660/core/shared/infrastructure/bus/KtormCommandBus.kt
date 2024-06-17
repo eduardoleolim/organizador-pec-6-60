@@ -2,7 +2,6 @@ package org.eduardoleolim.organizadorpec660.core.shared.infrastructure.bus
 
 import org.eduardoleolim.organizadorpec660.core.agency.infrastructure.bus.KtormAgencyCommandHandlers
 import org.eduardoleolim.organizadorpec660.core.federalEntity.infrastructure.bus.KtormFederalEntityCommandHandlers
-import org.eduardoleolim.organizadorpec660.core.instrumentType.infrastructure.bus.KtormInstrumentTypeCommandHandlers
 import org.eduardoleolim.organizadorpec660.core.municipality.infrastructure.bus.KtormMunicipalityCommandHandlers
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.*
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.koin.KtormAppKoinContext
@@ -16,7 +15,6 @@ class KtormCommandBus(database: Database) : CommandBus {
     private val commandHandlers = HashMap<KClass<out Command>, CommandHandler<out Command>>().apply {
         putAll(KtormAgencyCommandHandlers(context).handlers)
         putAll(KtormMunicipalityCommandHandlers(context).handlers)
-        putAll(KtormInstrumentTypeCommandHandlers(context).handlers)
         putAll(KtormStatisticTypeCommandHandlers(context).handlers)
         putAll(KtormFederalEntityCommandHandlers(context).handlers)
     }

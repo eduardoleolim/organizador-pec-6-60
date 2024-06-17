@@ -4,9 +4,6 @@ import org.eduardoleolim.organizadorpec660.core.agency.application.AgenciesRespo
 import org.eduardoleolim.organizadorpec660.core.agency.application.AgencyResponse
 import org.eduardoleolim.organizadorpec660.core.agency.application.search.AgencySearcher
 import org.eduardoleolim.organizadorpec660.core.agency.domain.AgencyCriteria
-import org.eduardoleolim.organizadorpec660.core.instrumentType.application.search.InstrumentTypeSearcher
-import org.eduardoleolim.organizadorpec660.core.instrumentType.domain.InstrumentType
-import org.eduardoleolim.organizadorpec660.core.instrumentType.domain.InstrumentTypeCriteria
 import org.eduardoleolim.organizadorpec660.core.municipality.application.search.MunicipalitySearcher
 import org.eduardoleolim.organizadorpec660.core.municipality.domain.Municipality
 import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityCriteria
@@ -18,36 +15,26 @@ import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTy
 class SearchAgenciesByTermQueryHandler(
     private val agencySearcher: AgencySearcher,
     private val municipalitySearcher: MunicipalitySearcher,
-    private val statisticTypeSearcher: StatisticTypeSearcher,
-    private val instrumentTypeSearcher: InstrumentTypeSearcher
+    private val statisticTypeSearcher: StatisticTypeSearcher
 ) : QueryHandler<SearchAgenciesByTermQuery, AgenciesResponse> {
     private val municipalitiesCache = mutableMapOf<String, Municipality>()
     private val statisticTypesCache = mutableMapOf<String, StatisticType>()
-    private val instrumentTypesCache = mutableMapOf<String, InstrumentType>()
 
     override fun handle(query: SearchAgenciesByTermQuery): AgenciesResponse {
         val agencies = searchAgencies(query.search(), query.orders(), query.limit(), query.offset())
         val totalAgencies = countTotalAgencies(query.search())
 
         return agencies.map { agency ->
-            val municipalities = agency.municipalities().map { municipalityAssociation ->
-                val municipality = searchMunicipality(municipalityAssociation.municipalityId().toString())
+            val municipality = searchMunicipality(agency.municipalityId().toString())
 
-                Pair(municipality, municipalityAssociation.isOwner())
+            val statisticTypes = agency.statisticTypeIds().map { statisticTypeId ->
+                searchStatisticType(statisticTypeId.value.toString())
             }
 
-            val statisticTypesAndInstrumentTypes = agency.statisticTypes().map { statisticTypeAssociation ->
-                val statisticType = searchStatisticType(statisticTypeAssociation.statisticTypeId().toString())
-                val instrumentType = searchInstrumentType(statisticTypeAssociation.instrumentTypeId().toString())
-
-                Pair(statisticType, instrumentType)
-            }
-
-            AgencyResponse.fromAggregate(agency, municipalities, statisticTypesAndInstrumentTypes)
+            AgencyResponse.fromAggregate(agency, municipality, statisticTypes)
         }.let {
             municipalitiesCache.clear()
             statisticTypesCache.clear()
-            instrumentTypesCache.clear()
 
             AgenciesResponse(it, totalAgencies, query.limit(), query.offset())
         }
@@ -94,18 +81,6 @@ class SearchAgenciesByTermQueryHandler(
 
         return statisticTypeSearcher.search(criteria).first().also { statisticType ->
             statisticTypesCache[statisticTypeId] = statisticType
-        }
-    }
-
-    private fun searchInstrumentType(instrumentTypeId: String): InstrumentType {
-        if (instrumentTypesCache.containsKey(instrumentTypeId)) {
-            return instrumentTypesCache[instrumentTypeId]!!
-        }
-
-        val criteria = InstrumentTypeCriteria.idCriteria(instrumentTypeId)
-
-        return instrumentTypeSearcher.search(criteria).first().also { instrumentType ->
-            instrumentTypesCache[instrumentTypeId] = instrumentType
         }
     }
 }

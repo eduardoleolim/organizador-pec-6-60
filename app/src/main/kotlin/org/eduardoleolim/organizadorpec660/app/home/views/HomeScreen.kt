@@ -36,7 +36,6 @@ enum class MenuTab {
     FEDERAL_ENTITIES,
     MUNICIPALITIES,
     STATISTIC_TYPES,
-    INSTRUMENTS_TYPES,
     AGENCIES
 }
 
@@ -63,11 +62,6 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
                 stringResource(Res.string.statistic_types),
                 Pair(Icons.Filled.BarChart, Icons.Outlined.BarChart),
                 MenuTab.STATISTIC_TYPES
-            ),
-            Triple(
-                stringResource(Res.string.instrument_types),
-                Pair(Icons.Filled.Folder, Icons.Outlined.Folder),
-                MenuTab.INSTRUMENTS_TYPES
             ),
             Triple(
                 stringResource(Res.string.agencies),
@@ -264,7 +258,6 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
                                 MenuTab.FEDERAL_ENTITIES -> FederalEntityView()
                                 MenuTab.MUNICIPALITIES -> MunicipalityView()
                                 MenuTab.STATISTIC_TYPES -> StatisticTypeView()
-                                MenuTab.INSTRUMENTS_TYPES -> InstrumentTypeView()
                                 MenuTab.AGENCIES -> AgencyScreen()
                             }
                         }

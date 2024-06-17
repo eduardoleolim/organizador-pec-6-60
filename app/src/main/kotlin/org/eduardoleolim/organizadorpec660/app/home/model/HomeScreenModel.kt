@@ -55,11 +55,6 @@ class HomeScreenModel(
     }
 
     @Composable
-    fun InstrumentTypeView() {
-        Navigator(ScreenRegistry.get(HomeProvider.InstrumentTypeScreen))
-    }
-
-    @Composable
     fun AgencyScreen() {
         Navigator(ScreenRegistry.get(HomeProvider.AgencyScreen))
     }

@@ -9,9 +9,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.eduardoleolim.organizadorpec660.app.statisticType.data.EmptyStatisticTypeDataException
-import org.eduardoleolim.organizadorpec660.core.instrumentType.application.InstrumentTypeResponse
-import org.eduardoleolim.organizadorpec660.core.instrumentType.application.InstrumentTypesResponse
-import org.eduardoleolim.organizadorpec660.core.instrumentType.application.searchByTerm.SearchInstrumentTypesByTermQuery
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
 import org.eduardoleolim.organizadorpec660.core.statisticType.application.StatisticTypesResponse
@@ -41,9 +38,6 @@ class StatisticTypeScreenModel(private val queryBus: QueryBus, private val comma
     var statisticTypes by mutableStateOf(StatisticTypesResponse(emptyList(), 0, null, null))
         private set
 
-    var instrumentTypes by mutableStateOf(emptyList<InstrumentTypeResponse>())
-        private set
-
     var formState by mutableStateOf<FormState>(FormState.Idle)
         private set
 
@@ -70,17 +64,6 @@ class StatisticTypeScreenModel(private val queryBus: QueryBus, private val comma
                 statisticTypes = queryBus.ask(query)
             } catch (e: Exception) {
                 statisticTypes = StatisticTypesResponse(emptyList(), 0, null, null)
-            }
-        }
-    }
-
-    fun searchAllInstrumentTypes() {
-        screenModelScope.launch(Dispatchers.IO) {
-            try {
-                val query = SearchInstrumentTypesByTermQuery()
-                instrumentTypes = queryBus.ask<InstrumentTypesResponse>(query).instrumentTypes
-            } catch (e: Exception) {
-                instrumentTypes = emptyList()
             }
         }
     }

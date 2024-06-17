@@ -13,7 +13,6 @@ object InstrumentCriteria {
         statisticYear: Int,
         statisticMonth: Int,
         consecutive: String,
-        instrumentTypeId: String,
         statisticTypeId: String,
         municipalityId: String
     ) = Criteria(
@@ -23,7 +22,6 @@ object InstrumentCriteria {
                 SingleFilter.equal("statisticYear", statisticYear.toString()),
                 SingleFilter.equal("statisticMonth", statisticMonth.toString()),
                 SingleFilter.equal("consecutive", consecutive),
-                SingleFilter.equal("instrumentTypeId", instrumentTypeId),
                 SingleFilter.equal("statisticTypeId", statisticTypeId),
                 SingleFilter.equal("municipalityId", municipalityId)
             )

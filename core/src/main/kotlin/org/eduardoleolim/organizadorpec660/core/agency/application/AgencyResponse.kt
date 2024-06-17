@@ -1,8 +1,6 @@
 package org.eduardoleolim.organizadorpec660.core.agency.application
 
 import org.eduardoleolim.organizadorpec660.core.agency.domain.Agency
-import org.eduardoleolim.organizadorpec660.core.instrumentType.application.InstrumentTypeResponse
-import org.eduardoleolim.organizadorpec660.core.instrumentType.domain.InstrumentType
 import org.eduardoleolim.organizadorpec660.core.municipality.domain.Municipality
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.Response
 import org.eduardoleolim.organizadorpec660.core.statisticType.application.StatisticTypeResponse
@@ -13,8 +11,8 @@ class AgencyResponse(
     val id: String,
     val name: String,
     val consecutive: Int,
-    val municipalities: List<Pair<MunicipalityResponse, Boolean>>,
-    val statisticTypes: List<Pair<StatisticTypeResponse, InstrumentTypeResponse>>,
+    val municipality: MunicipalityResponse,
+    val statisticTypes: List<StatisticTypeResponse>,
     val createdAt: Date,
     val updatedAt: Date?
 ) : Response {
@@ -39,22 +37,14 @@ class AgencyResponse(
     companion object {
         fun fromAggregate(
             agency: Agency,
-            municipalities: List<Pair<Municipality, Boolean>>,
-            statisticTypes: List<Pair<StatisticType, InstrumentType>>
+            municipality: Municipality,
+            statisticTypes: List<StatisticType>
         ): AgencyResponse {
-            val statisticTypesResponse = statisticTypes.map { statisticTypeAssociation ->
-                Pair(
-                    StatisticTypeResponse.fromAggregate(statisticTypeAssociation.first),
-                    InstrumentTypeResponse.fromAggregate(statisticTypeAssociation.second)
-                )
+            val statisticTypesResponse = statisticTypes.map { statisticType ->
+                StatisticTypeResponse.fromAggregate(statisticType)
             }
 
-            val municipalitiesResponse = municipalities.map { municipalityAssociation ->
-                Pair(
-                    MunicipalityResponse.fromAggregate(municipalityAssociation.first),
-                    municipalityAssociation.second
-                )
-            }
+            val municipalitiesResponse = MunicipalityResponse.fromAggregate(municipality)
 
             return AgencyResponse(
                 agency.id().toString(),

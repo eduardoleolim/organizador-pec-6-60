@@ -4,7 +4,6 @@ import org.eduardoleolim.organizadorpec660.core.agency.domain.AgencyFields
 import org.eduardoleolim.organizadorpec660.core.shared.domain.InvalidArgumentError
 import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.*
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.Agencies
-import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.AgenciesOfMunicipalities
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.StatisticTypesOfAgencies
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
@@ -17,12 +16,10 @@ import java.time.LocalDateTime
 class KtormAgenciesCriteriaParser(
     private val database: Database,
     private val agencies: Agencies,
-    private val agenciesOfMunicipalities: AgenciesOfMunicipalities,
     private val statisticTypesOfAgencies: StatisticTypesOfAgencies
 ) {
     fun selectQuery(criteria: Criteria): Query {
         return database.from(agencies)
-            .leftJoin(agenciesOfMunicipalities, on = agencies.id eq agenciesOfMunicipalities.agencyId)
             .leftJoin(statisticTypesOfAgencies, on = agencies.id eq statisticTypesOfAgencies.agencyId)
             .selectDistinct(agencies.columns).let {
                 addOrdersToQuery(it, criteria)
@@ -58,7 +55,7 @@ class KtormAgenciesCriteriaParser(
             AgencyFields.Consecutive -> parseOrderType(orderType, agencies.consecutive)
             AgencyFields.CreatedAt -> parseOrderType(orderType, agencies.createdAt)
             AgencyFields.UpdatedAt -> parseOrderType(orderType, agencies.updatedAt)
-            AgencyFields.MunicipalityId -> parseOrderType(orderType, agenciesOfMunicipalities.municipalityId)
+            AgencyFields.MunicipalityId -> parseOrderType(orderType, agencies.municipalityId)
             null -> throw InvalidArgumentError()
         }
     }
@@ -172,8 +169,8 @@ class KtormAgenciesCriteriaParser(
 
             AgencyFields.MunicipalityId -> {
                 when (operator) {
-                    FilterOperator.EQUAL -> agenciesOfMunicipalities.municipalityId eq value
-                    FilterOperator.NOT_EQUAL -> agenciesOfMunicipalities.municipalityId notEq value
+                    FilterOperator.EQUAL -> agencies.municipalityId eq value
+                    FilterOperator.NOT_EQUAL -> agencies.municipalityId notEq value
                     else -> null
                 }
             }

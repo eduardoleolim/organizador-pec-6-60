@@ -3,7 +3,6 @@ package org.eduardoleolim.organizadorpec660.core.statisticType.infrastructure.pe
 import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.Criteria
 import org.eduardoleolim.organizadorpec660.core.shared.domain.toDate
 import org.eduardoleolim.organizadorpec660.core.shared.domain.toLocalDateTime
-import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.InstrumentTypes
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.StatisticTypes
 import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticType
 import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeRepository
@@ -16,15 +15,9 @@ import java.time.LocalDateTime
 
 class KtormStatisticTypeRepository(private val database: Database) : StatisticTypeRepository {
     private val statisticTypes = StatisticTypes("st")
-    private val instrumentTypes = InstrumentTypes("it")
 
     override fun matching(criteria: Criteria): List<StatisticType> {
-        return KtormStatisticTypeCriteriaParser.parse(
-            database,
-            statisticTypes,
-            instrumentTypes,
-            criteria
-        ).map { rowSet ->
+        return KtormStatisticTypeCriteriaParser.parse(database, statisticTypes, criteria).map { rowSet ->
             statisticTypes.createEntity(rowSet).let {
                 StatisticType.from(
                     it.id,
@@ -38,12 +31,7 @@ class KtormStatisticTypeRepository(private val database: Database) : StatisticTy
     }
 
     override fun count(criteria: Criteria): Int {
-        return KtormStatisticTypeCriteriaParser.parse(
-            database,
-            statisticTypes,
-            instrumentTypes,
-            criteria
-        ).totalRecordsInAllPages
+        return KtormStatisticTypeCriteriaParser.parse(database, statisticTypes, criteria).totalRecordsInAllPages
     }
 
     override fun save(statisticType: StatisticType) {

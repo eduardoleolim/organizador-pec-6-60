@@ -24,7 +24,6 @@ interface Instrument : Entity<Instrument> {
     val saved: Boolean
     val createdAt: LocalDateTime
     val updatedAt: LocalDateTime?
-    val instrumentType: InstrumentType
     val statisticType: StatisticType
     val municipality: Municipality
     val instrumentFile: InstrumentFile?
@@ -38,7 +37,6 @@ class Instruments(alias: String? = null) : Table<Instrument>("instrument", alias
     val saved = boolean("saved").bindTo { it.saved }
     val createdAt = datetime("createdAt").bindTo { it.createdAt }
     val updatedAt = datetime("updatedAt").bindTo { it.updatedAt }
-    val instrumentTypeId = varchar("instrumentTypeId").references(InstrumentTypes()) { it.instrumentType }
     val statisticTypeId = varchar("statisticTypeId").references(StatisticTypes()) { it.statisticType }
     val municipalityId = varchar("municipalityId").references(Municipalities()) { it.municipality }
     val instrumentFileId = varchar("instrumentFileId").references(InstrumentFiles()) { it.instrumentFile }

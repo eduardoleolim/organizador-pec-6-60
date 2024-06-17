@@ -4,9 +4,6 @@ import org.eduardoleolim.organizadorpec660.core.instrument.domain.InstrumentAlre
 import org.eduardoleolim.organizadorpec660.core.instrument.domain.InstrumentCriteria
 import org.eduardoleolim.organizadorpec660.core.instrument.domain.InstrumentNotFoundError
 import org.eduardoleolim.organizadorpec660.core.instrument.domain.InstrumentRepository
-import org.eduardoleolim.organizadorpec660.core.instrumentType.domain.InstrumentTypeCriteria
-import org.eduardoleolim.organizadorpec660.core.instrumentType.domain.InstrumentTypeNotFoundError
-import org.eduardoleolim.organizadorpec660.core.instrumentType.domain.InstrumentTypeRepository
 import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityCriteria
 import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityNotFoundError
 import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityRepository
@@ -16,7 +13,6 @@ import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTy
 
 class InstrumentUpdater(
     private val instrumentRepository: InstrumentRepository,
-    private val instrumentTypeRepository: InstrumentTypeRepository,
     private val statisticTypeRepository: StatisticTypeRepository,
     private val municipalityRepository: MunicipalityRepository
 ) {
@@ -25,7 +21,6 @@ class InstrumentUpdater(
         statisticYear: Int,
         statisticMonth: Int,
         consecutive: String,
-        instrumentTypeId: String,
         statisticTypeId: String,
         municipalityId: String
     ) {
@@ -36,7 +31,6 @@ class InstrumentUpdater(
             statisticYear,
             statisticMonth,
             consecutive,
-            instrumentTypeId,
             statisticTypeId,
             municipalityId
         )
@@ -46,13 +40,9 @@ class InstrumentUpdater(
                 statisticYear,
                 statisticMonth,
                 consecutive,
-                instrumentTypeId,
                 statisticTypeId,
                 municipalityId
             )
-
-        if (existsInstrumentType(instrumentTypeId).not())
-            throw InstrumentTypeNotFoundError(instrumentTypeId)
 
         if (existsStatisticType(statisticTypeId).not())
             throw StatisticTypeNotFoundError(statisticTypeId)
@@ -63,7 +53,6 @@ class InstrumentUpdater(
         instrument.changeStatisticYear(statisticYear)
         instrument.changeStatisticMonth(statisticMonth)
         instrument.changeConsecutive(consecutive)
-        instrument.changeInstrumentTypeId(instrumentTypeId)
         instrument.changeStatisticTypeId(statisticTypeId)
         instrument.changeMunicipalityId(municipalityId)
 
@@ -80,7 +69,6 @@ class InstrumentUpdater(
         statisticYear: Int,
         statisticMonth: Int,
         consecutive: String,
-        instrumentTypeId: String,
         statisticTypeId: String,
         municipalityId: String
     ) =
@@ -89,16 +77,10 @@ class InstrumentUpdater(
             statisticYear,
             statisticMonth,
             consecutive,
-            instrumentTypeId,
             statisticTypeId,
             municipalityId
         ).let {
             instrumentRepository.count(it) > 0
-        }
-
-    private fun existsInstrumentType(instrumentTypeId: String) =
-        InstrumentTypeCriteria.idCriteria(instrumentTypeId).let {
-            instrumentTypeRepository.count(it) > 0
         }
 
     private fun existsStatisticType(statisticTypeId: String) =

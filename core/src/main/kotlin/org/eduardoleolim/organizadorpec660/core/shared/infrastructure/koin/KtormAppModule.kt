@@ -15,12 +15,6 @@ import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEnti
 import org.eduardoleolim.organizadorpec660.core.federalEntity.infrastructure.persistence.KtormFederalEntityRepository
 import org.eduardoleolim.organizadorpec660.core.instrument.application.create.InstrumentCreator
 import org.eduardoleolim.organizadorpec660.core.instrument.application.update.InstrumentUpdater
-import org.eduardoleolim.organizadorpec660.core.instrumentType.application.create.InstrumentTypeCreator
-import org.eduardoleolim.organizadorpec660.core.instrumentType.application.delete.InstrumentTypeDeleter
-import org.eduardoleolim.organizadorpec660.core.instrumentType.application.search.InstrumentTypeSearcher
-import org.eduardoleolim.organizadorpec660.core.instrumentType.application.update.InstrumentTypeUpdater
-import org.eduardoleolim.organizadorpec660.core.instrumentType.domain.InstrumentTypeRepository
-import org.eduardoleolim.organizadorpec660.core.instrumentType.infrastructure.persistence.KtormInstrumentTypeRepository
 import org.eduardoleolim.organizadorpec660.core.municipality.application.create.MunicipalityCreator
 import org.eduardoleolim.organizadorpec660.core.municipality.application.delete.MunicipalityDeleter
 import org.eduardoleolim.organizadorpec660.core.municipality.application.search.MunicipalitySearcher
@@ -49,14 +43,13 @@ object KtormAppModule {
         single<FederalEntityRepository> { KtormFederalEntityRepository(get()) }
         // single<InstrumentFileRepository> {  }
         // single<InstrumentRepository> {  }
-        single<InstrumentTypeRepository> { KtormInstrumentTypeRepository(get()) }
         single<MunicipalityRepository> { KtormMunicipalityRepository(get()) }
         // single<RoleRepository> { KtormRoleRepository(get()) }
         single<StatisticTypeRepository> { KtormStatisticTypeRepository(get()) }
         single<UserRepository> { KtormUserRepository(get()) }
 
         // Agency services
-        single { AgencyCreator(get(), get(), get(), get()) }
+        single { AgencyCreator(get(), get(), get()) }
         single { AgencySearcher(get()) }
 
         // Auth services
@@ -69,14 +62,8 @@ object KtormAppModule {
         single { FederalEntityUpdater(get()) }
 
         // Instrument services
-        single { InstrumentCreator(get(), get(), get(), get(), get()) }
-        single { InstrumentUpdater(get(), get(), get(), get()) }
-
-        // Instrument type services
-        single { InstrumentTypeCreator(get()) }
-        single { InstrumentTypeDeleter(get()) }
-        single { InstrumentTypeSearcher(get()) }
-        single { InstrumentTypeUpdater(get()) }
+        single { InstrumentCreator(get(), get(), get(), get()) }
+        single { InstrumentUpdater(get(), get(), get()) }
 
         // Municipality services
         single { MunicipalityCreator(get(), get()) }

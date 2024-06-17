@@ -39,10 +39,6 @@ fun StatisticTypeScreen.StatisticTypeFormModal(
     var keyCodeSupportingText: String? by remember { mutableStateOf(null) }
     var nameSupportingText: String? by remember { mutableStateOf(null) }
 
-    LaunchedEffect(Unit) {
-        screenModel.searchAllInstrumentTypes()
-    }
-
     when (val formState = screenModel.formState) {
         FormState.Idle -> {
             enabled = true

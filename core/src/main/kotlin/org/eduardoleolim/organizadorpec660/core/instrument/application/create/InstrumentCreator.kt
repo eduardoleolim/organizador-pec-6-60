@@ -4,9 +4,6 @@ import org.eduardoleolim.organizadorpec660.core.instrument.domain.Instrument
 import org.eduardoleolim.organizadorpec660.core.instrument.domain.InstrumentFile
 import org.eduardoleolim.organizadorpec660.core.instrument.domain.InstrumentFileRepository
 import org.eduardoleolim.organizadorpec660.core.instrument.domain.InstrumentRepository
-import org.eduardoleolim.organizadorpec660.core.instrumentType.domain.InstrumentTypeCriteria
-import org.eduardoleolim.organizadorpec660.core.instrumentType.domain.InstrumentTypeNotFoundError
-import org.eduardoleolim.organizadorpec660.core.instrumentType.domain.InstrumentTypeRepository
 import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityCriteria
 import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityNotFoundError
 import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityRepository
@@ -17,7 +14,6 @@ import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTy
 class InstrumentCreator(
     private val instrumentRepository: InstrumentRepository,
     private val instrumentFileRepository: InstrumentFileRepository,
-    private val instrumentTypeRepository: InstrumentTypeRepository,
     private val statisticTypeRepository: StatisticTypeRepository,
     private val municipalityRepository: MunicipalityRepository
 ) {
@@ -30,9 +26,6 @@ class InstrumentCreator(
         municipalityId: String,
         file: ByteArray
     ) {
-        if (existsInstrumentType(instrumentTypeId).not())
-            throw InstrumentTypeNotFoundError(instrumentTypeId)
-
         if (existsStatisticType(statisticTypeId).not())
             throw StatisticTypeNotFoundError(statisticTypeId)
 
@@ -53,11 +46,6 @@ class InstrumentCreator(
         instrumentRepository.save(instrument)
         instrumentFileRepository.save(instrumentFile)
     }
-
-    private fun existsInstrumentType(instrumentTypeId: String) =
-        InstrumentTypeCriteria.idCriteria(instrumentTypeId).let {
-            instrumentTypeRepository.count(it) > 0
-        }
 
     private fun existsStatisticType(statisticTypeId: String) =
         StatisticTypeCriteria.idCriteria(statisticTypeId).let {

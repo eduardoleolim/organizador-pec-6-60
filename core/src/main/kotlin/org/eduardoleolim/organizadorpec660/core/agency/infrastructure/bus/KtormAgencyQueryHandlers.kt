@@ -5,7 +5,6 @@ import org.eduardoleolim.organizadorpec660.core.agency.application.searchById.Se
 import org.eduardoleolim.organizadorpec660.core.agency.application.searchById.SearchAgencyByIdQueryHandler
 import org.eduardoleolim.organizadorpec660.core.agency.application.searchByTerm.SearchAgenciesByTermQuery
 import org.eduardoleolim.organizadorpec660.core.agency.application.searchByTerm.SearchAgenciesByTermQueryHandler
-import org.eduardoleolim.organizadorpec660.core.instrumentType.application.search.InstrumentTypeSearcher
 import org.eduardoleolim.organizadorpec660.core.municipality.application.search.MunicipalitySearcher
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.Query
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryHandler
@@ -30,12 +29,10 @@ class KtormAgencyQueryHandlers(context: KtormAppKoinContext) : KtormAppKoinCompo
         val agencySearcher: AgencySearcher by inject()
         val municipalitySearcher: MunicipalitySearcher by inject()
         val statisticTypeSearcher: StatisticTypeSearcher by inject()
-        val instrumentTypeSearcher: InstrumentTypeSearcher by inject()
         val queryHandler = SearchAgencyByIdQueryHandler(
             agencySearcher,
             municipalitySearcher,
-            statisticTypeSearcher,
-            instrumentTypeSearcher
+            statisticTypeSearcher
         )
 
         return KtormQueryHandlerDecorator(database, queryHandler)
@@ -45,12 +42,10 @@ class KtormAgencyQueryHandlers(context: KtormAppKoinContext) : KtormAppKoinCompo
         val agencySearcher: AgencySearcher by inject()
         val municipalitySearcher: MunicipalitySearcher by inject()
         val statisticTypeSearcher: StatisticTypeSearcher by inject()
-        val instrumentTypeSearcher: InstrumentTypeSearcher by inject()
         val queryHandler = SearchAgenciesByTermQueryHandler(
             agencySearcher,
             municipalitySearcher,
-            statisticTypeSearcher,
-            instrumentTypeSearcher
+            statisticTypeSearcher
         )
 
         return KtormQueryHandlerDecorator(database, queryHandler)

@@ -4,14 +4,12 @@ import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.Comman
 
 class CreateAgencyCommand(
     name: String,
-    consecutive: Int,
-    municipalities: List<Pair<String, Boolean>>,
-    statisticTypes: List<Pair<String, String>>
+    private val consecutive: Int,
+    private val municipalityId: String,
+    statisticTypeIds: List<String>
 ) : Command {
     private val name = name.trim().uppercase()
-    private val consecutive = consecutive
-    private val municipalities = municipalities.distinctBy { it.first }
-    private val statisticTypes = statisticTypes.distinctBy { it.first }
+    private val statisticTypeIds = statisticTypeIds.distinct()
 
     fun name(): String {
         return name
@@ -21,11 +19,11 @@ class CreateAgencyCommand(
         return consecutive
     }
 
-    fun municipalities(): List<Pair<String, Boolean>> {
-        return municipalities
+    fun municipalityId(): String {
+        return municipalityId
     }
 
-    fun statisticTypes(): List<Pair<String, String>> {
-        return statisticTypes
+    fun statisticTypeIds(): List<String> {
+        return statisticTypeIds
     }
 }

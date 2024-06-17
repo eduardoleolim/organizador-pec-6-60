@@ -2,7 +2,6 @@ package org.eduardoleolim.organizadorpec660.core.statisticType.infrastructure.pe
 
 import org.eduardoleolim.organizadorpec660.core.shared.domain.InvalidArgumentError
 import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.*
-import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.InstrumentTypes
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.StatisticTypes
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
@@ -16,37 +15,27 @@ object KtormStatisticTypeCriteriaParser {
     fun parse(
         database: Database,
         statisticTypes: StatisticTypes,
-        instrumentTypes: InstrumentTypes,
         criteria: Criteria
     ): Query {
         return database.from(statisticTypes)
             .selectDistinct(statisticTypes.columns).let {
-                addOrdersToQuery(it, statisticTypes, instrumentTypes, criteria)
+                addOrdersToQuery(it, statisticTypes, criteria)
             }.let {
                 it.totalRecordsInAllPages
-                addConditionsToQuery(it, statisticTypes, instrumentTypes, criteria)
+                addConditionsToQuery(it, statisticTypes, criteria)
             }.limit(criteria.offset, criteria.limit)
     }
 
-    private fun addOrdersToQuery(
-        query: Query,
-        statisticTypes: StatisticTypes,
-        instrumentTypes: InstrumentTypes,
-        criteria: Criteria
-    ): Query {
+    private fun addOrdersToQuery(query: Query, statisticTypes: StatisticTypes, criteria: Criteria): Query {
         if (!criteria.hasOrders())
             return query
 
         return query.orderBy(criteria.orders.orders.mapNotNull {
-            parseOrder(statisticTypes, instrumentTypes, it)
+            parseOrder(statisticTypes, it)
         })
     }
 
-    private fun parseOrder(
-        statisticTypes: StatisticTypes,
-        instrumentTypes: InstrumentTypes,
-        order: Order
-    ): OrderByExpression? {
+    private fun parseOrder(statisticTypes: StatisticTypes, order: Order): OrderByExpression? {
         val orderBy = order.orderBy.value
         val orderType = order.orderType
 
@@ -56,10 +45,6 @@ object KtormStatisticTypeCriteriaParser {
             "name" -> parseOrderType(orderType, statisticTypes.name)
             "createdAt" -> parseOrderType(orderType, statisticTypes.createdAt)
             "updatedAt" -> parseOrderType(orderType, statisticTypes.updatedAt)
-            "instrumentType.id" -> parseOrderType(orderType, instrumentTypes.id)
-            "instrumentType.name" -> parseOrderType(orderType, instrumentTypes.name)
-            "instrumentType.createdAt" -> parseOrderType(orderType, instrumentTypes.createdAt)
-            "instrumentType.updatedAt" -> parseOrderType(orderType, instrumentTypes.updatedAt)
             else -> throw InvalidArgumentError()
         }
     }
@@ -72,20 +57,15 @@ object KtormStatisticTypeCriteriaParser {
         }
     }
 
-    private fun addConditionsToQuery(
-        query: Query,
-        statisticTypes: StatisticTypes,
-        instrumentTypes: InstrumentTypes,
-        criteria: Criteria
-    ): Query {
+    private fun addConditionsToQuery(query: Query, statisticTypes: StatisticTypes, criteria: Criteria): Query {
         criteria.filters.let {
             return when (it) {
                 is EmptyFilters -> query
-                is SingleFilter -> parseFilter(statisticTypes, instrumentTypes, it.filter)?.let { conditions ->
+                is SingleFilter -> parseFilter(statisticTypes, it.filter)?.let { conditions ->
                     query.where(conditions)
                 } ?: query
 
-                is MultipleFilters -> parseMultipleFilters(statisticTypes, instrumentTypes, it)?.let { conditions ->
+                is MultipleFilters -> parseMultipleFilters(statisticTypes, it)?.let { conditions ->
                     query.where(conditions)
                 } ?: query
             }
@@ -94,7 +74,6 @@ object KtormStatisticTypeCriteriaParser {
 
     private fun parseMultipleFilters(
         statisticTypes: StatisticTypes,
-        instrumentTypes: InstrumentTypes,
         filters: MultipleFilters
     ): ColumnDeclaring<Boolean>? {
         if (filters.isEmpty())
@@ -102,8 +81,8 @@ object KtormStatisticTypeCriteriaParser {
 
         val filterConditions = filters.filters.mapNotNull {
             when (it) {
-                is SingleFilter -> parseFilter(statisticTypes, instrumentTypes, it.filter)
-                is MultipleFilters -> parseMultipleFilters(statisticTypes, instrumentTypes, it)
+                is SingleFilter -> parseFilter(statisticTypes, it.filter)
+                is MultipleFilters -> parseMultipleFilters(statisticTypes, it)
                 else -> null
             }
         }
@@ -114,11 +93,7 @@ object KtormStatisticTypeCriteriaParser {
         }
     }
 
-    private fun parseFilter(
-        statisticTypes: StatisticTypes,
-        instrumentTypes: InstrumentTypes,
-        filter: Filter
-    ): ColumnDeclaring<Boolean>? {
+    private fun parseFilter(statisticTypes: StatisticTypes, filter: Filter): ColumnDeclaring<Boolean>? {
         val field = filter.field.value
         val value = filter.value.value
         val operator = filter.operator
@@ -180,53 +155,6 @@ object KtormStatisticTypeCriteriaParser {
                     FilterOperator.GTE -> statisticTypes.updatedAt greaterEq date
                     FilterOperator.LT -> statisticTypes.updatedAt less date
                     FilterOperator.LTE -> statisticTypes.updatedAt lessEq date
-                    else -> null
-                }
-            }
-
-            "instrumentType.id" -> {
-                when (operator) {
-                    FilterOperator.EQUAL -> instrumentTypes.id eq value
-                    FilterOperator.NOT_EQUAL -> instrumentTypes.id notEq value
-                    else -> null
-                }
-            }
-
-            "instrumentType.name" -> {
-                when (operator) {
-                    FilterOperator.EQUAL -> instrumentTypes.name eq value
-                    FilterOperator.NOT_EQUAL -> instrumentTypes.name notEq value
-                    FilterOperator.GT -> instrumentTypes.name greater value
-                    FilterOperator.GTE -> instrumentTypes.name greaterEq value
-                    FilterOperator.LT -> instrumentTypes.name less value
-                    FilterOperator.LTE -> instrumentTypes.name lessEq value
-                    FilterOperator.CONTAINS -> instrumentTypes.name like "%$value%"
-                    FilterOperator.NOT_CONTAINS -> instrumentTypes.name notLike "%$value%"
-                }
-            }
-
-            "instrumentType.createdAt" -> {
-                val date = LocalDateTime.from(Instant.parse(value))
-                when (operator) {
-                    FilterOperator.EQUAL -> instrumentTypes.createdAt eq date
-                    FilterOperator.NOT_EQUAL -> instrumentTypes.createdAt notEq date
-                    FilterOperator.GT -> instrumentTypes.createdAt greater date
-                    FilterOperator.GTE -> instrumentTypes.createdAt greaterEq date
-                    FilterOperator.LT -> instrumentTypes.createdAt less date
-                    FilterOperator.LTE -> instrumentTypes.createdAt lessEq date
-                    else -> null
-                }
-            }
-
-            "instrumentType.updatedAt" -> {
-                val date = LocalDateTime.from(Instant.parse(value))
-                when (operator) {
-                    FilterOperator.EQUAL -> instrumentTypes.updatedAt eq date
-                    FilterOperator.NOT_EQUAL -> instrumentTypes.updatedAt notEq date
-                    FilterOperator.GT -> instrumentTypes.updatedAt greater date
-                    FilterOperator.GTE -> instrumentTypes.updatedAt greaterEq date
-                    FilterOperator.LT -> instrumentTypes.updatedAt less date
-                    FilterOperator.LTE -> instrumentTypes.updatedAt lessEq date
                     else -> null
                 }
             }

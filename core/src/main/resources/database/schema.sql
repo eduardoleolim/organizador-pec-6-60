@@ -26,16 +26,6 @@ create table if not exists municipality
     constraint federalEntityId_Fk foreign key (federalEntityId) references federalEntity (federalEntityId)
 );
 
-create table if not exists instrumentType
-(
-    instrumentTypeId text    not null,
-    name             text    not null,
-    createdAt        integer not null,
-    updatedAt        integer,
-
-    constraint instrumentType_Pk primary key (instrumentTypeId)
-);
-
 create table if not exists statisticType
 (
     statisticTypeId text    not null,
@@ -50,31 +40,22 @@ create table if not exists statisticType
 
 create table if not exists agency
 (
-    agencyId    text    not null,
-    name        text    not null,
-    consecutive integer not null,
-    createdAt   integer not null,
-    updatedAt   integer,
-
-    constraint agencyId_Pk primary key (agencyId)
-);
-
-create table if not exists agency_municipality
-(
     agencyId        text    not null,
+    name            text    not null,
+    consecutive     integer not null,
     municipalityId  text    not null,
-    isOWner         integer not null,
+    createdAt       integer not null,
+    updatedAt       integer,
 
-    constraint agency_municipality_Unq unique (agencyId, municipalityId),
-    constraint agencyId_Fk foreign key (agencyId) references agency (agencyId),
-    constraint municipalityId_Fk foreign key (municipalityId) references municipality (municipalityId)
+    constraint agencyId_Pk primary key (agencyId),
+    constraint municipalityId_Fk foreign key (municipalityId) references municipality (municipalityId),
+    constraint consecutive_Unq unique (consecutive, municipalityId)
 );
 
 create table if not exists statisticType_agency
 (
     agencyId        text not null,
     statisticTypeId text not null,
-    intrumentTypeId text not null,
 
     constraint statisticType_agency_Unq unique (agencyId, statisticTypeId),
     constraint agencyId_Fk foreign key (agencyId) references agency (agencyId),
@@ -98,15 +79,12 @@ create table if not exists instrument
     saved            integer not null,
     createdAt        integer not null,
     updatedAt        integer,
-    instrumentTypeId text    not null,
     statisticTypeId  text    not null,
     municipalityId   text    not null,
     instrumentFileId text    not null,
 
     constraint instrument_Pk primary key (instrumentId),
-    constraint instrument_Unq unique (statisticYear, statisticMonth, consecutive, instrumentTypeId, statisticTypeId,
-                                      municipalityId),
-    constraint instrumentTypeId_Fk foreign key (instrumentTypeId) references instrumentType (instrumentTypeId),
+    constraint instrument_Unq unique (statisticYear, statisticMonth, consecutive, statisticTypeId, municipalityId),
     constraint statisticTypeId_Fk foreign key (statisticTypeId) references statisticType (statisticTypeId),
     constraint municipalityId_Fk foreign key (municipalityId) references municipality (municipalityId),
     constraint instrumentFileId_Fk foreign key (instrumentFileId) references instrumentFile (instrumentFileId)
