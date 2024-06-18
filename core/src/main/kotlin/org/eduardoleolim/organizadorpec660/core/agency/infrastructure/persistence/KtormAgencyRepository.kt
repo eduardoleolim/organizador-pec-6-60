@@ -11,7 +11,6 @@ import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.Age
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.StatisticTypesOfAgencies
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
-import org.ktorm.support.sqlite.bulkInsert
 import org.ktorm.support.sqlite.insertOrUpdate
 import java.time.LocalDateTime
 
@@ -83,7 +82,7 @@ class KtormAgencyRepository(private val database: Database) : AgencyRepository {
             agency.statisticTypeIds().forEach { statisticTypeId ->
                 database.insertOrUpdate(statisticTypesOfAgencies) {
                     set(it.agencyId, agency.id().toString())
-                    set(it.statisticTypeId, statisticTypeId.toString())
+                    set(it.statisticTypeId, statisticTypeId.value.toString())
 
                     onConflict(it.agencyId, it.statisticTypeId) {
                         doNothing()
