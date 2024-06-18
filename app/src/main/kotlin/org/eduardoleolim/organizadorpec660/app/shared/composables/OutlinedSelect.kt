@@ -10,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.input.pointer.PointerIcon
@@ -87,7 +88,7 @@ fun <T> OutlinedSelect(
                     }
 
                     (keyEvent.key == Key.Tab && keyEvent.type == KeyEventType.KeyDown) -> {
-                        focusManager.moveFocus(FocusDirection.Down)
+                        focusManager.moveFocus(FocusDirection.Next)
 
                         true
                     }
