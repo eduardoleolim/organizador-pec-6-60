@@ -20,6 +20,7 @@ class AgencyResponse(
         val id: String,
         val name: String,
         val keyCode: String,
+        val federalEntityId: String,
         val createdAt: Date,
         val updatedAt: Date?
     ) {
@@ -28,6 +29,7 @@ class AgencyResponse(
                 municipality.id().toString(),
                 municipality.name(),
                 municipality.keyCode(),
+                municipality.federalEntityId().toString(),
                 municipality.createdAt(),
                 municipality.updatedAt()
             )
