@@ -19,11 +19,11 @@ class AgencyCreator(
         municipalityId: String,
         statisticTypeIds: List<String>
     ) {
-        if (statisticTypeIds.isEmpty())
-            throw InvalidAgencyStatisticTypesError()
-
         if (existsMunicipality(municipalityId).not())
             throw MunicipalityNotFoundError(municipalityId)
+
+        if (statisticTypeIds.isEmpty())
+            throw InvalidAgencyStatisticTypesError()
 
         statisticTypeIds.forEach { statisticTypeId ->
             if (existsStatisticType(statisticTypeId).not())
@@ -46,8 +46,8 @@ class AgencyCreator(
         statisticTypeRepository.count(it) > 0
     }
 
-    private fun existsAnotherAgencySameConsecutive(consecutive: Int, municipalityOwnerId: String) =
-        AgencyCriteria.anotherConsecutive(consecutive, municipalityOwnerId).let {
-            municipalityRepository.count(it) > 0
+    private fun existsAnotherAgencySameConsecutive(consecutive: Int, municipalityId: String) =
+        AgencyCriteria.anotherConsecutive(consecutive, municipalityId).let {
+            agencyRepository.count(it) > 0
         }
 }
