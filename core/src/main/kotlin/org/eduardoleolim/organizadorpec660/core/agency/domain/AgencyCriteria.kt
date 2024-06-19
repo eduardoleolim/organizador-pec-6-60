@@ -1,6 +1,5 @@
 package org.eduardoleolim.organizadorpec660.core.agency.domain
 
-import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityFields
 import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.*
 
 enum class AgencyFields(val value: String) {
@@ -16,10 +15,10 @@ enum class AgencyFields(val value: String) {
 object AgencyCriteria {
     fun idCriteria(id: String) = Criteria(SingleFilter.equal(AgencyFields.Id.value, id), Orders.none(), 1, null)
 
-    fun anotherConsecutive(consecutive: Int, municipalityOwnerId: String) = Criteria(
+    fun anotherConsecutive(consecutive: String, municipalityOwnerId: String) = Criteria(
         AndFilters(
             listOf(
-                SingleFilter.equal(AgencyFields.Consecutive.value, consecutive.toString()),
+                SingleFilter.equal(AgencyFields.Consecutive.value, consecutive),
                 SingleFilter.equal(AgencyFields.MunicipalityId.value, municipalityOwnerId)
             )
         ),

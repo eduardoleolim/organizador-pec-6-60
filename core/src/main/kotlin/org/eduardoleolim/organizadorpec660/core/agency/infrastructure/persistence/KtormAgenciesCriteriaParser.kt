@@ -129,15 +129,15 @@ class KtormAgenciesCriteriaParser(
             }
 
             AgencyFields.Consecutive -> {
-                val consecutive = value.toInt()
                 when (operator) {
-                    FilterOperator.EQUAL -> agencies.consecutive eq consecutive
-                    FilterOperator.NOT_EQUAL -> agencies.consecutive notEq consecutive
-                    FilterOperator.GT -> agencies.consecutive greater consecutive
-                    FilterOperator.GTE -> agencies.consecutive greaterEq consecutive
-                    FilterOperator.LT -> agencies.consecutive less consecutive
-                    FilterOperator.LTE -> agencies.consecutive lessEq consecutive
-                    else -> null
+                    FilterOperator.EQUAL -> agencies.consecutive eq value
+                    FilterOperator.NOT_EQUAL -> agencies.consecutive notEq value
+                    FilterOperator.GT -> agencies.consecutive greater value
+                    FilterOperator.GTE -> agencies.consecutive greaterEq value
+                    FilterOperator.LT -> agencies.consecutive less value
+                    FilterOperator.LTE -> agencies.consecutive lessEq value
+                    FilterOperator.CONTAINS -> agencies.consecutive like "%$value%"
+                    FilterOperator.NOT_CONTAINS -> agencies.consecutive notLike "%$value%"
                 }
             }
 

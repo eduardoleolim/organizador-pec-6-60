@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 interface Agency : Entity<Agency> {
     val id: String
     val name: String
-    val consecutive: Int
+    val consecutive: String
     val municipalityId: String
     val createdAt: LocalDateTime
     val updatedAt: LocalDateTime?
@@ -16,7 +16,7 @@ interface Agency : Entity<Agency> {
 class Agencies(alias: String? = null) : Table<Agency>("agency", alias) {
     val id = varchar("agencyId").primaryKey().bindTo { it.id }
     val name = varchar("name").bindTo { it.name }
-    val consecutive = int("consecutive").bindTo { it.consecutive }
+    val consecutive = varchar("consecutive").bindTo { it.consecutive }
     val municipalityId = varchar("municipalityId").bindTo { it.municipalityId }
     val createdAt = datetime("createdAt").bindTo { it.createdAt }
     val updatedAt = datetime("updatedAt").bindTo { it.updatedAt }

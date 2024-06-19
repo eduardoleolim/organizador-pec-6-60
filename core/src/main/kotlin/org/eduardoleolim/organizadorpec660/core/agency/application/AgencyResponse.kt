@@ -10,7 +10,7 @@ import java.util.*
 class AgencyResponse(
     val id: String,
     val name: String,
-    val consecutive: Int,
+    val consecutive: String,
     val municipality: MunicipalityResponse,
     val statisticTypes: List<StatisticTypeResponse>,
     val createdAt: Date,

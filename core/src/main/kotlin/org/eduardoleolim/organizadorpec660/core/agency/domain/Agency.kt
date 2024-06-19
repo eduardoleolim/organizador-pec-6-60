@@ -16,7 +16,7 @@ class Agency private constructor(
     companion object {
         fun create(
             name: String,
-            consecutive: Int,
+            consecutive: String,
             municipalityId: String,
             statisticTypeIds: List<String>
         ): Agency {
@@ -43,7 +43,7 @@ class Agency private constructor(
         fun from(
             id: String,
             name: String,
-            consecutive: Int,
+            consecutive: String,
             municipalityId: String,
             statisticTypeIds: List<String>,
             createdAt: Date,
@@ -94,7 +94,7 @@ class Agency private constructor(
         this.updatedAt = AgencyUpdateDate.now()
     }
 
-    fun changeConsecutive(consecutive: Int) {
+    fun changeConsecutive(consecutive: String) {
         this.consecutive = AgencyConsecutive(consecutive)
         this.updatedAt = AgencyUpdateDate.now()
     }
@@ -147,13 +147,13 @@ data class AgencyName(val value: String) {
     }
 }
 
-data class AgencyConsecutive(val value: Int) {
+data class AgencyConsecutive(val value: String) {
     init {
         validate()
     }
 
     private fun validate() {
-        if (value <= 0) {
+        if (Regex("[0-9]{1,4}").matches(value).not()) {
             throw InvalidAgencyConsecutiveError(value)
         }
     }

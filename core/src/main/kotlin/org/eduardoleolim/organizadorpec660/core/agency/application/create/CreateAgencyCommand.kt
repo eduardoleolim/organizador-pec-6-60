@@ -4,18 +4,19 @@ import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.Comman
 
 class CreateAgencyCommand(
     name: String,
-    private val consecutive: Int,
+    consecutive: String,
     private val municipalityId: String,
     statisticTypeIds: List<String>
 ) : Command {
     private val name = name.trim().uppercase()
+    private val consecutive = consecutive.trim()
     private val statisticTypeIds = statisticTypeIds.distinct()
 
     fun name(): String {
         return name
     }
 
-    fun consecutive(): Int {
+    fun consecutive(): String {
         return consecutive
     }
 

@@ -15,7 +15,7 @@ class AgencyCreator(
 ) {
     fun create(
         name: String,
-        consecutive: Int,
+        consecutive: String,
         municipalityId: String,
         statisticTypeIds: List<String>
     ) {
@@ -46,7 +46,7 @@ class AgencyCreator(
         statisticTypeRepository.count(it) > 0
     }
 
-    private fun existsAnotherAgencySameConsecutive(consecutive: Int, municipalityId: String) =
+    private fun existsAnotherAgencySameConsecutive(consecutive: String, municipalityId: String) =
         AgencyCriteria.anotherConsecutive(consecutive, municipalityId).let {
             agencyRepository.count(it) > 0
         }
