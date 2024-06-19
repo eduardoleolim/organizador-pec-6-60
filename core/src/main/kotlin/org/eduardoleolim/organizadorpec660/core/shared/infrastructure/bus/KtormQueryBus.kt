@@ -10,7 +10,7 @@ import org.eduardoleolim.organizadorpec660.core.statisticType.infrastructure.bus
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 
-class KtormQueryBus(database: Database) : QueryBus {
+class KtormQueryBus(database: Database, private val instrumentsPath: String) : QueryBus {
     private val context = KtormAppKoinContext(database)
 
     private val queryHandlers = HashMap<KClass<out Query>, QueryHandler<out Query, out Response>>().apply {

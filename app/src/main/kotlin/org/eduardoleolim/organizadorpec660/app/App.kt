@@ -34,7 +34,6 @@ import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.Comman
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.bus.KtormCommandBus
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.bus.KtormQueryBus
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.SqliteKtormDatabase
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import java.awt.Dimension
@@ -47,7 +46,8 @@ enum class SystemTheme {
 class App(
     private val databasePath: String,
     private var databasePassword: String,
-    private val databaseExtensionPath: String
+    private val databaseExtensionPath: String,
+    private val instrumentsPath: String
 ) {
     fun start() = application {
         var initializeApp by remember { mutableStateOf(SqliteKtormDatabase.exists(databasePath)) }
@@ -68,7 +68,6 @@ class App(
         }
     }
 
-    @OptIn(ExperimentalResourceApi::class)
     @Composable
     private fun MainWindow(onCloseRequest: () -> Unit) {
         val state = rememberWindowState()
@@ -79,10 +78,10 @@ class App(
             File(databaseExtensionPath).listFiles()?.map { it.absolutePath } ?: emptyList()
         }
         val commandBus: CommandBus = remember {
-            KtormCommandBus(SqliteKtormDatabase.connect(databasePath, databasePassword, sqliteExtensions))
+            KtormCommandBus(SqliteKtormDatabase.connect(databasePath, databasePassword, sqliteExtensions), instrumentsPath)
         }
         val queryBus = remember {
-            KtormQueryBus(SqliteKtormDatabase.connectReadOnly(databasePath, databasePassword, sqliteExtensions))
+            KtormQueryBus(SqliteKtormDatabase.connectReadOnly(databasePath, databasePassword, sqliteExtensions), instrumentsPath)
         }
 
         AppTheme(
@@ -136,7 +135,6 @@ class App(
         }
     }
 
-    @OptIn(ExperimentalResourceApi::class)
     @Composable
     private fun ConfigWindow(onCloseRequest: () -> Unit, onPasswordSet: (String) -> Unit) {
         val state = rememberWindowState()

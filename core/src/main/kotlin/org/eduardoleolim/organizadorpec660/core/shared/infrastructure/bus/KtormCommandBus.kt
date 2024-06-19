@@ -9,7 +9,7 @@ import org.eduardoleolim.organizadorpec660.core.statisticType.infrastructure.bus
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 
-class KtormCommandBus(database: Database) : CommandBus {
+class KtormCommandBus(database: Database, private val instrumentsPath: String) : CommandBus {
     private val context = KtormAppKoinContext(database)
 
     private val commandHandlers = HashMap<KClass<out Command>, CommandHandler<out Command>>().apply {
