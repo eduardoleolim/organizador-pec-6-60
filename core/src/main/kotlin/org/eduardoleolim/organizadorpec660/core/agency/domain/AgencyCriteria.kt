@@ -44,7 +44,7 @@ object AgencyCriteria {
             } ?: EmptyFilters(),
             orders?.let {
                 Orders.fromValues(orders)
-            } ?: Orders(listOf(Order.asc(FederalEntityFields.KeyCode.value))),
+            } ?: Orders(listOf(Order.asc(AgencyFields.Name.value))),
             limit,
             offset
         )
