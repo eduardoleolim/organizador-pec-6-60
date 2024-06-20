@@ -1,34 +1,47 @@
 package org.eduardoleolim.organizadorpec660.app.agency.views
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
+import com.seanproctor.datatable.paging.rememberPaginatedDataTableState
 import org.eduardoleolim.organizadorpec660.app.agency.model.AgencyScreenModel
 import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
 import org.eduardoleolim.organizadorpec660.app.generated.resources.agencies
+import org.eduardoleolim.organizadorpec660.app.shared.composables.reset
+import org.eduardoleolim.organizadorpec660.core.agency.application.AgencyResponse
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 
 class AgencyScreen(private val queryBus: QueryBus, private val commandBus: CommandBus) : Screen {
-    @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun Content() {
         val screenModel = rememberScreenModel { AgencyScreenModel(queryBus, commandBus) }
+        var showDeleteModal by remember { mutableStateOf(false) }
+        var showFormModal by remember { mutableStateOf(false) }
+        var selectedAgency by remember { mutableStateOf<AgencyResponse?>(null) }
+        val pageSizes = remember { listOf(10, 25, 50, 100) }
+        val state = rememberPaginatedDataTableState(pageSizes.first())
+        var searchValue by remember { mutableStateOf("") }
+
+        fun resetView() {
+            searchValue = ""
+            state.reset(pageSizes.first())
+            screenModel.searchAgencies(searchValue, null, state.pageSize, state.pageIndex * state.pageSize)
+            showDeleteModal = false
+            showFormModal = false
+            selectedAgency = null
+        }
 
         Column(
             modifier = Modifier.padding(24.dp)
@@ -47,12 +60,12 @@ class AgencyScreen(private val queryBus: QueryBus, private val commandBus: Comma
                     style = MaterialTheme.typography.titleLarge
                 )
 
-                Spacer(
-                    modifier = Modifier.weight(1.0f)
-                )
+                Spacer(modifier = Modifier.weight(1.0f))
 
                 SmallFloatingActionButton(
-                    onClick = { },
+                    onClick = {
+                        showFormModal = true
+                    },
                     containerColor = MaterialTheme.colorScheme.secondaryContainer,
                     contentColor = MaterialTheme.colorScheme.secondary
                 ) {
@@ -63,6 +76,40 @@ class AgencyScreen(private val queryBus: QueryBus, private val commandBus: Comma
                 }
             }
 
+            AgenciesTable(
+                modifier = Modifier.fillMaxSize(),
+                value = searchValue,
+                onValueChange = { searchValue = it },
+                pageSizes = pageSizes,
+                state = state,
+                data = screenModel.agencies,
+                onSearch = { search, pageIndex, pageSize, orderBy, isAscending ->
+                    val orders = orderBy?.let {
+                        val orderType = if (isAscending) "ASC" else "DESC"
+                        arrayOf(hashMapOf("orderBy" to orderBy, "orderType" to orderType))
+                    }
+
+                    screenModel.searchAgencies(search, orders, pageSize, pageIndex * pageSize)
+                },
+                onDeleteRequest = { agency ->
+                    selectedAgency = agency
+                    showDeleteModal = true
+                },
+                onEditRequest = { agency ->
+                    selectedAgency = agency
+                    showFormModal = true
+                }
+            )
+
+            if (showFormModal) {
+                screenModel.resetForm()
+                AgencyFormModal(
+                    screenModel = screenModel,
+                    agency = selectedAgency,
+                    onDismissRequest = { resetView() },
+                    onSuccess = { resetView() }
+                )
+            }
         }
     }
 }

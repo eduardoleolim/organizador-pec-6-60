@@ -101,4 +101,24 @@
 
     <!-- Agency -->
     <string name="agencies">Agencies</string>
+    <string name="ag_name">Name</string>
+    <string name="ag_consecutive">Consecutive</string>
+    <string name="ag_municipality">Municipality</string>
+    <string name="ag_created_at">Created at</string>
+    <string name="ag_updated_at">Updated at</string>
+    <string name="ag_delete_title">Delete agency?</string>
+    <string name="ag_delete_text">The agency %1$s will be permanently removed from application</string>
+    <string name="ag_form_add_title">Add agency</string>
+    <string name="ag_form_edit_title">Edit agency</string>
+    <string name="ag_form_general">General data</string>
+    <string name="ag_form_federal_entity">Federal Entity</string>
+    <string name="ag_form_municipality">Municipality</string>
+    <string name="ag_form_statistic_types">Statistic Types</string>
+    <string name="ag_form_statistic_type">Statistic Type</string>
+    <string name="ag_form_name_required">Name required</string>
+    <string name="ag_form_consecutive_required">Consecutive required</string>
+    <string name="ag_form_municipality_required">Municipality required</string>
+    <string name="ag_form_statistic_type_required">Statistic Type required</string>
+    <string name="ag_form_name_format">The name cannot be empty</string>
+    <string name="ag_form_consecutive_format">The consecutive must be bigger than zero</string>
 </resources>
