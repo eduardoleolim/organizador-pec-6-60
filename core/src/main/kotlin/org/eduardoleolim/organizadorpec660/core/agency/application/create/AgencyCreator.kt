@@ -47,7 +47,7 @@ class AgencyCreator(
     }
 
     private fun existsAnotherAgencySameConsecutive(consecutive: String, municipalityId: String) =
-        AgencyCriteria.anotherConsecutive(consecutive, municipalityId).let {
+        AgencyCriteria.anotherConsecutiveCriteria(consecutive, municipalityId).let {
             agencyRepository.count(it) > 0
         }
 }

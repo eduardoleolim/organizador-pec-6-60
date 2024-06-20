@@ -17,7 +17,7 @@ enum class AgencyFields(val value: String) {
 object AgencyCriteria {
     fun idCriteria(id: String) = Criteria(SingleFilter.equal(AgencyFields.Id.value, id), Orders.none(), 1, null)
 
-    fun anotherConsecutive(consecutive: String, municipalityOwnerId: String) = Criteria(
+    fun anotherConsecutiveCriteria(consecutive: String, municipalityOwnerId: String) = Criteria(
         AndFilters(
             listOf(
                 SingleFilter.equal(AgencyFields.Consecutive.value, consecutive),
