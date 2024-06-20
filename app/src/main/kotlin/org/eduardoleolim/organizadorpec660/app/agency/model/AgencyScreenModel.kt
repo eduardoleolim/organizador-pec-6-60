@@ -12,6 +12,7 @@ import org.eduardoleolim.organizadorpec660.app.agency.data.EmptyAgencyDataExcept
 import org.eduardoleolim.organizadorpec660.core.agency.application.AgenciesResponse
 import org.eduardoleolim.organizadorpec660.core.agency.application.create.CreateAgencyCommand
 import org.eduardoleolim.organizadorpec660.core.agency.application.searchByTerm.SearchAgenciesByTermQuery
+import org.eduardoleolim.organizadorpec660.core.agency.application.update.UpdateAgencyCommand
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntitiesResponse
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.searchByTerm.SearchFederalEntitiesByTermQuery
@@ -147,6 +148,38 @@ class AgencyScreenModel(private val queryBus: QueryBus, private val commandBus: 
             try {
                 commandBus.dispatch(CreateAgencyCommand(name, consecutive, municipalityId!!, statisticTypesId))
                 formState = FormState.SuccessCreate
+            } catch (e: Exception) {
+                formState = FormState.Error(e.cause!!)
+            }
+        }
+    }
+
+    fun updateAgency(agencyId: String, name: String, consecutive: String, municipalityId: String?, statisticTypesId: List<String>) {
+        screenModelScope.launch(Dispatchers.IO) {
+            formState = FormState.InProgress
+            delay(500)
+
+            val isNameEmpty = name.isEmpty()
+            val isConsecutiveEmpty = name.isEmpty()
+            val isMunicipalityEmpty = municipalityId.isNullOrEmpty()
+            val isStatisticTypesEmpty = statisticTypesId.isEmpty()
+
+            if (isNameEmpty || isConsecutiveEmpty || isMunicipalityEmpty || isStatisticTypesEmpty) {
+                formState = FormState.Error(
+                    EmptyAgencyDataException(
+                        isNameEmpty,
+                        isConsecutiveEmpty,
+                        isMunicipalityEmpty,
+                        isStatisticTypesEmpty
+                    )
+                )
+
+                return@launch
+            }
+
+            try {
+                commandBus.dispatch(UpdateAgencyCommand(agencyId, name, consecutive, municipalityId!!, statisticTypesId))
+                formState = FormState.SuccessEdit
             } catch (e: Exception) {
                 formState = FormState.Error(e.cause!!)
             }

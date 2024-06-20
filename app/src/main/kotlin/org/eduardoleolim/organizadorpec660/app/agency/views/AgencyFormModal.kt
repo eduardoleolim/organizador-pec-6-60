@@ -77,13 +77,13 @@ fun AgencyScreen.AgencyFormModal(
         screenModel.searchAllFederalEntities()
         screenModel.searchAllStatisticTypes()
 
-        delay(100)
+        delay(200)
 
         agencyFederalEntityId?.let { id ->
             federalEntityIndex = screenModel.federalEntities.indexOfFirst { it.id == id }
 
             screenModel.searchMunicipalities(id)
-            delay(100)
+            delay(200)
         }
 
         agencyMunicipalityId?.let { id ->
@@ -357,6 +357,14 @@ fun AgencyScreen.AgencyFormModal(
                 onClick = {
                     if (agencyId == null) {
                         screenModel.createAgency(name, consecutive, municipalityId, statisticTypes.map { it.id })
+                    } else {
+                        screenModel.updateAgency(
+                            agencyId,
+                            name,
+                            consecutive,
+                            municipalityId,
+                            statisticTypes.map { it.id }
+                        )
                     }
                 }
             ) {
