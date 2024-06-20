@@ -3,6 +3,9 @@ package org.eduardoleolim.organizadorpec660.core.agency.infrastructure.bus
 import org.eduardoleolim.organizadorpec660.core.agency.application.create.AgencyCreator
 import org.eduardoleolim.organizadorpec660.core.agency.application.create.CreateAgencyCommand
 import org.eduardoleolim.organizadorpec660.core.agency.application.create.CreateAgencyCommandHandler
+import org.eduardoleolim.organizadorpec660.core.agency.application.update.AgencyUpdater
+import org.eduardoleolim.organizadorpec660.core.agency.application.update.UpdateAgencyCommand
+import org.eduardoleolim.organizadorpec660.core.agency.application.update.UpdateAgencyCommandHandler
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.Command
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandHandler
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.bus.KtormCommandHandlerDecorator
@@ -17,11 +20,19 @@ class KtormAgencyCommandHandlers(context: KtormAppKoinContext) : KtormAppKoinCom
 
     val handlers: Map<KClass<out Command>, CommandHandler<out Command>> = mapOf(
         CreateAgencyCommand::class to createCommandHandler(),
+        UpdateAgencyCommand::class to updateCommnadHandler()
     )
 
     private fun createCommandHandler(): CommandHandler<out Command> {
         val creator: AgencyCreator by inject()
         val commandHandler = CreateAgencyCommandHandler(creator)
+
+        return KtormCommandHandlerDecorator(database, commandHandler)
+    }
+
+    private fun updateCommnadHandler(): CommandHandler<out Command> {
+        val updater: AgencyUpdater by inject()
+        val commandHandler = UpdateAgencyCommandHandler(updater)
 
         return KtormCommandHandlerDecorator(database, commandHandler)
     }

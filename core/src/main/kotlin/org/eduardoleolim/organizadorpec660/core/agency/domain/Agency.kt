@@ -121,6 +121,18 @@ class Agency private constructor(
             this.updatedAt = AgencyUpdateDate.now()
         }
     }
+
+    fun replaceStatisticTypeIds(statisticTypeIds: List<String>) {
+        if (statisticTypeIds.isEmpty())
+            throw InvalidAgencyStatisticTypesError()
+
+        this.statisticTypeIds.apply {
+            clear()
+            addAll(statisticTypeIds.map { StatisticTypeId.fromString(it) })
+        }
+
+        updatedAt = AgencyUpdateDate.now()
+    }
 }
 
 data class AgencyId(val value: UUID) {
