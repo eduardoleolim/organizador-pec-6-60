@@ -21,11 +21,9 @@ import org.eduardoleolim.organizadorpec660.app.shared.composables.reset
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 
 class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus: CommandBus) : Screen {
-    @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun Content() {
         val screenModel = rememberScreenModel { FederalEntityScreenModel(queryBus, commandBus) }

@@ -28,13 +28,11 @@ import org.eduardoleolim.organizadorpec660.app.generated.resources.*
 import org.eduardoleolim.organizadorpec660.app.window.LocalWindow
 import org.eduardoleolim.organizadorpec660.core.auth.domain.InvalidAuthCredentialsError
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import java.awt.Dimension
 
 class AuthScreen(private val queryBus: QueryBus) : Screen {
-    @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
@@ -73,7 +71,6 @@ class AuthScreen(private val queryBus: QueryBus) : Screen {
         }
     }
 
-    @OptIn(ExperimentalResourceApi::class)
     @Composable
     private fun AuthForm(screenModel: AuthScreenModel) {
         var username by remember { mutableStateOf("") }

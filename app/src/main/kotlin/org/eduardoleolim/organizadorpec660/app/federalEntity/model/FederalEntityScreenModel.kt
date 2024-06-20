@@ -62,7 +62,6 @@ class FederalEntityScreenModel(private val queryBus: QueryBus, private val comma
                 federalEntities = queryBus.ask(query)
             } catch (e: Exception) {
                 federalEntities = FederalEntitiesResponse(emptyList(), 0, null, null)
-                println(e.message)
             }
         }
     }

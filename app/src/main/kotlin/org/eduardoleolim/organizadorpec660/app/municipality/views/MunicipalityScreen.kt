@@ -21,11 +21,9 @@ import org.eduardoleolim.organizadorpec660.app.shared.composables.reset
 import org.eduardoleolim.organizadorpec660.core.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 
 class MunicipalityScreen(private val queryBus: QueryBus, private val commandBus: CommandBus) : Screen {
-    @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun Content() {
         val screenModel = rememberScreenModel { MunicipalityScreenModel(queryBus, commandBus) }

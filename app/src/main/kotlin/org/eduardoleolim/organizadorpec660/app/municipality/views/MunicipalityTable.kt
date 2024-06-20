@@ -29,11 +29,10 @@ import org.eduardoleolim.organizadorpec660.core.federalEntity.application.Federa
 import org.eduardoleolim.organizadorpec660.core.municipality.application.MunicipalitiesResponse
 import org.eduardoleolim.organizadorpec660.core.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorpec660.core.shared.domain.toLocalDateTime
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 import java.time.format.DateTimeFormatter
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalResourceApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MunicipalityScreen.MunicipalitiesTable(
     screenModel: MunicipalityScreenModel,

@@ -29,7 +29,6 @@ import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
 import org.eduardoleolim.organizadorpec660.app.generated.resources.table_pagination
 import org.eduardoleolim.organizadorpec660.app.generated.resources.table_search
 import org.eduardoleolim.organizadorpec660.app.generated.resources.table_show_items
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.min
 
@@ -45,7 +44,6 @@ fun PaginatedDataTableState.reset(pageSize: Int = 10) {
     this.count = 0
 }
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun PaginatedDataTable(
     total: Int,

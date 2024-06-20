@@ -11,10 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.eduardoleolim.organizadorpec660.app.generated.resources.*
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ErrorDialog(
     modifier: Modifier = Modifier,
@@ -54,7 +52,6 @@ fun ErrorDialog(
     )
 }
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun QuestionDialog(
     modifier: Modifier = Modifier,

@@ -15,10 +15,8 @@ import org.eduardoleolim.organizadorpec660.app.municipality.model.DeleteState
 import org.eduardoleolim.organizadorpec660.app.municipality.model.MunicipalityScreenModel
 import org.eduardoleolim.organizadorpec660.app.shared.composables.QuestionDialog
 import org.eduardoleolim.organizadorpec660.core.municipality.application.MunicipalityResponse
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun MunicipalityScreen.MunicipalityDeleteModal(
     screenModel: MunicipalityScreenModel,

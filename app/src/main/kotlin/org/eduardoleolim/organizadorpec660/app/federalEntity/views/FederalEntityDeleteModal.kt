@@ -17,10 +17,8 @@ import org.eduardoleolim.organizadorpec660.app.shared.composables.ErrorDialog
 import org.eduardoleolim.organizadorpec660.app.shared.composables.QuestionDialog
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityHasMunicipalitiesError
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun FederalEntityScreen.FederalEntityDeleteModal(
     screenModel: FederalEntityScreenModel,

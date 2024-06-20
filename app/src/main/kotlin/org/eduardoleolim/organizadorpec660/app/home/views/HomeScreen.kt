@@ -7,11 +7,13 @@ import androidx.compose.material.icons.automirrored.filled.ListAlt
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.automirrored.filled.MenuOpen
 import androidx.compose.material.icons.automirrored.outlined.ListAlt
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Apartment
+import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.Apartment
 import androidx.compose.material.icons.outlined.BarChart
 import androidx.compose.material.icons.outlined.Description
-import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -27,7 +29,6 @@ import org.eduardoleolim.organizadorpec660.app.generated.resources.*
 import org.eduardoleolim.organizadorpec660.app.home.model.HomeScreenModel
 import org.eduardoleolim.organizadorpec660.app.window.LocalWindow
 import org.eduardoleolim.organizadorpec660.core.auth.application.AuthUserResponse
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 import java.awt.Dimension
 
@@ -40,7 +41,6 @@ enum class MenuTab {
 }
 
 class HomeScreen(private val user: AuthUserResponse) : Screen {
-    @OptIn(ExperimentalResourceApi::class)
     private val items: List<Triple<String, Pair<ImageVector, ImageVector>, MenuTab>>
         @Composable get() = listOf(
             Triple(
@@ -70,7 +70,6 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
             )
         )
 
-    @OptIn(ExperimentalResourceApi::class)
     @Composable
     private fun ModalNavigationDrawerContent(
         items: List<Triple<String, Pair<ImageVector, ImageVector>, MenuTab>>,
@@ -131,7 +130,6 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
         }
     }
 
-    @OptIn(ExperimentalResourceApi::class)
     @Composable
     private fun NavigationRailContent(
         items: List<Triple<String, Pair<ImageVector, ImageVector>, MenuTab>>,

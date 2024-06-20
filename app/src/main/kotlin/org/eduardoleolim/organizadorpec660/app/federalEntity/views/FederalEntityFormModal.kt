@@ -18,10 +18,8 @@ import org.eduardoleolim.organizadorpec660.core.federalEntity.application.Federa
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityAlreadyExistsError
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.InvalidFederalEntityKeyCodeError
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.InvalidFederalEntityNameError
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun FederalEntityScreen.FederalEntityFormModal(
     screenModel: FederalEntityScreenModel,
