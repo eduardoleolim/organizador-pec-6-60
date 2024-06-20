@@ -7,6 +7,8 @@ enum class AgencyFields(val value: String) {
     Name("name"),
     Consecutive("consecutive"),
     MunicipalityId("municipality.id"),
+    MunicipalityKeyCode("municipality.keyCode"),
+    MunicipalityName("municipality.name"),
     CreatedAt("createdAt"),
     UpdatedAt("updatedAt")
 }
@@ -38,7 +40,9 @@ object AgencyCriteria {
                 OrFilters(
                     listOf(
                         SingleFilter.contains(AgencyFields.Name.value, it),
-                        SingleFilter.contains(AgencyFields.Consecutive.value, it)
+                        SingleFilter.contains(AgencyFields.Consecutive.value, it),
+                        SingleFilter.contains(AgencyFields.MunicipalityName.value, it),
+                        SingleFilter.contains(AgencyFields.MunicipalityKeyCode.value, it)
                     )
                 )
             } ?: EmptyFilters(),

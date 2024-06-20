@@ -4,6 +4,7 @@ import org.eduardoleolim.organizadorpec660.core.agency.domain.AgencyFields
 import org.eduardoleolim.organizadorpec660.core.shared.domain.InvalidArgumentError
 import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.*
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.Agencies
+import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.Municipalities
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.StatisticTypesOfAgencies
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
@@ -16,10 +17,12 @@ import java.time.LocalDateTime
 class KtormAgenciesCriteriaParser(
     private val database: Database,
     private val agencies: Agencies,
+    private val municipalities: Municipalities,
     private val statisticTypesOfAgencies: StatisticTypesOfAgencies
 ) {
     fun selectQuery(criteria: Criteria): Query {
         return database.from(agencies)
+            .innerJoin(municipalities, on = agencies.municipalityId eq municipalities.id)
             .leftJoin(statisticTypesOfAgencies, on = agencies.id eq statisticTypesOfAgencies.agencyId)
             .selectDistinct(agencies.columns).let {
                 addOrdersToQuery(it, criteria)
@@ -56,6 +59,8 @@ class KtormAgenciesCriteriaParser(
             AgencyFields.CreatedAt -> parseOrderType(orderType, agencies.createdAt)
             AgencyFields.UpdatedAt -> parseOrderType(orderType, agencies.updatedAt)
             AgencyFields.MunicipalityId -> parseOrderType(orderType, agencies.municipalityId)
+            AgencyFields.MunicipalityKeyCode -> parseOrderType(orderType, municipalities.keyCode)
+            AgencyFields.MunicipalityName -> parseOrderType(orderType, municipalities.name)
             null -> throw InvalidArgumentError()
         }
     }
@@ -171,6 +176,29 @@ class KtormAgenciesCriteriaParser(
                 when (operator) {
                     FilterOperator.EQUAL -> agencies.municipalityId eq value
                     FilterOperator.NOT_EQUAL -> agencies.municipalityId notEq value
+                    else -> null
+                }
+            }
+
+            AgencyFields.MunicipalityKeyCode -> {
+                when (operator) {
+                    FilterOperator.EQUAL -> municipalities.keyCode eq value
+                    FilterOperator.NOT_EQUAL -> municipalities.keyCode notEq value
+                    FilterOperator.GT -> municipalities.keyCode greater value
+                    FilterOperator.GTE -> municipalities.keyCode greaterEq value
+                    FilterOperator.LT -> municipalities.keyCode less value
+                    FilterOperator.LTE -> municipalities.keyCode lessEq value
+                    FilterOperator.CONTAINS -> municipalities.keyCode like "%$value%"
+                    FilterOperator.NOT_CONTAINS -> municipalities.keyCode notLike "%$value%"
+                }
+            }
+
+            AgencyFields.MunicipalityName -> {
+                when (operator) {
+                    FilterOperator.EQUAL -> municipalities.name eq value
+                    FilterOperator.NOT_EQUAL -> municipalities.name notEq value
+                    FilterOperator.CONTAINS -> municipalities.name like "%$value%"
+                    FilterOperator.NOT_CONTAINS -> municipalities.name notLike "%$value%"
                     else -> null
                 }
             }

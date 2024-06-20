@@ -8,6 +8,7 @@ import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.Criteria
 import org.eduardoleolim.organizadorpec660.core.shared.domain.toDate
 import org.eduardoleolim.organizadorpec660.core.shared.domain.toLocalDateTime
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.Agencies
+import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.Municipalities
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.StatisticTypesOfAgencies
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
@@ -16,8 +17,9 @@ import java.time.LocalDateTime
 
 class KtormAgencyRepository(private val database: Database) : AgencyRepository {
     private val agencies = Agencies("ac")
+    private val municipalities = Municipalities("m")
     private val statisticTypesOfAgencies = StatisticTypesOfAgencies("s_ac")
-    private val criteriaParser = KtormAgenciesCriteriaParser(database, agencies, statisticTypesOfAgencies)
+    private val criteriaParser = KtormAgenciesCriteriaParser(database, agencies, municipalities, statisticTypesOfAgencies)
 
     override fun matching(criteria: Criteria): List<Agency> {
         val query = criteriaParser.selectQuery(criteria)
