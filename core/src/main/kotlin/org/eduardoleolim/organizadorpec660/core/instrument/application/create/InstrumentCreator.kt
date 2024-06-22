@@ -1,5 +1,8 @@
 package org.eduardoleolim.organizadorpec660.core.instrument.application.create
 
+import org.eduardoleolim.organizadorpec660.core.agency.domain.AgencyCriteria
+import org.eduardoleolim.organizadorpec660.core.agency.domain.AgencyNotFoundError
+import org.eduardoleolim.organizadorpec660.core.agency.domain.AgencyRepository
 import org.eduardoleolim.organizadorpec660.core.instrument.domain.Instrument
 import org.eduardoleolim.organizadorpec660.core.instrument.domain.InstrumentFile
 import org.eduardoleolim.organizadorpec660.core.instrument.domain.InstrumentFileRepository
@@ -14,6 +17,7 @@ import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTy
 class InstrumentCreator(
     private val instrumentRepository: InstrumentRepository,
     private val instrumentFileRepository: InstrumentFileRepository,
+    private val agencyRepository: AgencyRepository,
     private val statisticTypeRepository: StatisticTypeRepository,
     private val municipalityRepository: MunicipalityRepository
 ) {
@@ -21,11 +25,14 @@ class InstrumentCreator(
         statisticYear: Int,
         statisticMonth: Int,
         consecutive: String,
-        instrumentTypeId: String,
+        agencyId: String,
         statisticTypeId: String,
         municipalityId: String,
         file: ByteArray
     ) {
+        if (existsAgency(agencyId).not())
+            throw AgencyNotFoundError(agencyId)
+
         if (existsStatisticType(statisticTypeId).not())
             throw StatisticTypeNotFoundError(statisticTypeId)
 
@@ -38,13 +45,17 @@ class InstrumentCreator(
             statisticMonth,
             consecutive,
             instrumentFile.id().toString(),
-            instrumentTypeId,
+            agencyId,
             statisticTypeId,
             municipalityId
         )
 
         instrumentRepository.save(instrument)
         instrumentFileRepository.save(instrumentFile)
+    }
+
+    private fun existsAgency(agencyId: String) = AgencyCriteria.idCriteria(agencyId).let {
+        agencyRepository.count(it) > 0
     }
 
     private fun existsStatisticType(statisticTypeId: String) =

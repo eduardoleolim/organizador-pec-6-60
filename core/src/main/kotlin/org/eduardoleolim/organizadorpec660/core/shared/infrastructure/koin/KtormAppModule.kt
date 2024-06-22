@@ -64,7 +64,7 @@ object KtormAppModule {
         single { FederalEntityUpdater(get()) }
 
         // Instrument services
-        single { InstrumentCreator(get(), get(), get(), get()) }
+        single { InstrumentCreator(get(), get(), get(), get(), get()) }
         single { InstrumentUpdater(get(), get(), get()) }
 
         // Municipality services

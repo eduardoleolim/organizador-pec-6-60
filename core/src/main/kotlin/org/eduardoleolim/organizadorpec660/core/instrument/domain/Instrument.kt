@@ -1,5 +1,6 @@
 package org.eduardoleolim.organizadorpec660.core.instrument.domain
 
+import org.eduardoleolim.organizadorpec660.core.agency.domain.AgencyId
 import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityId
 import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeId
 import java.util.*
@@ -11,6 +12,7 @@ class Instrument private constructor(
     private var consecutive: InstrumentConsecutive,
     private var saved: InstrumentSaved,
     private val instrumentFileId: InstrumentFileId,
+    private var agencyId: AgencyId,
     private var statisticTypeId: StatisticTypeId,
     private var municipalityId: MunicipalityId,
     private val createdAt: InstrumentCreateDate,
@@ -22,7 +24,7 @@ class Instrument private constructor(
             statisticMonth: Int,
             consecutive: String,
             instrumentFileId: String,
-            instrumentTypeId: String,
+            agencyId: String,
             statisticTypeId: String,
             municipalityId: String
         ) = Instrument(
@@ -32,6 +34,7 @@ class Instrument private constructor(
             InstrumentConsecutive(consecutive),
             InstrumentSaved(false),
             InstrumentFileId.fromString(instrumentFileId),
+            AgencyId.fromString(agencyId),
             StatisticTypeId.fromString(statisticTypeId),
             MunicipalityId.fromString(municipalityId),
             InstrumentCreateDate.now(),
@@ -45,7 +48,7 @@ class Instrument private constructor(
             consecutive: String,
             saved: Boolean,
             instrumentFileId: String,
-            instrumentTypeId: String,
+            agencyId: String,
             statisticTypeId: String,
             municipalityId: String,
             createdAt: Date,
@@ -57,6 +60,7 @@ class Instrument private constructor(
             InstrumentConsecutive(consecutive),
             InstrumentSaved(saved),
             InstrumentFileId.fromString(instrumentFileId),
+            AgencyId.fromString(agencyId),
             StatisticTypeId.fromString(statisticTypeId),
             MunicipalityId.fromString(municipalityId),
             InstrumentCreateDate(createdAt),
@@ -80,6 +84,8 @@ class Instrument private constructor(
     fun saved() = saved.value
 
     fun instrumentFileId() = instrumentFileId.value
+
+    fun agencyId() = agencyId.value
 
     fun statisticTypeId() = statisticTypeId.value
 
@@ -106,6 +112,11 @@ class Instrument private constructor(
 
     fun changeSaved(saved: Boolean) {
         this.saved = InstrumentSaved(saved)
+        this.updatedAt = InstrumentUpdateDate.now()
+    }
+
+    fun changeAgencyId(agencyId: String) {
+        this.agencyId = AgencyId.fromString(agencyId)
         this.updatedAt = InstrumentUpdateDate.now()
     }
 
