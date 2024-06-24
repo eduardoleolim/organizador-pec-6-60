@@ -5,13 +5,13 @@ import org.ktorm.schema.*
 import java.time.LocalDateTime
 
 interface InstrumentFile : Entity<InstrumentFile> {
-    val instrumentFileId: String
-    val content: ByteArray
+    val id: String
+    val path: String
 }
 
 class InstrumentFiles(alias: String? = null) : Table<InstrumentFile>("instrumentFile", alias) {
-    val instrumentFileId = varchar("instrumentFileId").primaryKey().bindTo { it.instrumentFileId }
-    val content = bytes("content").bindTo { it.content }
+    val id = varchar("instrumentFileId").primaryKey().bindTo { it.id }
+    val path = varchar("path").bindTo { it.path }
 
     override fun aliased(alias: String) = InstrumentFiles(alias)
 }
@@ -20,19 +20,21 @@ interface Instrument : Entity<Instrument> {
     val id: String
     val statisticYear: Int
     val statisticMonth: Int
+    val agency: Agency
     val consecutive: String
     val saved: Boolean
     val createdAt: LocalDateTime
     val updatedAt: LocalDateTime?
     val statisticType: StatisticType
     val municipality: Municipality
-    val instrumentFile: InstrumentFile?
+    val instrumentFile: InstrumentFile
 }
 
 class Instruments(alias: String? = null) : Table<Instrument>("instrument", alias) {
     val id = varchar("instrumentId").primaryKey().bindTo { it.id }
     val statisticYear = int("statisticYear").bindTo { it.statisticYear }
     val statisticMonth = int("statisticMonth").bindTo { it.statisticMonth }
+    val agencyId = varchar("agencyId").bindTo { it.id }
     val consecutive = varchar("consecutive").bindTo { it.consecutive }
     val saved = boolean("saved").bindTo { it.saved }
     val createdAt = datetime("createdAt").bindTo { it.createdAt }

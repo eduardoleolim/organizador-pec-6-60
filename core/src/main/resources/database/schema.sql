@@ -64,8 +64,8 @@ create table if not exists statisticType_agency
 
 create table if not exists instrumentFile
 (
-    instrumentFileId text    not null,
-    content          blob    not null,
+    instrumentFileId    text    not null,
+    path                text    not null,
 
     constraint instrumentFile_Pk primary key (instrumentFileId)
 );
