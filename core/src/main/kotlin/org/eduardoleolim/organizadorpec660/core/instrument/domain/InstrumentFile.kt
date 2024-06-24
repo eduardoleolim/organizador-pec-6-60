@@ -5,6 +5,9 @@ import java.util.*
 class InstrumentFile private constructor(private val id: InstrumentFileId, private val content: InstrumentContent) {
     companion object {
         fun create(content: ByteArray) = InstrumentFile(InstrumentFileId.random(), InstrumentContent(content))
+
+        fun from(id: String, content: ByteArray) =
+            InstrumentFile(InstrumentFileId.fromString(id), InstrumentContent(content))
     }
 
     fun id() = id.value

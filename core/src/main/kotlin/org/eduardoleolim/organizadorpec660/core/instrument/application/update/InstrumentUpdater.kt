@@ -50,13 +50,15 @@ class InstrumentUpdater(
         if (existsMunicipality(municipalityId).not())
             throw MunicipalityNotFoundError(municipalityId)
 
-        instrument.changeStatisticYear(statisticYear)
-        instrument.changeStatisticMonth(statisticMonth)
-        instrument.changeConsecutive(consecutive)
-        instrument.changeStatisticTypeId(statisticTypeId)
-        instrument.changeMunicipalityId(municipalityId)
-
-        instrumentRepository.save(instrument)
+        instrument.apply {
+            changeStatisticYear(statisticYear)
+            changeStatisticMonth(statisticMonth)
+            changeConsecutive(consecutive)
+            changeStatisticTypeId(statisticTypeId)
+            changeMunicipalityId(municipalityId)
+        }.let {
+            instrumentRepository.save(it)
+        }
     }
 
     private fun searchInstrument(instrumentId: String) =

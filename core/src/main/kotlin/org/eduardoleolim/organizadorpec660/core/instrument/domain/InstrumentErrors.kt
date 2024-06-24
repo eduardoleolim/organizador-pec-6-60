@@ -32,6 +32,10 @@ class InvalidInstrumentContentError :
 class InstrumentNotFoundError(id: String) :
     InstrumentError("The instrument with id <$id> was not found")
 
+class InstrumentFileRequiredError: InstrumentError("A new instrument must be saved with a intrument file")
+
+class InstrumentFileFailSaveError: InstrumentError("An error occurred during saving process")
+
 class InstrumentAlreadyExistsError(
     statisticYear: Int,
     statisticMonth: Int,

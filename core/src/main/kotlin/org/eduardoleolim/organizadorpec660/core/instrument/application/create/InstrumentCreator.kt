@@ -5,7 +5,6 @@ import org.eduardoleolim.organizadorpec660.core.agency.domain.AgencyNotFoundErro
 import org.eduardoleolim.organizadorpec660.core.agency.domain.AgencyRepository
 import org.eduardoleolim.organizadorpec660.core.instrument.domain.Instrument
 import org.eduardoleolim.organizadorpec660.core.instrument.domain.InstrumentFile
-import org.eduardoleolim.organizadorpec660.core.instrument.domain.InstrumentFileRepository
 import org.eduardoleolim.organizadorpec660.core.instrument.domain.InstrumentRepository
 import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityCriteria
 import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityNotFoundError
@@ -16,7 +15,6 @@ import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTy
 
 class InstrumentCreator(
     private val instrumentRepository: InstrumentRepository,
-    private val instrumentFileRepository: InstrumentFileRepository,
     private val agencyRepository: AgencyRepository,
     private val statisticTypeRepository: StatisticTypeRepository,
     private val municipalityRepository: MunicipalityRepository
@@ -50,8 +48,7 @@ class InstrumentCreator(
             municipalityId
         )
 
-        instrumentRepository.save(instrument)
-        instrumentFileRepository.save(instrumentFile)
+        instrumentRepository.save(instrument, instrumentFile)
     }
 
     private fun existsAgency(agencyId: String) = AgencyCriteria.idCriteria(agencyId).let {

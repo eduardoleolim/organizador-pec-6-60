@@ -38,15 +38,14 @@ import org.koin.dsl.module
 import org.ktorm.database.Database
 
 object KtormAppModule {
-    fun buildModule(database: Database) = module {
+    fun buildModule(database: Database, instrumentsPath: String) = module {
         single<Database> { database }
 
         // Repositories
         single<AgencyRepository> { KtormAgencyRepository(get()) }
         single<AuthRepository> { KtormAuthRepository(get()) }
         single<FederalEntityRepository> { KtormFederalEntityRepository(get()) }
-        // single<InstrumentFileRepository> {  }
-        single<InstrumentRepository> { KtormInstrumentRepository(get()) }
+        single<InstrumentRepository> { KtormInstrumentRepository(get(), instrumentsPath) }
         single<MunicipalityRepository> { KtormMunicipalityRepository(get()) }
         // single<RoleRepository> { KtormRoleRepository(get()) }
         single<StatisticTypeRepository> { KtormStatisticTypeRepository(get()) }
@@ -68,7 +67,7 @@ object KtormAppModule {
         single { FederalEntityUpdater(get()) }
 
         // Instrument services
-        single { InstrumentCreator(get(), get(), get(), get(), get()) }
+        single { InstrumentCreator(get(), get(), get(), get()) }
         single { InstrumentUpdater(get(), get(), get()) }
 
         // Municipality services
