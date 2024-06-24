@@ -86,19 +86,6 @@
     <string name="st_form_name_format">The name cannot be empty</string>
     <string name="st_form_already_exists">A statistic type already exists with that KeyCode</string>
 
-    <!-- Instrument type -->
-    <string name="instrument_types">Instrument Types</string>
-    <string name="it_name">Name</string>
-    <string name="it_created_at">Created at</string>
-    <string name="it_updated_at">Updated at</string>
-    <string name="it_delete_title">Delete instrument type?</string>
-    <string name="it_delete_text">The instrument %1$s will be permanently removed from application</string>
-    <string name="it_form_add_title">Add instrument type</string>
-    <string name="it_form_edit_title">Edit instrument type</string>
-    <string name="it_form_name_required">Name required</string>
-    <string name="it_form_name_format">The name cannot be empty</string>
-    <string name="it_form_already_exists">A instrument type already exists with that Name</string>
-
     <!-- Agency -->
     <string name="agencies">Agencies</string>
     <string name="ag_name">Name</string>
@@ -122,5 +109,5 @@
     <string name="ag_form_municipality_required">Municipality required</string>
     <string name="ag_form_statistic_type_required">Statistic Type required</string>
     <string name="ag_form_name_format">The name cannot be empty</string>
-    <string name="ag_form_consecutive_format">The consecutive must be bigger than zero</string>
+    <string name="ag_form_consecutive_format">The consecutive must be between 1 and 9999</string>
 </resources>

@@ -1,0 +1,113 @@
+<resources>
+    <string name="app_name">Organizador PEC-6-60</string>
+
+    <!-- Common -->
+    <string name="table_col_actions">Acciones</string>
+    <string name="table_show_items">Mostrar %1$s registros</string>
+    <string name="table_search">Buscar</string>
+    <string name="table_pagination">%1$s-%2$s de %3$s</string>
+    <string name="dialog_error_title">Un error ha ocurrido</string>
+
+    <string name="accept">Aceptar</string>
+    <string name="confirm">Confirmar</string>
+    <string name="edit">Editar</string>
+    <string name="save">Guardar</string>
+    <string name="delete">Eliminar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="password">Contraseña</string>
+
+    <!-- Auth -->
+    <string name="auth_enter">Ingresar</string>
+    <string name="auth_password">Contraseña</string>
+    <string name="auth_username">Usuario</string>
+    <string name="auth_login">Iniciar sesión</string>
+    <string name="auth_invalid_credentials">Credenciales inválidas</string>
+    <string name="auth_username_required">Usuario requerido</string>
+    <string name="auth_password_required">Contraseña requerida</string>
+
+    <!-- Home -->
+    <string name="logout">Cerrar sesión</string>
+
+    <!-- Instrument -->
+    <string name="instruments">Instrumentos</string>
+
+    <!-- Federal entity -->
+    <string name="federal_entities">Entidades federativas</string>
+    <string name="fe_keycode">Clave</string>
+    <string name="fe_name">Nombre</string>
+    <string name="fe_created_at">Fecha de registro</string>
+    <string name="fe_updated_at">Última actualización</string>
+    <string name="fe_delete_title">¿Eliminar la entidad federativa?</string>
+    <string name="fe_delete_text">La entidad federativa %1$s será eliminada permanentemente de la aplicación</string>
+    <string name="fe_delete_error_default">Ocurrió un error mientras se trataba de eliminar la entidad federativa</string>
+    <string name="fe_delete_error_has_municipalities">La entidad federativa no puede ser eliminada porque tiene municipio asociados</string>
+    <string name="fe_form_add_title">Agregar entidad federativa</string>
+    <string name="fe_form_edit_title">Editar federal entity</string>
+    <string name="fe_form_keycode_required">Clave requerida</string>
+    <string name="fe_form_name_required">Nombre requerido</string>
+    <string name="fe_form_keycode_format">La clave debe tener 2 dígitos</string>
+    <string name="fe_form_name_format">El nombre no puede estar vacío</string>
+    <string name="fe_form_already_exists">Ya existe una entidad federativa con esa clave</string>
+
+    <!-- Municipality -->
+    <string name="municipalities">Municipios</string>
+    <string name="mun_federal_entity">Entidad federativa</string>
+    <string name="mun_keycode">Clave</string>
+    <string name="mun_name">Nombre</string>
+    <string name="mun_created_at">Fecha de registro</string>
+    <string name="mun_updated_at">Última actualización</string>
+    <string name="mun_delete_title">¿Eliminar el municipio?</string>
+    <string name="mun_delete_text">El municipio %1$s será eliminada permanentemente de la aplicación</string>
+    <string name="mun_form_add_title">Agregar municipio</string>
+    <string name="mun_form_edit_title">Editar municipio</string>
+    <string name="mun_form_federal_entity_required">Entidad federativa requerida</string>
+    <string name="mun_form_keycode_required">Clave requerida</string>
+    <string name="mun_form_name_required">Nombre requerido</string>
+    <string name="mun_form_keycode_format">La clave debe tener 3 dígitos</string>
+    <string name="mun_form_name_format">El nombre no puede estar vacío</string>
+    <string name="mun_form_already_exists">Ya existe un municipio con esa clave</string>
+    <string name="mun_form_federal_entity_does_not_exist">La entidad federativa no existe</string>
+    <string name="mun_form_select_federal_entity">Selecciona una entidad federativa</string>
+    <string name="mun_form_select_all">Todas las entidades federativas</string>
+
+    <!-- Statistic type -->
+    <string name="statistic_types">Tipos de estadística</string>
+    <string name="st_keycode">Clave</string>
+    <string name="st_name">Nombre</string>
+    <string name="st_created_at">Fecha de registro</string>
+    <string name="st_updated_at">Última actualización</string>
+    <string name="st_delete_title">¿Eliminar el tipo de estadística?</string>
+    <string name="st_delete_text">El tipo de estadística %1$s será eliminado permanentemente de la aplicación</string>
+    <string name="st_form_add_title">Agregar tipo de estadística</string>
+    <string name="st_form_edit_title">Editar tipo de estadística</string>
+    <string name="st_form_keycode_required">Clave requerida</string>
+    <string name="st_form_name_required">Nombre requerido</string>
+    <string name="st_form_keycode_format">La clave debe tener 3 dígitos</string>
+    <string name="st_form_name_format">El nombre no puede estar vacío</string>
+    <string name="st_form_already_exists">Ya existe un tipo de estadística con esa clave</string>
+
+    <!-- Agency -->
+    <string name="agencies">Fuentes</string>
+    <string name="ag_name">Nombre</string>
+    <string name="ag_consecutive">Consecutivo</string>
+    <string name="ag_municipality">Municipio</string>
+    <string name="ag_created_at">Fecha de registro</string>
+    <string name="ag_updated_at">Última actualización</string>
+    <string name="ag_delete_title">¿Eliminar la fuente?</string>
+    <string name="ag_delete_error_default">Ocurrió un error mientras se trataba de eliminar la fuente</string>
+    <string name="ag_delete_error_has_instruments">La fuente no puede ser eliminada porque tiene instrumentos asociados</string>
+    <string name="ag_delete_text">La fuente %1$s será eliminada permanentemente de la aplicación</string>
+    <string name="ag_form_add_title">Agregar fuente</string>
+    <string name="ag_form_edit_title">Editar fuente</string>
+    <string name="ag_form_general">Datos generales</string>
+    <string name="ag_form_federal_entity">Entidad federativa</string>
+    <string name="ag_form_municipality">Municipio</string>
+    <string name="ag_form_statistic_types">Tipos de estadística</string>
+    <string name="ag_form_statistic_type">Tipo de estadística</string>
+    <string name="ag_form_name_required">Nombre requerido</string>
+    <string name="ag_form_consecutive_required">Consecutivo requerido</string>
+    <string name="ag_form_municipality_required">Municipio requerido</string>
+    <string name="ag_form_statistic_type_required">Tipo de estadística requerido</string>
+    <string name="ag_form_name_format">El nombre no puede estar vacío</string>
+    <string name="ag_form_consecutive_format">El consecutivo debe estar entre 1 y 9999</string>
+</resources>
