@@ -101,6 +101,16 @@ class AgencyScreen(private val queryBus: QueryBus, private val commandBus: Comma
                 }
             )
 
+            if (showDeleteModal && selectedAgency != null) {
+                screenModel.resetDeleteModal()
+                AgencyDeleteModal(
+                    screenModel = screenModel,
+                    agency = selectedAgency!!,
+                    onSuccess = { resetView() },
+                    onDismissRequest = { resetView() }
+                )
+            }
+
             if (showFormModal) {
                 screenModel.resetForm()
                 AgencyFormModal(

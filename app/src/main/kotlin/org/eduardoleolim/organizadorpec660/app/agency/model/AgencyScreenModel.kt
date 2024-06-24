@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import org.eduardoleolim.organizadorpec660.app.agency.data.EmptyAgencyDataException
 import org.eduardoleolim.organizadorpec660.core.agency.application.AgenciesResponse
 import org.eduardoleolim.organizadorpec660.core.agency.application.create.CreateAgencyCommand
+import org.eduardoleolim.organizadorpec660.core.agency.application.delete.DeleteAgencyCommand
 import org.eduardoleolim.organizadorpec660.core.agency.application.searchByTerm.SearchAgenciesByTermQuery
 import org.eduardoleolim.organizadorpec660.core.agency.application.update.UpdateAgencyCommand
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntitiesResponse
@@ -182,6 +183,20 @@ class AgencyScreenModel(private val queryBus: QueryBus, private val commandBus: 
                 formState = FormState.SuccessEdit
             } catch (e: Exception) {
                 formState = FormState.Error(e.cause!!)
+            }
+        }
+    }
+
+    fun deleteAgency(agencyId: String) {
+        screenModelScope.launch(Dispatchers.IO) {
+            deleteState = DeleteState.InProgress
+            delay(500)
+
+            try {
+                commandBus.dispatch(DeleteAgencyCommand(agencyId))
+                deleteState = DeleteState.Success
+            } catch (e: Exception) {
+                deleteState = DeleteState.Error(e.cause!!)
             }
         }
     }
