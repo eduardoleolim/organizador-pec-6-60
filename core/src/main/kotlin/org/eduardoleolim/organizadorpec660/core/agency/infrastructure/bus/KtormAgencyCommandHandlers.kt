@@ -3,6 +3,9 @@ package org.eduardoleolim.organizadorpec660.core.agency.infrastructure.bus
 import org.eduardoleolim.organizadorpec660.core.agency.application.create.AgencyCreator
 import org.eduardoleolim.organizadorpec660.core.agency.application.create.CreateAgencyCommand
 import org.eduardoleolim.organizadorpec660.core.agency.application.create.CreateAgencyCommandHandler
+import org.eduardoleolim.organizadorpec660.core.agency.application.delete.AgencyDeleter
+import org.eduardoleolim.organizadorpec660.core.agency.application.delete.DeleteAgencyCommand
+import org.eduardoleolim.organizadorpec660.core.agency.application.delete.DeleteAgencyCommandHandler
 import org.eduardoleolim.organizadorpec660.core.agency.application.update.AgencyUpdater
 import org.eduardoleolim.organizadorpec660.core.agency.application.update.UpdateAgencyCommand
 import org.eduardoleolim.organizadorpec660.core.agency.application.update.UpdateAgencyCommandHandler
@@ -20,7 +23,8 @@ class KtormAgencyCommandHandlers(context: KtormAppKoinContext) : KtormAppKoinCom
 
     val handlers: Map<KClass<out Command>, CommandHandler<out Command>> = mapOf(
         CreateAgencyCommand::class to createCommandHandler(),
-        UpdateAgencyCommand::class to updateCommnadHandler()
+        UpdateAgencyCommand::class to updateCommandHandler(),
+        DeleteAgencyCommand::class to deleteCommandHandler()
     )
 
     private fun createCommandHandler(): CommandHandler<out Command> {
@@ -30,9 +34,16 @@ class KtormAgencyCommandHandlers(context: KtormAppKoinContext) : KtormAppKoinCom
         return KtormCommandHandlerDecorator(database, commandHandler)
     }
 
-    private fun updateCommnadHandler(): CommandHandler<out Command> {
+    private fun updateCommandHandler(): CommandHandler<out Command> {
         val updater: AgencyUpdater by inject()
         val commandHandler = UpdateAgencyCommandHandler(updater)
+
+        return KtormCommandHandlerDecorator(database, commandHandler)
+    }
+
+    private fun deleteCommandHandler(): CommandHandler<out Command> {
+        val deleter: AgencyDeleter by inject()
+        val commandHandler = DeleteAgencyCommandHandler(deleter)
 
         return KtormCommandHandlerDecorator(database, commandHandler)
     }

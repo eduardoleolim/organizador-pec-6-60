@@ -13,10 +13,6 @@ class InvalidAgencyNameError(val name: String) : AgencyError("The name <$name> i
 class InvalidAgencyConsecutiveError(val consecutive: String) :
     AgencyError("The consecutive <$consecutive> is not a valid agency consecutive")
 
-class InvalidAgencyMunicipalitiesError : AgencyError("The agency must to have at least a municipality association")
-
-class InvalidAgencyMunicipalityOwnerError : AgencyError("The agency must belong just to a municipality")
-
 class InvalidAgencyStatisticTypesError : AgencyError("The agency must to have at least a statistic type association")
 
 class InvalidAgencyUpdateDateError(val updatedAt: Date, val createdAt: Date) :
@@ -25,3 +21,5 @@ class InvalidAgencyUpdateDateError(val updatedAt: Date, val createdAt: Date) :
 class AgencyAlreadyExists(consecutive: String) : AgencyError("The agency with consecutive <$consecutive> already exists")
 
 class AgencyNotFoundError(val id: String) : AgencyError("The agency with id <$id> was not found")
+
+class AgencyHasInstrumentsError : AgencyError("There are instruments related to the agency")

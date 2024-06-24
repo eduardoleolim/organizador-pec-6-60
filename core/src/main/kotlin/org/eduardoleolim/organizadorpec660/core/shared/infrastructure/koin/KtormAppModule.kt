@@ -1,6 +1,7 @@
 package org.eduardoleolim.organizadorpec660.core.shared.infrastructure.koin
 
 import org.eduardoleolim.organizadorpec660.core.agency.application.create.AgencyCreator
+import org.eduardoleolim.organizadorpec660.core.agency.application.delete.AgencyDeleter
 import org.eduardoleolim.organizadorpec660.core.agency.application.search.AgencySearcher
 import org.eduardoleolim.organizadorpec660.core.agency.application.update.AgencyUpdater
 import org.eduardoleolim.organizadorpec660.core.agency.domain.AgencyRepository
@@ -51,8 +52,9 @@ object KtormAppModule {
 
         // Agency services
         single { AgencyCreator(get(), get(), get()) }
-        single { AgencyUpdater(get(), get(), get()) }
+        single { AgencyDeleter(get(), get()) }
         single { AgencySearcher(get()) }
+        single { AgencyUpdater(get(), get(), get()) }
 
         // Auth services
         single { UserAuthenticator(get()) }

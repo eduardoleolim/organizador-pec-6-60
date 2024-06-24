@@ -43,4 +43,11 @@ object InstrumentCriteria {
         1,
         null
     )
+
+    fun agencyCriteria(agencyId: String) = Criteria(
+        SingleFilter.equal(InstrumentFields.AgencyId.value, agencyId),
+        Orders.none(),
+        1,
+        null
+    )
 }
