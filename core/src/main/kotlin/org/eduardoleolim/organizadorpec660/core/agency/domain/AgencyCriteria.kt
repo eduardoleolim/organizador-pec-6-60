@@ -9,6 +9,7 @@ enum class AgencyFields(val value: String) {
     MunicipalityId("municipality.id"),
     MunicipalityKeyCode("municipality.keyCode"),
     MunicipalityName("municipality.name"),
+    StatisticTypeId("statisticType.id"),
     CreatedAt("createdAt"),
     UpdatedAt("updatedAt")
 }
@@ -65,4 +66,11 @@ object AgencyCriteria {
             limit,
             offset
         )
+
+    fun statisticTypeCriteria(statisticTypeId: String) = Criteria(
+        SingleFilter.equal(AgencyFields.StatisticTypeId.value, statisticTypeId),
+        Orders.none(),
+        null,
+        null
+    )
 }

@@ -61,6 +61,7 @@ class KtormAgenciesCriteriaParser(
             AgencyFields.MunicipalityId -> parseOrderType(orderType, agencies.municipalityId)
             AgencyFields.MunicipalityKeyCode -> parseOrderType(orderType, municipalities.keyCode)
             AgencyFields.MunicipalityName -> parseOrderType(orderType, municipalities.name)
+            AgencyFields.StatisticTypeId -> parseOrderType(orderType, statisticTypesOfAgencies.statisticTypeId)
             null -> throw InvalidArgumentError()
         }
     }
@@ -203,7 +204,16 @@ class KtormAgenciesCriteriaParser(
                 }
             }
 
+            AgencyFields.StatisticTypeId -> {
+                when (operator) {
+                    FilterOperator.EQUAL -> statisticTypesOfAgencies.statisticTypeId eq value
+                    FilterOperator.NOT_EQUAL -> statisticTypesOfAgencies.statisticTypeId notEq value
+                    else -> null
+                }
+            }
+
             null -> throw InvalidArgumentError()
+
         }
     }
 }

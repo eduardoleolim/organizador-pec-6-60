@@ -20,5 +20,7 @@ class InvalidStatisticTypeUpdateDateError(val updatedAt: Date, val createdAt: Da
 class StatisticTypeNotFoundError(val id: String) :
     StatisticTypeError("The statistic type with id <$id> was not found")
 
+class StatisticTypeUsedinAgency: StatisticTypeError("The statistic type is used by an agency")
+
 class StatisticTypeAlreadyExistsError(val keyCode: String) :
     StatisticTypeError("The statistic type with key code <$keyCode> already exists")
