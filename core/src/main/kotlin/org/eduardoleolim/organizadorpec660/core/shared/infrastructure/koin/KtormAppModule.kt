@@ -17,6 +17,8 @@ import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEnti
 import org.eduardoleolim.organizadorpec660.core.federalEntity.infrastructure.persistence.KtormFederalEntityRepository
 import org.eduardoleolim.organizadorpec660.core.instrument.application.create.InstrumentCreator
 import org.eduardoleolim.organizadorpec660.core.instrument.application.update.InstrumentUpdater
+import org.eduardoleolim.organizadorpec660.core.instrument.domain.InstrumentRepository
+import org.eduardoleolim.organizadorpec660.core.instrument.infrastructure.persistence.KtormInstrumentRepository
 import org.eduardoleolim.organizadorpec660.core.municipality.application.create.MunicipalityCreator
 import org.eduardoleolim.organizadorpec660.core.municipality.application.delete.MunicipalityDeleter
 import org.eduardoleolim.organizadorpec660.core.municipality.application.search.MunicipalitySearcher
@@ -44,7 +46,7 @@ object KtormAppModule {
         single<AuthRepository> { KtormAuthRepository(get()) }
         single<FederalEntityRepository> { KtormFederalEntityRepository(get()) }
         // single<InstrumentFileRepository> {  }
-        // single<InstrumentRepository> {  }
+        single<InstrumentRepository> { KtormInstrumentRepository(get()) }
         single<MunicipalityRepository> { KtormMunicipalityRepository(get()) }
         // single<RoleRepository> { KtormRoleRepository(get()) }
         single<StatisticTypeRepository> { KtormStatisticTypeRepository(get()) }
