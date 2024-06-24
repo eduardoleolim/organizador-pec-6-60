@@ -1,7 +1,6 @@
 package org.eduardoleolim.organizadorpec660.app.shared.composables
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -14,8 +13,9 @@ import androidx.compose.material.icons.filled.FileOpen
 import androidx.compose.material.icons.filled.FirstPage
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.toComposeImageBitmap
+import androidx.compose.ui.graphics.toPainter
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
@@ -23,11 +23,8 @@ import kotlinx.coroutines.launch
 import org.apache.pdfbox.Loader
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.rendering.PDFRenderer
-import org.eduardoleolim.organizadorpec660.app.shared.theme.AppTheme
-import java.awt.image.BufferedImage
 import java.io.File
 import javax.swing.JFileChooser
-import javax.swing.JFrame
 import javax.swing.filechooser.FileNameExtensionFilter
 
 data class PdfViewerState(val pdDocument: PDDocument) {
@@ -77,7 +74,9 @@ fun PdfViewerTopBar(
             IconButton(
                 enabled = pdfViewerState != null && pdfViewerState.currentPageIndex > 0,
                 onClick = {
-                    pdfViewerState!!.currentPageIndex = 0
+                    context.launch(Dispatchers.IO) {
+                        pdfViewerState!!.currentPageIndex = 0
+                    }
                 }
             ) {
                 Icon(
@@ -88,8 +87,10 @@ fun PdfViewerTopBar(
             IconButton(
                 enabled = pdfViewerState != null && pdfViewerState.currentPageIndex > 0,
                 onClick = {
-                    if (pdfViewerState!!.currentPageIndex > 0) {
-                        pdfViewerState.currentPageIndex -= 1
+                    context.launch(Dispatchers.IO) {
+                        if (pdfViewerState!!.currentPageIndex > 0) {
+                            pdfViewerState.currentPageIndex -= 1
+                        }
                     }
                 }
             ) {
@@ -101,8 +102,10 @@ fun PdfViewerTopBar(
             IconButton(
                 enabled = pdfViewerState != null && pdfViewerState.currentPageIndex + 1 < pdfViewerState.pdDocument.numberOfPages,
                 onClick = {
-                    if (pdfViewerState!!.currentPageIndex < pdfViewerState.pdDocument.numberOfPages - 1) {
-                        pdfViewerState.currentPageIndex += 1
+                    context.launch(Dispatchers.IO) {
+                        if (pdfViewerState!!.currentPageIndex < pdfViewerState.pdDocument.numberOfPages - 1) {
+                            pdfViewerState.currentPageIndex += 1
+                        }
                     }
                 }
             ) {
@@ -114,7 +117,9 @@ fun PdfViewerTopBar(
             IconButton(
                 enabled = pdfViewerState != null && pdfViewerState.currentPageIndex + 1 < pdfViewerState.pdDocument.numberOfPages,
                 onClick = {
-                    pdfViewerState!!.currentPageIndex = pdfViewerState.pdDocument.numberOfPages - 1
+                    context.launch(Dispatchers.IO) {
+                        pdfViewerState!!.currentPageIndex = pdfViewerState.pdDocument.numberOfPages - 1
+                    }
                 },
             ) {
                 Icon(
@@ -139,31 +144,27 @@ fun PdfViewerContent(
         shape = MaterialTheme.shapes.extraSmall,
         contentColor = MaterialTheme.colorScheme.surfaceContainerHigh
     ) {
+        val density = LocalDensity.current.density
         val verticalScrollState = rememberScrollState()
         val horizontalScrollState = rememberScrollState()
 
         Box(
+            contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(verticalScrollState)
                 .horizontalScroll(horizontalScrollState)
         ) {
-            pdfViewerState?.let {
-                val renderer = remember(pdfViewerState.pdDocument) { PDFRenderer(it.pdDocument) }
-                var image by remember { mutableStateOf<BufferedImage?>(null) }
-                val density = LocalDensity.current.density
-
-                LaunchedEffect(pdfViewerState.currentPageIndex) {
-                    image = renderer.renderImage(pdfViewerState.currentPageIndex, density)
+            pdfViewerState?.let { state ->
+                val renderer = remember(state.pdDocument) { PDFRenderer(state.pdDocument) }
+                val image = remember(renderer, state.currentPageIndex) {
+                    renderer.renderImage(state.currentPageIndex, density)
                 }
 
-                Canvas(
-                    modifier = Modifier
-                ) {
-                    image?.let {
-                        drawImage(image = it.toComposeImageBitmap())
-                    }
-                }
+                Image(
+                    painter = image.toPainter(),
+                    contentDescription = "Index: ${state.currentPageIndex}"
+                )
             }
         }
     }
@@ -174,7 +175,7 @@ fun PdfViewer(
     modifier: Modifier = Modifier,
     onFileOpened: (File) -> Unit = {}
 ) {
-    var pdfDocument: File? by remember { mutableStateOf(null) }
+    var pdfDocument by remember { mutableStateOf<File?>(null) }
     var pdfViewerState by remember { mutableStateOf<PdfViewerState?>(null) }
     val fileChooser = remember {
         JFileChooser().apply {
@@ -184,9 +185,9 @@ fun PdfViewer(
     }
 
     DisposableEffect(pdfDocument) {
-        pdfDocument?.let {
-            pdfViewerState = PdfViewerState(Loader.loadPDF(it))
-            onFileOpened(it)
+        pdfDocument?.let { document ->
+            pdfViewerState = PdfViewerState(Loader.loadPDF(document))
+            onFileOpened(document)
         }
 
         onDispose {
@@ -203,7 +204,7 @@ fun PdfViewer(
             PdfViewerTopBar(
                 pdfViewerState = pdfViewerState,
                 onOpenFileRequest = {
-                    val result = fileChooser.showOpenDialog(null as JFrame?)
+                    val result = fileChooser.showOpenDialog(null)
 
                     if (result == JFileChooser.APPROVE_OPTION) {
                         pdfDocument = fileChooser.selectedFile
@@ -216,17 +217,5 @@ fun PdfViewer(
                 modifier = Modifier.weight(1f)
             )
         }
-    }
-}
-
-@Preview
-@Composable
-fun Preview() {
-    AppTheme(
-        darkTheme = true
-    ) {
-        PdfViewer(
-            modifier = Modifier.padding(20.dp)
-        )
     }
 }
