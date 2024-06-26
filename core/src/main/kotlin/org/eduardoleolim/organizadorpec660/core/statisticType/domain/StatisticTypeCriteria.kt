@@ -2,13 +2,31 @@ package org.eduardoleolim.organizadorpec660.core.statisticType.domain
 
 import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.*
 
-object StatisticTypeCriteria {
-    fun idCriteria(id: String) = Criteria(SingleFilter.equal("id", id), Orders.none(), 1, null)
+enum class StatisticTypeFields(val value: String) {
+    Id("id"),
+    KeyCode("keyCode"),
+    Name("name"),
+    CreatedAt("createdAt"),
+    UpdatedAt("updatedAt")
+}
 
-    fun keyCodeCriteria(keyCode: String) = Criteria(SingleFilter.equal("keyCode", keyCode), Orders.none(), 1, null)
+object StatisticTypeCriteria {
+    fun idCriteria(id: String) = Criteria(SingleFilter.equal(StatisticTypeFields.Id.value, id), Orders.none(), 1, null)
+
+    fun keyCodeCriteria(keyCode: String) = Criteria(
+        SingleFilter.equal(StatisticTypeFields.KeyCode.value, keyCode),
+        Orders.none(),
+        1,
+        null
+    )
 
     fun anotherSameKeyCodeCriteria(id: String, keyCode: String) = Criteria(
-        AndFilters(listOf(SingleFilter.notEqual("id", id), SingleFilter.equal("keyCode", keyCode))),
+        AndFilters(
+            listOf(
+                SingleFilter.notEqual(StatisticTypeFields.Id.value, id),
+                SingleFilter.equal(StatisticTypeFields.KeyCode.value, keyCode)
+            )
+        ),
         Orders.none(),
         1,
         null
@@ -24,14 +42,14 @@ object StatisticTypeCriteria {
             search?.let {
                 OrFilters(
                     listOf(
-                        SingleFilter.contains("keyCode", it),
-                        SingleFilter.contains("name", it)
+                        SingleFilter.contains(StatisticTypeFields.KeyCode.value, it),
+                        SingleFilter.contains(StatisticTypeFields.Name.value, it)
                     )
                 )
             } ?: EmptyFilters(),
             orders?.let {
                 Orders.fromValues(orders)
-            } ?: Orders(listOf(Order.asc("keyCode"))),
+            } ?: Orders(listOf(Order.asc(StatisticTypeFields.KeyCode.value))),
             limit,
             offset
         )

@@ -15,9 +15,12 @@ import java.time.LocalDateTime
 
 class KtormStatisticTypeRepository(private val database: Database) : StatisticTypeRepository {
     private val statisticTypes = StatisticTypes("st")
+    private val criteriaParser = KtormStatisticTypeCriteriaParser(database, statisticTypes)
 
     override fun matching(criteria: Criteria): List<StatisticType> {
-        return KtormStatisticTypeCriteriaParser.parse(database, statisticTypes, criteria).map { rowSet ->
+        val query = criteriaParser.selectQuery(criteria)
+
+        return query.map { rowSet ->
             statisticTypes.createEntity(rowSet).let {
                 StatisticType.from(
                     it.id,
@@ -31,7 +34,12 @@ class KtormStatisticTypeRepository(private val database: Database) : StatisticTy
     }
 
     override fun count(criteria: Criteria): Int {
-        return KtormStatisticTypeCriteriaParser.parse(database, statisticTypes, criteria).totalRecordsInAllPages
+        val query = criteriaParser.countQuery(criteria)
+
+        return query.rowSet.let {
+            it.next()
+            it.getInt(1)
+        }
     }
 
     override fun save(statisticType: StatisticType) {

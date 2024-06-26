@@ -3,6 +3,7 @@ package org.eduardoleolim.organizadorpec660.core.statisticType.infrastructure.pe
 import org.eduardoleolim.organizadorpec660.core.shared.domain.InvalidArgumentError
 import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.*
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.StatisticTypes
+import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeFields
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
 import org.ktorm.expression.OrderByExpression
@@ -11,42 +12,44 @@ import org.ktorm.schema.ColumnDeclaring
 import java.time.Instant
 import java.time.LocalDateTime
 
-object KtormStatisticTypeCriteriaParser {
-    fun parse(
-        database: Database,
-        statisticTypes: StatisticTypes,
-        criteria: Criteria
-    ): Query {
+class KtormStatisticTypeCriteriaParser(private val database: Database, private val statisticTypes: StatisticTypes) {
+    fun selectQuery(criteria: Criteria): Query {
         return database.from(statisticTypes)
             .selectDistinct(statisticTypes.columns).let {
-                addOrdersToQuery(it, statisticTypes, criteria)
+                addOrdersToQuery(it, criteria)
             }.let {
-                it.totalRecordsInAllPages
-                addConditionsToQuery(it, statisticTypes, criteria)
+                addConditionsToQuery(it, criteria)
             }.limit(criteria.offset, criteria.limit)
     }
 
-    private fun addOrdersToQuery(query: Query, statisticTypes: StatisticTypes, criteria: Criteria): Query {
-        if (!criteria.hasOrders())
-            return query
+    fun countQuery(criteria: Criteria): Query {
+        val baseQuery = selectQuery(criteria)
+        val querySource = QuerySource(database, statisticTypes, baseQuery.expression)
 
-        return query.orderBy(criteria.orders.orders.mapNotNull {
-            parseOrder(statisticTypes, it)
-        })
+        return querySource.select(count())
     }
 
-    private fun parseOrder(statisticTypes: StatisticTypes, order: Order): OrderByExpression? {
+    private fun addOrdersToQuery(query: Query, criteria: Criteria): Query {
+        if (criteria.hasOrders().not())
+            return query
+
+        return query.orderBy(criteria.orders.orders.mapNotNull { parseOrder(it) })
+    }
+
+    private fun parseOrder(order: Order): OrderByExpression? {
         val orderBy = order.orderBy.value
         val orderType = order.orderType
-
-        return when (orderBy) {
-            "id" -> parseOrderType(orderType, statisticTypes.id)
-            "keyCode" -> parseOrderType(orderType, statisticTypes.keyCode)
-            "name" -> parseOrderType(orderType, statisticTypes.name)
-            "createdAt" -> parseOrderType(orderType, statisticTypes.createdAt)
-            "updatedAt" -> parseOrderType(orderType, statisticTypes.updatedAt)
-            else -> throw InvalidArgumentError()
+        val field = StatisticTypeFields.entries.firstOrNull { it.value == orderBy }
+        val column = when (field) {
+            StatisticTypeFields.Id -> statisticTypes.id
+            StatisticTypeFields.KeyCode -> statisticTypes.keyCode
+            StatisticTypeFields.Name -> statisticTypes.name
+            StatisticTypeFields.CreatedAt -> statisticTypes.createdAt
+            StatisticTypeFields.UpdatedAt -> statisticTypes.updatedAt
+            null -> throw InvalidArgumentError()
         }
+
+        return parseOrderType(orderType, column)
     }
 
     private fun parseOrderType(orderType: OrderType, column: Column<*>): OrderByExpression? {
@@ -57,32 +60,29 @@ object KtormStatisticTypeCriteriaParser {
         }
     }
 
-    private fun addConditionsToQuery(query: Query, statisticTypes: StatisticTypes, criteria: Criteria): Query {
+    private fun addConditionsToQuery(query: Query, criteria: Criteria): Query {
         criteria.filters.let {
             return when (it) {
                 is EmptyFilters -> query
-                is SingleFilter -> parseFilter(statisticTypes, it.filter)?.let { conditions ->
+                is SingleFilter -> parseFilter(it.filter)?.let { conditions ->
                     query.where(conditions)
                 } ?: query
 
-                is MultipleFilters -> parseMultipleFilters(statisticTypes, it)?.let { conditions ->
+                is MultipleFilters -> parseMultipleFilters(it)?.let { conditions ->
                     query.where(conditions)
                 } ?: query
             }
         }
     }
 
-    private fun parseMultipleFilters(
-        statisticTypes: StatisticTypes,
-        filters: MultipleFilters
-    ): ColumnDeclaring<Boolean>? {
+    private fun parseMultipleFilters(filters: MultipleFilters): ColumnDeclaring<Boolean>? {
         if (filters.isEmpty())
             return null
 
         val filterConditions = filters.filters.mapNotNull {
             when (it) {
-                is SingleFilter -> parseFilter(statisticTypes, it.filter)
-                is MultipleFilters -> parseMultipleFilters(statisticTypes, it)
+                is SingleFilter -> parseFilter(it.filter)
+                is MultipleFilters -> parseMultipleFilters(it)
                 else -> null
             }
         }
@@ -93,13 +93,13 @@ object KtormStatisticTypeCriteriaParser {
         }
     }
 
-    private fun parseFilter(statisticTypes: StatisticTypes, filter: Filter): ColumnDeclaring<Boolean>? {
-        val field = filter.field.value
+    private fun parseFilter(filter: Filter): ColumnDeclaring<Boolean>? {
+        val field = StatisticTypeFields.entries.firstOrNull { it.value == filter.field.value }
         val value = filter.value.value
         val operator = filter.operator
 
         return when (field) {
-            "id" -> {
+            StatisticTypeFields.Id -> {
                 when (operator) {
                     FilterOperator.EQUAL -> statisticTypes.id eq value
                     FilterOperator.NOT_EQUAL -> statisticTypes.id notEq value
@@ -107,7 +107,7 @@ object KtormStatisticTypeCriteriaParser {
                 }
             }
 
-            "keyCode" -> {
+            StatisticTypeFields.KeyCode -> {
                 when (operator) {
                     FilterOperator.EQUAL -> statisticTypes.keyCode eq value
                     FilterOperator.NOT_EQUAL -> statisticTypes.keyCode notEq value
@@ -120,7 +120,7 @@ object KtormStatisticTypeCriteriaParser {
                 }
             }
 
-            "name" -> {
+            StatisticTypeFields.Name -> {
                 when (operator) {
                     FilterOperator.EQUAL -> statisticTypes.name eq value
                     FilterOperator.NOT_EQUAL -> statisticTypes.name notEq value
@@ -133,7 +133,7 @@ object KtormStatisticTypeCriteriaParser {
                 }
             }
 
-            "createdAt" -> {
+            StatisticTypeFields.CreatedAt -> {
                 val date = LocalDateTime.from(Instant.parse(value))
                 when (operator) {
                     FilterOperator.EQUAL -> statisticTypes.createdAt eq date
@@ -146,7 +146,7 @@ object KtormStatisticTypeCriteriaParser {
                 }
             }
 
-            "updatedAt" -> {
+            StatisticTypeFields.UpdatedAt -> {
                 val date = LocalDateTime.from(Instant.parse(value))
                 when (operator) {
                     FilterOperator.EQUAL -> statisticTypes.updatedAt eq date
