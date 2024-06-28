@@ -22,12 +22,15 @@ class KtormUserRepository(private val database: Database) : UserRepository {
     private val users = Users("u")
     private val credentials = Credentials("c")
     private val roles = Roles("r")
+    private val criteriaParser = KtormUsersCriteriaParser(database, users, credentials, roles)
 
     override fun matching(criteria: Criteria): List<User> {
-        return KtormUsersCriteriaParser.select(database, users, credentials, roles, criteria).map {
-            val credentials = credentials.createEntity(it, false)
-            val role = roles.createEntity(it, false)
-            val user = users.createEntity(it, false)
+        val query = criteriaParser.selectQuery(criteria)
+
+        return query.map { rowSet ->
+            val credentials = credentials.createEntity(rowSet, false)
+            val role = roles.createEntity(rowSet, false)
+            val user = users.createEntity(rowSet, false)
 
             User.from(
                 user.id,
@@ -44,10 +47,12 @@ class KtormUserRepository(private val database: Database) : UserRepository {
     }
 
     override fun count(criteria: Criteria): Int {
-        return KtormUsersCriteriaParser.count(database, users, credentials, roles, criteria)
-            .rowSet.apply {
-                next()
-            }.getInt(1)
+        val query = criteriaParser.countQuery(criteria)
+
+        return query.rowSet.let {
+            it.next()
+            it.getInt(1)
+        }
     }
 
     override fun save(user: User) {
@@ -84,13 +89,13 @@ class KtormUserRepository(private val database: Database) : UserRepository {
 
     override fun delete(userId: String) {
         database.useTransaction {
-            count(UserCriteria.idCriteria(userId)).let { count ->
-                if (count == 0)
-                    throw UserNotFoundError(userId)
+            val count = count(UserCriteria.idCriteria(userId))
 
-                database.delete(users) {
-                    it.id eq userId
-                }
+            if (count == 0)
+                throw UserNotFoundError(userId)
+
+            database.delete(users) {
+                it.id eq userId
             }
         }
     }
