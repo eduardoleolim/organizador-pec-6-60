@@ -58,13 +58,13 @@ class KtormFederalEntityRepository(private val database: Database) : FederalEnti
 
     override fun delete(federalEntityId: String) {
         database.useTransaction {
-            count(FederalEntityCriteria.idCriteria(federalEntityId)).let { count ->
-                if (count == 0)
-                    throw FederalEntityNotFoundError(federalEntityId)
+            val count = count(FederalEntityCriteria.idCriteria(federalEntityId))
 
-                database.delete(federalEntities) {
-                    it.id eq federalEntityId
-                }
+            if (count == 0)
+                throw FederalEntityNotFoundError(federalEntityId)
+
+            database.delete(federalEntities) {
+                it.id eq federalEntityId
             }
         }
     }

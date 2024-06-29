@@ -29,27 +29,26 @@ class KtormFederalEntitiesCriteriaParser(private val database: Database, private
     }
 
     private fun addOrdersToQuery(query: Query, criteria: Criteria): Query {
-        if (!criteria.hasOrders())
+        if (criteria.hasOrders().not())
             return query
 
-        return query.orderBy(criteria.orders.orders.mapNotNull { order ->
-            parseOrder(order)
-        })
+        return query.orderBy(criteria.orders.orders.mapNotNull { parseOrder(it) })
     }
 
     private fun parseOrder(order: Order): OrderByExpression? {
         val orderBy = order.orderBy.value
         val orderType = order.orderType
         val field = FederalEntityFields.entries.firstOrNull { it.value == orderBy }
-
-        return when (field) {
-            FederalEntityFields.Id -> parseOrderType(orderType, federalEntities.id)
-            FederalEntityFields.KeyCode -> parseOrderType(orderType, federalEntities.keyCode)
-            FederalEntityFields.Name -> parseOrderType(orderType, federalEntities.name)
-            FederalEntityFields.CreatedAt -> parseOrderType(orderType, federalEntities.createdAt)
-            FederalEntityFields.UpdatedAt -> parseOrderType(orderType, federalEntities.updatedAt)
+        val column = when (field) {
+            FederalEntityFields.Id -> federalEntities.id
+            FederalEntityFields.KeyCode -> federalEntities.keyCode
+            FederalEntityFields.Name -> federalEntities.name
+            FederalEntityFields.CreatedAt -> federalEntities.createdAt
+            FederalEntityFields.UpdatedAt -> federalEntities.updatedAt
             null -> throw InvalidArgumentError()
         }
+
+        return parseOrderType(orderType, column)
     }
 
     private fun parseOrderType(orderType: OrderType, column: Column<*>): OrderByExpression? {

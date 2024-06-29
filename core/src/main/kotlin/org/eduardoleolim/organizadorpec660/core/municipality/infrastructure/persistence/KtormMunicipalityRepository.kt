@@ -68,13 +68,13 @@ class KtormMunicipalityRepository(private val database: Database) : Municipality
 
     override fun delete(municipalityId: String) {
         database.useTransaction {
-            count(MunicipalityCriteria.idCriteria(municipalityId)).let { count ->
-                if (count == 0)
-                    throw MunicipalityNotFoundError(municipalityId)
+            val count = count(MunicipalityCriteria.idCriteria(municipalityId))
 
-                database.delete(municipalities) {
-                    it.id eq municipalityId
-                }
+            if (count == 0)
+                throw MunicipalityNotFoundError(municipalityId)
+
+            database.delete(municipalities) {
+                it.id eq municipalityId
             }
         }
     }

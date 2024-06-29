@@ -88,8 +88,8 @@ class KtormStatisticTypeCriteriaParser(private val database: Database, private v
         }
 
         return when (filters.operator) {
-            FiltersOperator.AND -> filterConditions.reduceOrNull { leftCondition, rightCondition -> leftCondition and rightCondition }
-            FiltersOperator.OR -> filterConditions.reduceOrNull { leftCondition, rightCondition -> leftCondition or rightCondition }
+            FiltersOperator.AND -> filterConditions.reduceOrNull { left, right -> left and right }
+            FiltersOperator.OR -> filterConditions.reduceOrNull { left, right -> left or right }
         }
     }
 

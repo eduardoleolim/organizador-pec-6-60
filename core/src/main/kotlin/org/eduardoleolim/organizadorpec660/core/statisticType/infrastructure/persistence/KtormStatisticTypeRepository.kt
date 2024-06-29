@@ -5,6 +5,8 @@ import org.eduardoleolim.organizadorpec660.core.shared.domain.toDate
 import org.eduardoleolim.organizadorpec660.core.shared.domain.toLocalDateTime
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.StatisticTypes
 import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticType
+import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeCriteria
+import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeNotFoundError
 import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeRepository
 import org.ktorm.database.Database
 import org.ktorm.dsl.delete
@@ -61,6 +63,11 @@ class KtormStatisticTypeRepository(private val database: Database) : StatisticTy
 
     override fun delete(statisticTypeId: String) {
         database.useTransaction {
+            val count = count(StatisticTypeCriteria.idCriteria(statisticTypeId))
+
+            if (count == 0)
+                throw StatisticTypeNotFoundError(statisticTypeId)
+
             database.delete(statisticTypes) {
                 it.id eq statisticTypeId
             }

@@ -151,8 +151,6 @@ class KtormInstrumentRepository(
             database.delete(instruments) {
                 it.id eq instrument.id().toString()
             }
-
-
         }
     }
 }

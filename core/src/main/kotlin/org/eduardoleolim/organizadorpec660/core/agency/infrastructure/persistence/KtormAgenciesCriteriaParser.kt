@@ -39,31 +39,30 @@ class KtormAgenciesCriteriaParser(
     }
 
     private fun addOrdersToQuery(query: Query, criteria: Criteria): Query {
-        if (!criteria.hasOrders())
+        if (criteria.hasOrders().not())
             return query
 
-        return query.orderBy(criteria.orders.orders.mapNotNull { order ->
-            parseOrder(order)
-        })
+        return query.orderBy(criteria.orders.orders.mapNotNull { parseOrder(it) })
     }
 
     private fun parseOrder(order: Order): OrderByExpression? {
         val orderBy = order.orderBy.value
         val orderType = order.orderType
         val field = AgencyFields.entries.firstOrNull { it.value == orderBy }
-
-        return when (field) {
-            AgencyFields.Id -> parseOrderType(orderType, agencies.id)
-            AgencyFields.Name -> parseOrderType(orderType, agencies.name)
-            AgencyFields.Consecutive -> parseOrderType(orderType, agencies.consecutive)
-            AgencyFields.CreatedAt -> parseOrderType(orderType, agencies.createdAt)
-            AgencyFields.UpdatedAt -> parseOrderType(orderType, agencies.updatedAt)
-            AgencyFields.MunicipalityId -> parseOrderType(orderType, agencies.municipalityId)
-            AgencyFields.MunicipalityKeyCode -> parseOrderType(orderType, municipalities.keyCode)
-            AgencyFields.MunicipalityName -> parseOrderType(orderType, municipalities.name)
-            AgencyFields.StatisticTypeId -> parseOrderType(orderType, statisticTypesOfAgencies.statisticTypeId)
+        val column = when (field) {
+            AgencyFields.Id -> agencies.id
+            AgencyFields.Name -> agencies.name
+            AgencyFields.Consecutive -> agencies.consecutive
+            AgencyFields.CreatedAt -> agencies.createdAt
+            AgencyFields.UpdatedAt -> agencies.updatedAt
+            AgencyFields.MunicipalityId -> agencies.municipalityId
+            AgencyFields.MunicipalityKeyCode -> municipalities.keyCode
+            AgencyFields.MunicipalityName -> municipalities.name
+            AgencyFields.StatisticTypeId -> statisticTypesOfAgencies.statisticTypeId
             null -> throw InvalidArgumentError()
         }
+
+        return parseOrderType(orderType, column)
     }
 
     private fun parseOrderType(orderType: OrderType, column: Column<*>): OrderByExpression? {

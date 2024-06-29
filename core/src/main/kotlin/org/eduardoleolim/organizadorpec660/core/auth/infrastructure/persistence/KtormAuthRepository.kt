@@ -14,7 +14,11 @@ class KtormAuthRepository(private val database: Database) : AuthRepository {
             .from(credentials)
             .select()
             .where { (credentials.email eq emailOrUsername) or (credentials.username eq emailOrUsername) }
-            .map { Auth.from(emailOrUsername, it[credentials.password]!!) }
+            .map { rowSet ->
+                credentials.createEntity(rowSet).let {
+                    Auth.from(emailOrUsername, it.password)
+                }
+            }
             .firstOrNull()
     }
 }

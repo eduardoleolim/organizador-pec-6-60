@@ -36,32 +36,31 @@ class KtormMunicipalitiesCriteriaParser(
     }
 
     private fun addOrdersToQuery(query: Query, criteria: Criteria): Query {
-        if (!criteria.hasOrders())
+        if (criteria.hasOrders().not())
             return query
 
-        return query.orderBy(criteria.orders.orders.mapNotNull {
-            parseOrder(it)
-        })
+        return query.orderBy(criteria.orders.orders.mapNotNull { parseOrder(it) })
     }
 
     private fun parseOrder(order: Order): OrderByExpression? {
         val orderBy = order.orderBy.value
         val orderType = order.orderType
         val field = MunicipalityFields.entries.firstOrNull { it.value == orderBy }
-
-        return when (field) {
-            MunicipalityFields.Id -> parseOrderType(orderType, municipalities.id)
-            MunicipalityFields.KeyCode -> parseOrderType(orderType, municipalities.keyCode)
-            MunicipalityFields.Name -> parseOrderType(orderType, municipalities.name)
-            MunicipalityFields.CreatedAt -> parseOrderType(orderType, municipalities.createdAt)
-            MunicipalityFields.UpdatedAt -> parseOrderType(orderType, municipalities.updatedAt)
-            MunicipalityFields.FederalEntityId -> parseOrderType(orderType, federalEntities.id)
-            MunicipalityFields.FederalEntityKeyCode -> parseOrderType(orderType, federalEntities.keyCode)
-            MunicipalityFields.FederalEntityName -> parseOrderType(orderType, federalEntities.name)
-            MunicipalityFields.FederalEntityCreatedAt -> parseOrderType(orderType, federalEntities.createdAt)
-            MunicipalityFields.FederalEntityUpdatedAt -> parseOrderType(orderType, federalEntities.updatedAt)
+        val column = when (field) {
+            MunicipalityFields.Id -> municipalities.id
+            MunicipalityFields.KeyCode -> municipalities.keyCode
+            MunicipalityFields.Name -> municipalities.name
+            MunicipalityFields.CreatedAt -> municipalities.createdAt
+            MunicipalityFields.UpdatedAt -> municipalities.updatedAt
+            MunicipalityFields.FederalEntityId -> federalEntities.id
+            MunicipalityFields.FederalEntityKeyCode -> federalEntities.keyCode
+            MunicipalityFields.FederalEntityName -> federalEntities.name
+            MunicipalityFields.FederalEntityCreatedAt -> federalEntities.createdAt
+            MunicipalityFields.FederalEntityUpdatedAt -> federalEntities.updatedAt
             null -> throw InvalidArgumentError()
         }
+
+        return parseOrderType(orderType, column)
     }
 
     private fun parseOrderType(orderType: OrderType, column: Column<*>): OrderByExpression? {

@@ -43,32 +43,31 @@ class KtormInstrumentsCriteriaParser(
     }
 
     private fun addOrdersToQuery(query: Query, criteria: Criteria): Query {
-        if (!criteria.hasOrders())
+        if (criteria.hasOrders().not())
             return query
 
-        return query.orderBy(criteria.orders.orders.mapNotNull { order ->
-            parseOrder(order)
-        })
+        return query.orderBy(criteria.orders.orders.mapNotNull { parseOrder(it) })
     }
 
     private fun parseOrder(order: Order): OrderByExpression? {
         val orderBy = order.orderBy.value
         val orderType = order.orderType
         val field = InstrumentFields.entries.firstOrNull { it.value == orderBy }
-
-        return when (field) {
-            InstrumentFields.Id -> parseOrderType(orderType, instruments.id)
-            InstrumentFields.StatisticYear -> parseOrderType(orderType, instruments.statisticYear)
-            InstrumentFields.StatisticMonth -> parseOrderType(orderType, instruments.statisticMonth)
-            InstrumentFields.Consecutive -> parseOrderType(orderType, instruments.consecutive)
-            InstrumentFields.Saved -> parseOrderType(orderType, instruments.saved)
-            InstrumentFields.AgencyId -> parseOrderType(orderType, instruments.agencyId)
-            InstrumentFields.StatisticTypeId -> parseOrderType(orderType, instruments.statisticTypeId)
-            InstrumentFields.MunicipalityId -> parseOrderType(orderType, instruments.municipalityId)
-            InstrumentFields.CreatedAt -> parseOrderType(orderType, instruments.createdAt)
-            InstrumentFields.UpdatedAt -> parseOrderType(orderType, instruments.updatedAt)
+        val column = when (field) {
+            InstrumentFields.Id -> instruments.id
+            InstrumentFields.StatisticYear -> instruments.statisticYear
+            InstrumentFields.StatisticMonth -> instruments.statisticMonth
+            InstrumentFields.Consecutive -> instruments.consecutive
+            InstrumentFields.Saved -> instruments.saved
+            InstrumentFields.AgencyId -> instruments.agencyId
+            InstrumentFields.StatisticTypeId -> instruments.statisticTypeId
+            InstrumentFields.MunicipalityId -> instruments.municipalityId
+            InstrumentFields.CreatedAt -> instruments.createdAt
+            InstrumentFields.UpdatedAt -> instruments.updatedAt
             null -> throw InvalidArgumentError()
         }
+
+        return parseOrderType(orderType, column)
     }
 
     private fun parseOrderType(orderType: OrderType, column: Column<*>): OrderByExpression? {
@@ -127,13 +126,15 @@ class KtormInstrumentsCriteriaParser(
             }
 
             InstrumentFields.StatisticYear -> {
+                val statisticYear = value.toIntOrNull()
+
                 when (operator) {
                     FilterOperator.EQUAL -> instruments.statisticYear.cast(VarcharSqlType) eq value
                     FilterOperator.NOT_EQUAL -> instruments.statisticYear.cast(VarcharSqlType) notEq value
-                    FilterOperator.GT -> value.toIntOrNull()?.let { instruments.statisticYear gt it }
-                    FilterOperator.GTE -> value.toIntOrNull()?.let { instruments.statisticYear gte it }
-                    FilterOperator.LT -> value.toIntOrNull()?.let { instruments.statisticYear lt it }
-                    FilterOperator.LTE -> value.toIntOrNull()?.let { instruments.statisticYear lte it }
+                    FilterOperator.GT -> statisticYear?.let { instruments.statisticYear greater it }
+                    FilterOperator.GTE -> statisticYear?.let { instruments.statisticYear greaterEq it }
+                    FilterOperator.LT -> statisticYear?.let { instruments.statisticYear less it }
+                    FilterOperator.LTE -> statisticYear?.let { instruments.statisticYear lessEq it }
                     else -> null
                 }
             }
@@ -149,13 +150,15 @@ class KtormInstrumentsCriteriaParser(
             }
 
             InstrumentFields.Consecutive -> {
+                val consecutive = value.toIntOrNull()
+
                 when (operator) {
                     FilterOperator.EQUAL -> instruments.consecutive eq value
                     FilterOperator.NOT_EQUAL -> instruments.consecutive notEq value
-                    FilterOperator.GT -> value.toIntOrNull()?.let { instruments.consecutive.cast(IntSqlType) gt it }
-                    FilterOperator.GTE -> value.toIntOrNull()?.let { instruments.consecutive.cast(IntSqlType) gte it }
-                    FilterOperator.LT -> value.toIntOrNull()?.let { instruments.consecutive.cast(IntSqlType) lt it }
-                    FilterOperator.LTE -> value.toIntOrNull()?.let { instruments.consecutive.cast(IntSqlType) lte it }
+                    FilterOperator.GT -> consecutive?.let { instruments.consecutive.cast(IntSqlType) greater it }
+                    FilterOperator.GTE -> consecutive?.let { instruments.consecutive.cast(IntSqlType) greaterEq it }
+                    FilterOperator.LT -> consecutive?.let { instruments.consecutive.cast(IntSqlType) less it }
+                    FilterOperator.LTE -> consecutive?.let { instruments.consecutive.cast(IntSqlType) lessEq it }
                     FilterOperator.CONTAINS -> instruments.consecutive like "%$value%"
                     FilterOperator.NOT_CONTAINS -> instruments.consecutive notLike "%$value%"
                 }
