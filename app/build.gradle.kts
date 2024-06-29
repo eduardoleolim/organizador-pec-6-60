@@ -50,13 +50,20 @@ compose.desktop {
                 iconFile.set(file("src/main/composeResources/drawable/icon.ico"))
                 dirChooser = true
                 shortcut = true
+                menuGroup = "Inegi"
             }
 
             linux {
                 iconFile.set(file("src/main/composeResources/drawable/logo.png"))
+                shortcut = true
+                menuGroup = "Inegi"
             }
 
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+        }
+
+        buildTypes.release.proguard {
+            configurationFiles.from(file("compose-desktop.pro"))
         }
     }
 }

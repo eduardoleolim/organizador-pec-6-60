@@ -1,0 +1,29 @@
+-dontwarn androidx.compose.material.**
+-dontwarn javax.annotation.**
+-dontwarn javax.servlet.**
+-dontwarn kotlinx.datetime.**
+-dontwarn org.apache.avalon.framework.logger.**
+-dontwarn org.apache.commons.logging.impl.**
+-dontwarn org.apache.log.**
+-dontwarn org.apache.log4j.**
+-dontwarn org.apache.pdfbox.io.**
+-dontwarn org.bouncycastle.**
+-dontwarn org.ktorm.database.**
+-dontwarn org.slf4j.**
+
+-keep class org.eduardoleolim.organizadorpec660.** { *; }
+-keep class org.apache.** { *; }
+-keep class org.sqlite.** { *; }
+-keep class org.ktorm.** { *; }
+-keep class oshi.** { *; }
+-keep class org.slf4j.** { *; }
+-keep class com.sun.jna.** { *; }
+-keep class * implements com.sun.jna.** { *; }
+-keep class javax.servlet.** { *; }
+-keep class * implements javax.servlet.** { *; }
+-keep class org.apache.log4j.** { *; }
+-keep class * implements org.apache.log4j.** { *; }
+-keep class org.apache.log.** { *; }
+-keep class * implements org.apache.log.** { *; }
+-keep class org.apache.avalon.framework.logger.** { *; }
+-keep class * implements org.apache.avalon.framework.logger.** { *; }
