@@ -69,14 +69,14 @@ fun AgencyScreen.AgenciesTable(
             DataColumn(
                 onSort = ::onSort,
                 alignment = Alignment.CenterHorizontally,
-                width = TableColumnWidth.Fraction(0.2f)
+                width = TableColumnWidth.Fraction(0.18f)
             ) {
                 Text(municipalityColumnName)
             },
             DataColumn(
                 onSort = ::onSort,
                 alignment = Alignment.CenterHorizontally,
-                width = TableColumnWidth.MinIntrinsic
+                width = TableColumnWidth.Fraction(0.16f)
             ) {
                 Text(
                     text = createdAtColumnName,
@@ -86,7 +86,7 @@ fun AgencyScreen.AgenciesTable(
             DataColumn(
                 onSort = ::onSort,
                 alignment = Alignment.CenterHorizontally,
-                width = TableColumnWidth.MinIntrinsic
+                width = TableColumnWidth.Fraction(0.16f)
             ) {
                 Text(
                     text = updatedAtColumnName,
@@ -95,7 +95,7 @@ fun AgencyScreen.AgenciesTable(
             },
             DataColumn(
                 alignment = Alignment.CenterHorizontally,
-                width = TableColumnWidth.MinIntrinsic
+                width = TableColumnWidth.Fraction(0.16f)
             ) {
                 Text(actionsColumnName)
             }
