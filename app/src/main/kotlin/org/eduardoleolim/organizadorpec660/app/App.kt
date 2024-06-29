@@ -31,6 +31,7 @@ import org.eduardoleolim.organizadorpec660.app.window.HitSpots
 import org.eduardoleolim.organizadorpec660.app.window.WindowCenter
 import org.eduardoleolim.organizadorpec660.app.window.windowFrameItem
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
+import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.bus.KtormCommandBus
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.bus.KtormQueryBus
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.SqliteKtormDatabase
@@ -49,10 +50,24 @@ class App(
     private val databaseExtensionPath: String,
     private val instrumentsPath: String
 ) {
-    fun start() = application {
-        var initializeApp by remember { mutableStateOf(SqliteKtormDatabase.exists(databasePath)) }
+    private val databaseExtensions by lazy {
+        File(databaseExtensionPath).listFiles()?.map { it.absolutePath } ?: emptyList()
+    }
 
-        if (initializeApp) {
+    private val commandBus: CommandBus by lazy {
+        val database = SqliteKtormDatabase.connect(databasePath, databasePassword, databaseExtensions)
+        KtormCommandBus(database, instrumentsPath)
+    }
+
+    private val queryBus: QueryBus by lazy {
+        val database = SqliteKtormDatabase.connectReadOnly(databasePath, databasePassword, databaseExtensions)
+        KtormQueryBus(database, instrumentsPath)
+    }
+
+    fun start() = application {
+        var existsDatabase by remember { mutableStateOf(SqliteKtormDatabase.exists(databasePath)) }
+
+        if (existsDatabase) {
             MainWindow(
                 onCloseRequest = { exitApplication() }
             )
@@ -62,7 +77,7 @@ class App(
                 onPasswordSet = { password ->
                     AppConfig.setProperty("database.password", password)
                     databasePassword = password
-                    initializeApp = true
+                    existsDatabase = true
                 }
             )
         }
@@ -71,21 +86,11 @@ class App(
     @Composable
     private fun MainWindow(onCloseRequest: () -> Unit) {
         val state = rememberWindowState()
-        var selectedTheme by remember { mutableStateOf(SystemTheme.DEFAULT) }
+        var theme by remember { mutableStateOf(SystemTheme.DEFAULT) }
         val isSystemInDarkTheme = isSystemInDarkTheme()
 
-        val sqliteExtensions = remember {
-            File(databaseExtensionPath).listFiles()?.map { it.absolutePath } ?: emptyList()
-        }
-        val commandBus: CommandBus = remember {
-            KtormCommandBus(SqliteKtormDatabase.connect(databasePath, databasePassword, sqliteExtensions), instrumentsPath)
-        }
-        val queryBus = remember {
-            KtormQueryBus(SqliteKtormDatabase.connectReadOnly(databasePath, databasePassword, sqliteExtensions), instrumentsPath)
-        }
-
         AppTheme(
-            darkTheme = when (selectedTheme) {
+            darkTheme = when (theme) {
                 SystemTheme.DARK -> true
                 SystemTheme.LIGHT -> false
                 SystemTheme.DEFAULT -> isSystemInDarkTheme
@@ -103,7 +108,7 @@ class App(
                         Modifier.fillMaxWidth().padding(start = 16.dp),
                     ) {
                         Icon(
-                            imageVector = when (selectedTheme) {
+                            imageVector = when (theme) {
                                 SystemTheme.DARK -> Icons.Filled.DarkMode
                                 SystemTheme.LIGHT -> Icons.Filled.LightMode
                                 SystemTheme.DEFAULT -> Icons.Filled.Contrast
@@ -113,7 +118,7 @@ class App(
                                 .windowFrameItem("theme", HitSpots.OTHER_HIT_SPOT)
                                 .clip(RoundedCornerShape(6.dp))
                                 .clickable {
-                                    selectedTheme = when (selectedTheme) {
+                                    theme = when (theme) {
                                         SystemTheme.DARK -> SystemTheme.LIGHT
                                         SystemTheme.LIGHT -> SystemTheme.DEFAULT
                                         SystemTheme.DEFAULT -> SystemTheme.DARK
