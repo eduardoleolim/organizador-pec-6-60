@@ -40,9 +40,11 @@ class AuthScreen(private val queryBus: QueryBus) : Screen {
         val screenModel = rememberScreenModel { AuthScreenModel(navigator, queryBus) }
 
         LaunchedEffect(Unit) {
+            val dimension = Dimension(800, 600)
             window.apply {
+                minimumSize = dimension
+                size = dimension
                 isResizable = false
-                size = Dimension(800, 600)
                 setLocationRelativeTo(null)
             }
         }
