@@ -41,7 +41,7 @@ object FederalEntityCriteria {
             } ?: EmptyFilters(),
             orders?.let {
                 Orders.fromValues(orders)
-            } ?: Orders(listOf(Order.asc(FederalEntityFields.KeyCode.value))),
+            } ?: Orders(Order.asc(FederalEntityFields.KeyCode.value)),
             limit,
             offset
         )

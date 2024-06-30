@@ -45,7 +45,7 @@ object StatisticTypeCriteria {
             } ?: EmptyFilters(),
             orders?.let {
                 Orders.fromValues(orders)
-            } ?: Orders(listOf(Order.asc(StatisticTypeFields.KeyCode.value))),
+            } ?: Orders(Order.asc(StatisticTypeFields.KeyCode.value)),
             limit,
             offset
         )

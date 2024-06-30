@@ -56,7 +56,7 @@ object AgencyCriteria {
             } ?: EmptyFilters(),
             orders?.let {
                 Orders.fromValues(orders)
-            } ?: Orders(listOf(Order.asc(AgencyFields.Name.value))),
+            } ?: Orders(Order.asc(AgencyFields.Name.value)),
             limit,
             offset
         )

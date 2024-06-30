@@ -72,10 +72,8 @@ object MunicipalityCriteria {
         orders?.let {
             Orders.fromValues(orders)
         } ?: Orders(
-            listOf(
-                Order.asc(MunicipalityFields.FederalEntityKeyCode.value),
-                Order.asc(MunicipalityFields.KeyCode.value)
-            )
+            Order.asc(MunicipalityFields.FederalEntityKeyCode.value),
+            Order.asc(MunicipalityFields.KeyCode.value)
         ),
         limit,
         offset
