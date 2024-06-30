@@ -21,10 +21,8 @@ object MunicipalityCriteria {
 
     fun keyCodeAndFederalEntityIdCriteria(keyCode: String, federalEntityId: String) = Criteria(
         AndFilters(
-            listOf(
-                SingleFilter.equal(MunicipalityFields.KeyCode.value, keyCode),
-                SingleFilter.equal(MunicipalityFields.FederalEntityId.value, federalEntityId)
-            )
+            SingleFilter.equal(MunicipalityFields.KeyCode.value, keyCode),
+            SingleFilter.equal(MunicipalityFields.FederalEntityId.value, federalEntityId)
         ),
         Orders.none(),
         1,
@@ -33,11 +31,9 @@ object MunicipalityCriteria {
 
     fun anotherKeyCodeCriteria(municipalityId: String, keyCode: String, federalEntityId: String) = Criteria(
         AndFilters(
-            listOf(
-                SingleFilter.notEqual(MunicipalityFields.Id.value, municipalityId),
-                SingleFilter.equal(MunicipalityFields.KeyCode.value, keyCode),
-                SingleFilter.equal(MunicipalityFields.FederalEntityId.value, federalEntityId)
-            )
+            SingleFilter.notEqual(MunicipalityFields.Id.value, municipalityId),
+            SingleFilter.equal(MunicipalityFields.KeyCode.value, keyCode),
+            SingleFilter.equal(MunicipalityFields.FederalEntityId.value, federalEntityId)
         ),
         Orders.none(),
         1,
@@ -65,12 +61,10 @@ object MunicipalityCriteria {
                 } ?: EmptyFilters(),
                 search?.let {
                     OrFilters(
-                        listOf(
-                            SingleFilter.contains(MunicipalityFields.KeyCode.value, it),
-                            SingleFilter.contains(MunicipalityFields.Name.value, it),
-                            SingleFilter.contains(MunicipalityFields.FederalEntityKeyCode.value, it),
-                            SingleFilter.contains(MunicipalityFields.FederalEntityName.value, it)
-                        )
+                        SingleFilter.contains(MunicipalityFields.KeyCode.value, it),
+                        SingleFilter.contains(MunicipalityFields.Name.value, it),
+                        SingleFilter.contains(MunicipalityFields.FederalEntityKeyCode.value, it),
+                        SingleFilter.contains(MunicipalityFields.FederalEntityName.value, it)
                     )
                 } ?: EmptyFilters()
             )

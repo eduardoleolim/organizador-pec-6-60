@@ -18,10 +18,8 @@ object FederalEntityCriteria {
 
     fun anotherKeyCodeCriteria(id: String, keyCode: String) = Criteria(
         AndFilters(
-            listOf(
-                SingleFilter.notEqual(FederalEntityFields.Id.value, id),
-                SingleFilter.equal(FederalEntityFields.KeyCode.value, keyCode)
-            )
+            SingleFilter.notEqual(FederalEntityFields.Id.value, id),
+            SingleFilter.equal(FederalEntityFields.KeyCode.value, keyCode)
         ),
         Orders.none(),
         1,
@@ -37,10 +35,8 @@ object FederalEntityCriteria {
         Criteria(
             search?.let {
                 OrFilters(
-                    listOf(
-                        SingleFilter.contains(FederalEntityFields.KeyCode.value, it),
-                        SingleFilter.contains(FederalEntityFields.Name.value, it)
-                    )
+                    SingleFilter.contains(FederalEntityFields.KeyCode.value, it),
+                    SingleFilter.contains(FederalEntityFields.Name.value, it)
                 )
             } ?: EmptyFilters(),
             orders?.let {

@@ -52,6 +52,8 @@ class SingleFilter(val filter: Filter) : Filters() {
 }
 
 open class MultipleFilters(val filters: List<Filters>, val operator: FiltersOperator) : Filters() {
+    constructor(vararg filters: Filters, operator: FiltersOperator) : this(filters.toList(), operator)
+
     override fun isEmpty() = filters.isEmpty()
 
     override val isMultiple = true
@@ -61,6 +63,10 @@ open class MultipleFilters(val filters: List<Filters>, val operator: FiltersOper
     }
 }
 
-class AndFilters(filters: List<Filters>) : MultipleFilters(filters, FiltersOperator.AND)
+class AndFilters(filters: List<Filters>) : MultipleFilters(filters, FiltersOperator.AND) {
+    constructor(vararg filters: Filters) : this(filters.toList())
+}
 
-class OrFilters(filters: List<Filters>) : MultipleFilters(filters, FiltersOperator.OR)
+class OrFilters(filters: List<Filters>) : MultipleFilters(filters, FiltersOperator.OR) {
+    constructor(vararg filters: Filters) : this(filters.toList())
+}

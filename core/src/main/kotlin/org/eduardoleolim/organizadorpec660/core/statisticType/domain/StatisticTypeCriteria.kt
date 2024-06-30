@@ -22,10 +22,8 @@ object StatisticTypeCriteria {
 
     fun anotherSameKeyCodeCriteria(id: String, keyCode: String) = Criteria(
         AndFilters(
-            listOf(
-                SingleFilter.notEqual(StatisticTypeFields.Id.value, id),
-                SingleFilter.equal(StatisticTypeFields.KeyCode.value, keyCode)
-            )
+            SingleFilter.notEqual(StatisticTypeFields.Id.value, id),
+            SingleFilter.equal(StatisticTypeFields.KeyCode.value, keyCode)
         ),
         Orders.none(),
         1,
@@ -41,10 +39,8 @@ object StatisticTypeCriteria {
         Criteria(
             search?.let {
                 OrFilters(
-                    listOf(
-                        SingleFilter.contains(StatisticTypeFields.KeyCode.value, it),
-                        SingleFilter.contains(StatisticTypeFields.Name.value, it)
-                    )
+                    SingleFilter.contains(StatisticTypeFields.KeyCode.value, it),
+                    SingleFilter.contains(StatisticTypeFields.Name.value, it)
                 )
             } ?: EmptyFilters(),
             orders?.let {

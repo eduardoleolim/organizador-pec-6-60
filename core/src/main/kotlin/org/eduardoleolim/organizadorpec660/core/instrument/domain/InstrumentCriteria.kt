@@ -30,14 +30,12 @@ object InstrumentCriteria {
         municipalityId: String
     ) = Criteria(
         AndFilters(
-            listOf(
-                SingleFilter.notEqual(InstrumentFields.Id.value, instrumentId),
-                SingleFilter.equal(InstrumentFields.StatisticYear.value, statisticYear.toString()),
-                SingleFilter.equal(InstrumentFields.StatisticMonth.value, statisticMonth.toString()),
-                SingleFilter.equal(InstrumentFields.Consecutive.value, consecutive),
-                SingleFilter.equal(InstrumentFields.StatisticTypeId.value, statisticTypeId),
-                SingleFilter.equal(InstrumentFields.MunicipalityId.value, municipalityId)
-            )
+            SingleFilter.notEqual(InstrumentFields.Id.value, instrumentId),
+            SingleFilter.equal(InstrumentFields.StatisticYear.value, statisticYear.toString()),
+            SingleFilter.equal(InstrumentFields.StatisticMonth.value, statisticMonth.toString()),
+            SingleFilter.equal(InstrumentFields.Consecutive.value, consecutive),
+            SingleFilter.equal(InstrumentFields.StatisticTypeId.value, statisticTypeId),
+            SingleFilter.equal(InstrumentFields.MunicipalityId.value, municipalityId)
         ),
         Orders.none(),
         1,

@@ -20,10 +20,8 @@ object AgencyCriteria {
 
     fun anotherConsecutiveCriteria(consecutive: String, municipalityId: String) = Criteria(
         AndFilters(
-            listOf(
-                SingleFilter.equal(AgencyFields.Consecutive.value, consecutive),
-                SingleFilter.equal(AgencyFields.MunicipalityId.value, municipalityId)
-            )
+            SingleFilter.equal(AgencyFields.Consecutive.value, consecutive),
+            SingleFilter.equal(AgencyFields.MunicipalityId.value, municipalityId)
         ),
         Orders.none(),
         1,
@@ -32,11 +30,9 @@ object AgencyCriteria {
 
     fun anotherConsecutiveCriteria(agencyId: String, consecutive: String, municipalityOwnerId: String) = Criteria(
         AndFilters(
-            listOf(
-                SingleFilter.notEqual(AgencyFields.Id.value, agencyId),
-                SingleFilter.equal(AgencyFields.Consecutive.value, consecutive),
-                SingleFilter.equal(AgencyFields.MunicipalityId.value, municipalityOwnerId)
-            )
+            SingleFilter.notEqual(AgencyFields.Id.value, agencyId),
+            SingleFilter.equal(AgencyFields.Consecutive.value, consecutive),
+            SingleFilter.equal(AgencyFields.MunicipalityId.value, municipalityOwnerId)
         ),
         Orders.none(),
         1,
@@ -52,12 +48,10 @@ object AgencyCriteria {
         Criteria(
             search?.let {
                 OrFilters(
-                    listOf(
-                        SingleFilter.contains(AgencyFields.Name.value, it),
-                        SingleFilter.contains(AgencyFields.Consecutive.value, it),
-                        SingleFilter.contains(AgencyFields.MunicipalityName.value, it),
-                        SingleFilter.contains(AgencyFields.MunicipalityKeyCode.value, it)
-                    )
+                    SingleFilter.contains(AgencyFields.Name.value, it),
+                    SingleFilter.contains(AgencyFields.Consecutive.value, it),
+                    SingleFilter.contains(AgencyFields.MunicipalityName.value, it),
+                    SingleFilter.contains(AgencyFields.MunicipalityKeyCode.value, it)
                 )
             } ?: EmptyFilters(),
             orders?.let {
