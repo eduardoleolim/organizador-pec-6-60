@@ -55,7 +55,10 @@ object AgencyCriteria {
                 )
             } ?: EmptyFilters(),
             orders?.let {
-                Orders.fromValues(orders)
+                val fields = AgencyFields.entries.map { it.value }
+                val filteredOrders = orders.mapNotNull { it.takeIf { fields.contains(it["orderBy"]) } }
+
+                Orders.fromValues(filteredOrders.toTypedArray())
             } ?: Orders(Order.asc(AgencyFields.Name.value)),
             limit,
             offset

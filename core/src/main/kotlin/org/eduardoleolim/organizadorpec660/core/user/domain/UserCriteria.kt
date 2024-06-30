@@ -22,10 +22,8 @@ object UserCriteria {
 
     fun emailOrUsernameCriteria(emailOrUsername: String) = Criteria(
         OrFilters(
-            listOf(
-                SingleFilter.equal(UserFields.Email.value, emailOrUsername),
-                SingleFilter.equal(UserFields.Username.value, emailOrUsername)
-            )
+            SingleFilter.equal(UserFields.Email.value, emailOrUsername),
+            SingleFilter.equal(UserFields.Username.value, emailOrUsername)
         ),
         Orders.none(),
         null,

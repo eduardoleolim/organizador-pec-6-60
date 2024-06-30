@@ -70,7 +70,10 @@ object MunicipalityCriteria {
             )
         ),
         orders?.let {
-            Orders.fromValues(orders)
+            val fields = MunicipalityFields.entries.map { it.value }
+            val filteredOrders = orders.mapNotNull { it.takeIf { fields.contains(it["orderBy"]) } }
+
+            Orders.fromValues(filteredOrders.toTypedArray())
         } ?: Orders(
             Order.asc(MunicipalityFields.FederalEntityKeyCode.value),
             Order.asc(MunicipalityFields.KeyCode.value)
