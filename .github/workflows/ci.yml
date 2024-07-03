@@ -9,11 +9,11 @@ jobs:
 
     steps:
       - name: 👍 Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: 💾 Cache JBR SDK 17.0.11
         id: jbrsdk
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: /opt/jbrsdk-17.0.11
           key: jbrsdk-17.0.11-${{ runner.os }}
@@ -71,11 +71,11 @@ jobs:
 
     steps:
       - name: 👍 Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: 💾 Cache JBR SDK 17.0.11
         id: jbrsdk
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ${{ matrix.sdk }}
           key: jbrsdk-17.0.11-${{ runner.os }}
