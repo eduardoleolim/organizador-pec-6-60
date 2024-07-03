@@ -16,7 +16,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /opt/jbrsdk-17.0.11
-          key: jbrsdk-17.0.11_${{ runner.os }}
+          key: jbrsdk-17.0.11-${{ runner.os }}
 
       - name: 📦 Setup JBR SDK 17.0.11
         if: steps.jbrsdk.outputs.cache-hit != 'true'
@@ -24,9 +24,6 @@ jobs:
           curl -L https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.11-linux-x64-b1312.2.tar.gz -o jbrsdk-17.0.11.tar.gz
           mkdir /opt/jbrsdk-17.0.11
           tar -xzf jbrsdk-17.0.11.tar.gz -C /opt/jbrsdk-17.0.11 --strip-components=1
-
-      - name: ♨️ Set JAVA_HOME
-        run: |
           echo "JAVA_HOME=/opt/jbrsdk-17.0.11" >> $GITHUB_ENV
           echo "PATH=$JAVA_HOME/bin:$PATH" >> $GITHUB_ENV
 
@@ -81,7 +78,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ matrix.sdk }}
-          key: jbrsdk-17.0.11_${{ runner.os }}
+          key: jbrsdk-17.0.11-${{ runner.os }}
 
       - name: 📦 Setup JBR SDK 17.0.11
         if: steps.jbrsdk.outputs.cache-hit != 'true'
@@ -89,9 +86,6 @@ jobs:
           curl -L ${{ matrix.url }} -o jbrsdk-17.0.11.tar.gz
           mkdir ${{ matrix.sdk }}
           tar -xzvf jbrsdk-17.0.11.tar.gz -C ${{ matrix.sdk }} --strip-components=1
-
-      - name: ♨️ Set JAVA_HOME
-        run: |
           echo "JAVA_HOME=${{ matrix.java_home }}" >> ${{ matrix.github }}
           echo "${{ matrix.path }}" >> ${{ matrix.github }}
 
