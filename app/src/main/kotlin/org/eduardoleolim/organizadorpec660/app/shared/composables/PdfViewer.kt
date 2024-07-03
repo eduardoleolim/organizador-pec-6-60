@@ -53,7 +53,7 @@ fun PdfViewerTopBar(
         modifier = Modifier.fillMaxWidth()
             .padding(start = 20.dp, end = 20.dp, top = 20.dp, bottom = 10.dp),
         shape = MaterialTheme.shapes.small,
-        color = MaterialTheme.colorScheme.surfaceContainerHighest
+        color = MaterialTheme.colorScheme.surfaceContainerHigh
     ) {
         Row(
             modifier = Modifier.height(IntrinsicSize.Min),
@@ -197,7 +197,7 @@ fun PdfViewerTopBar(
                         pdfViewerState!!.zoom = zoomLevel
                     },
                     valueRange = 0.5f..3.0f,
-                    modifier = Modifier.width(100.dp)
+                    modifier = Modifier.width(100.dp).padding(start = 8.dp, end = 8.dp)
                 )
             }
         }
@@ -218,7 +218,7 @@ fun PdfViewerContent(
             .padding(start = 20.dp, end = 20.dp, top = 10.dp, bottom = 20.dp)
             .then(modifier),
         shape = MaterialTheme.shapes.extraSmall,
-        contentColor = MaterialTheme.colorScheme.surfaceContainerHigh
+        color = MaterialTheme.colorScheme.surfaceContainerHigh
     ) {
         Box(
             contentAlignment = Alignment.Center,
