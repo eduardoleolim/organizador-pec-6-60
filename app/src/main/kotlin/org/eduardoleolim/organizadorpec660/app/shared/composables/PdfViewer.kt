@@ -3,8 +3,10 @@ package org.eduardoleolim.organizadorpec660.app.shared.composables
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.LastPage
 import androidx.compose.material.icons.filled.ChevronLeft
@@ -208,6 +210,7 @@ fun PdfViewerContent(
     modifier: Modifier = Modifier
 ) {
     val density = LocalDensity.current.density
+    val verticalScrollState = rememberScrollState()
 
     Surface(
         modifier = Modifier
@@ -219,7 +222,13 @@ fun PdfViewerContent(
     ) {
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize().run {
+                if (pdfViewerState?.showAllPages == false) {
+                    verticalScroll(verticalScrollState)
+                } else {
+                    this
+                }
+            }
         ) {
             pdfViewerState?.let { state ->
                 val renderer = remember(state.pdDocument) { PDFRenderer(state.pdDocument) }
