@@ -3,6 +3,7 @@ package org.eduardoleolim.organizadorpec660.app.federalEntity.views
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ImportExport
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
@@ -66,11 +67,22 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
 
                 SmallFloatingActionButton(
                     onClick = {
+
+                    },
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.ImportExport,
+                        contentDescription = "Import/Export federal entities"
+                    )
+                }
+
+                SmallFloatingActionButton(
+                    onClick = {
                         selectedFederalEntity = null
                         showFormModal = true
                     },
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                    contentColor = MaterialTheme.colorScheme.secondary
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Add,

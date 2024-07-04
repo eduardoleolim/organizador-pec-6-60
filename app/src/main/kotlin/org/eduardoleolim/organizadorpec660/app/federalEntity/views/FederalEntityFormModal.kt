@@ -11,8 +11,8 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import org.eduardoleolim.organizadorpec660.app.federalEntity.data.EmptyFederalEntityDataException
+import org.eduardoleolim.organizadorpec660.app.federalEntity.model.FederalEntityFormState
 import org.eduardoleolim.organizadorpec660.app.federalEntity.model.FederalEntityScreenModel
-import org.eduardoleolim.organizadorpec660.app.federalEntity.model.FormState
 import org.eduardoleolim.organizadorpec660.app.generated.resources.*
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityAlreadyExistsError
@@ -38,7 +38,7 @@ fun FederalEntityScreen.FederalEntityFormModal(
     var nameSupportingText: String? by remember { mutableStateOf(null) }
 
     when (val formState = screenModel.formState) {
-        FormState.Idle -> {
+        FederalEntityFormState.Idle -> {
             enabled = true
             isKeyCodeError = false
             isNameError = false
@@ -46,7 +46,7 @@ fun FederalEntityScreen.FederalEntityFormModal(
             nameSupportingText = null
         }
 
-        FormState.InProgress -> {
+        FederalEntityFormState.InProgress -> {
             enabled = false
             isKeyCodeError = false
             isNameError = false
@@ -54,17 +54,17 @@ fun FederalEntityScreen.FederalEntityFormModal(
             nameSupportingText = null
         }
 
-        FormState.SuccessCreate -> {
+        FederalEntityFormState.SuccessCreate -> {
             enabled = true
             onSuccess()
         }
 
-        FormState.SuccessEdit -> {
+        FederalEntityFormState.SuccessEdit -> {
             enabled = true
             onSuccess()
         }
 
-        is FormState.Error -> {
+        is FederalEntityFormState.Error -> {
             enabled = true
 
             when (val error = formState.error) {

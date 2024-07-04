@@ -17,37 +17,37 @@ import org.eduardoleolim.organizadorpec660.core.federalEntity.application.update
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
 
-sealed class FormState {
-    data object Idle : FormState()
-    data object InProgress : FormState()
-    data object SuccessCreate : FormState()
-    data object SuccessEdit : FormState()
-    data class Error(val error: Throwable) : FormState()
+sealed class FederalEntityFormState {
+    data object Idle : FederalEntityFormState()
+    data object InProgress : FederalEntityFormState()
+    data object SuccessCreate : FederalEntityFormState()
+    data object SuccessEdit : FederalEntityFormState()
+    data class Error(val error: Throwable) : FederalEntityFormState()
 }
 
-sealed class DeleteState {
-    data object Idle : DeleteState()
-    data object InProgress : DeleteState()
-    data object Success : DeleteState()
-    data class Error(val error: Throwable) : DeleteState()
+sealed class FederalEntityDeleteState {
+    data object Idle : FederalEntityDeleteState()
+    data object InProgress : FederalEntityDeleteState()
+    data object Success : FederalEntityDeleteState()
+    data class Error(val error: Throwable) : FederalEntityDeleteState()
 }
 
 class FederalEntityScreenModel(private val queryBus: QueryBus, private val commandBus: CommandBus) : ScreenModel {
     var federalEntities by mutableStateOf(FederalEntitiesResponse(emptyList(), 0, null, null))
         private set
 
-    var formState by mutableStateOf<FormState>(FormState.Idle)
+    var formState by mutableStateOf<FederalEntityFormState>(FederalEntityFormState.Idle)
         private set
 
-    var deleteState by mutableStateOf<DeleteState>(DeleteState.Idle)
+    var deleteState by mutableStateOf<FederalEntityDeleteState>(FederalEntityDeleteState.Idle)
         private set
 
     fun resetForm() {
-        formState = FormState.Idle
+        formState = FederalEntityFormState.Idle
     }
 
     fun resetDeleteModal() {
-        deleteState = DeleteState.Idle
+        deleteState = FederalEntityDeleteState.Idle
     }
 
     fun searchFederalEntities(
@@ -68,58 +68,58 @@ class FederalEntityScreenModel(private val queryBus: QueryBus, private val comma
 
     fun createFederalEntity(keyCode: String, name: String) {
         screenModelScope.launch(Dispatchers.IO) {
-            formState = FormState.InProgress
+            formState = FederalEntityFormState.InProgress
             delay(500)
 
             val isKeyCodeEmpty = keyCode.isEmpty()
             val isNameEmpty = name.isEmpty()
 
             if (isKeyCodeEmpty || isNameEmpty) {
-                formState = FormState.Error(EmptyFederalEntityDataException(isKeyCodeEmpty, isNameEmpty))
+                formState = FederalEntityFormState.Error(EmptyFederalEntityDataException(isKeyCodeEmpty, isNameEmpty))
                 return@launch
             }
 
             try {
                 commandBus.dispatch(CreateFederalEntityCommand(keyCode, name))
-                formState = FormState.SuccessCreate
+                formState = FederalEntityFormState.SuccessCreate
             } catch (e: Exception) {
-                formState = FormState.Error(e.cause!!)
+                formState = FederalEntityFormState.Error(e.cause!!)
             }
         }
     }
 
     fun editFederalEntity(federalEntityId: String, keyCode: String, name: String) {
         screenModelScope.launch(Dispatchers.IO) {
-            formState = FormState.InProgress
+            formState = FederalEntityFormState.InProgress
             delay(500)
 
             val isKeyCodeEmpty = keyCode.isEmpty()
             val isNameEmpty = name.isEmpty()
 
             if (isKeyCodeEmpty || isNameEmpty) {
-                formState = FormState.Error(EmptyFederalEntityDataException(isKeyCodeEmpty, isNameEmpty))
+                formState = FederalEntityFormState.Error(EmptyFederalEntityDataException(isKeyCodeEmpty, isNameEmpty))
                 return@launch
             }
 
             try {
                 commandBus.dispatch(UpdateFederalEntityCommand(federalEntityId, keyCode, name))
-                formState = FormState.SuccessEdit
+                formState = FederalEntityFormState.SuccessEdit
             } catch (e: Exception) {
-                formState = FormState.Error(e.cause!!)
+                formState = FederalEntityFormState.Error(e.cause!!)
             }
         }
     }
 
     fun deleteFederalEntity(federalEntityId: String) {
         screenModelScope.launch(Dispatchers.IO) {
-            deleteState = DeleteState.InProgress
+            deleteState = FederalEntityDeleteState.InProgress
             delay(500)
 
             try {
                 commandBus.dispatch(DeleteFederalEntityCommand(federalEntityId))
-                deleteState = DeleteState.Success
+                deleteState = FederalEntityDeleteState.Success
             } catch (e: Exception) {
-                deleteState = DeleteState.Error(e.cause!!)
+                deleteState = FederalEntityDeleteState.Error(e.cause!!)
             }
         }
     }

@@ -10,7 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.eduardoleolim.organizadorpec660.app.federalEntity.model.DeleteState
+import org.eduardoleolim.organizadorpec660.app.federalEntity.model.FederalEntityDeleteState
 import org.eduardoleolim.organizadorpec660.app.federalEntity.model.FederalEntityScreenModel
 import org.eduardoleolim.organizadorpec660.app.generated.resources.*
 import org.eduardoleolim.organizadorpec660.app.shared.composables.ErrorDialog
@@ -30,21 +30,21 @@ fun FederalEntityScreen.FederalEntityDeleteModal(
     var errorText: String? by remember { mutableStateOf(null) }
 
     when (val deleteState = screenModel.deleteState) {
-        DeleteState.Idle -> {
+        FederalEntityDeleteState.Idle -> {
             errorOccurred = false
             errorText = null
         }
 
-        DeleteState.InProgress -> {
+        FederalEntityDeleteState.InProgress -> {
             errorOccurred = false
             errorText = null
         }
 
-        DeleteState.Success -> {
+        FederalEntityDeleteState.Success -> {
             onSuccess()
         }
 
-        is DeleteState.Error -> {
+        is FederalEntityDeleteState.Error -> {
             errorOccurred = true
 
             when (val error = deleteState.error) {
