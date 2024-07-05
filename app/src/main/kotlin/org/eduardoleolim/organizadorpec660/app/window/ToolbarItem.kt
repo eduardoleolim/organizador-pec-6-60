@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogWindowScope
 import androidx.compose.ui.window.FrameWindowScope
 import org.eduardoleolim.organizadorpec660.app.window.utils.CustomWindowDecorationAccessing
 import java.awt.Rectangle
@@ -30,6 +31,12 @@ object HitSpots {
     const val MENU_BAR = 5
     const val DRAGGABLE_AREA = 6
 }
+
+context (Density)
+private fun Int.toAwtUnitSize() = toDp().value.toInt()
+
+context (Density)
+private fun Float.toAwtUnitSize() = toDp().value.toInt()
 
 private val LocalWindowHitSpots =
     compositionLocalOf<MutableMap<Any, Pair<Rectangle, Int>>> { error("LocalWindowHitSpots not provided") }
@@ -77,12 +84,6 @@ private fun Offset.toDpRectangle(width: Int, height: Int, density: Density): Rec
         return Rectangle(awtX, awtY, awtWidth, awtHeight)
     }
 }
-
-context (Density)
-private fun Int.toAwtUnitSize() = toDp().value.toInt()
-
-context (Density)
-private fun Float.toAwtUnitSize() = toDp().value.toInt()
 
 private fun placeHitSpots(window: Window, spots: Map<Shape, Int>, height: Int) {
     CustomWindowDecorationAccessing.setCustomDecorationEnabled(window, true)
@@ -134,6 +135,101 @@ fun ProvideWindowSpotContainer(content: @Composable () -> Unit) {
 context (FrameWindowScope)
 @Composable
 fun Modifier.windowFrameItem(key: Any, spot: Int) = composed {
+    var shape by remember(key) { mutableStateOf<Rectangle?>(null) }
+    val localWindowSpots = LocalWindowHitSpots.current
+
+    DisposableEffect(shape, key) {
+        shape.let { shape ->
+            if (shape != null) {
+                localWindowSpots[key] = shape to spot
+                onDispose {
+                    localWindowSpots.remove(key)
+                }
+            } else {
+                onDispose {}
+            }
+        }
+    }
+
+    onPositionInRect { shape = it }
+}
+
+@Composable
+private fun DialogWindowScope.getCurrentWindowSize(): DpSize {
+    var windowSize by remember { mutableStateOf(DpSize(window.width.dp, window.height.dp)) }
+
+    DisposableEffect(window) {
+        val listener = object : ComponentAdapter() {
+            override fun componentResized(event: ComponentEvent) {
+                val size = event.component.size
+                windowSize = DpSize(size.width.dp, size.height.dp)
+            }
+        }
+
+        window.addComponentListener(listener)
+        onDispose {
+            window.removeComponentListener(listener)
+        }
+    }
+
+    return windowSize
+}
+
+context (DialogWindowScope)
+@Composable
+private fun Modifier.onPositionInRect(onChange: (Rectangle) -> Unit) = composed {
+    val density = LocalDensity.current
+
+    onGloballyPositioned {
+        val position = it.positionInWindow()
+        val shape = position.toDpRectangle(it.size.width, it.size.height, density)
+        onChange(shape)
+    }
+}
+
+context (DialogWindowScope)
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun ProvideWindowSpotContainer(content: @Composable () -> Unit) {
+    val density = LocalDensity.current
+    val spotInfoState = remember { mutableStateMapOf<Any, Pair<Rectangle, Int>>() }
+    var toolbarHeight by remember { mutableStateOf(0) }
+    val spotsWithInfo = spotInfoState.toMap()
+    val windowSize = getCurrentWindowSize()
+    val containerSize = with(density) {
+        LocalWindowInfo.current.containerSize.let {
+            DpSize(it.width.toDp(), (it.height - toolbarHeight).toDp())
+        }
+    }
+
+    LaunchedEffect(spotsWithInfo, toolbarHeight, window, windowSize, containerSize) {
+        if (CustomWindowDecorationAccessing.isSupported) {
+            val startOffset = (windowSize - containerSize) / 2
+            val startWidthOffsetInDp = startOffset.width.value.toInt()
+            // val startHeightInDp=delta.height.value.toInt() //it seems no need here
+            val spots: Map<Shape, Int> = spotsWithInfo.values.associate { (rect, spot) ->
+                Rectangle(rect.x + startWidthOffsetInDp, rect.y, rect.width, rect.height) to spot
+            }
+            placeHitSpots(window, spots, toolbarHeight)
+        }
+    }
+
+    CompositionLocalProvider(LocalWindowHitSpots provides spotInfoState) {
+        Box(
+            modifier = Modifier.onGloballyPositioned {
+                toolbarHeight = with(density) {
+                    it.size.height.toAwtUnitSize()
+                }
+            }
+        ) {
+            content()
+        }
+    }
+}
+
+context (DialogWindowScope)
+@Composable
+fun Modifier.dialogWindowFrameItem(key: Any, spot: Int) = composed {
     var shape by remember(key) { mutableStateOf<Rectangle?>(null) }
     val localWindowSpots = LocalWindowHitSpots.current
 
