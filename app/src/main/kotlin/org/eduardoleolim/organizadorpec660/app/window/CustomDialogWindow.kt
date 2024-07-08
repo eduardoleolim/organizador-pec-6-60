@@ -64,9 +64,6 @@ fun DialogWindowIcon(icon: Painter, onClick: () -> Unit) {
     }
 }
 
-///
-
-
 @Composable
 private fun DialogWindowScope.FrameContent(
     title: String,
@@ -76,7 +73,7 @@ private fun DialogWindowScope.FrameContent(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(40.dp)
+            .height(30.dp)
             .background(MaterialTheme.colorScheme.primaryContainer),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -86,7 +83,7 @@ private fun DialogWindowScope.FrameContent(
 
             Image(
                 painter = it,
-                contentDescription = "Window Icon",
+                contentDescription = "DialogWindow Icon",
                 modifier = Modifier
                     .dialogWindowFrameItem("icon-window", HitSpots.OTHER_HIT_SPOT)
                     .size(16.dp)

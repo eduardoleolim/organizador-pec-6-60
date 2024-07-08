@@ -151,24 +151,10 @@ fun FrameWindowScope.WindowsActionButtons(
 
 @Composable
 fun DialogWindowScope.DialogWindowsActionButtons(onRequestClose: () -> Unit) {
-    var isResizable by remember { mutableStateOf(window.isResizable) }
-
-    DisposableEffect(window) {
-        val listener = PropertyChangeListener {
-            isResizable = it.newValue as Boolean
-        }
-
-        window.addPropertyChangeListener("resizable", listener)
-        onDispose {
-            window.removePropertyChangeListener("resizable", listener)
-        }
-    }
-
     Row(
         modifier = Modifier,
         verticalAlignment = Alignment.Top
     ) {
-
         CloseButton(
             onRequestClose = onRequestClose,
             modifier = Modifier

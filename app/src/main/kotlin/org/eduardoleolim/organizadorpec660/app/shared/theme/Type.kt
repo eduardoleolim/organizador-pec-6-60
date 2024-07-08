@@ -8,10 +8,8 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import org.eduardoleolim.organizadorpec660.app.generated.resources.*
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.Font
 
-@OptIn(ExperimentalResourceApi::class)
 val RobotoFontFamily
     @Composable get() = FontFamily(
         Font(Res.font.Roboto_Thin, FontWeight.Thin, FontStyle.Normal),
@@ -137,7 +135,6 @@ val RobotoTypography: Typography
         )
     )
 
-@OptIn(ExperimentalResourceApi::class)
 val montserratFontFamily
     @Composable get() = FontFamily(
         Font(Res.font.Montserrat_Thin, FontWeight.Thin, FontStyle.Normal),
