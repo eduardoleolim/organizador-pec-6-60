@@ -71,7 +71,7 @@ data class FederalEntityKeyCode(val value: String) {
     }
 
     private fun validate() {
-        if (Regex("[0-9]{2}").matches(value).not()) {
+        if (Regex("[0-9]{2}").matches(value).not() || value == "00") {
             throw InvalidFederalEntityKeyCodeError(value)
         }
     }
