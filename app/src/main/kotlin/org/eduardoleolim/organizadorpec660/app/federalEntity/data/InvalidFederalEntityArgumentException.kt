@@ -11,3 +11,6 @@ class EmptyFederalEntityDataException(val isKeyCodeEmpty: Boolean, val isNameEmp
             else -> null
         }
     )
+
+class FederalEntityImportException(val warnings: List<Throwable>) :
+    InvalidFederalEntityArgumentException("An error occurred during export of federal entities")

@@ -53,6 +53,19 @@
     <string name="fe_form_keycode_format">La clave debe tener 2 dígitos</string>
     <string name="fe_form_name_format">El nombre no puede estar vacío</string>
     <string name="fe_form_already_exists">Ya existe una entidad federativa con esa clave</string>
+    <string name="fe_catalog_title">Catálogo de entidades federativas</string>
+    <string name="fe_catalog_content">Selecciona una opción:</string>
+    <string name="fe_catalog_import">Importar</string>
+    <string name="fe_catalog_import_title">Importar Entidades Federativas</string>
+    <string name="fe_catalog_import_content">Por favor, descargue la plantilla, llénela con los datos necesarios y luego
+        seleccione el archivo para importar.
+    </string>
+    <string name="fe_catalog_import_download_template">Descargar Plantilla CSV</string>
+    <string name="fe_catalog_import_select_file">Seleccionar Archivo CSV</string>
+    <string name="fe_catalog_import_select_template">plantilla-entidades-federativas.csv</string>
+    <string name="fe_catalog_import_select_chooser">Documentos CSV (*.csv)</string>
+
+    <string name="fe_catalog_export">Exportar</string>
 
     <!-- Municipality -->
     <string name="municipalities">Municipios</string>

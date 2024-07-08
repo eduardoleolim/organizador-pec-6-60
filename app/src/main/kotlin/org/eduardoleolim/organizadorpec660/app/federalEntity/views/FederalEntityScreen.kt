@@ -30,18 +30,25 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
         val screenModel = rememberScreenModel { FederalEntityScreenModel(queryBus, commandBus) }
         var showDeleteModal by remember { mutableStateOf(false) }
         var showFormModal by remember { mutableStateOf(false) }
+        var showImportExportModal by remember { mutableStateOf(false) }
+        var showImportModal by remember { mutableStateOf(false) }
+        var showExportModal by remember { mutableStateOf(false) }
         var selectedFederalEntity by remember { mutableStateOf<FederalEntityResponse?>(null) }
         val pageSizes = remember { listOf(10, 25, 50, 100) }
         val state = rememberPaginatedDataTableState(pageSizes.first())
         var searchValue by remember { mutableStateOf("") }
-
-        fun resetView() {
-            searchValue = ""
-            state.reset(pageSizes.first())
-            screenModel.searchFederalEntities(searchValue, null, state.pageSize, state.pageIndex * state.pageSize)
-            showDeleteModal = false
-            showFormModal = false
-            selectedFederalEntity = null
+        val resetScreen = remember {
+            fun() {
+                searchValue = ""
+                state.reset(pageSizes.first())
+                screenModel.searchFederalEntities(searchValue, null, state.pageSize, state.pageIndex * state.pageSize)
+                showDeleteModal = false
+                showFormModal = false
+                showImportExportModal = false
+                showImportModal = false
+                showExportModal = false
+                selectedFederalEntity = null
+            }
         }
 
         Column(
@@ -67,7 +74,7 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
 
                 SmallFloatingActionButton(
                     onClick = {
-
+                        showImportExportModal = true
                     },
                     containerColor = MaterialTheme.colorScheme.secondaryContainer
                 ) {
@@ -116,24 +123,49 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
                 }
             )
 
-            if (showDeleteModal && selectedFederalEntity != null) {
-                screenModel.resetDeleteModal()
-                FederalEntityDeleteModal(
-                    screenModel = screenModel,
-                    federalEntity = selectedFederalEntity!!,
-                    onSuccess = { resetView() },
-                    onDismissRequest = { resetView() }
-                )
-            }
+            when {
+                showFormModal -> {
+                    screenModel.resetFormModal()
+                    FederalEntityFormModal(
+                        screenModel = screenModel,
+                        federalEntity = selectedFederalEntity,
+                        onDismissRequest = { resetScreen() },
+                        onSuccess = { resetScreen() }
+                    )
+                }
 
-            if (showFormModal) {
-                screenModel.resetForm()
-                FederalEntityFormModal(
-                    screenModel = screenModel,
-                    federalEntity = selectedFederalEntity,
-                    onDismissRequest = { resetView() },
-                    onSuccess = { resetView() }
-                )
+                showDeleteModal && selectedFederalEntity != null -> {
+                    screenModel.resetDeleteModal()
+                    FederalEntityDeleteModal(
+                        screenModel = screenModel,
+                        federalEntity = selectedFederalEntity!!,
+                        onSuccess = { resetScreen() },
+                        onDismissRequest = { resetScreen() }
+                    )
+                }
+
+                showImportExportModal -> {
+                    FederalEntityImportExportModal(
+                        onImportClick = {
+                            showImportExportModal = false
+                            showImportModal = true
+                        },
+                        onExportClick = {
+                            showImportExportModal = false
+                            showExportModal = true
+                        },
+                        onDismissRequest = { resetScreen() }
+                    )
+                }
+
+                showImportModal -> {
+                    screenModel.resetImportModal()
+                    FederalEntityImportModal(
+                        screenModel = screenModel,
+                        onSuccessImport = { resetScreen() },
+                        onDismissRequest = { resetScreen() }
+                    )
+                }
             }
         }
     }

@@ -12,6 +12,7 @@ ktorm = "4.0.0"
 sqlite = "3.46.0.0"
 koin = "3.5.6"
 slf4j = "2.0.13"
+kotlin-csv = "1.9.3"
 jasypt = "1.9.3"
 
 [libraries]
@@ -29,4 +30,5 @@ ktorm-sqlite = { module = "org.ktorm:ktorm-support-sqlite", version.ref = "ktorm
 jdbc-sqlite = { module = "io.github.willena:sqlite-jdbc", version.ref = "sqlite" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
+kotlin-csv-jvm = { module = "com.github.doyaaaaaken:kotlin-csv-jvm", version.ref = "kotlin-csv" }
 jasypt = { module = "org.jasypt:jasypt", version.ref = "jasypt" }

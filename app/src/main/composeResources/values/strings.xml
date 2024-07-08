@@ -53,6 +53,19 @@
     <string name="fe_form_keycode_format">The KeyCode must be a two-digit number</string>
     <string name="fe_form_name_format">The name cannot be empty</string>
     <string name="fe_form_already_exists">A federal entity already exists with that KeyCode</string>
+    <string name="fe_catalog_title">Federal entities catalog</string>
+    <string name="fe_catalog_content">Select an option:</string>
+    <string name="fe_catalog_import">Import</string>
+    <string name="fe_catalog_import_title">Import Federal Entities</string>
+    <string name="fe_catalog_import_content">Please download the template, fill it with the necessary data, and then
+        select the file to import.
+    </string>
+    <string name="fe_catalog_import_download_template">Download CSV Template</string>
+    <string name="fe_catalog_import_select_file">Select CSV File</string>
+    <string name="fe_catalog_import_select_template">template-federal-entities.csv</string>
+    <string name="fe_catalog_import_select_chooser">CSV documents (*.csv)</string>
+
+    <string name="fe_catalog_export">Export</string>
 
     <!-- Municipality -->
     <string name="municipalities">Municipalities</string>
