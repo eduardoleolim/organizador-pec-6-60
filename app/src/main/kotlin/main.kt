@@ -1,14 +1,12 @@
 import org.eduardoleolim.organizadorpec660.app.App
 import org.eduardoleolim.organizadorpec660.app.shared.utils.AppConfig
+import org.eduardoleolim.organizadorpec660.app.shared.utils.DesktopPlatform
 import java.io.File
 
 fun main() {
     try {
-        val osName = System.getProperty("os.name").lowercase()
-
-        val renderApi = when {
-            osName.contains("win") -> "OPENGL"
-            osName.contains("mac") -> "METAL"
+        val renderApi = when (DesktopPlatform.Current) {
+            DesktopPlatform.MacOS -> "METAL"
             else -> "OPENGL"
         }
 
