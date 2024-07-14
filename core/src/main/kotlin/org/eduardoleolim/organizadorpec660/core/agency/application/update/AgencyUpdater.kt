@@ -39,7 +39,7 @@ class AgencyUpdater(
         agency.apply {
             changeName(name)
             changeConsecutive(consecutive)
-            changeMuncipalityId(municipalityId)
+            changeMunicipalityId(municipalityId)
             replaceStatisticTypeIds(statisticTypeIds)
         }.let {
             agencyRepository.save(agency)

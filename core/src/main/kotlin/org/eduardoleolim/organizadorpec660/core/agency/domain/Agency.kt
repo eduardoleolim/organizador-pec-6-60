@@ -99,7 +99,7 @@ class Agency private constructor(
         this.updatedAt = AgencyUpdateDate.now()
     }
 
-    fun changeMuncipalityId(municipalityId: String) {
+    fun changeMunicipalityId(municipalityId: String) {
         this.municipalityId = MunicipalityId.fromString(municipalityId)
         this.updatedAt = AgencyUpdateDate.now()
     }
