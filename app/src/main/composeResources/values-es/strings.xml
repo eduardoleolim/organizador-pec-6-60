@@ -57,9 +57,7 @@
     <string name="fe_catalog_content">Selecciona una opción:</string>
     <string name="fe_catalog_import">Importar</string>
     <string name="fe_catalog_import_title">Importar Entidades Federativas</string>
-    <string name="fe_catalog_import_content">Por favor, descargue la plantilla, llénela con los datos necesarios y luego
-        seleccione el archivo para importar.
-    </string>
+    <string name="fe_catalog_import_content">Por favor, descargue la plantilla, llénela con los datos necesarios y luego seleccione el archivo para importar.</string>
     <string name="fe_catalog_import_download_template">Descargar Plantilla CSV</string>
     <string name="fe_catalog_import_select_file">Seleccionar Archivo CSV</string>
     <string name="fe_catalog_import_select_template">plantilla-entidades-federativas.csv</string>
