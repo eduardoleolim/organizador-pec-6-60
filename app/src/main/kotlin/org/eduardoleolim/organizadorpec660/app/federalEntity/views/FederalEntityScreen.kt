@@ -39,9 +39,10 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
         var searchValue by remember { mutableStateOf("") }
         val resetScreen = remember {
             fun() {
+                val offset = state.pageIndex * state.pageSize
                 searchValue = ""
                 state.reset(pageSizes.first())
-                screenModel.searchFederalEntities(searchValue, null, state.pageSize, state.pageIndex * state.pageSize)
+                screenModel.searchFederalEntities(searchValue, null, state.pageSize, offset)
                 showDeleteModal = false
                 showFormModal = false
                 showImportExportModal = false
@@ -54,49 +55,13 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
         Column(
             modifier = Modifier.padding(24.dp)
         ) {
-            Row(
-                modifier = Modifier
-                    .padding(
-                        start = 16.dp,
-                        end = 16.dp,
-                        bottom = 16.dp
-                    ),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(Res.string.federal_entities),
-                    style = MaterialTheme.typography.titleLarge
-                )
-
-                Spacer(
-                    modifier = Modifier.weight(1.0f)
-                )
-
-                SmallFloatingActionButton(
-                    onClick = {
-                        showImportExportModal = true
-                    },
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.ImportExport,
-                        contentDescription = "Import/Export federal entities"
-                    )
-                }
-
-                SmallFloatingActionButton(
-                    onClick = {
-                        selectedFederalEntity = null
-                        showFormModal = true
-                    },
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Add,
-                        contentDescription = "Add federal entity"
-                    )
-                }
-            }
+            FederalEntityScreenHeader(
+                onSaveRequest = {
+                    selectedFederalEntity = null
+                    showFormModal = true
+                },
+                onImportExportRequest = { showImportExportModal = true }
+            )
 
             FederalEntitiesTable(
                 modifier = Modifier.fillMaxSize(),
@@ -166,6 +131,46 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
                         onDismissRequest = { resetScreen() }
                     )
                 }
+            }
+        }
+    }
+
+    @Composable
+    fun FederalEntityScreenHeader(
+        onSaveRequest: () -> Unit,
+        onImportExportRequest: () -> Unit
+    ) {
+        Row(
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(Res.string.federal_entities),
+                style = MaterialTheme.typography.titleLarge
+            )
+
+            Spacer(Modifier.weight(1.0f))
+
+            SmallFloatingActionButton(
+                onClick = onImportExportRequest,
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.ImportExport,
+                    contentDescription = "Import/Export federal entities"
+                )
+            }
+
+            SmallFloatingActionButton(
+                onClick = onSaveRequest,
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = "Add federal entity"
+                )
             }
         }
     }

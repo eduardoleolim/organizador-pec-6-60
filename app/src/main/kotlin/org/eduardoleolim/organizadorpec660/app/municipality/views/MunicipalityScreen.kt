@@ -3,6 +3,7 @@ package org.eduardoleolim.organizadorpec660.app.municipality.views
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ImportExport
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
@@ -34,58 +35,29 @@ class MunicipalityScreen(private val queryBus: QueryBus, private val commandBus:
         var searchValue by remember { mutableStateOf("") }
         val pageSizes = remember { listOf(10, 25, 50, 100) }
         val state = rememberPaginatedDataTableState(pageSizes.first())
-
-        fun resetView() {
-            searchValue = ""
-            state.reset(pageSizes.first())
-            screenModel.searchMunicipalities(
-                searchValue,
-                selectedFederalEntityId,
-                null,
-                state.pageSize,
-                state.pageIndex * state.pageSize
-            )
-            screenModel.searchAllFederalEntities()
-            showDeleteModal = false
-            showFormModal = false
-            selectedMunicipality = null
+        val resetScreen = remember {
+            fun() {
+                val offset = state.pageIndex * state.pageSize
+                searchValue = ""
+                state.reset(pageSizes.first())
+                screenModel.searchMunicipalities(searchValue, selectedFederalEntityId, null, state.pageSize, offset)
+                screenModel.searchAllFederalEntities()
+                showDeleteModal = false
+                showFormModal = false
+                selectedMunicipality = null
+            }
         }
 
         Column(
             modifier = Modifier.padding(24.dp)
         ) {
-            Row(
-                modifier = Modifier
-                    .padding(
-                        start = 16.dp,
-                        end = 16.dp,
-                        bottom = 16.dp
-                    ),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(Res.string.municipalities),
-                    style = MaterialTheme.typography.titleLarge
-                )
-
-                Spacer(
-                    modifier = Modifier.weight(1.0f)
-                )
-
-                SmallFloatingActionButton(
-                    onClick = {
-                        selectedMunicipality = null
-                        showFormModal = true
-                    },
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                    contentColor = MaterialTheme.colorScheme.secondary
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Add,
-                        contentDescription = "Add municipality"
-                    )
-                }
-            }
+            MunicipalityScreenHeader(
+                onSaveRequest = {
+                    selectedMunicipality = null
+                    showFormModal = true
+                },
+                onImportExportRequest = { }
+            )
 
             MunicipalitiesTable(
                 modifier = Modifier.fillMaxSize(),
@@ -114,24 +86,68 @@ class MunicipalityScreen(private val queryBus: QueryBus, private val commandBus:
                 }
             )
 
-            if (showDeleteModal && selectedMunicipality != null) {
-                screenModel.resetDeleteModal()
-                MunicipalityDeleteModal(
-                    screenModel = screenModel,
-                    municipality = selectedMunicipality!!,
-                    onSuccess = { resetView() },
-                    onFail = { resetView() },
-                    onDismissRequest = { resetView() }
+            when {
+                showFormModal -> {
+                    screenModel.resetForm()
+                    MunicipalityFormModal(
+                        screenModel = screenModel,
+                        municipality = selectedMunicipality,
+                        onDismissRequest = { resetScreen() },
+                        onSuccess = { resetScreen() }
+                    )
+                }
+
+                showDeleteModal && selectedMunicipality != null -> {
+                    screenModel.resetDeleteModal()
+                    MunicipalityDeleteModal(
+                        screenModel = screenModel,
+                        municipality = selectedMunicipality!!,
+                        onSuccess = { resetScreen() },
+                        onFail = { resetScreen() },
+                        onDismissRequest = { resetScreen() }
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun MunicipalityScreenHeader(
+        onSaveRequest: () -> Unit,
+        onImportExportRequest: () -> Unit
+    ) {
+        Row(
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(Res.string.municipalities),
+                style = MaterialTheme.typography.titleLarge
+            )
+
+            Spacer(
+                modifier = Modifier.weight(1.0f)
+            )
+
+            SmallFloatingActionButton(
+                onClick = onImportExportRequest,
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.ImportExport,
+                    contentDescription = "Import/Export municipalities"
                 )
             }
 
-            if (showFormModal) {
-                screenModel.resetForm()
-                MunicipalityFormModal(
-                    screenModel = screenModel,
-                    municipality = selectedMunicipality,
-                    onDismissRequest = { resetView() },
-                    onSuccess = { resetView() }
+            SmallFloatingActionButton(
+                onClick = onSaveRequest,
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = "Add municipality"
                 )
             }
         }

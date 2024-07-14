@@ -3,6 +3,7 @@ package org.eduardoleolim.organizadorpec660.app.agency.views
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ImportExport
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
@@ -33,48 +34,28 @@ class AgencyScreen(private val queryBus: QueryBus, private val commandBus: Comma
         val pageSizes = remember { listOf(10, 25, 50, 100) }
         val state = rememberPaginatedDataTableState(pageSizes.first())
         var searchValue by remember { mutableStateOf("") }
-
-        fun resetView() {
-            searchValue = ""
-            state.reset(pageSizes.first())
-            screenModel.searchAgencies(searchValue, null, state.pageSize, state.pageIndex * state.pageSize)
-            showDeleteModal = false
-            showFormModal = false
-            selectedAgency = null
+        val resetScreen = remember {
+            fun() {
+                val offset = state.pageIndex * state.pageSize
+                searchValue = ""
+                state.reset(pageSizes.first())
+                screenModel.searchAgencies(searchValue, null, state.pageSize, offset)
+                showDeleteModal = false
+                showFormModal = false
+                selectedAgency = null
+            }
         }
 
         Column(
             modifier = Modifier.padding(24.dp)
         ) {
-            Row(
-                modifier = Modifier
-                    .padding(
-                        start = 16.dp,
-                        end = 16.dp,
-                        bottom = 16.dp
-                    ),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(Res.string.agencies),
-                    style = MaterialTheme.typography.titleLarge
-                )
-
-                Spacer(modifier = Modifier.weight(1.0f))
-
-                SmallFloatingActionButton(
-                    onClick = {
-                        showFormModal = true
-                    },
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                    contentColor = MaterialTheme.colorScheme.secondary
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Add,
-                        contentDescription = "Add agency"
-                    )
-                }
-            }
+            AgencyScreenHeader(
+                onSaveRequest = {
+                    selectedAgency = null
+                    showFormModal = true
+                },
+                onImportExportRequest = {}
+            )
 
             AgenciesTable(
                 modifier = Modifier.fillMaxSize(),
@@ -101,23 +82,65 @@ class AgencyScreen(private val queryBus: QueryBus, private val commandBus: Comma
                 }
             )
 
-            if (showDeleteModal && selectedAgency != null) {
-                screenModel.resetDeleteModal()
-                AgencyDeleteModal(
-                    screenModel = screenModel,
-                    agency = selectedAgency!!,
-                    onSuccess = { resetView() },
-                    onDismissRequest = { resetView() }
+            when {
+                showFormModal -> {
+                    screenModel.resetForm()
+                    AgencyFormModal(
+                        screenModel = screenModel,
+                        agency = selectedAgency,
+                        onDismissRequest = { resetScreen() },
+                        onSuccess = { resetScreen() }
+                    )
+                }
+
+                showDeleteModal && selectedAgency != null -> {
+                    screenModel.resetDeleteModal()
+                    AgencyDeleteModal(
+                        screenModel = screenModel,
+                        agency = selectedAgency!!,
+                        onSuccess = { resetScreen() },
+                        onDismissRequest = { resetScreen() }
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun AgencyScreenHeader(
+        onSaveRequest: () -> Unit,
+        onImportExportRequest: () -> Unit
+    ) {
+        Row(
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(Res.string.agencies),
+                style = MaterialTheme.typography.titleLarge
+            )
+
+            Spacer(modifier = Modifier.weight(1.0f))
+
+            SmallFloatingActionButton(
+                onClick = onImportExportRequest,
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.ImportExport,
+                    contentDescription = "Import/Export agencies"
                 )
             }
 
-            if (showFormModal) {
-                screenModel.resetForm()
-                AgencyFormModal(
-                    screenModel = screenModel,
-                    agency = selectedAgency,
-                    onDismissRequest = { resetView() },
-                    onSuccess = { resetView() }
+            SmallFloatingActionButton(
+                onClick = onSaveRequest,
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = "Add agency"
                 )
             }
         }

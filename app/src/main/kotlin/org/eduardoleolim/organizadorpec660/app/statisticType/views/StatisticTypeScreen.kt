@@ -3,6 +3,7 @@ package org.eduardoleolim.organizadorpec660.app.statisticType.views
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ImportExport
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
@@ -21,11 +22,9 @@ import org.eduardoleolim.organizadorpec660.app.statisticType.model.StatisticType
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
 import org.eduardoleolim.organizadorpec660.core.statisticType.application.StatisticTypeResponse
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 
 class StatisticTypeScreen(private val queryBus: QueryBus, private val commandBus: CommandBus) : Screen {
-    @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun Content() {
         val screenModel = rememberScreenModel { StatisticTypeScreenModel(queryBus, commandBus) }
@@ -35,51 +34,27 @@ class StatisticTypeScreen(private val queryBus: QueryBus, private val commandBus
         val pageSizes = remember { listOf(10, 25, 50, 100) }
         val state = rememberPaginatedDataTableState(pageSizes.first())
         var searchValue by remember { mutableStateOf("") }
-
-        fun resetView() {
-            searchValue = ""
-            state.reset(pageSizes.first())
-            screenModel.searchStatisticTypes(searchValue, null, state.pageSize, state.pageIndex * state.pageSize)
-            showDeleteModal = false
-            showFormModal = false
-            selectedStatisticType = null
+        val resetScreen = remember {
+            fun() {
+                searchValue = ""
+                state.reset(pageSizes.first())
+                screenModel.searchStatisticTypes(searchValue, null, state.pageSize, state.pageIndex * state.pageSize)
+                showDeleteModal = false
+                showFormModal = false
+                selectedStatisticType = null
+            }
         }
 
         Column(
             modifier = Modifier.padding(24.dp)
         ) {
-            Row(
-                modifier = Modifier
-                    .padding(
-                        start = 16.dp,
-                        end = 16.dp,
-                        bottom = 16.dp
-                    ),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(Res.string.statistic_types),
-                    style = MaterialTheme.typography.titleLarge
-                )
-
-                Spacer(
-                    modifier = Modifier.weight(1.0f)
-                )
-
-                SmallFloatingActionButton(
-                    onClick = {
-                        selectedStatisticType = null
-                        showFormModal = true
-                    },
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                    contentColor = MaterialTheme.colorScheme.secondary
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Add,
-                        contentDescription = "Add statistic type"
-                    )
-                }
-            }
+            StatisticTypeScreenHeader(
+                onSaveRequest = {
+                    selectedStatisticType = null
+                    showFormModal = true
+                },
+                onImportExportRequest = { }
+            )
 
             StatisticTypeTable(
                 modifier = Modifier.fillMaxSize(),
@@ -106,24 +81,68 @@ class StatisticTypeScreen(private val queryBus: QueryBus, private val commandBus
                 }
             )
 
-            if (showDeleteModal && selectedStatisticType != null) {
-                screenModel.resetDeleteModal()
-                StatisticTypeDeleteModal(
-                    screenModel = screenModel,
-                    statisticType = selectedStatisticType!!,
-                    onSuccess = { resetView() },
-                    onFail = { resetView() },
-                    onDismissRequest = { resetView() }
+            when {
+                showFormModal -> {
+                    screenModel.resetForm()
+                    StatisticTypeFormModal(
+                        screenModel = screenModel,
+                        statisticType = selectedStatisticType,
+                        onDismissRequest = { resetScreen() },
+                        onSuccess = { resetScreen() }
+                    )
+                }
+
+                showDeleteModal && selectedStatisticType != null -> {
+                    screenModel.resetDeleteModal()
+                    StatisticTypeDeleteModal(
+                        screenModel = screenModel,
+                        statisticType = selectedStatisticType!!,
+                        onSuccess = { resetScreen() },
+                        onFail = { resetScreen() },
+                        onDismissRequest = { resetScreen() }
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun StatisticTypeScreenHeader(
+        onSaveRequest: () -> Unit,
+        onImportExportRequest: () -> Unit
+    ) {
+        Row(
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(Res.string.statistic_types),
+                style = MaterialTheme.typography.titleLarge
+            )
+
+            Spacer(
+                modifier = Modifier.weight(1.0f)
+            )
+
+            SmallFloatingActionButton(
+                onClick = onImportExportRequest,
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.ImportExport,
+                    contentDescription = "Import/Export statistic types"
                 )
             }
 
-            if (showFormModal) {
-                screenModel.resetForm()
-                StatisticTypeFormModal(
-                    screenModel = screenModel,
-                    statisticType = selectedStatisticType,
-                    onDismissRequest = { resetView() },
-                    onSuccess = { resetView() }
+            SmallFloatingActionButton(
+                onClick = onSaveRequest,
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = "Add statistic type"
                 )
             }
         }
