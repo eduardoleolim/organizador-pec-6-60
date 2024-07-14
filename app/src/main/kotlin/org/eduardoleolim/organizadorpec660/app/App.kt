@@ -1,5 +1,6 @@
 package org.eduardoleolim.organizadorpec660.app
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,12 +25,12 @@ import kotlinx.coroutines.launch
 import org.eduardoleolim.organizadorpec660.app.generated.resources.*
 import org.eduardoleolim.organizadorpec660.app.router.Router
 import org.eduardoleolim.organizadorpec660.app.shared.theme.AppTheme
+import org.eduardoleolim.organizadorpec660.app.shared.theme.Contrast
 import org.eduardoleolim.organizadorpec660.app.shared.utils.AppConfig
 import org.eduardoleolim.organizadorpec660.app.shared.utils.isSystemInDarkTheme
 import org.eduardoleolim.organizadorpec660.app.window.CustomWindow
-import org.eduardoleolim.organizadorpec660.app.window.HitSpots
-import org.eduardoleolim.organizadorpec660.app.window.WindowCenter
-import org.eduardoleolim.organizadorpec660.app.window.windowFrameItem
+import org.eduardoleolim.organizadorpec660.app.window.DecoratedWindow
+import org.eduardoleolim.organizadorpec660.app.window.TitleBar
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.bus.KtormCommandBus
@@ -41,7 +42,7 @@ import java.awt.Dimension
 import java.io.File
 
 enum class SystemTheme {
-    DARK, LIGHT, DEFAULT
+    DARK, LIGHT, DARK_MEDIUM, LIGHT_MEDIUM, DARK_HIGH, LIGHT_HIGH, DEFAULT
 }
 
 class App(
@@ -84,69 +85,12 @@ class App(
     }
 
     @Composable
-    private fun MainWindow(onCloseRequest: () -> Unit) {
-        val state = rememberWindowState()
-        var theme by remember { mutableStateOf(SystemTheme.DEFAULT) }
-        val isSystemInDarkTheme = isSystemInDarkTheme()
-
-        AppTheme(
-            darkTheme = when (theme) {
-                SystemTheme.DARK -> true
-                SystemTheme.LIGHT -> false
-                SystemTheme.DEFAULT -> isSystemInDarkTheme
-            }
-        ) {
-            val icon = painterResource(Res.drawable.logo)
-            CustomWindow(
-                state = state,
-                onCloseRequest = { onCloseRequest() },
-                defaultTitle = stringResource(Res.string.app_name),
-                defaultIcon = icon
-            ) {
-                WindowCenter {
-                    Row(
-                        Modifier.fillMaxWidth().padding(start = 16.dp),
-                    ) {
-                        Icon(
-                            imageVector = when (theme) {
-                                SystemTheme.DARK -> Icons.Filled.DarkMode
-                                SystemTheme.LIGHT -> Icons.Filled.LightMode
-                                SystemTheme.DEFAULT -> Icons.Filled.Contrast
-                            },
-                            contentDescription = "Toggle theme",
-                            modifier = Modifier
-                                .windowFrameItem("theme", HitSpots.OTHER_HIT_SPOT)
-                                .clip(RoundedCornerShape(6.dp))
-                                .clickable {
-                                    theme = when (theme) {
-                                        SystemTheme.DARK -> SystemTheme.LIGHT
-                                        SystemTheme.LIGHT -> SystemTheme.DEFAULT
-                                        SystemTheme.DEFAULT -> SystemTheme.DARK
-                                    }
-                                }
-                                .padding(4.dp)
-                                .size(16.dp)
-                        )
-                    }
-                }
-
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.surfaceContainer
-                ) {
-                    Router(commandBus, queryBus)
-                }
-            }
-        }
-    }
-
-    @Composable
     private fun ConfigWindow(onCloseRequest: () -> Unit, onPasswordSet: (String) -> Unit) {
         val state = rememberWindowState()
         val isSystemInDarkTheme = isSystemInDarkTheme()
 
         AppTheme(
-            darkTheme = isSystemInDarkTheme
+            isDarkMode = isSystemInDarkTheme
         ) {
             val icon = painterResource(Res.drawable.logo)
             CustomWindow(
@@ -218,6 +162,149 @@ class App(
                             fontSize = 16.sp
                         )
                     }
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun MainWindow(onCloseRequest: () -> Unit) {
+        val state = rememberWindowState()
+        var theme by remember { mutableStateOf(SystemTheme.DEFAULT) }
+        val isSystemInDarkTheme = isSystemInDarkTheme()
+
+        AppTheme(
+            isDarkMode = when (theme) {
+                SystemTheme.DARK, SystemTheme.DARK_MEDIUM, SystemTheme.DARK_HIGH -> true
+                SystemTheme.LIGHT, SystemTheme.LIGHT_MEDIUM, SystemTheme.LIGHT_HIGH -> false
+                SystemTheme.DEFAULT -> isSystemInDarkTheme
+            },
+            contrast = when (theme) {
+                SystemTheme.DARK, SystemTheme.LIGHT, SystemTheme.DEFAULT -> Contrast.NORMAL
+                SystemTheme.DARK_MEDIUM, SystemTheme.LIGHT_MEDIUM -> Contrast.MEDIUM
+                SystemTheme.DARK_HIGH, SystemTheme.LIGHT_HIGH -> Contrast.HIGH
+            }
+        ) {
+            val icon = painterResource(Res.drawable.logo)
+            DecoratedWindow(
+                onCloseRequest = onCloseRequest,
+                state = state,
+                icon = icon,
+                title = stringResource(Res.string.app_name)
+            ) {
+                TitleBar {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.align(Alignment.Start).padding(start = 10.dp)
+                    ) {
+                        Image(
+                            painter = icon,
+                            contentDescription = "icon",
+                            modifier = Modifier.size(16.dp)
+                        )
+
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            ThemeSelector(onThemeSelected = { theme = it })
+                        }
+                    }
+
+                    Text(title)
+                }
+
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.surfaceContainer
+                ) {
+                    Router(commandBus, queryBus)
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun ThemeSelector(
+        initialValue: SystemTheme = SystemTheme.DEFAULT,
+        onThemeSelected: (SystemTheme) -> Unit
+    ) {
+        val themes = remember {
+            listOf(
+                Triple(Icons.Filled.Contrast, SystemTheme.DEFAULT, "System theme"),
+                Triple(Icons.Filled.DarkMode, SystemTheme.DARK, "Dark theme"),
+                Triple(Icons.Filled.DarkMode, SystemTheme.DARK_MEDIUM, "Medium Dark theme"),
+                Triple(Icons.Filled.DarkMode, SystemTheme.DARK_HIGH, "High Dark theme"),
+                Triple(Icons.Filled.LightMode, SystemTheme.LIGHT, "Light theme"),
+                Triple(Icons.Filled.LightMode, SystemTheme.LIGHT_MEDIUM, "Medium Light theme"),
+                Triple(Icons.Filled.LightMode, SystemTheme.LIGHT_HIGH, "High Light  theme"),
+            )
+        }
+        var theme by remember {
+            val value = themes.find { it.second == initialValue } ?: themes.first()
+            mutableStateOf(value)
+        }
+        var expanded by remember { mutableStateOf(false) }
+
+        val background = MaterialTheme.colorScheme.primaryContainer
+        val foreground = LocalContentColor.current
+        val fontStyle = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Light)
+
+        LaunchedEffect(theme) {
+            onThemeSelected(theme.second)
+        }
+
+        Box {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(6.dp))
+                    .clickable { expanded = true }
+                    .padding(4.dp)
+                    .height(24.dp)
+            ) {
+                Icon(
+                    imageVector = theme.first,
+                    contentDescription = "Toggle theme",
+                    modifier = Modifier.size(16.dp)
+                )
+
+                Text(
+                    color = foreground,
+                    text = theme.third,
+                    style = fontStyle
+                )
+            }
+
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+                containerColor = background
+            ) {
+                themes.forEach { item ->
+                    DropdownMenuItem(
+                        leadingIcon = {
+                            Icon(
+                                tint = foreground,
+                                imageVector = item.first,
+                                contentDescription = item.third,
+                                modifier = Modifier.size(16.dp)
+                            )
+                        },
+                        text = {
+                            Text(
+                                color = foreground,
+                                text = item.third,
+                                style = fontStyle
+                            )
+                        },
+                        onClick = {
+                            expanded = false
+                            theme = item
+                        }
+                    )
                 }
             }
         }

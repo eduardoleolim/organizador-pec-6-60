@@ -248,12 +248,29 @@ val unspecified_scheme = ColorFamily(
     Color.Unspecified, Color.Unspecified, Color.Unspecified, Color.Unspecified
 )
 
+enum class Contrast {
+    NORMAL, MEDIUM, HIGH
+}
+
 @Composable
 fun AppTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    isDarkMode: Boolean = isSystemInDarkTheme(),
+    contrast: Contrast = Contrast.NORMAL,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = if (darkTheme) darkScheme else lightScheme
+    val colorScheme = if (isDarkMode) {
+        when (contrast) {
+            Contrast.NORMAL -> darkScheme
+            Contrast.MEDIUM -> mediumContrastDarkColorScheme
+            Contrast.HIGH -> highContrastDarkColorScheme
+        }
+    } else {
+        when (contrast) {
+            Contrast.NORMAL -> lightScheme
+            Contrast.MEDIUM -> mediumContrastLightColorScheme
+            Contrast.HIGH -> highContrastLightColorScheme
+        }
+    }
 
     MaterialTheme(
         colorScheme = colorScheme,
