@@ -31,7 +31,7 @@ class AgencyCreator(
         }
 
         if (existsAnotherAgencySameConsecutive(consecutive, municipalityId))
-            throw AgencyAlreadyExists(consecutive)
+            throw AgencyAlreadyExistsError(consecutive)
 
         Agency.create(name, consecutive, municipalityId, statisticTypeIds).let {
             agencyRepository.save(it)

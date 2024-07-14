@@ -34,7 +34,7 @@ class AgencyUpdater(
         }
 
         if (existsAnotherAgencySameConsecutive(agencyId, consecutive, municipalityId))
-            throw AgencyAlreadyExists(consecutive)
+            throw AgencyAlreadyExistsError(consecutive)
 
         agency.apply {
             changeName(name)
