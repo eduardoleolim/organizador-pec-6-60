@@ -22,6 +22,7 @@ import org.eduardoleolim.organizadorpec660.core.federalEntity.application.search
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.update.UpdateFederalEntityCommand
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.core.shared.domain.onLeft
 import org.jetbrains.compose.resources.getString
 import java.io.File
 import java.io.IOException
@@ -106,8 +107,14 @@ class FederalEntityScreenModel(private val queryBus: QueryBus, private val comma
             }
 
             try {
-                commandBus.dispatch(CreateFederalEntityCommand(keyCode, name))
-                formState = FederalEntityFormState.SuccessCreate
+                commandBus.dispatch(CreateFederalEntityCommand(keyCode, name)).fold(
+                    ifRight = {
+                        formState = FederalEntityFormState.SuccessCreate
+                    },
+                    ifLeft = {
+                        deleteState = FederalEntityDeleteState.Error(it)
+                    }
+                )
             } catch (e: Exception) {
                 formState = FederalEntityFormState.Error(e.cause!!)
             }
@@ -128,8 +135,14 @@ class FederalEntityScreenModel(private val queryBus: QueryBus, private val comma
             }
 
             try {
-                commandBus.dispatch(UpdateFederalEntityCommand(federalEntityId, keyCode, name))
-                formState = FederalEntityFormState.SuccessEdit
+                commandBus.dispatch(UpdateFederalEntityCommand(federalEntityId, keyCode, name)).fold(
+                    ifRight = {
+                        formState = FederalEntityFormState.SuccessEdit
+                    },
+                    ifLeft = {
+                        deleteState = FederalEntityDeleteState.Error(it)
+                    }
+                )
             } catch (e: Exception) {
                 formState = FederalEntityFormState.Error(e.cause!!)
             }
@@ -142,8 +155,15 @@ class FederalEntityScreenModel(private val queryBus: QueryBus, private val comma
             delay(500)
 
             try {
-                commandBus.dispatch(DeleteFederalEntityCommand(federalEntityId))
-                deleteState = FederalEntityDeleteState.Success
+                commandBus.dispatch(DeleteFederalEntityCommand(federalEntityId)).fold(
+                    ifRight = {
+                        deleteState = FederalEntityDeleteState.Success
+                    },
+                    ifLeft = {
+                        deleteState = FederalEntityDeleteState.Error(it)
+                    }
+                )
+
             } catch (e: Exception) {
                 deleteState = FederalEntityDeleteState.Error(e.cause!!)
             }
@@ -183,8 +203,9 @@ class FederalEntityScreenModel(private val queryBus: QueryBus, private val comma
                     val keyCode = row[keyCodeHeader]?.padStart(2, '0') ?: ""
                     val name = row[nameHeader] ?: ""
 
-                    commandBus.runCatching { dispatch(CreateFederalEntityCommand(keyCode, name)) }
-                        .onFailure { warnings.add(it.cause!!) }
+                    commandBus.dispatch(CreateFederalEntityCommand(keyCode, name)).onLeft {
+                        warnings.add(it)
+                    }
                 }
             }
 

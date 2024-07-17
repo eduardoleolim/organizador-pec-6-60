@@ -100,8 +100,14 @@ class MunicipalityScreenModel(private val queryBus: QueryBus, private val comman
             }
 
             try {
-                commandBus.dispatch(CreateMunicipalityCommand(keyCode, name, federalEntityId!!))
-                formState = FormState.SuccessCreate
+                commandBus.dispatch(CreateMunicipalityCommand(keyCode, name, federalEntityId!!)).fold(
+                    ifRight = {
+                        formState = FormState.SuccessCreate
+                    },
+                    ifLeft = {
+                        formState = FormState.Error(it)
+                    }
+                )
             } catch (e: Exception) {
                 formState = FormState.Error(e.cause!!)
             }
@@ -124,8 +130,14 @@ class MunicipalityScreenModel(private val queryBus: QueryBus, private val comman
             }
 
             try {
-                commandBus.dispatch(UpdateMunicipalityCommand(municipalityId, keyCode, name, federalEntityId!!))
-                formState = FormState.SuccessEdit
+                commandBus.dispatch(UpdateMunicipalityCommand(municipalityId, keyCode, name, federalEntityId!!)).fold(
+                    ifRight = {
+                        formState = FormState.SuccessEdit
+                    },
+                    ifLeft = {
+                        formState = FormState.Error(it)
+                    }
+                )
             } catch (e: Exception) {
                 formState = FormState.Error(e.cause!!)
             }
@@ -138,8 +150,15 @@ class MunicipalityScreenModel(private val queryBus: QueryBus, private val comman
             delay(500)
 
             try {
-                commandBus.dispatch(DeleteMunicipalityCommand(municipalityId))
-                deleteState = DeleteState.Success
+                commandBus.dispatch(DeleteMunicipalityCommand(municipalityId)).fold(
+                    ifRight = {
+                        deleteState = DeleteState.Success
+                    },
+                    ifLeft = {
+                        deleteState = DeleteState.Error(it)
+                    }
+                )
+
             } catch (e: Exception) {
                 deleteState = DeleteState.Error(e.cause!!)
             }

@@ -17,7 +17,6 @@ import org.eduardoleolim.organizadorpec660.core.statisticType.application.delete
 import org.eduardoleolim.organizadorpec660.core.statisticType.application.searchByTerm.SearchStatisticTypesByTermQuery
 import org.eduardoleolim.organizadorpec660.core.statisticType.application.update.UpdateStatisticTypeCommand
 
-
 sealed class FormState {
     data object Idle : FormState()
     data object InProgress : FormState()
@@ -82,8 +81,14 @@ class StatisticTypeScreenModel(private val queryBus: QueryBus, private val comma
             }
 
             try {
-                commandBus.dispatch(CreateStatisticTypeCommand(keyCode, name))
-                formState = FormState.SuccessCreate
+                commandBus.dispatch(CreateStatisticTypeCommand(keyCode, name)).fold(
+                    ifRight = {
+                        formState = FormState.SuccessCreate
+                    },
+                    ifLeft = {
+                        formState = FormState.Error(it)
+                    }
+                )
             } catch (e: Exception) {
                 formState = FormState.Error(e.cause!!)
             }
@@ -104,8 +109,14 @@ class StatisticTypeScreenModel(private val queryBus: QueryBus, private val comma
             }
 
             try {
-                commandBus.dispatch(UpdateStatisticTypeCommand(statisticTypeId, keyCode, name))
-                formState = FormState.SuccessEdit
+                commandBus.dispatch(UpdateStatisticTypeCommand(statisticTypeId, keyCode, name)).fold(
+                    ifRight = {
+                        formState = FormState.SuccessEdit
+                    },
+                    ifLeft = {
+                        formState = FormState.Error(it)
+                    }
+                )
             } catch (e: Exception) {
                 formState = FormState.Error(e.cause!!)
             }
@@ -118,8 +129,14 @@ class StatisticTypeScreenModel(private val queryBus: QueryBus, private val comma
             delay(500)
 
             try {
-                commandBus.dispatch(DeleteStatisticTypeCommand(statisticTypeId))
-                deleteState = DeleteState.Success
+                commandBus.dispatch(DeleteStatisticTypeCommand(statisticTypeId)).fold(
+                    ifRight = {
+                        deleteState = DeleteState.Success
+                    },
+                    ifLeft = {
+                        deleteState = DeleteState.Error(it)
+                    }
+                )
             } catch (e: Exception) {
                 deleteState = DeleteState.Error(e.cause!!)
             }
