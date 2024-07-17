@@ -4,6 +4,7 @@ import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEnti
 import org.eduardoleolim.organizadorpec660.core.federalEntity.infrastructure.persistence.InMemoryFederalEntityRepository
 import org.eduardoleolim.organizadorpec660.core.municipality.application.create.MunicipalityCreator
 import org.eduardoleolim.organizadorpec660.core.municipality.domain.Municipality
+import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityAlreadyExistsError
 import org.eduardoleolim.organizadorpec660.core.municipality.infrastructure.InMemoryMunicipalityRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -75,10 +76,16 @@ class MunicipalityCreatorTest {
             val federalEntityId = aguascalientesId
 
             try {
-                creator.create(keyCode, name, federalEntityId)
+                creator.create(keyCode, name, federalEntityId).fold(
+                    ifRight = {
+                        assert(false)
+                    },
+                    ifLeft = {
+                        assert(it is MunicipalityAlreadyExistsError)
+                    }
+                )
+            } catch (e: Throwable) {
                 assert(false)
-            } catch (e: Exception) {
-                assert(e.message == "The municipality with key code <$keyCode> already exists")
             }
         }
 

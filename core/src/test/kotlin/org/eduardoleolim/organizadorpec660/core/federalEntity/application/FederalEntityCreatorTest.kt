@@ -42,15 +42,21 @@ class FederalEntityCreatorTest {
         }
 
         @Test
-        fun `federal entity already exists`() {
+        fun `fail if federal entity already exists`() {
             val keyCode = "30"
             val name = "VERACRUZ"
 
             try {
-                creator.create(keyCode, name)
+                creator.create(keyCode, name).fold(
+                    ifRight = {
+                        assert(false)
+                    },
+                    ifLeft = {
+                        assert(it is FederalEntityAlreadyExistsError)
+                    }
+                )
+            } catch (e: Throwable) {
                 assert(false)
-            } catch (e: FederalEntityAlreadyExistsError) {
-                assert(e.message == "The federal entity with key code <$keyCode> already exists")
             }
         }
     }
