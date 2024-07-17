@@ -111,6 +111,7 @@
     <string name="ag_updated_at">Última actualización</string>
     <string name="ag_delete_title">¿Eliminar la fuente?</string>
     <string name="ag_delete_error_default">Ocurrió un error mientras se trataba de eliminar la fuente</string>
+    <string name="ag_delete_error_not_found">No se encontró la agencia</string>
     <string name="ag_delete_error_has_instruments">La fuente no puede ser eliminada porque tiene instrumentos asociados</string>
     <string name="ag_delete_text">La fuente %1$s será eliminada permanentemente de la aplicación</string>
     <string name="ag_form_add_title">Agregar fuente</string>

@@ -12,11 +12,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.eduardoleolim.organizadorpec660.app.agency.model.AgencyScreenModel
 import org.eduardoleolim.organizadorpec660.app.agency.model.DeleteState
-import org.eduardoleolim.organizadorpec660.app.generated.resources.*
+import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
+import org.eduardoleolim.organizadorpec660.app.generated.resources.ag_delete_text
+import org.eduardoleolim.organizadorpec660.app.generated.resources.ag_delete_title
 import org.eduardoleolim.organizadorpec660.app.shared.composables.ErrorDialog
 import org.eduardoleolim.organizadorpec660.app.shared.composables.QuestionDialog
 import org.eduardoleolim.organizadorpec660.core.agency.application.AgencyResponse
-import org.eduardoleolim.organizadorpec660.core.agency.domain.AgencyHasInstrumentsError
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -27,17 +28,17 @@ fun AgencyScreen.AgencyDeleteModal(
     onDismissRequest: () -> Unit
 ) {
     var errorOccurred by remember { mutableStateOf(false) }
-    var errorText: String? by remember { mutableStateOf(null) }
+    var errorMessage: String? by remember { mutableStateOf(null) }
 
     when (val deleteState = screenModel.deleteState) {
         DeleteState.Idle -> {
             errorOccurred = false
-            errorText = null
+            errorMessage = null
         }
 
         DeleteState.InProgress -> {
             errorOccurred = false
-            errorText = null
+            errorMessage = null
         }
 
         DeleteState.Success -> {
@@ -46,17 +47,7 @@ fun AgencyScreen.AgencyDeleteModal(
 
         is DeleteState.Error -> {
             errorOccurred = true
-
-            when (val error = deleteState.error) {
-                is AgencyHasInstrumentsError -> {
-                    errorText = stringResource(Res.string.ag_delete_error_has_instruments)
-                }
-
-                else -> {
-                    errorText = stringResource(Res.string.ag_delete_error_default)
-                    println(error)
-                }
-            }
+            errorMessage = deleteState.message
         }
     }
 
@@ -78,18 +69,14 @@ fun AgencyScreen.AgencyDeleteModal(
                 Text(stringResource(Res.string.ag_delete_text, agency.name))
             }
         },
-        onConfirmRequest = {
-            screenModel.deleteAgency(agency.id)
-        },
-        onDismissRequest = {
-            onDismissRequest()
-        }
+        onConfirmRequest = { screenModel.deleteAgency(agency.id) },
+        onDismissRequest = { onDismissRequest() }
     )
 
     if (errorOccurred) {
         ErrorDialog(
             text = {
-                errorText?.let {
+                errorMessage?.let {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
@@ -97,9 +84,7 @@ fun AgencyScreen.AgencyDeleteModal(
                     }
                 }
             },
-            onDismissRequest = {
-                screenModel.resetDeleteModal()
-            },
+            onDismissRequest = { screenModel.resetDeleteModal() },
             onConfirmRequest = onDismissRequest
         )
     }

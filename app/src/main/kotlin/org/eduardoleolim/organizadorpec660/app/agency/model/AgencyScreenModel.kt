@@ -9,11 +9,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.eduardoleolim.organizadorpec660.app.agency.data.EmptyAgencyDataException
+import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
+import org.eduardoleolim.organizadorpec660.app.generated.resources.ag_delete_error_default
+import org.eduardoleolim.organizadorpec660.app.generated.resources.ag_delete_error_has_instruments
+import org.eduardoleolim.organizadorpec660.app.generated.resources.ag_delete_error_not_found
 import org.eduardoleolim.organizadorpec660.core.agency.application.AgenciesResponse
 import org.eduardoleolim.organizadorpec660.core.agency.application.create.CreateAgencyCommand
 import org.eduardoleolim.organizadorpec660.core.agency.application.delete.DeleteAgencyCommand
 import org.eduardoleolim.organizadorpec660.core.agency.application.searchByTerm.SearchAgenciesByTermQuery
 import org.eduardoleolim.organizadorpec660.core.agency.application.update.UpdateAgencyCommand
+import org.eduardoleolim.organizadorpec660.core.agency.domain.AgencyHasInstrumentsError
+import org.eduardoleolim.organizadorpec660.core.agency.domain.AgencyNotFoundError
+import org.eduardoleolim.organizadorpec660.core.agency.domain.CanNotDeleteAgencyError
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntitiesResponse
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.searchByTerm.SearchFederalEntitiesByTermQuery
@@ -25,6 +32,7 @@ import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
 import org.eduardoleolim.organizadorpec660.core.statisticType.application.StatisticTypeResponse
 import org.eduardoleolim.organizadorpec660.core.statisticType.application.StatisticTypesResponse
 import org.eduardoleolim.organizadorpec660.core.statisticType.application.searchByTerm.SearchStatisticTypesByTermQuery
+import org.jetbrains.compose.resources.getString
 
 sealed class FormState {
     data object Idle : FormState()
@@ -38,7 +46,7 @@ sealed class DeleteState {
     data object Idle : DeleteState()
     data object InProgress : DeleteState()
     data object Success : DeleteState()
-    data class Error(val error: Throwable) : DeleteState()
+    data class Error(val message: String) : DeleteState()
 }
 
 class AgencyScreenModel(private val queryBus: QueryBus, private val commandBus: CommandBus) : ScreenModel {
@@ -142,20 +150,31 @@ class AgencyScreenModel(private val queryBus: QueryBus, private val commandBus: 
                         isStatisticTypesEmpty
                     )
                 )
-
-                return@launch
-            }
-
-            try {
-                commandBus.dispatch(CreateAgencyCommand(name, consecutive, municipalityId!!, statisticTypesId))
-                formState = FormState.SuccessCreate
-            } catch (e: Exception) {
-                formState = FormState.Error(e.cause!!)
+            } else {
+                try {
+                    val command = CreateAgencyCommand(name, consecutive, municipalityId!!, statisticTypesId)
+                    commandBus.dispatch(command).fold(
+                        ifRight = {
+                            formState = FormState.SuccessCreate
+                        },
+                        ifLeft = {
+                            formState = FormState.Error(it)
+                        }
+                    )
+                } catch (e: Exception) {
+                    formState = FormState.Error(e.cause!!)
+                }
             }
         }
     }
 
-    fun updateAgency(agencyId: String, name: String, consecutive: String, municipalityId: String?, statisticTypesId: List<String>) {
+    fun updateAgency(
+        agencyId: String,
+        name: String,
+        consecutive: String,
+        municipalityId: String?,
+        statisticTypesId: List<String>
+    ) {
         screenModelScope.launch(Dispatchers.IO) {
             formState = FormState.InProgress
             delay(500)
@@ -174,15 +193,20 @@ class AgencyScreenModel(private val queryBus: QueryBus, private val commandBus: 
                         isStatisticTypesEmpty
                     )
                 )
-
-                return@launch
-            }
-
-            try {
-                commandBus.dispatch(UpdateAgencyCommand(agencyId, name, consecutive, municipalityId!!, statisticTypesId))
-                formState = FormState.SuccessEdit
-            } catch (e: Exception) {
-                formState = FormState.Error(e.cause!!)
+            } else {
+                try {
+                    val command = UpdateAgencyCommand(agencyId, name, consecutive, municipalityId!!, statisticTypesId)
+                    commandBus.dispatch(command).fold(
+                        ifRight = {
+                            formState = FormState.SuccessEdit
+                        },
+                        ifLeft = {
+                            formState = FormState.Error(it)
+                        }
+                    )
+                } catch (e: Exception) {
+                    formState = FormState.Error(e.cause!!)
+                }
             }
         }
     }
@@ -193,10 +217,26 @@ class AgencyScreenModel(private val queryBus: QueryBus, private val commandBus: 
             delay(500)
 
             try {
-                commandBus.dispatch(DeleteAgencyCommand(agencyId))
-                deleteState = DeleteState.Success
+                commandBus.dispatch(DeleteAgencyCommand(agencyId)).foldAsync(
+                    ifRight = {
+                        deleteState = DeleteState.Success
+                    },
+                    ifLeft = { error ->
+                        val message = when (error) {
+                            is AgencyNotFoundError -> getString(Res.string.ag_delete_error_not_found)
+
+                            is AgencyHasInstrumentsError -> getString(Res.string.ag_delete_error_has_instruments)
+
+                            is CanNotDeleteAgencyError -> getString(Res.string.ag_delete_error_default)
+
+                            else -> getString(Res.string.ag_delete_error_default)
+                        }
+
+                        deleteState = DeleteState.Error(message)
+                    }
+                )
             } catch (e: Exception) {
-                deleteState = DeleteState.Error(e.cause!!)
+                deleteState = DeleteState.Error(getString(Res.string.ag_delete_error_default))
             }
         }
     }
