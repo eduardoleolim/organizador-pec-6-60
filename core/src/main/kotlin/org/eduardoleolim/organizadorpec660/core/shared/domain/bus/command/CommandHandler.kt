@@ -1,5 +1,7 @@
 package org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command
 
-interface CommandHandler<T : Command> {
-    fun handle(command: T)
+import org.eduardoleolim.organizadorpec660.core.shared.domain.Either
+
+interface CommandHandler<L, R, T : Command<L, R>> {
+    fun handle(command: T): Either<L, R>
 }

@@ -2,10 +2,11 @@ package org.eduardoleolim.organizadorpec660.core.agency.application.update
 
 import org.eduardoleolim.organizadorpec660.core.agency.domain.*
 import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityCriteria
-import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityNotFoundError
 import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityRepository
+import org.eduardoleolim.organizadorpec660.core.shared.domain.Either
+import org.eduardoleolim.organizadorpec660.core.shared.domain.Left
+import org.eduardoleolim.organizadorpec660.core.shared.domain.Right
 import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeCriteria
-import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeNotFoundError
 import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeRepository
 
 class AgencyUpdater(
@@ -19,30 +20,35 @@ class AgencyUpdater(
         consecutive: String,
         municipalityId: String,
         statisticTypeIds: List<String>
-    ) {
-        val agency = searchAgency(agencyId) ?: throw AgencyNotFoundError(agencyId)
+    ): Either<AgencyError, Unit> {
+        try {
+            val agency = searchAgency(agencyId) ?: return Left(AgencyNotFoundError(agencyId))
 
-        if (existsMunicipality(municipalityId).not())
-            throw MunicipalityNotFoundError(municipalityId)
+            if (statisticTypeIds.isEmpty())
+                return Left(AgencyHasNoStatisticTypesError())
 
-        if (statisticTypeIds.isEmpty())
-            throw InvalidAgencyStatisticTypesError()
+            if (existsMunicipality(municipalityId).not())
+                return Left(MunicipalityNotFoundError(municipalityId))
 
-        statisticTypeIds.forEach { statisticTypeId ->
-            if (existsStatisticType(statisticTypeId).not())
-                throw StatisticTypeNotFoundError(statisticTypeId)
-        }
+            statisticTypeIds.forEach { statisticTypeId ->
+                if (existsStatisticType(statisticTypeId).not())
+                    return Left(StatisticTypeNotFoundError(statisticTypeId))
+            }
 
-        if (existsAnotherAgencySameConsecutive(agencyId, consecutive, municipalityId))
-            throw AgencyAlreadyExistsError(consecutive)
+            if (existsAnotherAgencySameConsecutive(agencyId, consecutive, municipalityId))
+                return Left(AgencyAlreadyExistsError(consecutive))
 
-        agency.apply {
-            changeName(name)
-            changeConsecutive(consecutive)
-            changeMunicipalityId(municipalityId)
-            replaceStatisticTypeIds(statisticTypeIds)
-        }.let {
-            agencyRepository.save(agency)
+            agency.apply {
+                changeName(name)
+                changeConsecutive(consecutive)
+                changeMunicipalityId(municipalityId)
+                replaceStatisticTypeIds(statisticTypeIds)
+            }.let {
+                agencyRepository.save(agency)
+                return Right(Unit)
+            }
+        } catch (e: InvalidArgumentAgencyException) {
+            return Left(CanNotSaveAgencyError(e))
         }
     }
 

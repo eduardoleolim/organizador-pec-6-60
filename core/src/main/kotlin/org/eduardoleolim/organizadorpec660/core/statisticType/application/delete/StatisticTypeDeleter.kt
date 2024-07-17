@@ -2,23 +2,28 @@ package org.eduardoleolim.organizadorpec660.core.statisticType.application.delet
 
 import org.eduardoleolim.organizadorpec660.core.agency.domain.AgencyCriteria
 import org.eduardoleolim.organizadorpec660.core.agency.domain.AgencyRepository
-import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeCriteria
-import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeNotFoundError
-import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeRepository
-import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeUsedinAgency
+import org.eduardoleolim.organizadorpec660.core.shared.domain.Either
+import org.eduardoleolim.organizadorpec660.core.shared.domain.Left
+import org.eduardoleolim.organizadorpec660.core.shared.domain.Right
+import org.eduardoleolim.organizadorpec660.core.statisticType.domain.*
 
 class StatisticTypeDeleter(
     private val statisticTypeRepository: StatisticTypeRepository,
     private val agencyRepository: AgencyRepository
 ) {
-    fun delete(id: String) {
-        if (exists(id).not())
-            throw StatisticTypeNotFoundError(id)
+    fun delete(id: String): Either<StatisticTypeError, Unit> {
+        try {
+            if (exists(id).not())
+                return Left(StatisticTypeNotFoundError(id))
 
-        if (usedInAgencies(id))
-            throw StatisticTypeUsedinAgency()
+            if (usedInAgencies(id))
+                return Left(StatisticTypeUsedInAgency())
 
-        statisticTypeRepository.delete(id)
+            statisticTypeRepository.delete(id)
+            return Right(Unit)
+        } catch (e: InvalidArgumentStatisticTypeException) {
+            return Left(CanNotDeleteStatisticTypeError(e))
+        }
     }
 
     private fun exists(id: String) = StatisticTypeCriteria.idCriteria(id).let {

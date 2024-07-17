@@ -1,15 +1,21 @@
 package org.eduardoleolim.organizadorpec660.core.municipality.application.delete
 
-import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityCriteria
-import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityNotFoundError
-import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityRepository
+import org.eduardoleolim.organizadorpec660.core.municipality.domain.*
+import org.eduardoleolim.organizadorpec660.core.shared.domain.Either
+import org.eduardoleolim.organizadorpec660.core.shared.domain.Left
+import org.eduardoleolim.organizadorpec660.core.shared.domain.Right
 
 class MunicipalityDeleter(private val repository: MunicipalityRepository) {
-    fun delete(id: String) {
-        if (!exists(id))
-            throw MunicipalityNotFoundError(id)
+    fun delete(id: String): Either<MunicipalityError, Unit> {
+        try {
+            if (!exists(id))
+                return Left(MunicipalityNotFoundError(id))
 
-        repository.delete(id)
+            repository.delete(id)
+            return Right(Unit)
+        } catch (e: InvalidArgumentMunicipalityException) {
+            return Left(CanNotDeleteMunicipalityError(e))
+        }
     }
 
     private fun exists(id: String) = MunicipalityCriteria.idCriteria(id).let {

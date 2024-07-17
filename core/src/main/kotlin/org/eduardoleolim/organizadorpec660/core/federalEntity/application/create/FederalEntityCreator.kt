@@ -1,17 +1,23 @@
 package org.eduardoleolim.organizadorpec660.core.federalEntity.application.create
 
-import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntity
-import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityAlreadyExistsError
-import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityCriteria
-import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityRepository
+import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.*
+import org.eduardoleolim.organizadorpec660.core.shared.domain.Either
+import org.eduardoleolim.organizadorpec660.core.shared.domain.Left
+import org.eduardoleolim.organizadorpec660.core.shared.domain.Right
+import java.util.*
 
 class FederalEntityCreator(private val repository: FederalEntityRepository) {
-    fun create(keyCode: String, name: String) {
-        if (exists(keyCode))
-            throw FederalEntityAlreadyExistsError(keyCode)
+    fun create(keyCode: String, name: String): Either<FederalEntityError, UUID> {
+        try {
+            if (exists(keyCode))
+                return Left(FederalEntityAlreadyExistsError(keyCode))
 
-        FederalEntity.create(keyCode, name).let {
-            repository.save(it)
+            FederalEntity.create(keyCode, name).let {
+                repository.save(it)
+                return Right(it.id())
+            }
+        } catch (e: InvalidArgumentFederalEntityException) {
+            return Left(CanNotSaveFederalEntityError(e))
         }
     }
 

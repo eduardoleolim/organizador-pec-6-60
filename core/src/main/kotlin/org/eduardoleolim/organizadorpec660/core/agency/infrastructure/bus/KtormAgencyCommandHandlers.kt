@@ -21,27 +21,27 @@ import kotlin.reflect.KClass
 class KtormAgencyCommandHandlers(context: KtormAppKoinContext) : KtormAppKoinComponent(context) {
     private val database: Database by inject()
 
-    val handlers: Map<KClass<out Command>, CommandHandler<out Command>> = mapOf(
+    val handlers: Map<KClass<out Command<*, *>>, CommandHandler<*, *, out Command<*, *>>> = mapOf(
         CreateAgencyCommand::class to createCommandHandler(),
         UpdateAgencyCommand::class to updateCommandHandler(),
         DeleteAgencyCommand::class to deleteCommandHandler()
     )
 
-    private fun createCommandHandler(): CommandHandler<out Command> {
+    private fun createCommandHandler(): CommandHandler<*, *, out Command<*, *>> {
         val creator: AgencyCreator by inject()
         val commandHandler = CreateAgencyCommandHandler(creator)
 
         return KtormCommandHandlerDecorator(database, commandHandler)
     }
 
-    private fun updateCommandHandler(): CommandHandler<out Command> {
+    private fun updateCommandHandler(): CommandHandler<*, *, out Command<*, *>> {
         val updater: AgencyUpdater by inject()
         val commandHandler = UpdateAgencyCommandHandler(updater)
 
         return KtormCommandHandlerDecorator(database, commandHandler)
     }
 
-    private fun deleteCommandHandler(): CommandHandler<out Command> {
+    private fun deleteCommandHandler(): CommandHandler<*, *, out Command<*, *>> {
         val deleter: AgencyDeleter by inject()
         val commandHandler = DeleteAgencyCommandHandler(deleter)
 

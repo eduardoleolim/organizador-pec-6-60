@@ -1,32 +1,42 @@
 package org.eduardoleolim.organizadorpec660.core.municipality.application.update
 
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityCriteria
-import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityNotFoundError
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityRepository
-import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityAlreadyExistsError
-import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityCriteria
-import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityNotFoundError
-import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityRepository
+import org.eduardoleolim.organizadorpec660.core.municipality.domain.*
+import org.eduardoleolim.organizadorpec660.core.shared.domain.Either
+import org.eduardoleolim.organizadorpec660.core.shared.domain.Left
+import org.eduardoleolim.organizadorpec660.core.shared.domain.Right
 
 class MunicipalityUpdater(
     private val municipalityRepository: MunicipalityRepository,
     private val federalEntityRepository: FederalEntityRepository
 ) {
-    fun update(municipalityId: String, keyCode: String, name: String, federalEntityId: String) {
-        val municipality = searchMunicipality(municipalityId) ?: throw MunicipalityNotFoundError(municipalityId)
+    fun update(
+        municipalityId: String,
+        keyCode: String,
+        name: String,
+        federalEntityId: String
+    ): Either<MunicipalityError, Unit> {
+        try {
+            val municipality =
+                searchMunicipality(municipalityId) ?: return Left(MunicipalityNotFoundError(municipalityId))
 
-        if (existsFederalEntity(federalEntityId).not())
-            throw FederalEntityNotFoundError(federalEntityId)
+            if (existsFederalEntity(federalEntityId).not())
+                return Left(FederalEntityNotFoundError(federalEntityId))
 
-        if (existsAnotherSameKeyCode(municipalityId, keyCode, federalEntityId))
-            throw MunicipalityAlreadyExistsError(keyCode)
+            if (existsAnotherSameKeyCode(municipalityId, keyCode, federalEntityId))
+                return Left(MunicipalityAlreadyExistsError(keyCode))
 
-        municipality.apply {
-            changeKeyCode(keyCode)
-            changeName(name)
-            changeFederalEntityId(federalEntityId)
-        }.let {
-            municipalityRepository.save(it)
+            municipality.apply {
+                changeKeyCode(keyCode)
+                changeName(name)
+                changeFederalEntityId(federalEntityId)
+            }.let {
+                municipalityRepository.save(it)
+                return Right(Unit)
+            }
+        } catch (e: InvalidArgumentMunicipalityException) {
+            return Left(CanNotSaveMunicipalityError(e))
         }
     }
 

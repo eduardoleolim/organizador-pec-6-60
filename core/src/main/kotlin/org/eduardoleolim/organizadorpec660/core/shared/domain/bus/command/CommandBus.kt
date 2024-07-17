@@ -1,6 +1,7 @@
 package org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command
 
+import org.eduardoleolim.organizadorpec660.core.shared.domain.Either
+
 interface CommandBus {
-    @Throws(CommandHandlerExecutionError::class)
-    fun dispatch(command: Command)
+    fun <L, R> dispatch(command: Command<L, R>): Either<L, R>
 }

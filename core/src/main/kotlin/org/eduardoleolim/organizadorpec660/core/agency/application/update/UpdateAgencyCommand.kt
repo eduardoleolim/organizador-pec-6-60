@@ -1,5 +1,6 @@
 package org.eduardoleolim.organizadorpec660.core.agency.application.update
 
+import org.eduardoleolim.organizadorpec660.core.agency.domain.AgencyError
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.Command
 
 class UpdateAgencyCommand(
@@ -8,7 +9,7 @@ class UpdateAgencyCommand(
     consecutive: String,
     municipalityId: String,
     statisticTypeIds: List<String>
-) : Command {
+) : Command<AgencyError, Unit> {
     private val agencyId = agencyId.trim()
     private val name = name.trim().uppercase()
     private val consecutive = consecutive.trim()

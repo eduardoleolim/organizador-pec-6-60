@@ -1,22 +1,27 @@
 package org.eduardoleolim.organizadorpec660.core.statisticType.application.update
 
-import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeAlreadyExistsError
-import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeCriteria
-import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeNotFoundError
-import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeRepository
+import org.eduardoleolim.organizadorpec660.core.shared.domain.Either
+import org.eduardoleolim.organizadorpec660.core.shared.domain.Left
+import org.eduardoleolim.organizadorpec660.core.shared.domain.Right
+import org.eduardoleolim.organizadorpec660.core.statisticType.domain.*
 
 class StatisticTypeUpdater(private val statisticTypeRepository: StatisticTypeRepository) {
-    fun update(id: String, keyCode: String, name: String) {
-        val statisticType = searchStatisticType(id) ?: throw StatisticTypeNotFoundError(id)
+    fun update(id: String, keyCode: String, name: String): Either<StatisticTypeError, Unit> {
+        try {
+            val statisticType = searchStatisticType(id) ?: return Left(StatisticTypeNotFoundError(id))
 
-        if (existsAnotherSameKeyCode(id, keyCode))
-            throw StatisticTypeAlreadyExistsError(keyCode)
+            if (existsAnotherSameKeyCode(id, keyCode))
+                return Left(StatisticTypeAlreadyExistsError(keyCode))
 
-        statisticType.apply {
-            changeKeyCode(keyCode)
-            changeName(name)
-        }.let {
-            statisticTypeRepository.save(it)
+            statisticType.apply {
+                changeKeyCode(keyCode)
+                changeName(name)
+            }.let {
+                statisticTypeRepository.save(it)
+                return Right(Unit)
+            }
+        } catch (e: InvalidArgumentStatisticTypeException) {
+            return Left(CanNotSaveStatisticTypeError(e))
         }
     }
 

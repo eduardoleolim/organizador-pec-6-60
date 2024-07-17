@@ -1,22 +1,27 @@
 package org.eduardoleolim.organizadorpec660.core.federalEntity.application.update
 
-import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityAlreadyExistsError
-import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityCriteria
-import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityNotFoundError
-import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityRepository
+import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.*
+import org.eduardoleolim.organizadorpec660.core.shared.domain.Either
+import org.eduardoleolim.organizadorpec660.core.shared.domain.Left
+import org.eduardoleolim.organizadorpec660.core.shared.domain.Right
 
 class FederalEntityUpdater(private val repository: FederalEntityRepository) {
-    fun update(id: String, keyCode: String, name: String) {
-        val federalEntity = searchFederalEntity(id) ?: throw FederalEntityNotFoundError(id)
+    fun update(id: String, keyCode: String, name: String): Either<FederalEntityError, Unit> {
+        try {
+            val federalEntity = searchFederalEntity(id) ?: return Left(FederalEntityNotFoundError(id))
 
-        if (existsAnotherSameKeyCode(id, keyCode))
-            throw FederalEntityAlreadyExistsError(keyCode)
+            if (existsAnotherSameKeyCode(id, keyCode))
+                return Left(FederalEntityAlreadyExistsError(keyCode))
 
-        federalEntity.apply {
-            changeKeyCode(keyCode)
-            changeName(name)
-        }.let {
-            repository.save(it)
+            federalEntity.apply {
+                changeKeyCode(keyCode)
+                changeName(name)
+            }.let {
+                repository.save(it)
+                return Right(Unit)
+            }
+        } catch (e: InvalidArgumentFederalEntityException) {
+            return Left(CanNotSaveFederalEntityError(e))
         }
     }
 

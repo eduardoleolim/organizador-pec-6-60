@@ -1,8 +1,9 @@
 package org.eduardoleolim.organizadorpec660.core.federalEntity.application.delete
 
+import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityError
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.Command
 
-class DeleteFederalEntityCommand(federalEntityId: String) : Command {
+class DeleteFederalEntityCommand(federalEntityId: String) : Command<FederalEntityError, Unit> {
     private val federalEntityId: String = federalEntityId.trim()
 
     fun federalEntityId(): String {

@@ -21,27 +21,27 @@ import kotlin.reflect.KClass
 class KtormStatisticTypeCommandHandlers(context: KtormAppKoinContext) : KtormAppKoinComponent(context) {
     private val database: Database by inject()
 
-    val handlers: Map<KClass<out Command>, CommandHandler<out Command>> = mapOf(
+    val handlers: Map<KClass<out Command<*, *>>, CommandHandler<*, *, out Command<*, *>>> = mapOf(
         CreateStatisticTypeCommand::class to createCommandHandler(),
         UpdateStatisticTypeCommand::class to updateCommandHandler(),
         DeleteStatisticTypeCommand::class to deleteCommandHandler()
     )
 
-    private fun createCommandHandler(): CommandHandler<out Command> {
+    private fun createCommandHandler(): CommandHandler<*, *, out Command<*, *>> {
         val creator: StatisticTypeCreator by inject()
         val commandHandler = CreateStatisticTypeCommandHandler(creator)
 
         return KtormCommandHandlerDecorator(database, commandHandler)
     }
 
-    private fun updateCommandHandler(): CommandHandler<out Command> {
+    private fun updateCommandHandler(): CommandHandler<*, *, out Command<*, *>> {
         val updater: StatisticTypeUpdater by inject()
         val commandHandler = UpdateStatisticTypeCommandHandler(updater)
 
         return KtormCommandHandlerDecorator(database, commandHandler)
     }
 
-    private fun deleteCommandHandler(): CommandHandler<out Command> {
+    private fun deleteCommandHandler(): CommandHandler<*, *, out Command<*, *>> {
         val deleter: StatisticTypeDeleter by inject()
         val commandHandler = DeleteStatisticTypeCommandHandler(deleter)
 

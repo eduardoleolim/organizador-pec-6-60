@@ -1,26 +1,31 @@
 package org.eduardoleolim.organizadorpec660.core.municipality.application.create
 
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityCriteria
-import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityNotFoundError
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityRepository
-import org.eduardoleolim.organizadorpec660.core.municipality.domain.Municipality
-import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityAlreadyExistsError
-import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityCriteria
-import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityRepository
+import org.eduardoleolim.organizadorpec660.core.municipality.domain.*
+import org.eduardoleolim.organizadorpec660.core.shared.domain.Either
+import org.eduardoleolim.organizadorpec660.core.shared.domain.Left
+import org.eduardoleolim.organizadorpec660.core.shared.domain.Right
+import java.util.*
 
 class MunicipalityCreator(
     private val municipalityRepository: MunicipalityRepository,
     private val federalEntityRepository: FederalEntityRepository
 ) {
-    fun create(keyCode: String, name: String, federalEntityId: String) {
-        if (existsFederalEntity(federalEntityId).not())
-            throw FederalEntityNotFoundError(federalEntityId)
+    fun create(keyCode: String, name: String, federalEntityId: String): Either<MunicipalityError, UUID> {
+        try {
+            if (existsFederalEntity(federalEntityId).not())
+                return Left(FederalEntityNotFoundError(federalEntityId))
 
-        if (existsMunicipality(keyCode, federalEntityId))
-            throw MunicipalityAlreadyExistsError(keyCode)
+            if (existsMunicipality(keyCode, federalEntityId))
+                return Left(MunicipalityAlreadyExistsError(keyCode))
 
-        Municipality.create(keyCode, name, federalEntityId).let {
-            municipalityRepository.save(it)
+            Municipality.create(keyCode, name, federalEntityId).let {
+                municipalityRepository.save(it)
+                return Right(it.id())
+            }
+        } catch (e: InvalidArgumentMunicipalityException) {
+            return Left(CanNotSaveMunicipalityError(e))
         }
     }
 
