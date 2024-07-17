@@ -79,9 +79,7 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
     ) {
         ModalDrawerSheet {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
+                modifier = Modifier.fillMaxWidth().padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(stringResource(Res.string.app_name))
@@ -137,8 +135,8 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
         selectedTab: MenuTab,
         onChangeSelectedTab: (MenuTab) -> Unit
     ) {
-        items.forEach {
-            val (label, icon, tab) = it
+        items.forEach { item ->
+            val (label, icon, tab) = item
             NavigationRailItem(
                 icon = {
                     Icon(
@@ -228,28 +226,18 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
                         screenModel = screenModel,
                         selectedTab = selectedTab,
                         onChangeSelectedTab = {
-                            screenModel.closeNavigationDrawer(
-                                onClosed = { selectedTab = it }
-                            )
+                            screenModel.closeNavigationDrawer(onClosed = { selectedTab = it })
                         }
                     )
                 }
 
                 Surface(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(
-                            start = 8.dp,
-                            end = 24.dp,
-                            top = 24.dp,
-                            bottom = 24.dp
-                        ),
+                    modifier = Modifier.fillMaxSize()
+                        .padding(start = 8.dp, end = 24.dp, top = 24.dp, bottom = 24.dp),
                     color = MaterialTheme.colorScheme.surfaceContainerHigh,
                     shape = MaterialTheme.shapes.large,
                 ) {
-                    AnimatedContent(
-                        targetState = selectedTab
-                    ) { targetState ->
+                    AnimatedContent(targetState = selectedTab) { targetState ->
                         screenModel.apply {
                             when (targetState) {
                                 MenuTab.INSTRUMENTS -> InstrumentView()
