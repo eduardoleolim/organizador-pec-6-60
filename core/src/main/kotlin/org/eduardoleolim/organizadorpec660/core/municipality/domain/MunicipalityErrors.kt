@@ -1,24 +1,16 @@
 package org.eduardoleolim.organizadorpec660.core.municipality.domain
 
-import java.util.*
-
-sealed class MunicipalityErrors(override val message: String, override val cause: Throwable? = null) :
-    RuntimeException(message, cause)
-
-class InvalidMunicipalityIdError(val id: String, override val cause: Throwable?) :
-    MunicipalityErrors("The id <$id> is not a valid municipality id", cause)
-
-class InvalidMunicipalityKeyCodeError(val keyCode: String) :
-    MunicipalityErrors("The key code <$keyCode> is not a valid municipality key code")
-
-class InvalidMunicipalityUpdateDateError(val updatedAt: Date, val createdAt: Date) :
-    MunicipalityErrors("The update date <$updatedAt> is not valid because it is before the create date <$createdAt>")
-
-class InvalidMunicipalityNameError(val name: String) :
-    MunicipalityErrors("The name <$name> is not a valid municipality name")
+sealed class MunicipalityError(override val message: String, override val cause: Throwable? = null) :
+    Error(message, cause)
 
 class MunicipalityAlreadyExistsError(val keyCode: String) :
-    MunicipalityErrors("The municipality with key code <$keyCode> already exists")
+    MunicipalityError("The municipality with key code <$keyCode> already exists")
 
 class MunicipalityNotFoundError(val id: String) :
-    MunicipalityErrors("The municipality with id <$id> was not found")
+    MunicipalityError("The municipality with id <$id> was not found")
+
+class FederalEntityNotFoundError(val id: String) : MunicipalityError("The federal entity with id <$id> was not found")
+
+class CanNotSaveMunicipalityError(cause: Throwable?) : MunicipalityError("The municipality could not be saved", cause)
+
+class CanNotDeleteMunicipalityError(cause: Throwable?) : MunicipalityError("The municipality could not be saved", cause)

@@ -67,7 +67,7 @@ class Agency private constructor(
                 AgencyCreateDate(createdAt),
                 updatedAt?.let {
                     if (it.before(createdAt))
-                        throw InvalidAgencyUpdateDateError(it, createdAt)
+                        throw InvalidAgencyUpdateDateException(it, createdAt)
 
                     AgencyUpdateDate(it)
                 }
@@ -124,7 +124,7 @@ class Agency private constructor(
 
     fun replaceStatisticTypeIds(statisticTypeIds: List<String>) {
         if (statisticTypeIds.isEmpty())
-            throw InvalidAgencyStatisticTypesError()
+            throw InvalidAgencyStatisticTypesException()
 
         this.statisticTypeIds.apply {
             clear()
@@ -142,7 +142,7 @@ data class AgencyId(val value: UUID) {
         fun fromString(value: String) = try {
             AgencyId(UUID.fromString(value))
         } catch (e: Exception) {
-            throw InvalidAgencyIdError(value, e)
+            throw InvalidAgencyIdException(value, e)
         }
     }
 }
@@ -154,7 +154,7 @@ data class AgencyName(val value: String) {
 
     private fun validate() {
         if (value.isBlank()) {
-            throw InvalidAgencyNameError(value)
+            throw InvalidAgencyNameException(value)
         }
     }
 }
@@ -166,7 +166,7 @@ data class AgencyConsecutive(val value: String) {
 
     private fun validate() {
         if (Regex("[0-9]{1,4}").matches(value).not()) {
-            throw InvalidAgencyConsecutiveError(value)
+            throw InvalidAgencyConsecutiveException(value)
         }
     }
 }

@@ -25,7 +25,7 @@ data class RoleId(val value: UUID) {
         fun fromString(value: String) = try {
             RoleId(UUID.fromString(value))
         } catch (e: Exception) {
-            throw InvalidRoleIdError(value, e)
+            throw InvalidRoleIdException(value, e)
         }
     }
 }
