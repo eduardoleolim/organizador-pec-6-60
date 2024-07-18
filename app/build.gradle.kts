@@ -30,6 +30,7 @@ dependencies {
     implementation(libs.jSystemThemeDetector) {
         exclude("org.slf4j")
     }
+    implementation(libs.properlty)
 }
 
 compose.desktop {

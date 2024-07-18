@@ -1,58 +1,91 @@
 package org.eduardoleolim.organizadorpec660.app.shared.utils
 
+import com.ufoscout.properlty.Default
+import com.ufoscout.properlty.Properlty
+import com.ufoscout.properlty.reader.SystemPropertiesReader
 import java.io.File
+import java.math.BigDecimal
+import java.math.BigInteger
 import java.util.*
 
 object AppConfig {
-    private val properties = Properties()
+    init {
+        val renderApi = when (DesktopPlatform.Current) {
+            DesktopPlatform.MacOS -> "METAL"
+            else -> "OPENGL"
+        }
+
+        System.setProperty("skiko.renderApi", renderApi)
+    }
+
     private val resourcesPath = System.getProperty("compose.application.resources.dir")
     private val propertiesFile = File(resourcesPath).resolve("app.properties")
+    private var properties = Properlty.builder()
+        .add(SystemPropertiesReader())
+        .add(propertiesFile.path)
+        .build()
 
-    private val placeholderRegex = Regex("\\$\\{([^}]+)\\}")
+    operator fun get(key: String): String? = properties[key]
 
-    init {
-        propertiesFile.inputStream().use {
-            properties.load(it)
-        }
-    }
-
-    fun getProperty(name: String): String? {
-        val property = properties.getProperty(name) ?: return null
-
-        if (property.isBlank()) {
-            return null
-        }
-
-        val placeholders = placeholderRegex.findAll(property)
-
-        if (placeholders.any()) {
-            return replacePlaceholders(property, placeholders)
-        }
-
-        return property
-    }
-
-    private fun replacePlaceholders(property: String, placeholders: Sequence<MatchResult>): String {
-        var value = property
-
-        placeholders.forEach { placeholder ->
-            val propertyName = placeholder.value.substring(2, placeholder.value.length - 1)
-            var propertyValue = System.getProperty(propertyName)
-
-            if (propertyValue == null) {
-                propertyValue = properties.getProperty(propertyName)
+    operator fun set(key: String, value: String) {
+        if (System.getProperty(key) != null) {
+            System.setProperty(key, value)
+        } else {
+            Properties().also { ppt ->
+                propertiesFile.inputStream().use { ppt.load(it) }
+                ppt.setProperty(key, value)
+                propertiesFile.outputStream().use { ppt.store(it, null) }
             }
-
-            value = value.replace(placeholder.value, propertyValue)
         }
 
-        return value
+        properties = Properlty.builder()
+            .add(SystemPropertiesReader())
+            .add(propertiesFile.path)
+            .build()
     }
 
-    fun setProperty(name: String, value: String) {
-        propertiesFile.outputStream().use {
-            properties.setProperty(name, value)
-            properties.store(it, null)
-        }
-    }
+    operator fun get(key: String, defaultValue: String): String = properties[key] ?: defaultValue
+
+    operator fun <T> get(key: String, map: (String) -> T): T? = properties[key, map]
+
+    operator fun <T> get(key: String, defaultValue: T, map: (String) -> T): T = properties[key, defaultValue, map]
+
+    fun getBoolean(key: String): Boolean? = properties.getBoolean(key)
+
+    fun getBoolean(key: String, defaultValue: Boolean): Boolean = properties.getBoolean(key, defaultValue)
+
+    fun getInt(key: String): Int? = properties.getInt(key)
+
+    fun getInt(key: String, defaultValue: Int): Int = properties.getInt(key, defaultValue)
+
+    fun getDouble(key: String): Double? = properties.getDouble(key)
+
+    fun getDouble(key: String, defaultValue: Double): Double = properties.getDouble(key, defaultValue)
+
+    fun getFloat(key: String): Float? = properties.getFloat(key)
+
+    fun getFloat(key: String, defaultValue: Float): Float = properties.getFloat(key, defaultValue)
+
+    fun getLong(key: String): Long? = properties.getLong(key)
+
+    fun getLong(key: String, defaultValue: Long): Long = properties.getLong(key, defaultValue)
+
+    fun getBigDecimal(key: String): BigDecimal? = properties.getBigDecimal(key)
+
+    fun getBigDecimal(key: String, defaultValue: BigDecimal): BigDecimal = properties.getBigDecimal(key, defaultValue)
+
+    fun getBigInteger(key: String): BigInteger? = properties.getBigInteger(key)
+
+    fun getBigInteger(key: String, defaultValue: BigInteger): BigInteger = properties.getBigInteger(key, defaultValue)
+
+    fun getArray(key: String, separator: String = Default.LIST_SEPARATOR): Array<String> =
+        properties.getArray(key, separator)
+
+    fun getList(key: String, separator: String = Default.LIST_SEPARATOR): List<String> =
+        properties.getList(key, separator)
+
+    fun <T> getList(key: String, map: (String) -> T): List<T> = properties.getList(key, map)
+
+    fun <T> getList(key: String, separator: String = Default.LIST_SEPARATOR, map: (String) -> T): List<T> =
+        properties.getList(key, separator, map)
 }

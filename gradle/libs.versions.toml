@@ -14,6 +14,7 @@ koin = "3.5.6"
 slf4j = "2.0.13"
 kotlin-csv = "1.9.3"
 jasypt = "1.9.3"
+properlty = "1.9.0"
 
 [libraries]
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
@@ -31,4 +32,5 @@ jdbc-sqlite = { module = "io.github.willena:sqlite-jdbc", version.ref = "sqlite"
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
 kotlin-csv-jvm = { module = "com.github.doyaaaaaken:kotlin-csv-jvm", version.ref = "kotlin-csv" }
+properlty = { module = "com.ufoscout.properlty:properlty-kotlin", version.ref = "properlty" }
 jasypt = { module = "org.jasypt:jasypt", version.ref = "jasypt" }

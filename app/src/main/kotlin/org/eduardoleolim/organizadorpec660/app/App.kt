@@ -69,14 +69,12 @@ class App(
         var existsDatabase by remember { mutableStateOf(SqliteKtormDatabase.exists(databasePath)) }
 
         if (existsDatabase) {
-            MainWindow(
-                onCloseRequest = { exitApplication() }
-            )
+            MainWindow(onCloseRequest = { exitApplication() })
         } else {
             ConfigWindow(
                 onCloseRequest = { exitApplication() },
                 onPasswordSet = { password ->
-                    AppConfig.setProperty("database.password", password)
+                    AppConfig["database.password"] = password
                     databasePassword = password
                     existsDatabase = true
                 }
