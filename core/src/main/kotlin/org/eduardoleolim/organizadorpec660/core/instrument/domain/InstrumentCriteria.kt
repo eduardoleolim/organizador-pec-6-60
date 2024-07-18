@@ -9,9 +9,9 @@ enum class InstrumentFields(val value: String) {
     Id("id"),
     StatisticYear("statisticYear"),
     StatisticMonth("statisticMonth"),
-    Consecutive("consecutive"),
     Saved("saved"),
     AgencyId("agency.id"),
+    AgencyConsecutive("agency.consecutive"),
     StatisticTypeId("statisticType.id"),
     MunicipalityId("municipality.id"),
     CreatedAt("createdAt"),
@@ -25,7 +25,7 @@ object InstrumentCriteria {
         instrumentId: String,
         statisticYear: Int,
         statisticMonth: Int,
-        consecutive: String,
+        agencyId: String,
         statisticTypeId: String,
         municipalityId: String
     ) = Criteria(
@@ -33,7 +33,7 @@ object InstrumentCriteria {
             SingleFilter.notEqual(InstrumentFields.Id.value, instrumentId),
             SingleFilter.equal(InstrumentFields.StatisticYear.value, statisticYear.toString()),
             SingleFilter.equal(InstrumentFields.StatisticMonth.value, statisticMonth.toString()),
-            SingleFilter.equal(InstrumentFields.Consecutive.value, consecutive),
+            SingleFilter.equal(InstrumentFields.AgencyId.value, agencyId),
             SingleFilter.equal(InstrumentFields.StatisticTypeId.value, statisticTypeId),
             SingleFilter.equal(InstrumentFields.MunicipalityId.value, municipalityId)
         ),

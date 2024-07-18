@@ -1,7 +1,9 @@
 package org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models
 
 import org.ktorm.entity.Entity
-import org.ktorm.schema.*
+import org.ktorm.schema.Table
+import org.ktorm.schema.datetime
+import org.ktorm.schema.varchar
 import java.time.LocalDateTime
 
 interface Agency : Entity<Agency> {

@@ -1,17 +1,16 @@
 package org.eduardoleolim.organizadorpec660.core.instrument.application.create
 
 import org.eduardoleolim.organizadorpec660.core.agency.domain.AgencyCriteria
-import org.eduardoleolim.organizadorpec660.core.agency.domain.AgencyNotFoundError
 import org.eduardoleolim.organizadorpec660.core.agency.domain.AgencyRepository
-import org.eduardoleolim.organizadorpec660.core.instrument.domain.Instrument
-import org.eduardoleolim.organizadorpec660.core.instrument.domain.InstrumentFile
-import org.eduardoleolim.organizadorpec660.core.instrument.domain.InstrumentRepository
+import org.eduardoleolim.organizadorpec660.core.instrument.domain.*
 import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityCriteria
-import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityNotFoundError
 import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityRepository
+import org.eduardoleolim.organizadorpec660.core.shared.domain.Either
+import org.eduardoleolim.organizadorpec660.core.shared.domain.Left
+import org.eduardoleolim.organizadorpec660.core.shared.domain.Right
 import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeCriteria
-import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeNotFoundError
 import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeRepository
+import java.util.*
 
 class InstrumentCreator(
     private val instrumentRepository: InstrumentRepository,
@@ -22,26 +21,24 @@ class InstrumentCreator(
     fun create(
         statisticYear: Int,
         statisticMonth: Int,
-        consecutive: String,
         agencyId: String,
         statisticTypeId: String,
         municipalityId: String,
         file: ByteArray
-    ) {
+    ): Either<InstrumentError, UUID> {
         if (existsAgency(agencyId).not())
-            throw AgencyNotFoundError(agencyId)
+            return Left(AgencyNotFoundError(agencyId))
 
         if (existsStatisticType(statisticTypeId).not())
-            throw StatisticTypeNotFoundError(statisticTypeId)
+            return Left(StatisticTypeNotFoundError(statisticTypeId))
 
         if (existsMunicipality(municipalityId).not())
-            throw MunicipalityNotFoundError(municipalityId)
+            return Left(MunicipalityNotFoundError(municipalityId))
 
         val instrumentFile = InstrumentFile.create(file)
         val instrument = Instrument.create(
             statisticYear,
             statisticMonth,
-            consecutive,
             instrumentFile.id().toString(),
             agencyId,
             statisticTypeId,
@@ -49,6 +46,7 @@ class InstrumentCreator(
         )
 
         instrumentRepository.save(instrument, instrumentFile)
+        return Right(instrument.id())
     }
 
     private fun existsAgency(agencyId: String) = AgencyCriteria.idCriteria(agencyId).let {

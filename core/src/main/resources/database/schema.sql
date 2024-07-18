@@ -75,7 +75,6 @@ create table if not exists instrument
     instrumentId     text    not null,
     statisticYear    integer not null,
     statisticMonth   integer not null,
-    consecutive      text    not null,
     saved            integer not null,
     createdAt        integer not null,
     updatedAt        integer,
@@ -85,7 +84,7 @@ create table if not exists instrument
     instrumentFileId text    not null,
 
     constraint instrument_Pk primary key (instrumentId),
-    constraint instrument_Unq unique (statisticYear, statisticMonth, consecutive, statisticTypeId, municipalityId),
+    constraint instrument_Unq unique (statisticYear, statisticMonth, agencyId, statisticTypeId, municipalityId),
     constraint agencyId_Fk foreign key (agencyId) references agency (agencyId),
     constraint statisticTypeId_Fk foreign key (statisticTypeId) references statisticType (statisticTypeId),
     constraint municipalityId_Fk foreign key (municipalityId) references municipality (municipalityId),

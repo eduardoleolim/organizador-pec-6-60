@@ -57,7 +57,7 @@ class KtormInstrumentsCriteriaParser(
             InstrumentFields.Id -> instruments.id
             InstrumentFields.StatisticYear -> instruments.statisticYear
             InstrumentFields.StatisticMonth -> instruments.statisticMonth
-            InstrumentFields.Consecutive -> instruments.consecutive
+            InstrumentFields.AgencyConsecutive -> agencies.consecutive
             InstrumentFields.Saved -> instruments.saved
             InstrumentFields.AgencyId -> instruments.agencyId
             InstrumentFields.StatisticTypeId -> instruments.statisticTypeId
@@ -149,18 +149,18 @@ class KtormInstrumentsCriteriaParser(
                 }
             }
 
-            InstrumentFields.Consecutive -> {
+            InstrumentFields.AgencyConsecutive -> {
                 val consecutive = value.toIntOrNull()
 
                 when (operator) {
-                    FilterOperator.EQUAL -> instruments.consecutive eq value
-                    FilterOperator.NOT_EQUAL -> instruments.consecutive notEq value
-                    FilterOperator.GT -> consecutive?.let { instruments.consecutive.cast(IntSqlType) greater it }
-                    FilterOperator.GTE -> consecutive?.let { instruments.consecutive.cast(IntSqlType) greaterEq it }
-                    FilterOperator.LT -> consecutive?.let { instruments.consecutive.cast(IntSqlType) less it }
-                    FilterOperator.LTE -> consecutive?.let { instruments.consecutive.cast(IntSqlType) lessEq it }
-                    FilterOperator.CONTAINS -> instruments.consecutive like "%$value%"
-                    FilterOperator.NOT_CONTAINS -> instruments.consecutive notLike "%$value%"
+                    FilterOperator.EQUAL -> agencies.consecutive eq value
+                    FilterOperator.NOT_EQUAL -> agencies.consecutive notEq value
+                    FilterOperator.GT -> consecutive?.let { agencies.consecutive.cast(IntSqlType) greater it }
+                    FilterOperator.GTE -> consecutive?.let { agencies.consecutive.cast(IntSqlType) greaterEq it }
+                    FilterOperator.LT -> consecutive?.let { agencies.consecutive.cast(IntSqlType) less it }
+                    FilterOperator.LTE -> consecutive?.let { agencies.consecutive.cast(IntSqlType) lessEq it }
+                    FilterOperator.CONTAINS -> agencies.consecutive like "%$value%"
+                    FilterOperator.NOT_CONTAINS -> agencies.consecutive notLike "%$value%"
                 }
             }
 

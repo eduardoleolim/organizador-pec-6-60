@@ -9,7 +9,6 @@ class Instrument private constructor(
     private val id: InstrumentId,
     private var statisticYear: InstrumentStatisticYear,
     private var statisticMonth: InstrumentStatisticMonth,
-    private var consecutive: InstrumentConsecutive,
     private var saved: InstrumentSaved,
     private val instrumentFileId: InstrumentFileId,
     private var agencyId: AgencyId,
@@ -22,7 +21,6 @@ class Instrument private constructor(
         fun create(
             statisticYear: Int,
             statisticMonth: Int,
-            consecutive: String,
             instrumentFileId: String,
             agencyId: String,
             statisticTypeId: String,
@@ -31,7 +29,6 @@ class Instrument private constructor(
             InstrumentId.random(),
             InstrumentStatisticYear(statisticYear),
             InstrumentStatisticMonth(statisticMonth),
-            InstrumentConsecutive(consecutive),
             InstrumentSaved(false),
             InstrumentFileId.fromString(instrumentFileId),
             AgencyId.fromString(agencyId),
@@ -45,7 +42,6 @@ class Instrument private constructor(
             id: String,
             statisticYear: Int,
             statisticMonth: Int,
-            consecutive: String,
             saved: Boolean,
             instrumentFileId: String,
             agencyId: String,
@@ -57,7 +53,6 @@ class Instrument private constructor(
             InstrumentId.fromString(id),
             InstrumentStatisticYear(statisticYear),
             InstrumentStatisticMonth(statisticMonth),
-            InstrumentConsecutive(consecutive),
             InstrumentSaved(saved),
             InstrumentFileId.fromString(instrumentFileId),
             AgencyId.fromString(agencyId),
@@ -78,8 +73,6 @@ class Instrument private constructor(
     fun statisticYear() = statisticYear.value
 
     fun statisticMonth() = statisticMonth.value
-
-    fun consecutive() = consecutive.value
 
     fun saved() = saved.value
 
@@ -102,11 +95,6 @@ class Instrument private constructor(
 
     fun changeStatisticMonth(statisticMonth: Int) {
         this.statisticMonth = InstrumentStatisticMonth(statisticMonth)
-        this.updatedAt = InstrumentUpdateDate.now()
-    }
-
-    fun changeConsecutive(consecutive: String) {
-        this.consecutive = InstrumentConsecutive(consecutive)
         this.updatedAt = InstrumentUpdateDate.now()
     }
 
@@ -162,17 +150,6 @@ data class InstrumentStatisticMonth(val value: Int) {
     private fun validate(value: Int) {
         if (value < 0 || value > 12)
             throw InvalidInstrumentStatisticMonthError(value)
-    }
-}
-
-data class InstrumentConsecutive(val value: String) {
-    init {
-        validate(value)
-    }
-
-    private fun validate(value: String) {
-        if (Regex("^[0-9]{4}$").matches(value).not())
-            throw InvalidInstrumentConsecutiveError(value)
     }
 }
 

@@ -21,7 +21,6 @@ interface Instrument : Entity<Instrument> {
     val statisticYear: Int
     val statisticMonth: Int
     val agency: Agency
-    val consecutive: String
     val saved: Boolean
     val createdAt: LocalDateTime
     val updatedAt: LocalDateTime?
@@ -34,7 +33,6 @@ class Instruments(alias: String? = null) : Table<Instrument>("instrument", alias
     val id = varchar("instrumentId").primaryKey().bindTo { it.id }
     val statisticYear = int("statisticYear").bindTo { it.statisticYear }
     val statisticMonth = int("statisticMonth").bindTo { it.statisticMonth }
-    val consecutive = varchar("consecutive").bindTo { it.consecutive }
     val saved = boolean("saved").bindTo { it.saved }
     val createdAt = datetime("createdAt").bindTo { it.createdAt }
     val updatedAt = datetime("updatedAt").bindTo { it.updatedAt }

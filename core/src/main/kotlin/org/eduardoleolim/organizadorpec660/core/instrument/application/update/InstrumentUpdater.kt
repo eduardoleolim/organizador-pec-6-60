@@ -1,14 +1,12 @@
 package org.eduardoleolim.organizadorpec660.core.instrument.application.update
 
-import org.eduardoleolim.organizadorpec660.core.instrument.domain.InstrumentAlreadyExistsError
-import org.eduardoleolim.organizadorpec660.core.instrument.domain.InstrumentCriteria
-import org.eduardoleolim.organizadorpec660.core.instrument.domain.InstrumentNotFoundError
-import org.eduardoleolim.organizadorpec660.core.instrument.domain.InstrumentRepository
+import org.eduardoleolim.organizadorpec660.core.instrument.domain.*
 import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityCriteria
-import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityNotFoundError
 import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityRepository
+import org.eduardoleolim.organizadorpec660.core.shared.domain.Either
+import org.eduardoleolim.organizadorpec660.core.shared.domain.Left
+import org.eduardoleolim.organizadorpec660.core.shared.domain.Right
 import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeCriteria
-import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeNotFoundError
 import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeRepository
 
 class InstrumentUpdater(
@@ -20,44 +18,46 @@ class InstrumentUpdater(
         instrumentId: String,
         statisticYear: Int,
         statisticMonth: Int,
-        consecutive: String,
+        agencyId: String,
         statisticTypeId: String,
         municipalityId: String
-    ) {
-        val instrument = searchInstrument(instrumentId) ?: throw InstrumentNotFoundError(instrumentId)
+    ): Either<InstrumentError, Unit> {
+        val instrument = searchInstrument(instrumentId) ?: return Left(InstrumentNotFoundError(instrumentId))
 
         val existsAnotherInstrument = existsAnotherInstrumentSameData(
             instrumentId,
             statisticYear,
             statisticMonth,
-            consecutive,
+            agencyId,
             statisticTypeId,
             municipalityId
         )
 
         if (existsAnotherInstrument)
-            throw InstrumentAlreadyExistsError(
-                statisticYear,
-                statisticMonth,
-                consecutive,
-                statisticTypeId,
-                municipalityId
+            return Left(
+                InstrumentAlreadyExistsError(
+                    statisticYear,
+                    statisticMonth,
+                    agencyId,
+                    statisticTypeId,
+                    municipalityId
+                )
             )
 
         if (existsStatisticType(statisticTypeId).not())
-            throw StatisticTypeNotFoundError(statisticTypeId)
+            return Left(StatisticTypeNotFoundError(statisticTypeId))
 
         if (existsMunicipality(municipalityId).not())
-            throw MunicipalityNotFoundError(municipalityId)
+            return Left(MunicipalityNotFoundError(municipalityId))
 
         instrument.apply {
             changeStatisticYear(statisticYear)
             changeStatisticMonth(statisticMonth)
-            changeConsecutive(consecutive)
             changeStatisticTypeId(statisticTypeId)
             changeMunicipalityId(municipalityId)
         }.let {
             instrumentRepository.save(it)
+            return Right(Unit)
         }
     }
 
@@ -70,7 +70,7 @@ class InstrumentUpdater(
         instrumentId: String,
         statisticYear: Int,
         statisticMonth: Int,
-        consecutive: String,
+        agencyId: String,
         statisticTypeId: String,
         municipalityId: String
     ) =
@@ -78,7 +78,7 @@ class InstrumentUpdater(
             instrumentId,
             statisticYear,
             statisticMonth,
-            consecutive,
+            agencyId,
             statisticTypeId,
             municipalityId
         ).let {

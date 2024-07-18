@@ -36,7 +36,6 @@ class KtormInstrumentRepository(
                     it.id,
                     it.statisticYear,
                     it.statisticMonth,
-                    it.consecutive,
                     it.saved,
                     it.instrumentFile.id,
                     it.agency.id,
@@ -117,7 +116,6 @@ class KtormInstrumentRepository(
                 set(it.id, instrument.id().toString())
                 set(it.statisticYear, instrument.statisticYear())
                 set(it.statisticMonth, instrument.statisticMonth())
-                set(it.consecutive, instrument.consecutive())
                 set(it.saved, instrument.saved())
                 set(it.createdAt, instrument.createdAt().toLocalDateTime())
                 set(it.agencyId, instrument.agencyId().toString())
@@ -128,7 +126,6 @@ class KtormInstrumentRepository(
                 onConflict(it.id) {
                     set(it.statisticYear, instrument.statisticYear())
                     set(it.statisticMonth, instrument.statisticMonth())
-                    set(it.consecutive, instrument.consecutive())
                     set(it.saved, instrument.saved())
                     set(it.updatedAt, instrument.updatedAt()?.toLocalDateTime() ?: LocalDateTime.now())
                     set(it.agencyId, instrument.agencyId().toString())

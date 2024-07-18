@@ -19,7 +19,8 @@ class KtormAgencyRepository(private val database: Database) : AgencyRepository {
     private val agencies = Agencies("ac")
     private val municipalities = Municipalities("m")
     private val statisticTypesOfAgencies = StatisticTypesOfAgencies("s_ac")
-    private val criteriaParser = KtormAgenciesCriteriaParser(database, agencies, municipalities, statisticTypesOfAgencies)
+    private val criteriaParser =
+        KtormAgenciesCriteriaParser(database, agencies, municipalities, statisticTypesOfAgencies)
 
     override fun matching(criteria: Criteria): List<Agency> {
         val query = criteriaParser.selectQuery(criteria)
