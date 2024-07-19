@@ -69,3 +69,5 @@ compose.desktop {
         }
     }
 }
+
+println(JavaVersion.current())

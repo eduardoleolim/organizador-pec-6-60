@@ -2,6 +2,7 @@ package org.eduardoleolim.organizadorpec660.core.shared.infrastructure.bus
 
 import org.eduardoleolim.organizadorpec660.core.agency.infrastructure.bus.KtormAgencyCommandHandlers
 import org.eduardoleolim.organizadorpec660.core.federalEntity.infrastructure.bus.KtormFederalEntityCommandHandlers
+import org.eduardoleolim.organizadorpec660.core.instrument.infrastructure.bus.KtormInstrumentCommandHandlers
 import org.eduardoleolim.organizadorpec660.core.municipality.infrastructure.bus.KtormMunicipalityCommandHandlers
 import org.eduardoleolim.organizadorpec660.core.shared.domain.Either
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.*
@@ -15,9 +16,10 @@ class KtormCommandBus(database: Database, instrumentsPath: String) : CommandBus 
 
     private val commandHandlers = HashMap<KClass<out Command<*, *>>, CommandHandler<*, *, out Command<*, *>>>().apply {
         putAll(KtormAgencyCommandHandlers(context).handlers)
+        putAll(KtormFederalEntityCommandHandlers(context).handlers)
+        putAll(KtormInstrumentCommandHandlers(context).handlers)
         putAll(KtormMunicipalityCommandHandlers(context).handlers)
         putAll(KtormStatisticTypeCommandHandlers(context).handlers)
-        putAll(KtormFederalEntityCommandHandlers(context).handlers)
     }
 
     override fun <L, R> dispatch(command: Command<L, R>): Either<L, R> {
