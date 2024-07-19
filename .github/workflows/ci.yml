@@ -30,6 +30,9 @@ jobs:
           echo "JAVA_HOME=/opt/jbrsdk-17.0.11" >> $GITHUB_ENV
           echo "PATH=$JAVA_HOME/bin:$PATH" >> $GITHUB_ENV
 
+      - name: 🐘 Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
       - name: 🔓 Grant permission
         run: chmod +x gradlew
 
