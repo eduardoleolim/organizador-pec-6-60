@@ -19,6 +19,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
@@ -79,7 +80,8 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
     ) {
         ModalDrawerSheet {
             Row(
-                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                modifier = Modifier.fillMaxWidth()
+                    .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(stringResource(Res.string.app_name))
@@ -176,9 +178,10 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
         val drawerState = rememberDrawerState(DrawerValue.Closed)
         val screenModel = rememberScreenModel { HomeScreenModel(navigator, drawerState, compositionContext) }
         var selectedTab by remember { mutableStateOf(MenuTab.INSTRUMENTS) }
+        val density = LocalDensity.current
 
         LaunchedEffect(Unit) {
-            val dimension = Dimension(900, 640)
+            val dimension = with(density) { Dimension(900.dp.roundToPx(), 640.dp.roundToPx()) }
             window.apply {
                 isResizable = true
                 size = dimension
@@ -204,8 +207,7 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
         ) {
             Row {
                 NavigationRail(
-                    modifier = Modifier
-                        .width(116.dp)
+                    modifier = Modifier.width(116.dp)
                         .padding(horizontal = 16.dp),
                     containerColor = MaterialTheme.colorScheme.surfaceContainer,
                     header = {
@@ -237,9 +239,9 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
                     color = MaterialTheme.colorScheme.surfaceContainerHigh,
                     shape = MaterialTheme.shapes.large,
                 ) {
-                    AnimatedContent(targetState = selectedTab) { targetState ->
+                    AnimatedContent(targetState = selectedTab) { state ->
                         screenModel.apply {
-                            when (targetState) {
+                            when (state) {
                                 MenuTab.INSTRUMENTS -> InstrumentView()
                                 MenuTab.FEDERAL_ENTITIES -> FederalEntityView()
                                 MenuTab.MUNICIPALITIES -> MunicipalityView()

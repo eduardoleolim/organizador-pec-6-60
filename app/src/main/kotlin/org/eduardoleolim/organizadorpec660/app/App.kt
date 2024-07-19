@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -87,9 +88,7 @@ class App(
         val state = rememberWindowState()
         val isSystemInDarkTheme = isSystemInDarkTheme()
 
-        AppTheme(
-            isDarkMode = isSystemInDarkTheme
-        ) {
+        AppTheme(isDarkMode = isSystemInDarkTheme) {
             val icon = painterResource(Res.drawable.logo)
             CustomWindow(
                 state = state,
@@ -98,10 +97,11 @@ class App(
                 defaultTitle = stringResource(Res.string.app_name),
                 defaultIcon = icon
             ) {
+                val density = LocalDensity.current
                 LaunchedEffect(Unit) {
                     window.apply {
                         isResizable = false
-                        size = Dimension(400, 400)
+                        size = with(density) { Dimension(400.dp.roundToPx(), 400.dp.roundToPx()) }
                         setLocationRelativeTo(null)
                     }
                 }
