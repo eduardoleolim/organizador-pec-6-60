@@ -24,6 +24,9 @@ jobs:
           curl -L https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.11-linux-x64-b1312.2.tar.gz -o jbrsdk-17.0.11.tar.gz
           mkdir /opt/jbrsdk-17.0.11
           tar -xzf jbrsdk-17.0.11.tar.gz -C /opt/jbrsdk-17.0.11 --strip-components=1
+
+      - name: ♨️ Set JAVA_HOME
+        run: |
           echo "JAVA_HOME=/opt/jbrsdk-17.0.11" >> $GITHUB_ENV
           echo "PATH=$JAVA_HOME/bin:$PATH" >> $GITHUB_ENV
 
@@ -86,6 +89,9 @@ jobs:
           curl -L ${{ matrix.url }} -o jbrsdk-17.0.11.tar.gz
           mkdir ${{ matrix.sdk }}
           tar -xzvf jbrsdk-17.0.11.tar.gz -C ${{ matrix.sdk }} --strip-components=1
+
+      - name: ♨️ Set JAVA_HOME
+        run: |
           echo "JAVA_HOME=${{ matrix.java_home }}" >> ${{ matrix.github }}
           echo "${{ matrix.path }}" >> ${{ matrix.github }}
 
