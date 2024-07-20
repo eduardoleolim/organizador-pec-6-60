@@ -1,3 +1,4 @@
+import org.gradle.internal.os.OperatingSystem
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -37,6 +38,12 @@ compose.desktop {
     application {
         mainClass = "MainKt"
         jvmArgs("-Dfile.encoding=UTF-8")
+
+        if (OperatingSystem.current().isMacOsX) {
+            jvmArgs("-Dskiko.renderApi=METAL")
+        } else {
+            jvmArgs("-Dskiko.renderApi=OPENGL")
+        }
 
         nativeDistributions {
             packageName = "Organizador PEC-6-60"

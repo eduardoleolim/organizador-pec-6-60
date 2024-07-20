@@ -9,15 +9,6 @@ import java.math.BigInteger
 import java.util.*
 
 object AppConfig {
-    init {
-        val renderApi = when (DesktopPlatform.Current) {
-            DesktopPlatform.MacOS -> "METAL"
-            else -> "OPENGL"
-        }
-
-        System.setProperty("skiko.renderApi", renderApi)
-    }
-
     private val resourcesPath = System.getProperty("compose.application.resources.dir")
     private val propertiesFile = File(resourcesPath).resolve("app.properties")
     private var properties = Properlty.builder()
