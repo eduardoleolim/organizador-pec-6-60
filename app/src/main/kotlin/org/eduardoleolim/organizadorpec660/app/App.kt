@@ -70,7 +70,9 @@ class App(
         var existsDatabase by remember { mutableStateOf(SqliteKtormDatabase.exists(databasePath)) }
 
         if (existsDatabase) {
-            MainWindow(onCloseRequest = { exitApplication() })
+            MainWindow(
+                onCloseRequest = { exitApplication() }
+            )
         } else {
             ConfigWindow(
                 onCloseRequest = { exitApplication() },
@@ -107,8 +109,7 @@ class App(
                 }
 
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
+                    modifier = Modifier.fillMaxSize()
                         .padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
@@ -257,8 +258,7 @@ class App(
             Row(
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .clip(RoundedCornerShape(6.dp))
+                modifier = Modifier.clip(RoundedCornerShape(6.dp))
                     .clickable { expanded = true }
                     .padding(4.dp)
                     .height(24.dp)

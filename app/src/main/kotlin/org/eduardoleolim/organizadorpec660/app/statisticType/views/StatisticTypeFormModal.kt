@@ -18,10 +18,8 @@ import org.eduardoleolim.organizadorpec660.core.statisticType.application.Statis
 import org.eduardoleolim.organizadorpec660.core.statisticType.domain.InvalidStatisticTypeKeyCodeError
 import org.eduardoleolim.organizadorpec660.core.statisticType.domain.InvalidStatisticTypeNameError
 import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeAlreadyExistsError
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun StatisticTypeScreen.StatisticTypeFormModal(
     screenModel: StatisticTypeScreenModel,
@@ -121,7 +119,9 @@ fun StatisticTypeScreen.StatisticTypeFormModal(
         text = {
             Column {
                 OutlinedTextField(
-                    label = { Text(stringResource(Res.string.st_keycode)) },
+                    label = {
+                        Text(stringResource(Res.string.st_keycode))
+                    },
                     value = keyCode,
                     onValueChange = {
                         if (Regex("[0-9]{0,3}").matches(it)) {
@@ -141,10 +141,12 @@ fun StatisticTypeScreen.StatisticTypeFormModal(
                         }
                 )
 
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(Modifier.height(32.dp))
 
                 OutlinedTextField(
-                    label = { Text(stringResource(Res.string.st_name)) },
+                    label = {
+                        Text(stringResource(Res.string.st_name))
+                    },
                     value = name,
                     onValueChange = { name = it.uppercase() },
                     singleLine = true,

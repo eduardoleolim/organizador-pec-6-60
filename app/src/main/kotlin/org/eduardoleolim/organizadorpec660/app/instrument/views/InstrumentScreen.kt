@@ -52,9 +52,7 @@ class InstrumentScreen(private val queryBus: QueryBus, private val commandBus: C
                 style = MaterialTheme.typography.titleLarge
             )
 
-            Spacer(
-                modifier = Modifier.weight(1.0f)
-            )
+            Spacer(Modifier.weight(1.0f))
 
             SmallFloatingActionButton(
                 onClick = onImportExportRequest,

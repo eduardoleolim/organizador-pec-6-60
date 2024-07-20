@@ -51,8 +51,7 @@ class AuthScreen(private val queryBus: QueryBus) : Screen {
 
         Row {
             Column(
-                modifier = Modifier
-                    .fillMaxWidth(0.5f)
+                modifier = Modifier.fillMaxWidth(0.5f)
                     .fillMaxHeight()
             ) {
                 Image(
@@ -165,10 +164,13 @@ class AuthScreen(private val queryBus: QueryBus) : Screen {
 
         OutlinedTextField(
             enabled = enabled,
-            label = { Text(stringResource(Res.string.auth_username)) },
+            label = {
+                Text(stringResource(Res.string.auth_username))
+            },
             value = username,
             onValueChange = { username = it },
-            modifier = Modifier.fillMaxWidth(0.8f).padding(bottom = 20.dp),
+            modifier = Modifier.fillMaxWidth(0.8f)
+                .padding(bottom = 20.dp),
             singleLine = true,
             isError = isUsernameError || isCredentialsError,
             supportingText = usernameSupportingText?.let { message ->
@@ -178,10 +180,13 @@ class AuthScreen(private val queryBus: QueryBus) : Screen {
 
         OutlinedTextField(
             enabled = enabled,
-            label = { Text(stringResource(Res.string.auth_password)) },
+            label = {
+                Text(stringResource(Res.string.auth_password))
+            },
             value = password,
             onValueChange = { password = it },
-            modifier = Modifier.fillMaxWidth(0.8f).padding(bottom = 20.dp),
+            modifier = Modifier.fillMaxWidth(0.8f)
+                .padding(bottom = 20.dp),
             singleLine = true,
             isError = isPasswordError || isCredentialsError,
             supportingText = passwordSupportingText?.let { message ->

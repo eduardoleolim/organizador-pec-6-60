@@ -130,7 +130,9 @@ fun FederalEntityScreen.FederalEntitiesTable(
 
                     cell {
                         PlainTextTooltip(
-                            tooltip = { Text(stringResource(Res.string.edit)) }
+                            tooltip = {
+                                Text(stringResource(Res.string.edit))
+                            }
                         ) {
                             IconButton(
                                 onClick = { onEditRequest(federalEntity) }
@@ -143,7 +145,9 @@ fun FederalEntityScreen.FederalEntitiesTable(
                         }
 
                         PlainTextTooltip(
-                            tooltip = { Text(stringResource(Res.string.delete)) }
+                            tooltip = {
+                                Text(stringResource(Res.string.delete))
+                            }
                         ) {
                             IconButton(
                                 onClick = { onDeleteRequest(federalEntity) }

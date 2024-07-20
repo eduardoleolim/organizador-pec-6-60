@@ -63,8 +63,7 @@ fun <T> SearchList(
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier
-                    .horizontalScroll(rememberScrollState())
+                modifier = Modifier.horizontalScroll(rememberScrollState())
                     .weight(1f)
             ) {
                 header()
@@ -75,9 +74,13 @@ fun <T> SearchList(
             OutlinedTextField(
                 value = value,
                 onValueChange = onValueChange,
-                label = { Text("Buscar") },
+                label = {
+                    Text("Buscar")
+                },
                 textStyle = MaterialTheme.typography.bodyLarge,
-                leadingIcon = { Icon(Icons.Default.Search, "Buscar") },
+                leadingIcon = {
+                    Icon(Icons.Default.Search, "Buscar")
+                },
                 singleLine = true,
                 modifier = Modifier.width(250.dp),
                 shape = MaterialTheme.shapes.extraLarge,

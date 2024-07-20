@@ -78,12 +78,8 @@ fun FederalEntityScreen.FederalEntityDeleteModal(
                 Text(stringResource(Res.string.fe_delete_text, federalEntity.name))
             }
         },
-        onConfirmRequest = {
-            screenModel.deleteFederalEntity(federalEntity.id)
-        },
-        onDismissRequest = {
-            onDismissRequest()
-        }
+        onConfirmRequest = { screenModel.deleteFederalEntity(federalEntity.id) },
+        onDismissRequest = { onDismissRequest() }
     )
 
     if (errorOccurred) {
@@ -97,9 +93,7 @@ fun FederalEntityScreen.FederalEntityDeleteModal(
                     }
                 }
             },
-            onDismissRequest = {
-                screenModel.resetDeleteModal()
-            },
+            onDismissRequest = { screenModel.resetDeleteModal() },
             onConfirmRequest = onDismissRequest
         )
     }

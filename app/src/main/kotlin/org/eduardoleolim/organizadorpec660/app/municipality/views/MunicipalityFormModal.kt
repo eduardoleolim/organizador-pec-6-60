@@ -144,9 +144,7 @@ fun MunicipalityScreen.MunicipalityFormModal(
             Column {
                 OutlinedSelect(
                     values = screenModel.federalEntities,
-                    onValueSelected = { _, item ->
-                        federalEntity = item
-                    },
+                    onValueSelected = { _, item -> federalEntity = item },
                     visualTransformation = { "${it.keyCode} - ${it.name}" },
                     label = { Text(stringResource(Res.string.mun_federal_entity)) },
                     isError = isFederalEntityError,

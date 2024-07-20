@@ -118,7 +118,9 @@ fun FederalEntityScreen.FederalEntityFormModal(
         text = {
             Column {
                 OutlinedTextField(
-                    label = { Text(stringResource(Res.string.fe_keycode)) },
+                    label = {
+                        Text(stringResource(Res.string.fe_keycode))
+                    },
                     value = keyCode,
                     onValueChange = {
                         if (Regex("[0-9]{0,2}").matches(it)) {
@@ -138,10 +140,12 @@ fun FederalEntityScreen.FederalEntityFormModal(
                         }
                 )
 
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(Modifier.height(32.dp))
 
                 OutlinedTextField(
-                    label = { Text(stringResource(Res.string.fe_name)) },
+                    label = {
+                        Text(stringResource(Res.string.fe_name))
+                    },
                     value = name,
                     onValueChange = { name = it.uppercase() },
                     singleLine = true,

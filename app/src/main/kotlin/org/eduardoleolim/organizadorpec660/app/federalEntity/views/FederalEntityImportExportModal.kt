@@ -143,7 +143,7 @@ fun FederalEntityScreen.FederalEntityImportModal(
             Column {
                 Text(stringResource(Res.string.fe_catalog_import_content))
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(Modifier.height(16.dp))
 
                 Button(
                     enabled = enable,

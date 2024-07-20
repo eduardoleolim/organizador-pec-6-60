@@ -22,11 +22,10 @@ import org.eduardoleolim.organizadorpec660.app.shared.composables.sortColumnInde
 import org.eduardoleolim.organizadorpec660.core.shared.domain.toLocalDateTime
 import org.eduardoleolim.organizadorpec660.core.statisticType.application.StatisticTypeResponse
 import org.eduardoleolim.organizadorpec660.core.statisticType.application.StatisticTypesResponse
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 import java.time.format.DateTimeFormatter
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalResourceApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun StatisticTypeScreen.StatisticTypeTable(
     value: String,
@@ -130,7 +129,9 @@ fun StatisticTypeScreen.StatisticTypeTable(
 
                     cell {
                         PlainTextTooltip(
-                            tooltip = { Text(stringResource(Res.string.edit)) }
+                            tooltip = {
+                                Text(stringResource(Res.string.edit))
+                            }
                         ) {
                             IconButton(
                                 onClick = { onEditRequest(statisticType) }
@@ -143,7 +144,9 @@ fun StatisticTypeScreen.StatisticTypeTable(
                         }
 
                         PlainTextTooltip(
-                            tooltip = { Text(stringResource(Res.string.delete)) }
+                            tooltip = {
+                                Text(stringResource(Res.string.delete))
+                            }
                         ) {
                             IconButton(
                                 onClick = { onDeleteRequest(statisticType) }

@@ -106,9 +106,7 @@ fun PdfViewerTopBar(
 
                 IconButton(
                     enabled = isPdfLoaded && pdfViewerState!!.currentPageIndex > 0,
-                    onClick = {
-                        pdfViewerState!!.currentPageIndex = 0
-                    }
+                    onClick = { pdfViewerState!!.currentPageIndex = 0 }
                 ) {
                     Icon(
                         imageVector = Icons.Filled.FirstPage,
@@ -168,9 +166,7 @@ fun PdfViewerTopBar(
                 }
                 IconButton(
                     enabled = isPdfLoaded && pdfViewerState!!.currentPageIndex + 1 < pdfViewerState.pdDocument.numberOfPages,
-                    onClick = {
-                        pdfViewerState!!.currentPageIndex = pdfViewerState.pdDocument.numberOfPages - 1
-                    }
+                    onClick = { pdfViewerState!!.currentPageIndex = pdfViewerState.pdDocument.numberOfPages - 1 }
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.LastPage,
@@ -193,9 +189,7 @@ fun PdfViewerTopBar(
                 Slider(
                     enabled = isPdfLoaded,
                     value = zoom,
-                    onValueChange = { zoomLevel ->
-                        pdfViewerState!!.zoom = zoomLevel
-                    },
+                    onValueChange = { zoomLevel -> pdfViewerState!!.zoom = zoomLevel },
                     valueRange = 0.5f..3.0f,
                     modifier = Modifier.width(100.dp).padding(start = 8.dp, end = 8.dp)
                 )
@@ -213,8 +207,7 @@ fun PdfViewerContent(
     val verticalScrollState = rememberScrollState()
 
     Surface(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
             .padding(start = 20.dp, end = 20.dp, top = 10.dp, bottom = 20.dp)
             .then(modifier),
         shape = MaterialTheme.shapes.extraSmall,
@@ -222,13 +215,14 @@ fun PdfViewerContent(
     ) {
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxSize().run {
-                if (pdfViewerState?.showAllPages == false) {
-                    verticalScroll(verticalScrollState)
-                } else {
-                    this
+            modifier = Modifier.fillMaxSize()
+                .run {
+                    if (pdfViewerState?.showAllPages == false) {
+                        verticalScroll(verticalScrollState)
+                    } else {
+                        this
+                    }
                 }
-            }
         ) {
             pdfViewerState?.let { state ->
                 val renderer = remember(state.pdDocument) { PDFRenderer(state.pdDocument) }
@@ -303,7 +297,8 @@ fun PdfViewer(
     }
 
     Surface(
-        modifier = Modifier.fillMaxSize().then(modifier),
+        modifier = Modifier.fillMaxSize()
+            .then(modifier),
         shape = MaterialTheme.shapes.medium,
         color = MaterialTheme.colorScheme.surfaceContainer
     ) {

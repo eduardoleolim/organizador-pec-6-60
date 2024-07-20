@@ -158,8 +158,7 @@ fun MunicipalityScreen.MunicipalitiesTable(
                     DropdownMenu(
                         expanded = expanded,
                         onDismissRequest = { expanded = false },
-                        modifier = Modifier
-                            .heightIn(0.dp, 300.dp)
+                        modifier = Modifier.heightIn(0.dp, 300.dp)
                             .background(MaterialTheme.colorScheme.surface)
                     ) {
                         DropdownMenuItem(
@@ -215,7 +214,9 @@ fun MunicipalityScreen.MunicipalitiesTable(
 
                     cell {
                         PlainTextTooltip(
-                            tooltip = { Text(stringResource(Res.string.edit)) }
+                            tooltip = {
+                                Text(stringResource(Res.string.edit))
+                            }
                         ) {
                             IconButton(
                                 onClick = { onEditRequest(municipality) }
@@ -228,7 +229,9 @@ fun MunicipalityScreen.MunicipalitiesTable(
                         }
 
                         PlainTextTooltip(
-                            tooltip = { Text(stringResource(Res.string.delete)) }
+                            tooltip = {
+                                Text(stringResource(Res.string.delete))
+                            }
                         ) {
                             IconButton(
                                 onClick = { onDeleteRequest(municipality) }

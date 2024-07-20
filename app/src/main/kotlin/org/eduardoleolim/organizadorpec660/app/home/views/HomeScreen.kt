@@ -109,7 +109,9 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
                             contentDescription = label
                         )
                     },
-                    label = { Text(label) },
+                    label = {
+                        Text(label)
+                    },
                     selected = selectedTab == tab,
                     onClick = { onChangeSelectedTab(tab) },
                     shape = MaterialTheme.shapes.medium
@@ -121,8 +123,15 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
             HorizontalDivider()
 
             NavigationDrawerItem(
-                icon = { Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = "logout") },
-                label = { Text(stringResource(Res.string.logout)) },
+                icon = {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.Logout,
+                        contentDescription = "logout"
+                    )
+                },
+                label = {
+                    Text(stringResource(Res.string.logout))
+                },
                 selected = false,
                 onClick = { screenModel.logout() },
                 shape = MaterialTheme.shapes.medium
@@ -158,7 +167,12 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
         }
 
         NavigationRailItem(
-            icon = { Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = "logout") },
+            icon = {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.Logout,
+                    contentDescription = "logout"
+                )
+            },
             label = {
                 Text(
                     text = stringResource(Res.string.logout),

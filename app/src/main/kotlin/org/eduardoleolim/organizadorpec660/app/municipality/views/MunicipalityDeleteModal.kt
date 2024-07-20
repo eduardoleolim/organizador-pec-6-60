@@ -58,9 +58,7 @@ fun MunicipalityScreen.MunicipalityDeleteModal(
         text = {
             Text(stringResource(Res.string.mun_delete_text, municipality.name))
         },
-        onConfirmRequest = {
-            screenModel.deleteMunicipality(municipality.id)
-        },
+        onConfirmRequest = { screenModel.deleteMunicipality(municipality.id) },
         onDismissRequest = onDismissRequest
     )
 }

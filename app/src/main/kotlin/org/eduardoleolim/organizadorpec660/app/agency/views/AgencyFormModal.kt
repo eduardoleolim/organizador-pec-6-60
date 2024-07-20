@@ -198,11 +198,11 @@ fun AgencyScreen.AgencyFormModal(
 
                 Row {
                     OutlinedTextField(
-                        label = { Text(stringResource(Res.string.ag_name)) },
-                        value = name,
-                        onValueChange = {
-                            name = it.uppercase()
+                        label = {
+                            Text(stringResource(Res.string.ag_name))
                         },
+                        value = name,
+                        onValueChange = { name = it.uppercase() },
                         singleLine = true,
                         isError = isNameError,
                         supportingText = nameSupportingText?.let { message ->
@@ -214,7 +214,9 @@ fun AgencyScreen.AgencyFormModal(
                     Spacer(Modifier.width(32.dp))
 
                     OutlinedTextField(
-                        label = { Text(stringResource(Res.string.ag_consecutive)) },
+                        label = {
+                            Text(stringResource(Res.string.ag_consecutive))
+                        },
                         value = consecutive,
                         onValueChange = {
                             if (it.isBlank()) {
@@ -250,7 +252,9 @@ fun AgencyScreen.AgencyFormModal(
                             federalEntityId = item?.id
                         },
                         visualTransformation = { "${it.keyCode} - ${it.name}" },
-                        label = { Text(stringResource(Res.string.mun_federal_entity)) },
+                        label = {
+                            Text(stringResource(Res.string.mun_federal_entity))
+                        },
                         isError = isFederalEntityError,
                         supportingText = federalEntitySupportingText?.let { message ->
                             { Text(text = message, color = MaterialTheme.colorScheme.error) }
@@ -269,7 +273,9 @@ fun AgencyScreen.AgencyFormModal(
                             municipalityId = item?.id
                         },
                         visualTransformation = { "${it.keyCode} - ${it.name}" },
-                        label = { Text(stringResource(Res.string.ag_form_municipality)) },
+                        label = {
+                            Text(stringResource(Res.string.ag_form_municipality))
+                        },
                         isError = isMunicipalityError,
                         supportingText = municipalitySupportingText?.let { message ->
                             { Text(text = message, color = MaterialTheme.colorScheme.error) }
@@ -291,11 +297,11 @@ fun AgencyScreen.AgencyFormModal(
                     Row {
                         OutlinedSelect(
                             values = screenModel.statisticTypes,
-                            onValueSelected = { _, item ->
-                                statisticType = item
-                            },
+                            onValueSelected = { _, item -> statisticType = item },
                             visualTransformation = { "${it.keyCode} - ${it.name}" },
-                            label = { Text(stringResource(Res.string.ag_form_statistic_type)) },
+                            label = {
+                                Text(stringResource(Res.string.ag_form_statistic_type))
+                            },
                             isError = isStatisticTypeError,
                             supportingText = statisticTypeSupportingText?.let { message ->
                                 { Text(text = message, color = MaterialTheme.colorScheme.error) }

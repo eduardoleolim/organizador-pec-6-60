@@ -58,43 +58,42 @@ fun <T> OutlinedSelect(
         OutlinedTextField(
             value = value,
             onValueChange = { },
-            modifier = modifier.onGloballyPositioned { coordinates ->
-                textFieldSize = coordinates.size
-            }.onPreviewKeyEvent { keyEvent ->
-                when {
-                    (keyEvent.key == Key.DirectionDown && keyEvent.type == KeyEventType.KeyDown) -> {
-                        if (selectedIndex == null) {
-                            selectedIndex = 0
+            modifier = modifier.onGloballyPositioned { textFieldSize = it.size }
+                .onPreviewKeyEvent { keyEvent ->
+                    when {
+                        (keyEvent.key == Key.DirectionDown && keyEvent.type == KeyEventType.KeyDown) -> {
+                            if (selectedIndex == null) {
+                                selectedIndex = 0
 
-                            true
-                        } else if (selectedIndex!! + 1 < values.size) {
-                            selectedIndex = selectedIndex!! + 1
+                                true
+                            } else if (selectedIndex!! + 1 < values.size) {
+                                selectedIndex = selectedIndex!! + 1
 
-                            true
-                        } else {
-                            false
+                                true
+                            } else {
+                                false
+                            }
                         }
-                    }
 
-                    (keyEvent.key == Key.DirectionUp && keyEvent.type == KeyEventType.KeyDown) -> {
-                        if (selectedIndex != null && selectedIndex!! > 0) {
-                            selectedIndex = selectedIndex!! - 1
+                        (keyEvent.key == Key.DirectionUp && keyEvent.type == KeyEventType.KeyDown) -> {
+                            if (selectedIndex != null && selectedIndex!! > 0) {
+                                selectedIndex = selectedIndex!! - 1
+
+                                true
+                            } else {
+                                false
+                            }
+                        }
+
+                        (keyEvent.key == Key.Tab && keyEvent.type == KeyEventType.KeyDown) -> {
+                            focusManager.moveFocus(FocusDirection.Next)
 
                             true
-                        } else {
-                            false
                         }
+
+                        else -> false
                     }
-
-                    (keyEvent.key == Key.Tab && keyEvent.type == KeyEventType.KeyDown) -> {
-                        focusManager.moveFocus(FocusDirection.Next)
-
-                        true
-                    }
-
-                    else -> false
-                }
-            },
+                },
             enabled = enabled,
             readOnly = true,
             textStyle = textStyle,
@@ -118,9 +117,7 @@ fun <T> OutlinedSelect(
             supportingText = supportingText?.let {
                 {
                     Box(
-                        modifier = Modifier.onGloballyPositioned { coordinates ->
-                            supportingTextSize = coordinates.size
-                        }
+                        modifier = Modifier.onGloballyPositioned { supportingTextSize = it.size }
                     ) {
                         supportingText()
                     }
@@ -140,7 +137,9 @@ fun <T> OutlinedSelect(
         ) {
             values.forEach {
                 DropdownMenuItem(
-                    text = { Text(visualTransformation(it)) },
+                    text = {
+                        Text(visualTransformation(it))
+                    },
                     onClick = {
                         expanded = false
                         selectedValue = it

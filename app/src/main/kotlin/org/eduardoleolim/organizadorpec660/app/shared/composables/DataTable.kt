@@ -77,19 +77,13 @@ fun PaginatedDataTable(
     }
 
     Column(
-        modifier = Modifier
-            .onGloballyPositioned { coordinates ->
-                size = coordinates.size.toSize()
-            }.then(modifier)
+        modifier = Modifier.onGloballyPositioned { size = it.size.toSize() }
+            .then(modifier)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    horizontal = horizontalPadding,
-                    vertical = verticalPadding
-                )
+            modifier = Modifier.fillMaxWidth()
+                .padding(horizontal = horizontalPadding, vertical = verticalPadding)
         ) {
             var expandedPageSize by remember { mutableStateOf(false) }
 
@@ -130,7 +124,7 @@ fun PaginatedDataTable(
 
             header()
 
-            Spacer(modifier = Modifier.weight(1f))
+            Spacer(Modifier.weight(1f))
 
             OutlinedTextField(
                 value = value,
@@ -163,8 +157,7 @@ fun PaginatedDataTable(
         val stateHorizontal = rememberScrollState(0)
 
         Column(
-            modifier = Modifier
-                .weight(1.0f)
+            modifier = Modifier.weight(1.0f)
                 .padding(8.dp)
                 .verticalScroll(stateVertical)
         ) {
@@ -185,7 +178,9 @@ fun PaginatedDataTable(
         }
 
         Row(
-            modifier = Modifier.height(rowHeight).padding(horizontal = 16.dp).fillMaxWidth(),
+            modifier = Modifier.height(rowHeight)
+                .padding(horizontal = 16.dp)
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.End),
             verticalAlignment = Alignment.CenterVertically,
         ) {

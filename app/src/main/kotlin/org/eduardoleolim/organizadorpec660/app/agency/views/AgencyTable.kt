@@ -143,7 +143,9 @@ fun AgencyScreen.AgenciesTable(
 
                     cell {
                         PlainTextTooltip(
-                            tooltip = { Text(stringResource(Res.string.edit)) }
+                            tooltip = {
+                                Text(stringResource(Res.string.edit))
+                            }
                         ) {
                             IconButton(
                                 onClick = { onEditRequest(agency) }
@@ -156,7 +158,9 @@ fun AgencyScreen.AgenciesTable(
                         }
 
                         PlainTextTooltip(
-                            tooltip = { Text(stringResource(Res.string.delete)) }
+                            tooltip = {
+                                Text(stringResource(Res.string.delete))
+                            }
                         ) {
                             IconButton(
                                 onClick = { onDeleteRequest(agency) }
