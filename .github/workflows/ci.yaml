@@ -11,27 +11,12 @@ jobs:
       - name: 👍 Checkout
         uses: actions/checkout@v4
 
-      - name: 💾 Cache JBR SDK 17.0.11
-        id: jbrsdk
-        uses: actions/cache@v4
+      - name: ♨️ Setup JBR SDK 17
+        uses: gmitch215/setup-java@6d2c5e1f82f180ae79f799f0ed6e3e5efb4e664d
         with:
-          path: /opt/jbrsdk-17.0.11
-          key: jbrsdk-17.0.11-${{ runner.os }}
-
-      - name: 📦 Setup JBR SDK 17.0.11
-        if: steps.jbrsdk.outputs.cache-hit != 'true'
-        run: |
-          curl -L https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-17.0.11-linux-x64-b1312.2.tar.gz -o jbrsdk-17.0.11.tar.gz
-          mkdir /opt/jbrsdk-17.0.11
-          tar -xzf jbrsdk-17.0.11.tar.gz -C /opt/jbrsdk-17.0.11 --strip-components=1
-
-      - name: ♨️ Set JAVA_HOME
-        run: |
-          echo "JAVA_HOME=/opt/jbrsdk-17.0.11" >> $GITHUB_ENV
-          echo "PATH=$JAVA_HOME/bin:$PATH" >> $GITHUB_ENV
-
-      - name: 🐘 Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
+          distribution: 'jetbrains'
+          java-version: 17
+          cache: 'gradle'
 
       - name: 🔓 Grant permission
         run: chmod +x gradlew
