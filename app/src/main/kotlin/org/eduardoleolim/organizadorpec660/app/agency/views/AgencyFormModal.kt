@@ -245,7 +245,7 @@ fun AgencyScreen.AgencyFormModal(
 
                 Row {
                     OutlinedSelect(
-                        values = screenModel.federalEntities,
+                        items = screenModel.federalEntities,
                         valueIndex = federalEntityIndex,
                         onValueSelected = { index, item ->
                             federalEntityIndex = index
@@ -266,7 +266,7 @@ fun AgencyScreen.AgencyFormModal(
 
                     OutlinedSelect(
                         enabled = federalEntityId != null,
-                        values = screenModel.municipalities,
+                        items = screenModel.municipalities,
                         valueIndex = municipalityIndex,
                         onValueSelected = { index, item ->
                             municipalityIndex = index
@@ -296,7 +296,7 @@ fun AgencyScreen.AgencyFormModal(
                 Column {
                     Row {
                         OutlinedSelect(
-                            values = screenModel.statisticTypes,
+                            items = screenModel.statisticTypes,
                             onValueSelected = { _, item -> statisticType = item },
                             visualTransformation = { "${it.keyCode} - ${it.name}" },
                             label = {
