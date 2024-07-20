@@ -148,7 +148,7 @@ data class InstrumentStatisticMonth(val value: Int) {
     }
 
     private fun validate(value: Int) {
-        if (value < 0 || value > 12)
+        if ((1..12).contains(value))
             throw InvalidInstrumentStatisticMonthError(value)
     }
 }

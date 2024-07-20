@@ -12,7 +12,7 @@ class InvalidInstrumentStatisticYearError(year: Int) :
     InvalidInstrumentException("The year <$year> is not a valid instrument statistic year")
 
 class InvalidInstrumentStatisticMonthError(month: Int) :
-    InvalidInstrumentException("The month <$month> is not a valid instrument statistic month")
+    InvalidInstrumentException("The month <$month> is not a valid instrument statistic month. It must be between 1 and 12")
 
 class InvalidInstrumentConsecutiveError(consecutive: String) :
     InvalidInstrumentException("The consecutive <$consecutive> is not a valid instrument consecutive")
