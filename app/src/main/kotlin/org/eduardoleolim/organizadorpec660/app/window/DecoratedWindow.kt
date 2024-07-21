@@ -118,7 +118,7 @@ fun DecoratedWindow(
             } else {
                 Modifier
             }
-         */
+        */
 
         CompositionLocalProvider(
             LocalTitleBarInfo provides TitleBarInfo(title, icon),

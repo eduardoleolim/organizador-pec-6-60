@@ -20,7 +20,7 @@ import kotlinx.coroutines.isActive
 
 @Composable
 internal fun DecoratedWindowScope.TitleBarOnWindows(
-    defaultHeight: Dp = 40.dp,
+    minHeight: Dp = 40.dp,
     modifier: Modifier = Modifier,
     gradientStartColor: Color = Color.Unspecified,
     content: @Composable TitleBarScope.(DecoratedWindowState) -> Unit,
@@ -33,7 +33,7 @@ internal fun DecoratedWindowScope.TitleBarOnWindows(
     val foregroundColorInactive = java.awt.Color(foreground.red, foreground.green, foreground.blue, 0.5f)
 
     TitleBarImpl(
-        defaultHeight = defaultHeight,
+        minHeight = minHeight,
         modifier = modifier.customTitleBarMouseEventHandler(titleBar),
         gradientStartColor = gradientStartColor,
         applyTitleBar = { height, _ ->

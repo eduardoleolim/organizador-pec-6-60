@@ -1,10 +1,7 @@
 package org.eduardoleolim.organizadorpec660.app.window
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -36,6 +33,7 @@ internal const val TITLE_BAR_BORDER_LAYOUT_ID = "__TITLE_BAR_BORDER__"
 
 @Composable
 fun DecoratedWindowScope.TitleBar(
+    minHeight: Dp = 40.dp,
     modifier: Modifier = Modifier,
     gradientStartColor: Color = Color.Unspecified,
     content: @Composable TitleBarScope.(DecoratedWindowState) -> Unit,
@@ -47,11 +45,7 @@ fun DecoratedWindowScope.TitleBar(
     ) {
         when (DesktopPlatform.Current) {
             // DesktopPlatform.Linux -> TitleBarOnLinux(modifier, gradientStartColor, content)
-            DesktopPlatform.Windows -> TitleBarOnWindows(
-                modifier = modifier,
-                gradientStartColor = gradientStartColor,
-                content = content
-            )
+            DesktopPlatform.Windows -> TitleBarOnWindows(minHeight, modifier, gradientStartColor, content)
             // DesktopPlatform.MacOS -> TitleBarOnMacOs(modifier, gradientStartColor, content)
             DesktopPlatform.Unknown -> error("TitleBar is not supported on this platform(${System.getProperty("os.name")})")
             else -> {}
@@ -61,7 +55,7 @@ fun DecoratedWindowScope.TitleBar(
 
 @Composable
 internal fun DecoratedWindowScope.TitleBarImpl(
-    defaultHeight: Dp,
+    minHeight: Dp,
     modifier: Modifier = Modifier,
     gradientStartColor: Color = Color.Unspecified,
     applyTitleBar: (Dp, DecoratedWindowState) -> PaddingValues,
@@ -96,7 +90,7 @@ internal fun DecoratedWindowScope.TitleBarImpl(
         modifier = modifier.background(backgroundBrush)
             .focusProperties { canFocus = false }
             .layoutId(TITLE_BAR_LAYOUT_ID)
-            .height(defaultHeight)
+            .heightIn(min = minHeight)
             .onSizeChanged { with(density) { applyTitleBar(it.height.toDp(), state) } }
             .fillMaxWidth(),
         measurePolicy =
