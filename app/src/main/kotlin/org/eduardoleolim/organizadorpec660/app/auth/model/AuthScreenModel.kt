@@ -28,10 +28,6 @@ class AuthScreenModel(private val navigator: Navigator, private val queryBus: Qu
     var authState by mutableStateOf<AuthState>(AuthState.Idle)
         private set
 
-    fun resetAuthForm() {
-        authState = AuthState.Idle
-    }
-
     fun login(username: String, password: String) {
         screenModelScope.launch(Dispatchers.IO) {
             authState = AuthState.InProgress
@@ -55,6 +51,7 @@ class AuthScreenModel(private val navigator: Navigator, private val queryBus: Qu
     }
 
     fun navigateToHomeView(user: AuthUserResponse) {
+        authState = AuthState.Idle
         navigator.push(ScreenRegistry.get(MainProvider.HomeScreen(user)))
     }
 }

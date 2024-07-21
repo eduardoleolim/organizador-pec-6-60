@@ -109,7 +109,6 @@ class AuthScreen(private val queryBus: QueryBus) : Screen {
 
             is AuthState.Success -> {
                 screenModel.navigateToHomeView(authState.user)
-                screenModel.resetAuthForm()
             }
 
             is AuthState.Error -> {
