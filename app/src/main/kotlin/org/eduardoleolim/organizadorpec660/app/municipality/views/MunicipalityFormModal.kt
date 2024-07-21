@@ -146,7 +146,9 @@ fun MunicipalityScreen.MunicipalityFormModal(
                     items = screenModel.federalEntities,
                     onValueSelected = { _, item -> federalEntity = item },
                     visualTransformation = { "${it.keyCode} - ${it.name}" },
-                    label = { Text(stringResource(Res.string.mun_federal_entity)) },
+                    label = {
+                        Text(stringResource(Res.string.mun_federal_entity))
+                    },
                     isError = isFederalEntityError,
                     supportingText = federalEntitySupportingText?.let { message ->
                         { Text(text = message, color = MaterialTheme.colorScheme.error) }
@@ -158,7 +160,9 @@ fun MunicipalityScreen.MunicipalityFormModal(
 
                 OutlinedTextField(
                     enabled = true,
-                    label = { Text(stringResource(Res.string.mun_keycode)) },
+                    label = {
+                        Text(stringResource(Res.string.mun_keycode))
+                    },
                     value = keyCode,
                     onValueChange = {
                         if (Regex("[0-9]{0,3}").matches(it)) {
@@ -182,7 +186,9 @@ fun MunicipalityScreen.MunicipalityFormModal(
 
                 OutlinedTextField(
                     enabled = true,
-                    label = { Text(stringResource(Res.string.mun_name)) },
+                    label = {
+                        Text(stringResource(Res.string.mun_name))
+                    },
                     value = name,
                     onValueChange = { name = it.uppercase() },
                     singleLine = true,

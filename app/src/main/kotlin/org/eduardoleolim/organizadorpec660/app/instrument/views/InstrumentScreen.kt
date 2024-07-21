@@ -17,6 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
 import org.eduardoleolim.organizadorpec660.app.generated.resources.instruments
 import org.eduardoleolim.organizadorpec660.app.instrument.model.InstrumentScreenModel
@@ -27,11 +29,12 @@ import org.jetbrains.compose.resources.stringResource
 class InstrumentScreen(private val queryBus: QueryBus, private val commandBus: CommandBus) : Screen {
     @Composable
     override fun Content() {
-        val screenModel = rememberScreenModel { InstrumentScreenModel(queryBus, commandBus) }
+        val navigator = LocalNavigator.currentOrThrow
+        val screenModel = rememberScreenModel { InstrumentScreenModel(navigator, queryBus, commandBus) }
 
         Column(modifier = Modifier.padding(24.dp)) {
             InstrumentScreenHeader(
-                onSaveRequest = {},
+                onSaveRequest = { screenModel.navigateToSaveInstrumentView() },
                 onImportExportRequest = {}
             )
 
