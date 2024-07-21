@@ -9,6 +9,7 @@ import cafe.adriel.voyager.core.registry.ScreenRegistry
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.stack.popUntil
 import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.transitions.FadeTransition
 import kotlinx.coroutines.launch
 import org.eduardoleolim.organizadorpec660.app.auth.views.AuthScreen
 import org.eduardoleolim.organizadorpec660.app.router.HomeProvider
@@ -35,28 +36,38 @@ class HomeScreenModel(
     }
 
     @Composable
-    fun InstrumentView() {
-        Navigator(ScreenRegistry.get(HomeProvider.InstrumentScreen))
+    fun navigateToInstrumentView() {
+        Navigator(ScreenRegistry.get(HomeProvider.InstrumentScreen)) { navigator ->
+            FadeTransition(navigator)
+        }
     }
 
     @Composable
-    fun FederalEntityView() {
-        Navigator(ScreenRegistry.get(HomeProvider.FederalEntityScreen))
+    fun navigateToFederalEntityView() {
+        Navigator(ScreenRegistry.get(HomeProvider.FederalEntityScreen)) { navigator ->
+            FadeTransition(navigator)
+        }
     }
 
     @Composable
-    fun MunicipalityView() {
-        Navigator(ScreenRegistry.get(HomeProvider.MunicipalityScreen))
+    fun navigateToMunicipalityView() {
+        Navigator(ScreenRegistry.get(HomeProvider.MunicipalityScreen)) { navigator ->
+            FadeTransition(navigator)
+        }
     }
 
     @Composable
-    fun StatisticTypeView() {
-        Navigator(ScreenRegistry.get(HomeProvider.StatisticTypeScreen))
+    fun navigateToStatisticTypeView() {
+        Navigator(ScreenRegistry.get(HomeProvider.StatisticTypeScreen)) { navigator ->
+            FadeTransition(navigator)
+        }
     }
 
     @Composable
-    fun AgencyScreen() {
-        Navigator(ScreenRegistry.get(HomeProvider.AgencyScreen))
+    fun navigateToAgencyScreen() {
+        Navigator(ScreenRegistry.get(HomeProvider.AgencyScreen)) { navigator ->
+            FadeTransition(navigator)
+        }
     }
 
     fun logout() {

@@ -254,14 +254,12 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
                     shape = MaterialTheme.shapes.large,
                 ) {
                     AnimatedContent(targetState = selectedTab) { state ->
-                        screenModel.apply {
-                            when (state) {
-                                MenuTab.INSTRUMENTS -> InstrumentView()
-                                MenuTab.FEDERAL_ENTITIES -> FederalEntityView()
-                                MenuTab.MUNICIPALITIES -> MunicipalityView()
-                                MenuTab.STATISTIC_TYPES -> StatisticTypeView()
-                                MenuTab.AGENCIES -> AgencyScreen()
-                            }
+                        when (state) {
+                            MenuTab.INSTRUMENTS -> screenModel.navigateToInstrumentView()
+                            MenuTab.FEDERAL_ENTITIES -> screenModel.navigateToFederalEntityView()
+                            MenuTab.MUNICIPALITIES -> screenModel.navigateToMunicipalityView()
+                            MenuTab.STATISTIC_TYPES -> screenModel.navigateToStatisticTypeView()
+                            MenuTab.AGENCIES -> screenModel.navigateToAgencyScreen()
                         }
                     }
                 }
