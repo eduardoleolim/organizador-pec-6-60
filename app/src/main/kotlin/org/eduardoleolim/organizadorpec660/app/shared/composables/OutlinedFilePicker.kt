@@ -12,7 +12,7 @@ import androidx.compose.ui.input.pointer.pointerHoverIcon
 import javax.swing.JFileChooser
 import javax.swing.filechooser.FileNameExtensionFilter
 
-data class NameExtension(val description: String, val extension: String)
+data class NameExtension(val description: String, val extension: String, val isDefault: Boolean = false)
 
 @Composable
 fun OutlinedFilePicker(
@@ -26,7 +26,11 @@ fun OutlinedFilePicker(
         JFileChooser().apply {
             isMultiSelectionEnabled = false
             extensions.forEach { extension ->
-                addChoosableFileFilter(FileNameExtensionFilter(extension.description, extension.extension))
+                val filter = FileNameExtensionFilter(extension.description, extension.extension)
+                addChoosableFileFilter(filter)
+                if (fileFilter !== null && extension.isDefault) {
+                    fileFilter = filter
+                }
             }
         }
     }
@@ -36,6 +40,7 @@ fun OutlinedFilePicker(
         onValueChange = { },
         label = label,
         readOnly = true,
+        singleLine = true,
         trailingIcon = {
             IconButton(
                 onClick = {
