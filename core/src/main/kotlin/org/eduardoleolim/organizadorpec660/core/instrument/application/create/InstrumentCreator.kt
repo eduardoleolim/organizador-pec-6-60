@@ -35,6 +35,25 @@ class InstrumentCreator(
         if (existsMunicipality(municipalityId).not())
             return Left(MunicipalityNotFoundError(municipalityId))
 
+        val existsInstrument = existsInstrument(
+            statisticYear,
+            statisticMonth,
+            agencyId,
+            statisticTypeId,
+            municipalityId
+        )
+
+        if (existsInstrument)
+            return Left(
+                InstrumentAlreadyExistsError(
+                    statisticYear,
+                    statisticMonth,
+                    agencyId,
+                    statisticTypeId,
+                    municipalityId
+                )
+            )
+
         val instrumentFile = InstrumentFile.create(file)
         val instrument = Instrument.create(
             statisticYear,
@@ -62,4 +81,20 @@ class InstrumentCreator(
         MunicipalityCriteria.idCriteria(municipalityId).let {
             municipalityRepository.count(it) > 0
         }
+
+    private fun existsInstrument(
+        statisticYear: Int,
+        statisticMonth: Int,
+        agencyId: String,
+        statisticTypeId: String,
+        municipalityId: String
+    ) = InstrumentCriteria.otherInstrumentCriteria(
+        statisticYear,
+        statisticMonth,
+        agencyId,
+        statisticTypeId,
+        municipalityId
+    ).let {
+        instrumentRepository.count(it) > 0
+    }
 }

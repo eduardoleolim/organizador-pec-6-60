@@ -38,14 +38,33 @@ object InstrumentCriteria {
             SingleFilter.equal(InstrumentFields.MunicipalityId.value, municipalityId)
         ),
         Orders.none(),
-        1,
+        null,
+        null
+    )
+
+    fun otherInstrumentCriteria(
+        statisticYear: Int,
+        statisticMonth: Int,
+        agencyId: String,
+        statisticTypeId: String,
+        municipalityId: String
+    ) = Criteria(
+        AndFilters(
+            SingleFilter.equal(InstrumentFields.StatisticYear.value, statisticYear.toString()),
+            SingleFilter.equal(InstrumentFields.StatisticMonth.value, statisticMonth.toString()),
+            SingleFilter.equal(InstrumentFields.AgencyId.value, agencyId),
+            SingleFilter.equal(InstrumentFields.StatisticTypeId.value, statisticTypeId),
+            SingleFilter.equal(InstrumentFields.MunicipalityId.value, municipalityId)
+        ),
+        Orders.none(),
+        null,
         null
     )
 
     fun agencyCriteria(agencyId: String) = Criteria(
         SingleFilter.equal(InstrumentFields.AgencyId.value, agencyId),
         Orders.none(),
-        1,
+        null,
         null
     )
 }
