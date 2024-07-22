@@ -17,6 +17,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toPainter
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.KeyboardType
@@ -41,7 +42,8 @@ data class PdfViewerState(val pdDocument: PDDocument) {
 fun PdfViewerTopBar(
     pdfViewerState: PdfViewerState?,
     isReaderMode: Boolean,
-    onOpenFileRequest: () -> Unit
+    onOpenFileRequest: () -> Unit,
+    containerColor: Color
 ) {
     val context = rememberCoroutineScope()
     var openButtonEnabled by remember { mutableStateOf(true) }
@@ -53,7 +55,7 @@ fun PdfViewerTopBar(
         modifier = Modifier.fillMaxWidth()
             .padding(start = 20.dp, end = 20.dp, top = 20.dp, bottom = 10.dp),
         shape = MaterialTheme.shapes.small,
-        color = MaterialTheme.colorScheme.surfaceContainerHigh
+        color = containerColor  //MaterialTheme.colorScheme.surfaceContainerHigh
     ) {
         Row(
             modifier = Modifier.height(IntrinsicSize.Min),
@@ -201,7 +203,8 @@ fun PdfViewerTopBar(
 @Composable
 fun PdfViewerContent(
     pdfViewerState: PdfViewerState?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    containerColor: Color
 ) {
     val density = LocalDensity.current.density
     val verticalScrollState = rememberScrollState()
@@ -211,7 +214,7 @@ fun PdfViewerContent(
             .padding(start = 20.dp, end = 20.dp, top = 10.dp, bottom = 20.dp)
             .then(modifier),
         shape = MaterialTheme.shapes.extraSmall,
-        color = MaterialTheme.colorScheme.surfaceContainerHigh
+        color = containerColor
     ) {
         Box(
             contentAlignment = Alignment.Center,
@@ -261,7 +264,10 @@ fun PdfViewer(
     pdfPath: String? = null,
     isReaderMode: Boolean = false,
     onFileOpened: (File) -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    containerColor: Color = MaterialTheme.colorScheme.surfaceContainer,
+    topbarColor: Color = MaterialTheme.colorScheme.surfaceContainerHigh,
+    pageColor: Color = MaterialTheme.colorScheme.surfaceContainerHigh,
 ) {
     val coroutineScope = rememberCoroutineScope()
     var pdfFile by remember { mutableStateOf<File?>(null) }
@@ -300,7 +306,7 @@ fun PdfViewer(
         modifier = Modifier.fillMaxSize()
             .then(modifier),
         shape = MaterialTheme.shapes.medium,
-        color = MaterialTheme.colorScheme.surfaceContainer
+        color = containerColor
     ) {
         Column {
             PdfViewerTopBar(
@@ -312,12 +318,14 @@ fun PdfViewer(
                     if (result == JFileChooser.APPROVE_OPTION) {
                         pdfFile = fileChooser.selectedFile
                     }
-                }
+                },
+                containerColor = topbarColor
             )
 
             PdfViewerContent(
                 pdfViewerState = pdfViewerState,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                containerColor = pageColor
             )
         }
     }
