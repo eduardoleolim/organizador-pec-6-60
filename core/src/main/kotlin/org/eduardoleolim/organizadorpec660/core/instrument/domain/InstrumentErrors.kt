@@ -13,7 +13,8 @@ class MunicipalityNotFoundError(val id: String) : InstrumentError("The municipal
 
 class InstrumentFileRequiredError : InstrumentError("A new instrument must be saved with a intrument file")
 
-class InstrumentFileFailSaveError : InstrumentError("An error occurred during saving process")
+class InstrumentFileFailSaveError(override val cause: Throwable? = null) :
+    InstrumentError("An error occurred during saving process")
 
 class InstrumentAlreadyExistsError(
     statisticYear: Int,
