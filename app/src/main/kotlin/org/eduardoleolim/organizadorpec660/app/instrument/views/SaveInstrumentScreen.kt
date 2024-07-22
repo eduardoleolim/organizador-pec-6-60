@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
+import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
 
 class SaveInstrumentScreen(
     private val instrumentId: String?,
