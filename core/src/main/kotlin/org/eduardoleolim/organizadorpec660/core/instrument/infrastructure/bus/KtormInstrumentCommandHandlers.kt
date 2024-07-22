@@ -1,11 +1,11 @@
 package org.eduardoleolim.organizadorpec660.core.instrument.infrastructure.bus
 
+import org.eduardoleolim.organizadorpec660.core.instrument.application.create.CreateInstrumentCommand
 import org.eduardoleolim.organizadorpec660.core.instrument.application.create.CreateInstrumentCommandHandler
 import org.eduardoleolim.organizadorpec660.core.instrument.application.create.InstrumentCreator
 import org.eduardoleolim.organizadorpec660.core.instrument.application.update.InstrumentUpdater
+import org.eduardoleolim.organizadorpec660.core.instrument.application.update.UpdateInstrumentCommand
 import org.eduardoleolim.organizadorpec660.core.instrument.application.update.UpdateInstrumentCommandHandler
-import org.eduardoleolim.organizadorpec660.core.municipality.application.create.CreateMunicipalityCommand
-import org.eduardoleolim.organizadorpec660.core.municipality.application.update.UpdateMunicipalityCommand
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.Command
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandHandler
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.bus.KtormCommandHandlerDecorator
@@ -19,8 +19,8 @@ class KtormInstrumentCommandHandlers(context: KtormAppKoinContext) : KtormAppKoi
     private val database: Database by inject()
 
     val handlers: Map<KClass<out Command<*, *>>, CommandHandler<*, *, out Command<*, *>>> = mapOf(
-        CreateMunicipalityCommand::class to createCommandHandler(),
-        UpdateMunicipalityCommand::class to updateCommandHandler()
+        CreateInstrumentCommand::class to createCommandHandler(),
+        UpdateInstrumentCommand::class to updateCommandHandler()
     )
 
     private fun createCommandHandler(): CommandHandler<*, *, out Command<*, *>> {
