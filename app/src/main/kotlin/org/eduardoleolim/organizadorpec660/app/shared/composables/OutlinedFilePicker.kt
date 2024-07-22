@@ -1,5 +1,7 @@
 package org.eduardoleolim.organizadorpec660.app.shared.composables
 
+import androidx.compose.foundation.interaction.Interaction
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material3.Icon
@@ -12,13 +14,17 @@ import androidx.compose.ui.input.pointer.pointerHoverIcon
 import javax.swing.JFileChooser
 import javax.swing.filechooser.FileNameExtensionFilter
 
+object ResetFilePickerInteraction : Interaction
+
 data class NameExtension(val description: String, val extension: String, val isDefault: Boolean = false)
 
 @Composable
 fun OutlinedFilePicker(
+    enabled: Boolean = true,
     label: @Composable () -> Unit,
     extensions: List<NameExtension> = emptyList(),
     modifier: Modifier = Modifier,
+    interactionSource: MutableInteractionSource? = null,
     onFileSelected: (String) -> Unit
 ) {
     var filePath by remember { mutableStateOf("") }
@@ -35,7 +41,17 @@ fun OutlinedFilePicker(
         }
     }
 
+    LaunchedEffect(interactionSource) {
+        interactionSource?.interactions?.collect { interaction ->
+            if (interaction is ResetFilePickerInteraction) {
+                filePath = ""
+            }
+        }
+    }
+
+
     OutlinedTextField(
+        enabled = enabled,
         value = filePath,
         onValueChange = { },
         label = label,
@@ -43,6 +59,7 @@ fun OutlinedFilePicker(
         singleLine = true,
         trailingIcon = {
             IconButton(
+                enabled = enabled,
                 onClick = {
                     val result = fileChooser.showOpenDialog(null)
 
@@ -53,6 +70,7 @@ fun OutlinedFilePicker(
                         }
                     }
                 },
+                interactionSource = interactionSource,
                 modifier = Modifier.pointerHoverIcon(PointerIcon.Default)
             ) {
                 Icon(
