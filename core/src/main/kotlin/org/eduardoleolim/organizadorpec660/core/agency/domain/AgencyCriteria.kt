@@ -44,27 +44,26 @@ object AgencyCriteria {
         orders: Array<HashMap<String, String>>? = null,
         limit: Int? = null,
         offset: Int? = null
-    ) =
-        Criteria(
-            search?.let {
-                OrFilters(
-                    SingleFilter.contains(AgencyFields.Name.value, it),
-                    SingleFilter.contains(AgencyFields.Consecutive.value, it),
-                    SingleFilter.contains(AgencyFields.MunicipalityName.value, it),
-                    SingleFilter.contains(AgencyFields.MunicipalityKeyCode.value, it)
-                )
-            } ?: EmptyFilters(),
-            orders?.let {
-                val fields = AgencyFields.entries.map { it.value }
-                val filteredOrders = orders.mapNotNull { it.takeIf { fields.contains(it["orderBy"]) } }
+    ) = Criteria(
+        search?.let {
+            OrFilters(
+                SingleFilter.contains(AgencyFields.Name.value, it),
+                SingleFilter.contains(AgencyFields.Consecutive.value, it),
+                SingleFilter.contains(AgencyFields.MunicipalityName.value, it),
+                SingleFilter.contains(AgencyFields.MunicipalityKeyCode.value, it)
+            )
+        } ?: EmptyFilters(),
+        orders?.let {
+            val fields = AgencyFields.entries.map { it.value }
+            val filteredOrders = orders.mapNotNull { it.takeIf { fields.contains(it["orderBy"]) } }
 
-                Orders.fromValues(filteredOrders.toTypedArray())
-            } ?: Orders(Order.asc(AgencyFields.Name.value)),
-            limit,
-            offset
-        )
+            Orders.fromValues(filteredOrders.toTypedArray())
+        } ?: Orders(Order.asc(AgencyFields.Name.value)),
+        limit,
+        offset
+    )
 
-    fun statisticTypeCriteria(statisticTypeId: String) = Criteria(
+    fun statisticTypeIdCriteria(statisticTypeId: String) = Criteria(
         SingleFilter.equal(AgencyFields.StatisticTypeId.value, statisticTypeId),
         Orders.none(),
         null,

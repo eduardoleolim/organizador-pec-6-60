@@ -30,7 +30,7 @@ class StatisticTypeDeleter(
         statisticTypeRepository.count(it) > 0
     }
 
-    private fun usedInAgencies(id: String) = AgencyCriteria.statisticTypeCriteria(id).let {
+    private fun usedInAgencies(id: String) = AgencyCriteria.statisticTypeIdCriteria(id).let {
         agencyRepository.count(it) > 0
     }
 }
