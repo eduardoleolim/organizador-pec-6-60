@@ -25,7 +25,9 @@ fun Router(commandBus: CommandBus, queryBus: QueryBus) {
         register<HomeProvider.MunicipalityScreen> { MunicipalityScreen(queryBus, commandBus) }
         register<HomeProvider.StatisticTypeScreen> { StatisticTypeScreen(queryBus, commandBus) }
         register<HomeProvider.InstrumentScreen> { InstrumentScreen(queryBus, commandBus) }
-        register<HomeProvider.SaveInstrumentScreen> { SaveInstrumentScreen(commandBus) }
+        register<HomeProvider.SaveInstrumentScreen> { provider ->
+            SaveInstrumentScreen(provider.instrumentId, queryBus, commandBus)
+        }
         register<HomeProvider.AgencyScreen> { AgencyScreen(queryBus, commandBus) }
     }
 

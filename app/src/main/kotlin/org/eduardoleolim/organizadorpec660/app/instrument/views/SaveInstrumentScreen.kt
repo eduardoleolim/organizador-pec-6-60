@@ -8,7 +8,11 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
 
-class SaveInstrumentScreen(private val commandBus: CommandBus) : Screen {
+class SaveInstrumentScreen(
+    private val instrumentId: String?,
+    private val queryBus: QueryBus,
+    private val commandBus: CommandBus
+) : Screen {
     @Composable
     override fun Content() {
         Column(modifier = Modifier.padding(24.dp)) {

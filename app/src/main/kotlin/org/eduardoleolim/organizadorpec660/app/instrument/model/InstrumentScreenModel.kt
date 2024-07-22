@@ -12,7 +12,7 @@ class InstrumentScreenModel(
     private val queryBus: QueryBus,
     private val commandBus: CommandBus
 ) : ScreenModel {
-    fun navigateToSaveInstrumentView() {
-        navigator.push(ScreenRegistry.get(HomeProvider.SaveInstrumentScreen))
+    fun navigateToSaveInstrumentView(instrumentId: String?) {
+        navigator.push(ScreenRegistry.get(HomeProvider.SaveInstrumentScreen(instrumentId)))
     }
 }

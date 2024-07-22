@@ -34,8 +34,8 @@ class InstrumentScreen(private val queryBus: QueryBus, private val commandBus: C
 
         Column(modifier = Modifier.padding(24.dp)) {
             InstrumentScreenHeader(
-                onSaveRequest = { screenModel.navigateToSaveInstrumentView() },
-                onImportExportRequest = {}
+                onSaveRequest = { screenModel.navigateToSaveInstrumentView(null) },
+                onImportExportRequest = { }
             )
 
         }
