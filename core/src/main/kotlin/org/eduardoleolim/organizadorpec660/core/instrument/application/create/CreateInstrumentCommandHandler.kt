@@ -10,7 +10,7 @@ class CreateInstrumentCommandHandler(private val creator: InstrumentCreator) :
     override fun handle(command: CreateInstrumentCommand): Either<InstrumentError, UUID> {
         return creator.create(
             command.statisticYear(),
-            command.statisticYear(),
+            command.statisticMonth(),
             command.agencyId(),
             command.statisticTypeId(),
             command.municipalityId(),
