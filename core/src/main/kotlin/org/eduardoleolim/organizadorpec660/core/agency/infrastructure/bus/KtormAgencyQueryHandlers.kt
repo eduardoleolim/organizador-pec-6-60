@@ -3,6 +3,8 @@ package org.eduardoleolim.organizadorpec660.core.agency.infrastructure.bus
 import org.eduardoleolim.organizadorpec660.core.agency.application.search.AgencySearcher
 import org.eduardoleolim.organizadorpec660.core.agency.application.searchById.SearchAgencyByIdQuery
 import org.eduardoleolim.organizadorpec660.core.agency.application.searchById.SearchAgencyByIdQueryHandler
+import org.eduardoleolim.organizadorpec660.core.agency.application.searchByMunicipalityId.SearchAgenciesByMunicipalityIdQuery
+import org.eduardoleolim.organizadorpec660.core.agency.application.searchByMunicipalityId.SearchAgenciesByMunicipalityIdQueryHandler
 import org.eduardoleolim.organizadorpec660.core.agency.application.searchByTerm.SearchAgenciesByTermQuery
 import org.eduardoleolim.organizadorpec660.core.agency.application.searchByTerm.SearchAgenciesByTermQueryHandler
 import org.eduardoleolim.organizadorpec660.core.municipality.application.search.MunicipalitySearcher
@@ -22,7 +24,8 @@ class KtormAgencyQueryHandlers(context: KtormAppKoinContext) : KtormAppKoinCompo
 
     val handlers: Map<KClass<out Query>, QueryHandler<out Query, out Response>> = mapOf(
         SearchAgencyByIdQuery::class to searchByIdQueryHandler(),
-        SearchAgenciesByTermQuery::class to searchByTermQueryHandler()
+        SearchAgenciesByTermQuery::class to searchByTermQueryHandler(),
+        SearchAgenciesByMunicipalityIdQuery::class to searchByMunicipalityIdQueryHandler()
     )
 
     private fun searchByIdQueryHandler(): KtormQueryHandlerDecorator<out Query, out Response> {
@@ -43,6 +46,19 @@ class KtormAgencyQueryHandlers(context: KtormAppKoinContext) : KtormAppKoinCompo
         val municipalitySearcher: MunicipalitySearcher by inject()
         val statisticTypeSearcher: StatisticTypeSearcher by inject()
         val queryHandler = SearchAgenciesByTermQueryHandler(
+            agencySearcher,
+            municipalitySearcher,
+            statisticTypeSearcher
+        )
+
+        return KtormQueryHandlerDecorator(database, queryHandler)
+    }
+
+    private fun searchByMunicipalityIdQueryHandler(): KtormQueryHandlerDecorator<out Query, out Response> {
+        val agencySearcher: AgencySearcher by inject()
+        val municipalitySearcher: MunicipalitySearcher by inject()
+        val statisticTypeSearcher: StatisticTypeSearcher by inject()
+        val queryHandler = SearchAgenciesByMunicipalityIdQueryHandler(
             agencySearcher,
             municipalitySearcher,
             statisticTypeSearcher

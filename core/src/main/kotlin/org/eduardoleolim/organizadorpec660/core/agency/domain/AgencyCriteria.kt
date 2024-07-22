@@ -69,4 +69,11 @@ object AgencyCriteria {
         null,
         null
     )
+
+    fun municipalityIdCriteria(municipalityId: String) = Criteria(
+        SingleFilter.equal(AgencyFields.MunicipalityId.value, municipalityId),
+        Orders(Order.asc(AgencyFields.Consecutive.value)),
+        null,
+        null
+    )
 }
