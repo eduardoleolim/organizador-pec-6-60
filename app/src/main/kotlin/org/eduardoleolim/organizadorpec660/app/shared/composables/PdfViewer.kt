@@ -1,6 +1,7 @@
 package org.eduardoleolim.organizadorpec660.app.shared.composables
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
@@ -46,6 +47,7 @@ fun PdfViewerTopBar(
     containerColor: Color
 ) {
     val context = rememberCoroutineScope()
+    val horizontalScrollState = rememberScrollState()
     var openButtonEnabled by remember { mutableStateOf(true) }
     val isPdfLoaded = remember(pdfViewerState) { pdfViewerState != null }
     val showAllPages = remember(pdfViewerState?.showAllPages) { pdfViewerState?.showAllPages ?: false }
@@ -58,7 +60,7 @@ fun PdfViewerTopBar(
         color = containerColor  //MaterialTheme.colorScheme.surfaceContainerHigh
     ) {
         Row(
-            modifier = Modifier.height(IntrinsicSize.Min),
+            modifier = Modifier.height(IntrinsicSize.Min).horizontalScroll(horizontalScrollState),
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -206,8 +208,9 @@ fun PdfViewerContent(
     modifier: Modifier = Modifier,
     containerColor: Color
 ) {
-    val density = LocalDensity.current.density
+    val density = LocalDensity.current
     val verticalScrollState = rememberScrollState()
+    val horizontalScrollState = rememberScrollState()
 
     Surface(
         modifier = Modifier.fillMaxSize()
@@ -219,6 +222,7 @@ fun PdfViewerContent(
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier.fillMaxSize()
+                .horizontalScroll(horizontalScrollState)
                 .run {
                     if (pdfViewerState?.showAllPages == false) {
                         verticalScroll(verticalScrollState)
@@ -233,8 +237,9 @@ fun PdfViewerContent(
                 if (state.showAllPages) {
                     LazyColumn {
                         items(state.pdDocument.numberOfPages) { index ->
-                            val image = remember(renderer, state.zoom, density) {
-                                renderer.renderImage(index, density * state.zoom)
+                            val image = remember(renderer, state.zoom) {
+                                val scale = with(density) { (1f * state.zoom).toDp().toPx() }
+                                renderer.renderImage(index, scale)
                             }
 
                             Image(
@@ -245,8 +250,9 @@ fun PdfViewerContent(
                         }
                     }
                 } else {
-                    val image = remember(renderer, state.currentPageIndex, state.zoom, density) {
-                        renderer.renderImage(state.currentPageIndex, density * state.zoom)
+                    val image = remember(renderer, state.currentPageIndex, state.zoom) {
+                        val scale = with(density) { (1f * state.zoom).toDp().toPx() }
+                        renderer.renderImage(state.currentPageIndex, scale)
                     }
 
                     Image(
