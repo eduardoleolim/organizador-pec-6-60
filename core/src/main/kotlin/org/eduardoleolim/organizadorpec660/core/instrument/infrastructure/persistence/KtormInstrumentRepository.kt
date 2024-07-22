@@ -84,54 +84,61 @@ class KtormInstrumentRepository(
 
     override fun save(instrument: Instrument, instrumentFile: InstrumentFile?) {
         database.useTransaction {
+            var file: File? = null
             val exists = count(InstrumentCriteria.idCriteria(instrument.id().toString())) > 0
 
             if (exists.not() && instrumentFile == null)
                 throw InstrumentFileRequiredError()
 
-            instrumentFile?.let { file ->
-                val id = file.id().toString()
-                val path = File(instrumentPath, "$id.pdf").absolutePath
-                val byteArray = file.content()
+            instrumentFile?.let {
+                val id = instrumentFile.id().toString()
+                file = File(instrumentPath, "$id.pdf")
 
                 database.insertOrUpdate(instrumentFiles) {
                     set(it.id, id)
-                    set(it.path, path)
+                    set(it.path, file!!.absolutePath)
 
                     onConflict(it.id) {
-                        set(it.path, path)
+                        set(it.path, file!!.absolutePath)
                     }
                 }
 
-                val saveResult = File(path).runCatching {
-                    mkdirs()
-                    writeBytes(byteArray)
+                val saveResult = file!!.runCatching {
+                    parentFile.mkdirs()
+                    writeBytes(instrumentFile.content())
                 }
 
                 if (saveResult.isFailure)
-                    throw InstrumentFileFailSaveError()
+                    throw InstrumentFileFailSaveError(saveResult.exceptionOrNull())
             }
 
-            database.insertOrUpdate(instruments) {
-                set(it.id, instrument.id().toString())
-                set(it.statisticYear, instrument.statisticYear())
-                set(it.statisticMonth, instrument.statisticMonth())
-                set(it.saved, instrument.saved())
-                set(it.createdAt, instrument.createdAt().toLocalDateTime())
-                set(it.agencyId, instrument.agencyId().toString())
-                set(it.statisticTypeId, instrument.statisticTypeId().toString())
-                set(it.municipalityId, instrument.municipalityId().toString())
-                set(it.instrumentFileId, instrument.instrumentFileId().toString())
-
-                onConflict(it.id) {
+            try {
+                database.insertOrUpdate(instruments) {
+                    set(it.id, instrument.id().toString())
                     set(it.statisticYear, instrument.statisticYear())
                     set(it.statisticMonth, instrument.statisticMonth())
                     set(it.saved, instrument.saved())
-                    set(it.updatedAt, instrument.updatedAt()?.toLocalDateTime() ?: LocalDateTime.now())
+                    set(it.createdAt, instrument.createdAt().toLocalDateTime())
                     set(it.agencyId, instrument.agencyId().toString())
                     set(it.statisticTypeId, instrument.statisticTypeId().toString())
                     set(it.municipalityId, instrument.municipalityId().toString())
+                    set(it.instrumentFileId, instrument.instrumentFileId().toString())
+
+                    onConflict(it.id) {
+                        set(it.statisticYear, instrument.statisticYear())
+                        set(it.statisticMonth, instrument.statisticMonth())
+                        set(it.saved, instrument.saved())
+                        set(it.updatedAt, instrument.updatedAt()?.toLocalDateTime() ?: LocalDateTime.now())
+                        set(it.agencyId, instrument.agencyId().toString())
+                        set(it.statisticTypeId, instrument.statisticTypeId().toString())
+                        set(it.municipalityId, instrument.municipalityId().toString())
+                    }
                 }
+            } catch (e: Throwable) {
+                if (exists.not()) {
+                    file?.delete()
+                }
+                throw e
             }
         }
     }
