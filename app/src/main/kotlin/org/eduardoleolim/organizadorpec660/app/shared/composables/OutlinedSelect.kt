@@ -26,8 +26,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun <T> OutlinedSelect(
     items: List<T>,
-    onValueSelected: (Int?, T?) -> Unit,
-    valueIndex: Int? = null,
+    onValueSelected: (Int, T) -> Unit,
+    index: Int? = null,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     textStyle: TextStyle = LocalTextStyle.current,
@@ -41,11 +41,13 @@ fun <T> OutlinedSelect(
     shape: Shape = OutlinedTextFieldDefaults.shape,
     colors: TextFieldColors = OutlinedTextFieldDefaults.colors()
 ) {
-    var selectedIndex by remember(valueIndex) { mutableStateOf(valueIndex) }
-    val value = remember(selectedIndex) { selectedIndex?.let { visualTransformation(items[it]) } ?: "" }
+    var selectedIndex by remember(index) { mutableStateOf(index) }
+    val value = remember(selectedIndex) {
+        selectedIndex?.runCatching { visualTransformation(items[this]) }?.getOrNull() ?: ""
+    }
 
     LaunchedEffect(selectedIndex) {
-        onValueSelected(selectedIndex, selectedIndex?.let { items[it] })
+        selectedIndex?.runCatching { onValueSelected(this, items[this]) }
     }
 
     Box {
