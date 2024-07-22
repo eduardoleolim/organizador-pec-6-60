@@ -35,6 +35,16 @@
 
     <!-- Instrument -->
     <string name="instruments">Instrumentos</string>
+    <string name="inst_federal_entity">Entidad federativa</string>
+    <string name="inst_municipality">Municipios</string>
+    <string name="inst_agency">Fuente</string>
+    <string name="inst_statistic_type">Tipo de estadística</string>
+    <string name="inst_year">Año</string>
+    <string name="inst_month">Mes</string>
+    <string name="inst_document">Documento</string>
+
+    <string name="inst_form_add_title">Agregar instrumento</string>
+    <string name="inst_form_edit_title">Editar instrumento</string>
 
     <!-- Federal entity -->
     <string name="federal_entities">Entidades federativas</string>

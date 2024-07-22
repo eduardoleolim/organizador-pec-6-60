@@ -94,18 +94,14 @@ class AgencyScreenModel(private val queryBus: QueryBus, private val commandBus: 
 
     fun searchMunicipalities(federalEntityId: String?) {
         screenModelScope.launch(Dispatchers.IO) {
-            if (federalEntityId == null) {
-                municipalities = emptyList()
-
-                return@launch
-            }
-
-            try {
-                val query = SearchMunicipalitiesByTermQuery(federalEntityId)
-                municipalities = queryBus.ask<MunicipalitiesResponse>(query).municipalities
-            } catch (e: Exception) {
-                municipalities = emptyList()
-            }
+            municipalities = federalEntityId?.let {
+                try {
+                    val query = SearchMunicipalitiesByTermQuery(federalEntityId)
+                    queryBus.ask<MunicipalitiesResponse>(query).municipalities
+                } catch (e: Exception) {
+                    emptyList()
+                }
+            } ?: emptyList()
         }
     }
 
