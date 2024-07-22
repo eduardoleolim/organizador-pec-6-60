@@ -29,7 +29,7 @@ class SearchAgenciesByTermQueryHandler(
 
             val statisticTypes = agency.statisticTypeIds().map { statisticTypeId ->
                 searchStatisticType(statisticTypeId.value.toString())
-            }
+            }.sortedBy { it.keyCode() }
 
             AgencyResponse.fromAggregate(agency, municipality, statisticTypes)
         }.let {
