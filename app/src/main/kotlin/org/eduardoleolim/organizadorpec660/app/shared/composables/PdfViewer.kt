@@ -280,21 +280,24 @@ fun PdfViewer(
     }
 
     LaunchedEffect(pdfPath) {
-        pdfPath?.let { path ->
+        pdfFile = pdfPath?.let { path ->
             val file = File(path)
 
-            if (file.exists() && file.isFile && file.extension == "pdf") {
-                pdfFile = file
+            if (file.run { exists() && isFile && extension == "pdf" }) {
+                file
+            } else {
+                null
             }
         }
     }
 
     DisposableEffect(pdfFile) {
         coroutineScope.launch(Dispatchers.IO) {
-            pdfFile?.runCatching {
-                pdfViewerState = PdfViewerState(Loader.loadPDF(this))
-                onFileOpened(this)
-            }
+            pdfViewerState = pdfFile?.runCatching {
+                PdfViewerState(Loader.loadPDF(this)).also {
+                    onFileOpened(this)
+                }
+            }?.getOrNull()
         }
 
         onDispose {
