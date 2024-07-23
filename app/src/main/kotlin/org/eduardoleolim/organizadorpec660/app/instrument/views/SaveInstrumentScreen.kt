@@ -60,7 +60,7 @@ class SaveInstrumentScreen(
                         modifier = Modifier.fillMaxHeight()
                             .padding(top = 16.dp, bottom = 16.dp, end = 16.dp),
                         containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                        topbarColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                        topBarColor = MaterialTheme.colorScheme.surfaceContainerHighest,
                         pageColor = MaterialTheme.colorScheme.surfaceContainerHighest
                     )
                 }

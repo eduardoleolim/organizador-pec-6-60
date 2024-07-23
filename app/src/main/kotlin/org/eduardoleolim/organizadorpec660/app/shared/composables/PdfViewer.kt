@@ -29,12 +29,16 @@ import kotlinx.coroutines.launch
 import org.apache.pdfbox.Loader
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.rendering.PDFRenderer
+import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
+import org.eduardoleolim.organizadorpec660.app.generated.resources.pdf_viewer_show_all
+import org.eduardoleolim.organizadorpec660.app.generated.resources.pdf_viewer_zoom
+import org.jetbrains.compose.resources.stringResource
 import java.io.File
 import javax.swing.JFileChooser
 import javax.swing.filechooser.FileNameExtensionFilter
 
 data class PdfViewerState(val pdDocument: PDDocument) {
-    var currentPageIndex by mutableStateOf(0)
+    var index by mutableStateOf(0)
     var showAllPages by mutableStateOf(false)
     var zoom by mutableStateOf(1.0f)
 }
@@ -90,7 +94,7 @@ fun PdfViewerTopBar(
                 modifier = Modifier.padding(8.dp)
             ) {
                 Text(
-                    text = "Show all pages",
+                    text = stringResource(Res.string.pdf_viewer_show_all),
                     style = MaterialTheme.typography.bodySmall
                 )
 
@@ -109,8 +113,8 @@ fun PdfViewerTopBar(
                 VerticalDivider()
 
                 IconButton(
-                    enabled = isPdfLoaded && pdfViewerState!!.currentPageIndex > 0,
-                    onClick = { pdfViewerState!!.currentPageIndex = 0 }
+                    enabled = isPdfLoaded && pdfViewerState!!.index > 0,
+                    onClick = { pdfViewerState!!.index = 0 }
                 ) {
                     Icon(
                         imageVector = Icons.Filled.FirstPage,
@@ -118,10 +122,10 @@ fun PdfViewerTopBar(
                     )
                 }
                 IconButton(
-                    enabled = isPdfLoaded && pdfViewerState!!.currentPageIndex > 0,
+                    enabled = isPdfLoaded && pdfViewerState!!.index > 0,
                     onClick = {
-                        if (pdfViewerState!!.currentPageIndex > 0) {
-                            pdfViewerState.currentPageIndex -= 1
+                        if (pdfViewerState!!.index > 0) {
+                            pdfViewerState.index -= 1
                         }
                     }
                 ) {
@@ -131,8 +135,8 @@ fun PdfViewerTopBar(
                     )
                 }
 
-                val pageInput = remember(pdfViewerState?.currentPageIndex) {
-                    pdfViewerState?.let { "${it.currentPageIndex + 1}" } ?: ""
+                val pageInput = remember(pdfViewerState?.index) {
+                    pdfViewerState?.let { "${it.index + 1}" } ?: ""
                 }
                 OutlinedTextField(
                     enabled = isPdfLoaded,
@@ -141,7 +145,7 @@ fun PdfViewerTopBar(
                         val pageNumber = value.toIntOrNull()
 
                         if (isPdfLoaded && pageNumber != null && pageNumber in 1..pdfViewerState!!.pdDocument.numberOfPages) {
-                            pdfViewerState.currentPageIndex = pageNumber - 1
+                            pdfViewerState.index = pageNumber - 1
                         }
                     },
                     textStyle = MaterialTheme.typography.bodyMedium.copy(textAlign = TextAlign.Center),
@@ -156,10 +160,10 @@ fun PdfViewerTopBar(
                 )
 
                 IconButton(
-                    enabled = isPdfLoaded && pdfViewerState!!.currentPageIndex + 1 < pdfViewerState.pdDocument.numberOfPages,
+                    enabled = isPdfLoaded && pdfViewerState!!.index + 1 < pdfViewerState.pdDocument.numberOfPages,
                     onClick = {
-                        if (pdfViewerState!!.currentPageIndex < pdfViewerState.pdDocument.numberOfPages - 1) {
-                            pdfViewerState.currentPageIndex += 1
+                        if (pdfViewerState!!.index < pdfViewerState.pdDocument.numberOfPages - 1) {
+                            pdfViewerState.index += 1
                         }
                     }
                 ) {
@@ -169,8 +173,8 @@ fun PdfViewerTopBar(
                     )
                 }
                 IconButton(
-                    enabled = isPdfLoaded && pdfViewerState!!.currentPageIndex + 1 < pdfViewerState.pdDocument.numberOfPages,
-                    onClick = { pdfViewerState!!.currentPageIndex = pdfViewerState.pdDocument.numberOfPages - 1 }
+                    enabled = isPdfLoaded && pdfViewerState!!.index + 1 < pdfViewerState.pdDocument.numberOfPages,
+                    onClick = { pdfViewerState!!.index = pdfViewerState.pdDocument.numberOfPages - 1 }
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.LastPage,
@@ -186,7 +190,7 @@ fun PdfViewerTopBar(
                 modifier = Modifier.padding(start = 8.dp)
             ) {
                 Text(
-                    text = "Zoom",
+                    text = stringResource(Res.string.pdf_viewer_zoom),
                     style = MaterialTheme.typography.bodySmall
                 )
 
@@ -250,14 +254,14 @@ fun PdfViewerContent(
                         }
                     }
                 } else {
-                    val image = remember(renderer, state.currentPageIndex, state.zoom) {
+                    val image = remember(renderer, state.index, state.zoom) {
                         val scale = with(density) { (1f * state.zoom).toDp().toPx() }
-                        renderer.renderImage(state.currentPageIndex, scale)
+                        renderer.renderImage(state.index, scale)
                     }
 
                     Image(
                         painter = image.toPainter(),
-                        contentDescription = "Index: ${state.currentPageIndex}"
+                        contentDescription = "Index: ${state.index}"
                     )
                 }
             }
@@ -272,7 +276,7 @@ fun PdfViewer(
     onFileOpened: (File) -> Unit = {},
     modifier: Modifier = Modifier,
     containerColor: Color = MaterialTheme.colorScheme.surfaceContainer,
-    topbarColor: Color = MaterialTheme.colorScheme.surfaceContainerHigh,
+    topBarColor: Color = MaterialTheme.colorScheme.surfaceContainerHigh,
     pageColor: Color = MaterialTheme.colorScheme.surfaceContainerHigh,
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -328,7 +332,7 @@ fun PdfViewer(
                         pdfFile = fileChooser.selectedFile
                     }
                 },
-                containerColor = topbarColor
+                containerColor = topBarColor
             )
 
             PdfViewerContent(

@@ -21,6 +21,10 @@
     <string name="no">No</string>
     <string name="ok">Aceptar</string>
 
+    <!-- Pdf Viewer -->
+    <string name="pdf_viewer_show_all">Todas las páginas</string>
+    <string name="pdf_viewer_zoom">Zoom</string>
+
     <!-- Auth -->
     <string name="auth_enter">Ingresar</string>
     <string name="auth_password">Contraseña</string>
