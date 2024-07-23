@@ -142,7 +142,9 @@ class App(
                     OutlinedTextField(
                         value = password,
                         onValueChange = { password = it },
-                        label = { Text(stringResource(Res.string.password)) }
+                        label = {
+                            Text(stringResource(Res.string.password))
+                        }
                     )
 
                     Spacer(Modifier.height(32.dp))

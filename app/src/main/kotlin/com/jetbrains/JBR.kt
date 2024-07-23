@@ -63,8 +63,12 @@ object JBR {
                 .invoke(null, MethodHandles.lookup()) as ServiceApi
         } catch (e: InvocationTargetException) {
             val t = e.cause
-            if (t is Error) throw t
-            else throw Error(t)
+
+            if (t is Error) {
+                throw t
+            } else {
+                throw Error(t)
+            }
         } catch (e: IllegalAccessException) {
             exception = e
         } catch (e: NoSuchMethodException) {
