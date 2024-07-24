@@ -3,7 +3,9 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.eduardoleolim.organizadorpec660.kotlin-application-conventions")
+    alias(libs.plugins.jvm)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.compose)
 }
 
 tasks.withType<KotlinCompile>().configureEach {
