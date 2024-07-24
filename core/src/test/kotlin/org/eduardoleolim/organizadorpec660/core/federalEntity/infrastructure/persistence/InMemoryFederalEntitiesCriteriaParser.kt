@@ -1,6 +1,7 @@
 package org.eduardoleolim.organizadorpec660.core.federalEntity.infrastructure.persistence
 
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntity
+import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityFields
 import org.eduardoleolim.organizadorpec660.core.shared.domain.InvalidArgumentError
 import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.*
 import java.time.Instant
@@ -42,12 +43,12 @@ object InMemoryFederalEntitiesCriteriaParser {
     }
 
     private fun filterPassed(record: FederalEntity, filter: Filter): Boolean? {
-        val field = filter.field.value
+        val field = FederalEntityFields.entries.firstOrNull { it.value == filter.field.value }
         val value = filter.value.value
         val operator = filter.operator
 
         return when (field) {
-            "id" -> {
+            FederalEntityFields.Id -> {
                 when (operator) {
                     FilterOperator.EQUAL -> value == record.id().toString()
                     FilterOperator.NOT_EQUAL -> value != record.id().toString()
@@ -55,7 +56,7 @@ object InMemoryFederalEntitiesCriteriaParser {
                 }
             }
 
-            "keyCode" -> {
+            FederalEntityFields.KeyCode -> {
                 when (operator) {
                     FilterOperator.EQUAL -> value == record.keyCode()
                     FilterOperator.NOT_EQUAL -> value != record.keyCode()
@@ -65,7 +66,7 @@ object InMemoryFederalEntitiesCriteriaParser {
                 }
             }
 
-            "name" -> {
+            FederalEntityFields.Name -> {
                 when (operator) {
                     FilterOperator.EQUAL -> value == record.name()
                     FilterOperator.NOT_EQUAL -> value != record.name()
@@ -75,7 +76,7 @@ object InMemoryFederalEntitiesCriteriaParser {
                 }
             }
 
-            "createdAt" -> {
+            FederalEntityFields.CreatedAt -> {
                 val time = Date.from(Instant.parse(value)).time
                 val recordTime = record.createdAt().time
 
@@ -90,7 +91,7 @@ object InMemoryFederalEntitiesCriteriaParser {
                 }
             }
 
-            "updatedAt" -> {
+            FederalEntityFields.UpdatedAt -> {
                 val time = Date.from(Instant.parse(value)).time
                 val recordTime = record.updatedAt()?.time ?: return null
 
@@ -113,14 +114,15 @@ object InMemoryFederalEntitiesCriteriaParser {
         return criteria.orders.orders.fold(records) { list, order ->
             val orderBy = order.orderBy.value
             val orderType = order.orderType
+            val field = FederalEntityFields.entries.firstOrNull { it.value == orderBy }
 
             list.sortedWith(compareBy {
-                when (orderBy) {
-                    "id" -> it.id()
-                    "keyCode" -> it.keyCode()
-                    "name" -> it.name()
-                    "createdAt" -> it.createdAt()
-                    "updatedAt" -> it.updatedAt()
+                when (field) {
+                    FederalEntityFields.Id -> it.id()
+                    FederalEntityFields.KeyCode -> it.keyCode()
+                    FederalEntityFields.Name -> it.name()
+                    FederalEntityFields.CreatedAt -> it.createdAt()
+                    FederalEntityFields.UpdatedAt -> it.updatedAt()
                     else -> null
                 }
             }).let { if (orderType == OrderType.DESC) it.reversed() else it }

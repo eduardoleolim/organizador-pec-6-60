@@ -10,6 +10,7 @@ dependencies {
     api(libs.koin.core)
 
     testImplementation(libs.junit.jupiter)
+    // testRuntimeOnly(libs.junit.platform.reporting)
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
