@@ -50,25 +50,15 @@ class AuthScreen(private val queryBus: QueryBus) : Screen {
         }
 
         Row {
-            Column(
+            Image(
+                painter = painterResource(Res.drawable.login_background),
+                contentDescription = "Fountain of the Four Rivers",
                 modifier = Modifier.fillMaxWidth(0.5f)
-                    .fillMaxHeight()
-            ) {
-                Image(
-                    painter = painterResource(Res.drawable.login_background),
-                    contentDescription = "Fountain of the Four Rivers",
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.FillWidth
-                )
-            }
+                    .fillMaxHeight(),
+                contentScale = ContentScale.Crop
+            )
 
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                AuthForm(screenModel)
-            }
+            AuthForm(screenModel)
         }
     }
 
@@ -140,77 +130,85 @@ class AuthScreen(private val queryBus: QueryBus) : Screen {
             }
         }
 
-        Text(
-            text = stringResource(Res.string.app_name),
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.displayMedium.copy(fontWeight = FontWeight.Medium),
-            modifier = Modifier.padding(bottom = 20.dp)
-        )
-
-        Text(
-            text = stringResource(Res.string.auth_enter),
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(bottom = 20.dp)
-        )
-
-        if (isCredentialsError) {
-            Text(
-                text = stringResource(Res.string.auth_invalid_credentials),
-                color = MaterialTheme.colorScheme.error,
-                modifier = Modifier.padding(bottom = 20.dp)
-            )
-        }
-
-        OutlinedTextField(
-            enabled = enabled,
-            label = {
-                Text(stringResource(Res.string.auth_username))
-            },
-            value = username,
-            onValueChange = { username = it },
-            modifier = Modifier.fillMaxWidth(0.8f)
-                .padding(bottom = 20.dp),
-            singleLine = true,
-            isError = isUsernameError || isCredentialsError,
-            supportingText = usernameSupportingText?.let { message ->
-                { Text(text = message, color = MaterialTheme.colorScheme.error) }
-            }
-        )
-
-        OutlinedTextField(
-            enabled = enabled,
-            label = {
-                Text(stringResource(Res.string.auth_password))
-            },
-            value = password,
-            onValueChange = { password = it },
-            modifier = Modifier.fillMaxWidth(0.8f)
-                .padding(bottom = 20.dp),
-            singleLine = true,
-            isError = isPasswordError || isCredentialsError,
-            supportingText = passwordSupportingText?.let { message ->
-                { Text(text = message, color = MaterialTheme.colorScheme.error) }
-            },
-            visualTransformation = visualTransformation,
-            trailingIcon = {
-                IconButton(
-                    onClick = { isPasswordVisible = !isPasswordVisible },
-                    modifier = Modifier.pointerHoverIcon(PointerIcon.Default)
-                ) {
-                    Icon(imageVector = trailingIcon, contentDescription = "Password visibility")
-                }
-            }
-        )
-
-        Button(
-            enabled = enabled,
-            onClick = { screenModel.login(username, password) },
-            modifier = Modifier.fillMaxWidth(0.8f)
+        Column(
+            modifier = Modifier.padding(horizontal = 32.dp, vertical = 24.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (screenModel.authState != AuthState.InProgress && enabled) {
-                Text(stringResource(Res.string.auth_login))
-            } else {
-                CircularProgressIndicator(Modifier.size(16.dp))
+            Text(
+                text = stringResource(Res.string.app_name),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.displayMedium.copy(fontWeight = FontWeight.Medium),
+                modifier = Modifier.padding(vertical = 16.dp),
+            )
+
+            Spacer(Modifier.height(24.dp))
+
+            Text(
+                text = stringResource(Res.string.auth_enter),
+                style = MaterialTheme.typography.titleLarge
+            )
+
+            Spacer(Modifier.height(24.dp))
+
+            if (isCredentialsError) {
+                Text(
+                    text = stringResource(Res.string.auth_invalid_credentials),
+                    color = MaterialTheme.colorScheme.error
+                )
+
+                Spacer(Modifier.height(24.dp))
+            }
+
+            OutlinedTextField(
+                enabled = enabled,
+                label = { Text(stringResource(Res.string.auth_username)) },
+                value = username,
+                onValueChange = { username = it },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                isError = isUsernameError || isCredentialsError,
+                supportingText = usernameSupportingText?.let { message ->
+                    { Text(text = message, color = MaterialTheme.colorScheme.error) }
+                }
+            )
+
+            Spacer(Modifier.height(24.dp))
+
+            OutlinedTextField(
+                enabled = enabled,
+                label = { Text(stringResource(Res.string.auth_password)) },
+                value = password,
+                onValueChange = { password = it },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                isError = isPasswordError || isCredentialsError,
+                supportingText = passwordSupportingText?.let { message ->
+                    { Text(text = message, color = MaterialTheme.colorScheme.error) }
+                },
+                visualTransformation = visualTransformation,
+                trailingIcon = {
+                    IconButton(
+                        onClick = { isPasswordVisible = !isPasswordVisible },
+                        modifier = Modifier.pointerHoverIcon(PointerIcon.Default)
+                    ) {
+                        Icon(imageVector = trailingIcon, contentDescription = "Password visibility")
+                    }
+                }
+            )
+
+            Spacer(Modifier.height(24.dp))
+
+            Button(
+                enabled = enabled,
+                onClick = { screenModel.login(username, password) },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                if (screenModel.authState != AuthState.InProgress && enabled) {
+                    Text(stringResource(Res.string.auth_login))
+                } else {
+                    CircularProgressIndicator(Modifier.size(16.dp))
+                }
             }
         }
     }
