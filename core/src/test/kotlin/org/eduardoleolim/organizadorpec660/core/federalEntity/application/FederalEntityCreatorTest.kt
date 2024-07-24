@@ -26,8 +26,16 @@ class FederalEntityCreatorTest {
 
         try {
             creator.create(keyCode, name)
-            assert(repository.records.size == 1)
-        } catch (e: Exception) {
+                .fold(
+                    ifRight = {
+                        assert(repository.records.size == 1)
+                    },
+                    ifLeft = {
+                        assert(false)
+                    }
+                )
+
+        } catch (e: Throwable) {
             assert(false)
         }
     }

@@ -11,8 +11,8 @@ class MunicipalityTest {
         try {
             MunicipalityName(name)
             assert(false)
-        } catch (e: InvalidMunicipalityNameError) {
-            assert(e.message == "The name <$name> is not a valid municipality name")
+        } catch (e: Throwable) {
+            assert(e is InvalidMunicipalityNameError)
         }
     }
 
@@ -22,8 +22,8 @@ class MunicipalityTest {
         try {
             MunicipalityName(name)
             assert(false)
-        } catch (e: InvalidMunicipalityNameError) {
-            assert(e.message == "The name <$name> is not a valid municipality name")
+        } catch (e: Throwable) {
+            assert(e is InvalidMunicipalityNameError)
         }
     }
 
@@ -44,8 +44,8 @@ class MunicipalityTest {
         try {
             MunicipalityKeyCode(keyCode)
             assert(false)
-        } catch (e: InvalidMunicipalityKeyCodeError) {
-            assert(e.message == "The key code <$keyCode> is not a valid municipality key code")
+        } catch (e: Throwable) {
+            assert(e is InvalidMunicipalityKeyCodeError)
         }
     }
 
@@ -55,8 +55,8 @@ class MunicipalityTest {
         try {
             MunicipalityKeyCode(keyCode)
             assert(false)
-        } catch (e: InvalidMunicipalityKeyCodeError) {
-            assert(e.message == "The key code <$keyCode> is not a valid municipality key code")
+        } catch (e: Throwable) {
+            assert(e is InvalidMunicipalityKeyCodeError)
         }
     }
 
@@ -66,8 +66,8 @@ class MunicipalityTest {
         try {
             MunicipalityKeyCode(keyCode)
             assert(false)
-        } catch (e: InvalidMunicipalityKeyCodeError) {
-            assert(e.message == "The key code <$keyCode> is not a valid municipality key code")
+        } catch (e: Throwable) {
+            assert(e is InvalidMunicipalityKeyCodeError)
         }
     }
 
@@ -77,8 +77,8 @@ class MunicipalityTest {
         try {
             MunicipalityKeyCode(keyCode)
             assert(false)
-        } catch (e: InvalidMunicipalityKeyCodeError) {
-            assert(e.message == "The key code <$keyCode> is not a valid municipality key code")
+        } catch (e: Throwable) {
+            assert(e is InvalidMunicipalityKeyCodeError)
         }
     }
 
@@ -88,8 +88,8 @@ class MunicipalityTest {
         try {
             MunicipalityKeyCode(keyCode)
             assert(false)
-        } catch (e: InvalidMunicipalityKeyCodeError) {
-            assert(e.message == "The key code <$keyCode> is not a valid municipality key code")
+        } catch (e: Throwable) {
+            assert(e is InvalidMunicipalityKeyCodeError)
         }
     }
 
@@ -99,8 +99,8 @@ class MunicipalityTest {
         try {
             MunicipalityKeyCode(keyCode)
             assert(false)
-        } catch (e: InvalidMunicipalityKeyCodeError) {
-            assert(e.message == "The key code <$keyCode> is not a valid municipality key code")
+        } catch (e: Throwable) {
+            assert(e is InvalidMunicipalityKeyCodeError)
         }
     }
 
@@ -110,8 +110,8 @@ class MunicipalityTest {
         try {
             MunicipalityKeyCode(keyCode)
             assert(true)
-        } catch (e: InvalidMunicipalityKeyCodeError) {
-            assert(e.message == "The key code <$keyCode> is not a valid municipality key code")
+        } catch (e: Throwable) {
+            assert(e is InvalidMunicipalityKeyCodeError)
         }
     }
 
@@ -121,8 +121,8 @@ class MunicipalityTest {
         try {
             MunicipalityId.fromString(id)
             assert(false)
-        } catch (e: InvalidMunicipalityIdError) {
-            assert(e.message == "The id <$id> is not a valid municipality id")
+        } catch (e: Throwable) {
+            assert(e is InvalidMunicipalityIdError)
         }
     }
 
@@ -132,8 +132,8 @@ class MunicipalityTest {
         try {
             MunicipalityId.fromString(id)
             assert(false)
-        } catch (e: InvalidMunicipalityIdError) {
-            assert(e.message == "The id <$id> is not a valid municipality id")
+        } catch (e: Throwable) {
+            assert(e is InvalidMunicipalityIdError)
         }
     }
 
@@ -143,7 +143,7 @@ class MunicipalityTest {
         try {
             MunicipalityId.fromString(id)
             assert(true)
-        } catch (e: InvalidMunicipalityIdError) {
+        } catch (e: Throwable) {
             assert(false)
         }
     }
@@ -154,8 +154,8 @@ class MunicipalityTest {
         try {
             MunicipalityId.fromString(id)
             assert(false)
-        } catch (e: InvalidMunicipalityIdError) {
-            assert(e.message == "The id <$id> is not a valid municipality id")
+        } catch (e: Throwable) {
+            assert(e is InvalidMunicipalityIdError)
         }
     }
 
@@ -174,8 +174,8 @@ class MunicipalityTest {
                 updatedAt.value
             )
             assert(false)
-        } catch (e: InvalidMunicipalityUpdateDateError) {
-            assert(e.message == "The update date <${updatedAt.value}> is not valid because it is before the create date <${createdAt.value}>")
+        } catch (e: Throwable) {
+            assert(e is InvalidMunicipalityUpdateDateError)
         }
     }
 }

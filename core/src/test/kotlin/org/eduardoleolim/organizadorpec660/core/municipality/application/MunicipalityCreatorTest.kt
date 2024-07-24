@@ -70,20 +70,21 @@ class MunicipalityCreatorTest {
         }
 
         @Test
-        fun `fail if municipality already exists`() {
+        fun `fails if municipality already exists`() {
             val keyCode = "001"
             val name = "AGUASCALIENTES"
             val federalEntityId = aguascalientesId
 
             try {
-                creator.create(keyCode, name, federalEntityId).fold(
-                    ifRight = {
-                        assert(false)
-                    },
-                    ifLeft = {
-                        assert(it is MunicipalityAlreadyExistsError)
-                    }
-                )
+                creator.create(keyCode, name, federalEntityId)
+                    .fold(
+                        ifRight = {
+                            assert(false)
+                        },
+                        ifLeft = {
+                            assert(it is MunicipalityAlreadyExistsError)
+                        }
+                    )
             } catch (e: Throwable) {
                 assert(false)
             }
@@ -97,7 +98,14 @@ class MunicipalityCreatorTest {
 
             try {
                 creator.create(keyCode, name, federalEntityId)
-                assert(municipalityRepository.municipalities.size == 2)
+                    .fold(
+                        ifRight = {
+                            assert(municipalityRepository.municipalities.size == 2)
+                        },
+                        ifLeft = {
+                            assert(false)
+                        }
+                    )
             } catch (e: Exception) {
                 assert(false)
             }
