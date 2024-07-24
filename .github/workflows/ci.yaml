@@ -34,6 +34,10 @@ jobs:
       - name: 🧪 Test
         run: ./gradlew test
 
+      - name: 📝 Publish Test Report
+        uses: mikepenz/action-junit-report@v4
+        if: always()
+
   package:
     name: 📦 Package
     if: startsWith(github.ref, 'refs/tags/v')
