@@ -1,13 +1,11 @@
 package org.eduardoleolim.organizadorpec660.app.shared.composables
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.LastPage
 import androidx.compose.material.icons.filled.ChevronLeft
@@ -58,13 +56,16 @@ fun PdfViewerTopBar(
     val zoom = remember(pdfViewerState?.zoom) { pdfViewerState?.zoom ?: 1.0f }
 
     Surface(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .padding(start = 20.dp, end = 20.dp, top = 20.dp, bottom = 10.dp),
         shape = MaterialTheme.shapes.small,
-        color = containerColor  //MaterialTheme.colorScheme.surfaceContainerHigh
+        color = containerColor
     ) {
         Row(
-            modifier = Modifier.height(IntrinsicSize.Min).horizontalScroll(horizontalScrollState),
+            modifier = Modifier
+                .height(IntrinsicSize.Min)
+                .horizontalScroll(horizontalScrollState),
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -95,7 +96,8 @@ fun PdfViewerTopBar(
             ) {
                 Text(
                     text = stringResource(Res.string.pdf_viewer_show_all),
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.bodySmall,
+                    maxLines = 1
                 )
 
                 Spacer(Modifier.width(8.dp))
@@ -191,7 +193,8 @@ fun PdfViewerTopBar(
             ) {
                 Text(
                     text = stringResource(Res.string.pdf_viewer_zoom),
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.bodySmall,
+                    maxLines = 1
                 )
 
                 Slider(
@@ -199,11 +202,31 @@ fun PdfViewerTopBar(
                     value = zoom,
                     onValueChange = { zoomLevel -> pdfViewerState!!.zoom = zoomLevel },
                     valueRange = 0.5f..3.0f,
-                    modifier = Modifier.width(100.dp).padding(start = 8.dp, end = 8.dp)
+                    modifier = Modifier
+                        .width(100.dp)
+                        .padding(horizontal = 8.dp)
                 )
             }
         }
     }
+}
+
+@Composable
+fun PdfPage(
+    renderer: PDFRenderer,
+    index: Int,
+    zoom: Float,
+    modifier: Modifier = Modifier
+) {
+    val density = LocalDensity.current
+    val scale = with(density) { (1f * zoom).toDp().toPx() }
+    val image = renderer.renderImage(index, scale)
+
+    Image(
+        painter = image.toPainter(),
+        contentDescription = "Index: $index",
+        modifier = modifier
+    )
 }
 
 @Composable
@@ -212,56 +235,71 @@ fun PdfViewerContent(
     modifier: Modifier = Modifier,
     containerColor: Color
 ) {
-    val density = LocalDensity.current
-    val verticalScrollState = rememberScrollState()
-    val horizontalScrollState = rememberScrollState()
-
     Surface(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .padding(start = 20.dp, end = 20.dp, top = 10.dp, bottom = 20.dp)
             .then(modifier),
         shape = MaterialTheme.shapes.extraSmall,
         color = containerColor
     ) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxSize()
-                .horizontalScroll(horizontalScrollState)
-                .run {
-                    if (pdfViewerState?.showAllPages == false) {
-                        verticalScroll(verticalScrollState)
-                    } else {
-                        this
-                    }
-                }
-        ) {
-            pdfViewerState?.let { state ->
+        pdfViewerState?.let { state ->
+            Box(
+                modifier = Modifier.fillMaxSize()
+            ) {
                 val renderer = remember(state.pdDocument) { PDFRenderer(state.pdDocument) }
 
-                if (state.showAllPages) {
-                    LazyColumn {
-                        items(state.pdDocument.numberOfPages) { index ->
-                            val image = remember(renderer, state.zoom) {
-                                val scale = with(density) { (1f * state.zoom).toDp().toPx() }
-                                renderer.renderImage(index, scale)
-                            }
+                if (state.showAllPages.not()) {
+                    val verticalScrollState = rememberScrollState(0)
+                    val horizontalScrollState = rememberScrollState(0)
 
-                            Image(
-                                painter = image.toPainter(),
-                                contentDescription = "Page: $index",
-                                modifier = Modifier.padding(vertical = 8.dp)
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(verticalScrollState)
+                            .horizontalScroll(horizontalScrollState)
+                    ) {
+                        PdfPage(renderer, state.index, state.zoom)
+                    }
+                    VerticalScrollbar(
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .fillMaxHeight(),
+                        adapter = rememberScrollbarAdapter(verticalScrollState)
+                    )
+                    HorizontalScrollbar(
+                        modifier = Modifier
+                            .align(Alignment.BottomStart)
+                            .fillMaxWidth()
+                            .padding(end = 12.dp),
+                        adapter = rememberScrollbarAdapter(horizontalScrollState)
+                    )
+                } else {
+                    val verticalScrollState = rememberLazyListState(state.index)
+
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        state = verticalScrollState
+                    ) {
+                        items(
+                            count = state.pdDocument.numberOfPages,
+                            key = { it }
+                        ) { index ->
+                            PdfPage(
+                                renderer = renderer,
+                                index = index,
+                                zoom = state.zoom
                             )
+                            Spacer(Modifier.height(5.dp))
                         }
                     }
-                } else {
-                    val image = remember(renderer, state.index, state.zoom) {
-                        val scale = with(density) { (1f * state.zoom).toDp().toPx() }
-                        renderer.renderImage(state.index, scale)
-                    }
-
-                    Image(
-                        painter = image.toPainter(),
-                        contentDescription = "Index: ${state.index}"
+                    VerticalScrollbar(
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .fillMaxHeight(),
+                        adapter = rememberScrollbarAdapter(verticalScrollState)
                     )
                 }
             }
@@ -291,13 +329,7 @@ fun PdfViewer(
 
     LaunchedEffect(pdfPath) {
         pdfFile = pdfPath?.let { path ->
-            val file = File(path)
-
-            if (file.run { exists() && isFile && extension == "pdf" }) {
-                file
-            } else {
-                null
-            }
+            File(path).takeIf { it.exists() && it.isFile && it.extension == "pdf" }
         }
     }
 
@@ -316,7 +348,8 @@ fun PdfViewer(
     }
 
     Surface(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .then(modifier),
         shape = MaterialTheme.shapes.medium,
         color = containerColor
