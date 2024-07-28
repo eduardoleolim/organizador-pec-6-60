@@ -46,7 +46,7 @@ fun MunicipalityScreen.MunicipalitiesTable(
     onEditRequest: (MunicipalityResponse) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val orders = listOf("keyCode", "name", "federalEntity.name", "createdAt", "updatedAt")
+    val orders = remember { listOf("keyCode", "name", "federalEntity.name", "createdAt", "updatedAt") }
     val keyCodeColumnName = stringResource(Res.string.mun_keycode)
     val nameColumnName = stringResource(Res.string.mun_name)
     val federalEntityColumnName = stringResource(Res.string.mun_federal_entity)
@@ -65,49 +65,49 @@ fun MunicipalityScreen.MunicipalitiesTable(
             DataColumn(
                 onSort = ::onSort,
                 alignment = Alignment.CenterHorizontally,
-                width = TableColumnWidth.MinIntrinsic
-            ) {
-                Text(keyCodeColumnName)
-            },
+                width = TableColumnWidth.MinIntrinsic,
+                header = { Text(keyCodeColumnName) }
+            ),
             DataColumn(
                 onSort = ::onSort,
-            ) {
-                Text(nameColumnName)
-            },
-            DataColumn(
-                onSort = ::onSort
-            ) {
-                Text(
-                    text = federalEntityColumnName,
-                    textAlign = TextAlign.Center
-                )
-            },
+                header = { Text(nameColumnName) }
+            ),
             DataColumn(
                 onSort = ::onSort,
-                alignment = Alignment.CenterHorizontally,
-                width = TableColumnWidth.Fraction(0.18f)
-            ) {
-                Text(
-                    text = createdAtColumnName,
-                    textAlign = TextAlign.Center
-                )
-            },
+                header = {
+                    Text(
+                        text = federalEntityColumnName,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            ),
             DataColumn(
                 onSort = ::onSort,
                 alignment = Alignment.CenterHorizontally,
-                width = TableColumnWidth.Fraction(0.18f)
-            ) {
-                Text(
-                    text = updatedAtColumnName,
-                    textAlign = TextAlign.Center
-                )
-            },
+                width = TableColumnWidth.Fraction(0.18f),
+                header = {
+                    Text(
+                        text = createdAtColumnName,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            ),
+            DataColumn(
+                onSort = ::onSort,
+                alignment = Alignment.CenterHorizontally,
+                width = TableColumnWidth.Fraction(0.18f),
+                header = {
+                    Text(
+                        text = updatedAtColumnName,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            ),
             DataColumn(
                 alignment = Alignment.CenterHorizontally,
-                width = TableColumnWidth.Fraction(0.2f)
-            ) {
-                Text(actionsColumnName)
-            }
+                width = TableColumnWidth.Fraction(0.2f),
+                header = { Text(actionsColumnName) }
+            )
         )
     }
 

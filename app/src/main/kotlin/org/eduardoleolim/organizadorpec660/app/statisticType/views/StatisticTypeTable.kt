@@ -38,7 +38,7 @@ fun StatisticTypeScreen.StatisticTypeTable(
     onEditRequest: (StatisticTypeResponse) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val orders = listOf("keyCode", "name", "createdAt", "updatedAt")
+    val orders = remember { listOf("keyCode", "name", "createdAt", "updatedAt") }
     val keyCodeColumnName = stringResource(Res.string.st_keycode)
     val nameColumnName = stringResource(Res.string.st_name)
     val createdAtColumnName = stringResource(Res.string.st_created_at)
@@ -55,41 +55,42 @@ fun StatisticTypeScreen.StatisticTypeTable(
             DataColumn(
                 onSort = ::onSort,
                 alignment = Alignment.CenterHorizontally,
-                width = TableColumnWidth.MinIntrinsic
-            ) {
-                Text(keyCodeColumnName)
-            },
+                width = TableColumnWidth.MinIntrinsic,
+                header = { Text(keyCodeColumnName) }
+            ),
             DataColumn(
                 onSort = ::onSort,
-            ) {
-                Text(nameColumnName)
-            },
+                header = { Text(nameColumnName) }
+            ),
             DataColumn(
                 onSort = ::onSort,
                 alignment = Alignment.CenterHorizontally,
-                width = TableColumnWidth.Fraction(0.2f)
-            ) {
-                Text(
-                    text = createdAtColumnName,
-                    textAlign = TextAlign.Center
-                )
-            },
+                width = TableColumnWidth.Fraction(0.2f),
+                header = {
+                    Text(
+                        text = createdAtColumnName,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            ),
             DataColumn(
                 onSort = ::onSort,
                 alignment = Alignment.CenterHorizontally,
-                width = TableColumnWidth.Fraction(0.2f)
-            ) {
-                Text(
-                    text = updatedAtColumnName,
-                    textAlign = TextAlign.Center
-                )
-            },
+                width = TableColumnWidth.Fraction(0.2f),
+                header = {
+                    Text(
+                        text = updatedAtColumnName,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            ),
             DataColumn(
                 alignment = Alignment.CenterHorizontally,
-                width = TableColumnWidth.Fraction(0.2f)
-            ) {
-                Text(actionsColumnName)
-            }
+                width = TableColumnWidth.Fraction(0.2f),
+                header = {
+                    Text(actionsColumnName)
+                }
+            )
         )
     }
 

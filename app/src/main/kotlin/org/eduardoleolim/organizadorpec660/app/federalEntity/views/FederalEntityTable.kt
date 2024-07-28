@@ -38,7 +38,7 @@ fun FederalEntityScreen.FederalEntitiesTable(
     onEditRequest: (FederalEntityResponse) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val orders = listOf("keyCode", "name", "createdAt", "updatedAt")
+    val orders = remember { listOf("keyCode", "name", "createdAt", "updatedAt") }
     val keyCodeColumnName = stringResource(Res.string.fe_keycode)
     val nameColumnName = stringResource(Res.string.fe_name)
     val createdAtColumnName = stringResource(Res.string.fe_created_at)
@@ -55,42 +55,41 @@ fun FederalEntityScreen.FederalEntitiesTable(
             DataColumn(
                 onSort = ::onSort,
                 alignment = Alignment.CenterHorizontally,
-                width = TableColumnWidth.MinIntrinsic
-            ) {
-                Text(keyCodeColumnName)
-            },
+                width = TableColumnWidth.MinIntrinsic,
+                header = { Text(keyCodeColumnName) }
+            ),
             DataColumn(
                 onSort = ::onSort,
-                width = TableColumnWidth.Fraction(0.3f)
-            ) {
-                Text(nameColumnName)
-            },
+                width = TableColumnWidth.Fraction(0.3f),
+                header = { Text(nameColumnName) }
+            ),
             DataColumn(
                 onSort = ::onSort,
                 alignment = Alignment.CenterHorizontally,
-                width = TableColumnWidth.Fraction(0.18f)
-            ) {
-                Text(
-                    text = createdAtColumnName,
-                    textAlign = TextAlign.Center
-                )
-            },
+                width = TableColumnWidth.Fraction(0.18f),
+                header = {
+                    Text(
+                        text = createdAtColumnName,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            ),
             DataColumn(
                 onSort = ::onSort,
                 alignment = Alignment.CenterHorizontally,
-                width = TableColumnWidth.Fraction(0.18f)
-            ) {
-                Text(
-                    text = updatedAtColumnName,
-                    textAlign = TextAlign.Center
-                )
-            },
+                width = TableColumnWidth.Fraction(0.18f),
+                header = {
+                    Text(
+                        text = updatedAtColumnName,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            ),
             DataColumn(
                 alignment = Alignment.CenterHorizontally,
-                width = TableColumnWidth.Fraction(0.18f)
-            ) {
-                Text(actionsColumnName)
-            }
+                width = TableColumnWidth.Fraction(0.18f),
+                header = { Text(actionsColumnName) }
+            )
         )
     }
 
