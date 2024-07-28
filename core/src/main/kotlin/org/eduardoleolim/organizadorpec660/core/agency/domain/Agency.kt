@@ -4,6 +4,20 @@ import org.eduardoleolim.organizadorpec660.core.municipality.domain.Municipality
 import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeId
 import java.util.*
 
+/**
+ * The agencies provide monthly summary reports of statistics for each municipality to INEGI
+ *
+ * @property id The id of the agency
+ * @property name The name of the agency
+ * @property consecutive The consecutive key of the agency
+ * @property municipalityId The id of municipality where the agency is located
+ * @property statisticTypeIds The ids of statistic types used to generate the summary reports
+ * @property createdAt The date when the agency was registered in the system
+ * @property updatedAt The date of last update of agency
+ * @see org.eduardoleolim.organizadorpec660.core.municipality.domain.Municipality
+ * @see org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticType
+ * @constructor Create Agency
+ */
 class Agency private constructor(
     private val id: AgencyId,
     private var name: AgencyName,
@@ -14,6 +28,15 @@ class Agency private constructor(
     private var updatedAt: AgencyUpdateDate?
 ) {
     companion object {
+        /**
+         * Create an entity of [Agency] from primitive values with random id
+         *
+         * @param name The name of agency
+         * @param consecutive The consecutive key of agency
+         * @param municipalityId The id of municipality where the agency is located
+         * @param statisticTypeIds The ids of statistic types used to generate the summary reports
+         * @return An entity of Agency
+         */
         fun create(
             name: String,
             consecutive: String,
@@ -24,22 +47,32 @@ class Agency private constructor(
             val agencyName = AgencyName(name)
             val agencyConsecutive = AgencyConsecutive(consecutive)
             val agencyMunicipalityId = MunicipalityId.fromString(municipalityId)
-
-            val agencyStatisticTypeId = statisticTypeIds.map { statisticTypeId ->
-                StatisticTypeId.fromString(statisticTypeId)
-            }.distinct()
+            val agencyStatisticTypeIds = statisticTypeIds.map { StatisticTypeId.fromString(it) }
+                .distinct()
+                .toMutableList()
 
             return Agency(
                 agencyId,
                 agencyName,
                 agencyConsecutive,
                 agencyMunicipalityId,
-                agencyStatisticTypeId.toMutableList(),
+                agencyStatisticTypeIds,
                 AgencyCreateDate.now(),
                 null
             )
         }
 
+        /**
+         * Initialize an entity of [Agency] from primitive values
+         *
+         * @param id The id of agency
+         * @param name The name of agency
+         * @param consecutive The consecutive key of agency
+         * @param municipalityId The id of municipality where the agency is located
+         * @param statisticTypeIds The ids of statistic types used to generate the summary reports
+         * @param updatedAt The date of last update of agency
+         * @return An entity of Agency
+         */
         fun from(
             id: String,
             name: String,
@@ -53,17 +86,16 @@ class Agency private constructor(
             val agencyName = AgencyName(name)
             val agencyConsecutive = AgencyConsecutive(consecutive)
             val agencyMunicipalityId = MunicipalityId.fromString(municipalityId)
-
-            val agencyStatisticTypeId = statisticTypeIds.map { statisticTypeId ->
-                StatisticTypeId.fromString(statisticTypeId)
-            }.distinct().toMutableList()
+            val agencyStatisticTypeIds = statisticTypeIds.map { StatisticTypeId.fromString(it) }
+                .distinct()
+                .toMutableList()
 
             return Agency(
                 agencyId,
                 agencyName,
                 agencyConsecutive,
                 agencyMunicipalityId,
-                agencyStatisticTypeId.toMutableList(),
+                agencyStatisticTypeIds.toMutableList(),
                 AgencyCreateDate(createdAt),
                 updatedAt?.let {
                     if (it.before(createdAt))
