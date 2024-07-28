@@ -7,7 +7,7 @@ interface InstrumentRepository {
 
     fun searchFileById(id: String): InstrumentFile?
 
-    fun searchFileByInstrumentId(instrumentId: String): InstrumentFile?
+    fun searchInstrumentFile(instrumentFileId: String): InstrumentFile?
 
     fun count(criteria: Criteria): Int
 

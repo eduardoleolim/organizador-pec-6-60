@@ -19,7 +19,7 @@ enum class InstrumentFields(val value: String) {
 }
 
 object InstrumentCriteria {
-    fun idCriteria(id: String) = Criteria(SingleFilter.equal("id", id), Orders.none(), 1, null)
+    fun idCriteria(id: String) = Criteria(SingleFilter.equal(InstrumentFields.Id.value, id), Orders.none(), 1, null)
 
     fun anotherInstrumentCriteria(
         instrumentId: String,

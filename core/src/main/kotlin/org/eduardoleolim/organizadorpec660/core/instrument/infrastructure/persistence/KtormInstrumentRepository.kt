@@ -58,11 +58,10 @@ class KtormInstrumentRepository(
         }
     }
 
-    override fun searchFileByInstrumentId(instrumentId: String): InstrumentFile? {
+    override fun searchInstrumentFile(instrumentFileId: String): InstrumentFile? {
         val instrumentFile = database.from(instrumentFiles)
-            .innerJoin(instruments, on = instrumentFiles.id eq instruments.instrumentFileId)
             .select(instrumentFiles.columns)
-            .where { instrumentFiles.id eq instrumentId }
+            .where { instrumentFiles.id eq instrumentFileId }
             .map { instrumentFiles.createEntity(it) }
             .firstOrNull()
 
