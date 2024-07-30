@@ -1,6 +1,7 @@
 package org.eduardoleolim.organizadorpec660.core.agency.application
 
 import org.eduardoleolim.organizadorpec660.core.agency.domain.Agency
+import org.eduardoleolim.organizadorpec660.core.municipality.application.SimpleMunicipalityResponse
 import org.eduardoleolim.organizadorpec660.core.municipality.domain.Municipality
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.Response
 import org.eduardoleolim.organizadorpec660.core.statisticType.application.StatisticTypeResponse
@@ -11,31 +12,11 @@ class AgencyResponse(
     val id: String,
     val name: String,
     val consecutive: String,
-    val municipality: MunicipalityResponse,
+    val municipality: SimpleMunicipalityResponse,
     val statisticTypes: List<StatisticTypeResponse>,
     val createdAt: Date,
     val updatedAt: Date?
 ) : Response {
-    class MunicipalityResponse(
-        val id: String,
-        val name: String,
-        val keyCode: String,
-        val federalEntityId: String,
-        val createdAt: Date,
-        val updatedAt: Date?
-    ) {
-        companion object {
-            fun fromAggregate(municipality: Municipality) = MunicipalityResponse(
-                municipality.id().toString(),
-                municipality.name(),
-                municipality.keyCode(),
-                municipality.federalEntityId().toString(),
-                municipality.createdAt(),
-                municipality.updatedAt()
-            )
-        }
-    }
-
     companion object {
         fun fromAggregate(
             agency: Agency,
@@ -46,7 +27,7 @@ class AgencyResponse(
                 StatisticTypeResponse.fromAggregate(statisticType)
             }
 
-            val municipalitiesResponse = MunicipalityResponse.fromAggregate(municipality)
+            val municipalitiesResponse = SimpleMunicipalityResponse.fromAggregate(municipality)
 
             return AgencyResponse(
                 agency.id().toString(),
