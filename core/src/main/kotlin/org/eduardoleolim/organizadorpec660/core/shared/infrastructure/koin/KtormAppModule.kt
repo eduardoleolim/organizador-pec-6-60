@@ -16,6 +16,7 @@ import org.eduardoleolim.organizadorpec660.core.federalEntity.application.update
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityRepository
 import org.eduardoleolim.organizadorpec660.core.federalEntity.infrastructure.persistence.KtormFederalEntityRepository
 import org.eduardoleolim.organizadorpec660.core.instrument.application.create.InstrumentCreator
+import org.eduardoleolim.organizadorpec660.core.instrument.application.search.InstrumentSearcher
 import org.eduardoleolim.organizadorpec660.core.instrument.application.update.InstrumentUpdater
 import org.eduardoleolim.organizadorpec660.core.instrument.domain.InstrumentRepository
 import org.eduardoleolim.organizadorpec660.core.instrument.infrastructure.persistence.KtormInstrumentRepository
@@ -69,6 +70,7 @@ object KtormAppModule {
         // Instrument services
         single { InstrumentCreator(get(), get(), get(), get()) }
         single { InstrumentUpdater(get(), get(), get()) }
+        single { InstrumentSearcher(get()) }
 
         // Municipality services
         single { MunicipalityCreator(get(), get()) }
