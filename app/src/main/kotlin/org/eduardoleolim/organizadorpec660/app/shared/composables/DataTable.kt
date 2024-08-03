@@ -130,11 +130,17 @@ fun PaginatedDataTable(
                 value = value,
                 onValueChange = onValueChange,
                 label = {
-                    Text(stringResource(Res.string.table_search))
+                    Text(
+                        text = stringResource(Res.string.table_search),
+                        minLines = 1
+                    )
                 },
                 textStyle = MaterialTheme.typography.bodyMedium,
                 leadingIcon = {
-                    Icon(Icons.Default.Search, stringResource(Res.string.table_search))
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = stringResource(Res.string.table_search)
+                    )
                 },
                 singleLine = true,
                 modifier = Modifier.width(250.dp),

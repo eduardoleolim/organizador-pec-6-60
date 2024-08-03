@@ -27,7 +27,6 @@ dependencies {
     implementation(libs.voyager.screenmodel)
     implementation(libs.voyager.transitions)
     implementation(libs.material3.datatable)
-    implementation(libs.kotlin.csv.jvm)
     implementation(libs.pdfbox) {
         exclude("org.junit.jupiter")
     }
