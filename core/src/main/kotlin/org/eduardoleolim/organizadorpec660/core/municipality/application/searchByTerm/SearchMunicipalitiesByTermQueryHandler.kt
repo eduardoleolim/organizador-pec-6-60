@@ -13,7 +13,7 @@ class SearchMunicipalitiesByTermQueryHandler(
     private val municipalitySearcher: MunicipalitySearcher,
     private val federalEntitySearcher: FederalEntitySearcher
 ) : QueryHandler<SearchMunicipalitiesByTermQuery, MunicipalitiesResponse> {
-    private val cache = mutableMapOf<String, FederalEntity>()
+    private val federalEntityCache = mutableMapOf<String, FederalEntity>()
 
     override fun handle(query: SearchMunicipalitiesByTermQuery): MunicipalitiesResponse {
         val municipalities = searchMunicipalities(
@@ -26,11 +26,14 @@ class SearchMunicipalitiesByTermQueryHandler(
         val totalMunicipalities = countTotalMunicipalities(query.federalEntityId(), query.search())
 
         return municipalities.map { municipality ->
-            val federalEntity = searchFederalEntity(municipality.federalEntityId().toString())
+            val federalEntityId = municipality.federalEntityId().toString()
+            val federalEntity = federalEntityCache[federalEntityId] ?: searchFederalEntity(federalEntityId).also {
+                federalEntityCache[federalEntityId] = it
+            }
 
             MunicipalityResponse.fromAggregate(municipality, federalEntity)
         }.let {
-            cache.clear()
+            federalEntityCache.clear()
 
             MunicipalitiesResponse(it, totalMunicipalities, query.limit(), query.offset())
         }
@@ -62,16 +65,7 @@ class SearchMunicipalitiesByTermQueryHandler(
         municipalitySearcher.count(it)
     }
 
-    private fun searchFederalEntity(id: String): FederalEntity {
-        if (cache.containsKey(id)) {
-            return cache[id]!!
-        }
-
-        val criteria = FederalEntityCriteria.idCriteria(id)
-
-        return this.federalEntitySearcher.search(criteria).first().let {
-            cache[id] = it
-            it
-        }
+    private fun searchFederalEntity(id: String) = FederalEntityCriteria.idCriteria(id).let {
+        federalEntitySearcher.search(it).first()
     }
 }

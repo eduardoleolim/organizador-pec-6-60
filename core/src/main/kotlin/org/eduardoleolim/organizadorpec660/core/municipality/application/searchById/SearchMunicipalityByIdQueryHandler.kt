@@ -23,7 +23,7 @@ class SearchMunicipalityByIdQueryHandler(
         municipalitySearcher.search(it).firstOrNull()
     }
 
-    private fun searchFederalEntity(id: String) = FederalEntityCriteria.idCriteria(id).let {
-        federalEntitySearcher.search(it).first() // If the municipality exists, the federal entity must exist too.
+    private fun searchFederalEntity(federalEntityId: String) = FederalEntityCriteria.idCriteria(federalEntityId).let {
+        federalEntitySearcher.search(it).first() // If the municipality exists, the federal entity must exists too.
     }
 }
