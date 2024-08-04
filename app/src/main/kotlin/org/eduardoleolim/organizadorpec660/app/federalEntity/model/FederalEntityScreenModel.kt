@@ -7,6 +7,7 @@ import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -49,7 +50,11 @@ sealed class FederalEntityImportState {
     data class Error(val error: Throwable) : FederalEntityImportState()
 }
 
-class FederalEntityScreenModel(private val queryBus: QueryBus, private val commandBus: CommandBus) : ScreenModel {
+class FederalEntityScreenModel(
+    private val queryBus: QueryBus,
+    private val commandBus: CommandBus,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.Default
+) : ScreenModel {
     private val csvReader = csvReader()
     private val csvWriter = csvWriter()
 
@@ -83,7 +88,7 @@ class FederalEntityScreenModel(private val queryBus: QueryBus, private val comma
         limit: Int? = null,
         offset: Int? = null,
     ) {
-        screenModelScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(dispatcher) {
             try {
                 val query = SearchFederalEntitiesByTermQuery(search, orders, limit, offset)
                 federalEntities = queryBus.ask(query)
@@ -94,7 +99,7 @@ class FederalEntityScreenModel(private val queryBus: QueryBus, private val comma
     }
 
     fun createFederalEntity(keyCode: String, name: String) {
-        screenModelScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(dispatcher) {
             formState = FederalEntityFormState.InProgress
             delay(500)
 
@@ -122,7 +127,7 @@ class FederalEntityScreenModel(private val queryBus: QueryBus, private val comma
     }
 
     fun editFederalEntity(federalEntityId: String, keyCode: String, name: String) {
-        screenModelScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(dispatcher) {
             formState = FederalEntityFormState.InProgress
             delay(500)
 
@@ -150,7 +155,7 @@ class FederalEntityScreenModel(private val queryBus: QueryBus, private val comma
     }
 
     fun deleteFederalEntity(federalEntityId: String) {
-        screenModelScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(dispatcher) {
             deleteState = FederalEntityDeleteState.InProgress
             delay(500)
 
@@ -171,7 +176,7 @@ class FederalEntityScreenModel(private val queryBus: QueryBus, private val comma
     }
 
     fun saveTemplate(file: File) {
-        screenModelScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(dispatcher) {
             val keyCode = getString(Res.string.fe_keycode)
             val name = getString(Res.string.fe_name)
 
@@ -186,7 +191,7 @@ class FederalEntityScreenModel(private val queryBus: QueryBus, private val comma
     }
 
     fun importFederalEntities(file: File) {
-        screenModelScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(dispatcher) {
             importState = FederalEntityImportState.InProgress
             delay(500)
 

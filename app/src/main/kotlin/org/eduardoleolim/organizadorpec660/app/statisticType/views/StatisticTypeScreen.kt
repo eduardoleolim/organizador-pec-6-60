@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import com.seanproctor.datatable.paging.rememberPaginatedDataTableState
+import kotlinx.coroutines.Dispatchers
 import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
 import org.eduardoleolim.organizadorpec660.app.generated.resources.statistic_types
 import org.eduardoleolim.organizadorpec660.app.shared.composables.reset
@@ -27,7 +28,7 @@ import org.jetbrains.compose.resources.stringResource
 class StatisticTypeScreen(private val queryBus: QueryBus, private val commandBus: CommandBus) : Screen {
     @Composable
     override fun Content() {
-        val screenModel = rememberScreenModel { StatisticTypeScreenModel(queryBus, commandBus) }
+        val screenModel = rememberScreenModel { StatisticTypeScreenModel(queryBus, commandBus, Dispatchers.IO) }
         var showDeleteModal by remember { mutableStateOf(false) }
         var showFormModal by remember { mutableStateOf(false) }
         var selectedStatisticType by remember { mutableStateOf<StatisticTypeResponse?>(null) }

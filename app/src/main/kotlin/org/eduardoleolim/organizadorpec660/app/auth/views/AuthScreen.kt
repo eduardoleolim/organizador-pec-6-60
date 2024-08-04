@@ -21,6 +21,7 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import kotlinx.coroutines.Dispatchers
 import org.eduardoleolim.organizadorpec660.app.auth.data.InvalidCredentialsException
 import org.eduardoleolim.organizadorpec660.app.auth.model.AuthScreenModel
 import org.eduardoleolim.organizadorpec660.app.auth.model.AuthState
@@ -37,7 +38,7 @@ class AuthScreen(private val queryBus: QueryBus) : Screen {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
         val window = LocalWindow.current
-        val screenModel = rememberScreenModel { AuthScreenModel(navigator, queryBus) }
+        val screenModel = rememberScreenModel { AuthScreenModel(navigator, queryBus, Dispatchers.IO) }
 
         LaunchedEffect(Unit) {
             val dimension = Dimension(800, 600)

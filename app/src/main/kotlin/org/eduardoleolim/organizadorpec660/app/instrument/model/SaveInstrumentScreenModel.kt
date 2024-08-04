@@ -8,6 +8,7 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.stack.popUntil
 import cafe.adriel.voyager.navigator.Navigator
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -38,7 +39,8 @@ sealed class InstrumentFormState {
 class SaveInstrumentScreenModel(
     private val navigator: Navigator,
     private val queryBus: QueryBus,
-    private val commandBus: CommandBus
+    private val commandBus: CommandBus,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.Default
 ) : ScreenModel {
     var federalEntities by mutableStateOf(emptyList<FederalEntityResponse>())
         private set
@@ -60,7 +62,7 @@ class SaveInstrumentScreenModel(
     }
 
     fun searchAllFederalEntities() {
-        screenModelScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(dispatcher) {
             try {
                 val query = SearchFederalEntitiesByTermQuery()
                 federalEntities = queryBus.ask<FederalEntitiesResponse>(query).federalEntities
@@ -71,7 +73,7 @@ class SaveInstrumentScreenModel(
     }
 
     fun searchMunicipalities(federalEntityId: String?) {
-        screenModelScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(dispatcher) {
             municipalities = federalEntityId?.let { id ->
                 try {
                     val query = SearchMunicipalitiesByTermQuery(id)
@@ -84,7 +86,7 @@ class SaveInstrumentScreenModel(
     }
 
     fun searchAgencies(municipalityId: String?) {
-        screenModelScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(dispatcher) {
             agencies = municipalityId?.let {
                 try {
                     val query = SearchAgenciesByMunicipalityIdQuery(municipalityId)
@@ -112,7 +114,7 @@ class SaveInstrumentScreenModel(
         statisticTypeId: String?,
         documentPath: String?
     ) {
-        screenModelScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(dispatcher) {
             formState = InstrumentFormState.InProgress
             delay(500)
 

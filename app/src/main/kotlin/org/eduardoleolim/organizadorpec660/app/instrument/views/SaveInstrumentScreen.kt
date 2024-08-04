@@ -15,6 +15,7 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.eduardoleolim.organizadorpec660.app.generated.resources.*
 import org.eduardoleolim.organizadorpec660.app.instrument.model.InstrumentFormState
@@ -34,7 +35,8 @@ class SaveInstrumentScreen(
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val screenModel = rememberScreenModel { SaveInstrumentScreenModel(navigator, queryBus, commandBus) }
+        val screenModel =
+            rememberScreenModel { SaveInstrumentScreenModel(navigator, queryBus, commandBus, Dispatchers.IO) }
         var instrumentSelected by remember { mutableStateOf<String?>(null) }
 
         Column(modifier = Modifier.padding(24.dp)) {

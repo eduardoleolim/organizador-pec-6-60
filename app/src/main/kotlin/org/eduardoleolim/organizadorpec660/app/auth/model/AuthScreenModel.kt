@@ -7,6 +7,7 @@ import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import cafe.adriel.voyager.core.registry.ScreenRegistry
 import cafe.adriel.voyager.navigator.Navigator
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -24,12 +25,16 @@ sealed class AuthState {
     data class Error(val error: Throwable) : AuthState()
 }
 
-class AuthScreenModel(private val navigator: Navigator, private val queryBus: QueryBus) : ScreenModel {
+class AuthScreenModel(
+    private val navigator: Navigator,
+    private val queryBus: QueryBus,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.Default
+) : ScreenModel {
     var authState by mutableStateOf<AuthState>(AuthState.Idle)
         private set
 
     fun login(username: String, password: String) {
-        screenModelScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(dispatcher) {
             authState = AuthState.InProgress
             delay(500)
 

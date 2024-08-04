@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import com.seanproctor.datatable.paging.rememberPaginatedDataTableState
+import kotlinx.coroutines.Dispatchers
 import org.eduardoleolim.organizadorpec660.app.agency.model.AgencyScreenModel
 import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
 import org.eduardoleolim.organizadorpec660.app.generated.resources.agencies
@@ -27,7 +28,7 @@ import org.jetbrains.compose.resources.stringResource
 class AgencyScreen(private val queryBus: QueryBus, private val commandBus: CommandBus) : Screen {
     @Composable
     override fun Content() {
-        val screenModel = rememberScreenModel { AgencyScreenModel(queryBus, commandBus) }
+        val screenModel = rememberScreenModel { AgencyScreenModel(queryBus, commandBus, Dispatchers.IO) }
         var showDeleteModal by remember { mutableStateOf(false) }
         var showFormModal by remember { mutableStateOf(false) }
         var selectedAgency by remember { mutableStateOf<AgencyResponse?>(null) }

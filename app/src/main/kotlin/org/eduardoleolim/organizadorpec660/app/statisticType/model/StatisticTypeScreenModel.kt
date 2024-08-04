@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -33,7 +34,11 @@ sealed class DeleteState {
 }
 
 
-class StatisticTypeScreenModel(private val queryBus: QueryBus, private val commandBus: CommandBus) : ScreenModel {
+class StatisticTypeScreenModel(
+    private val queryBus: QueryBus,
+    private val commandBus: CommandBus,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.Default
+) : ScreenModel {
     var statisticTypes by mutableStateOf(StatisticTypesResponse(emptyList(), 0, null, null))
         private set
 
@@ -57,7 +62,7 @@ class StatisticTypeScreenModel(private val queryBus: QueryBus, private val comma
         limit: Int? = null,
         offset: Int? = null,
     ) {
-        screenModelScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(dispatcher) {
             try {
                 val query = SearchStatisticTypesByTermQuery(search, orders, limit, offset)
                 statisticTypes = queryBus.ask(query)
@@ -68,7 +73,7 @@ class StatisticTypeScreenModel(private val queryBus: QueryBus, private val comma
     }
 
     fun createStatisticType(keyCode: String, name: String) {
-        screenModelScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(dispatcher) {
             formState = FormState.InProgress
             delay(500)
 
@@ -96,7 +101,7 @@ class StatisticTypeScreenModel(private val queryBus: QueryBus, private val comma
     }
 
     fun editStatisticType(statisticTypeId: String, keyCode: String, name: String) {
-        screenModelScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(dispatcher) {
             formState = FormState.InProgress
             delay(500)
 
@@ -124,7 +129,7 @@ class StatisticTypeScreenModel(private val queryBus: QueryBus, private val comma
     }
 
     fun deleteStatisticType(statisticTypeId: String) {
-        screenModelScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(dispatcher) {
             deleteState = DeleteState.InProgress
             delay(500)
 

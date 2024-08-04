@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -35,7 +36,11 @@ sealed class DeleteState {
     data class Error(val error: Throwable) : DeleteState()
 }
 
-class MunicipalityScreenModel(private val queryBus: QueryBus, private val commandBus: CommandBus) : ScreenModel {
+class MunicipalityScreenModel(
+    private val queryBus: QueryBus,
+    private val commandBus: CommandBus,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.Default
+) : ScreenModel {
     var municipalities by mutableStateOf(MunicipalitiesResponse(emptyList(), 0, null, null))
         private set
 
@@ -63,7 +68,7 @@ class MunicipalityScreenModel(private val queryBus: QueryBus, private val comman
         limit: Int? = null,
         offset: Int? = null
     ) {
-        screenModelScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(dispatcher) {
             try {
                 val query = SearchMunicipalitiesByTermQuery(federalEntityId, search, orders, limit, offset)
                 municipalities = queryBus.ask(query)
@@ -74,7 +79,7 @@ class MunicipalityScreenModel(private val queryBus: QueryBus, private val comman
     }
 
     fun searchAllFederalEntities() {
-        screenModelScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(dispatcher) {
             try {
                 val query = SearchFederalEntitiesByTermQuery()
                 federalEntities = queryBus.ask<FederalEntitiesResponse>(query).federalEntities
@@ -85,7 +90,7 @@ class MunicipalityScreenModel(private val queryBus: QueryBus, private val comman
     }
 
     fun createMunicipality(keyCode: String, name: String, federalEntityId: String?) {
-        screenModelScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(dispatcher) {
             formState = FormState.InProgress
             delay(500)
 
@@ -115,7 +120,7 @@ class MunicipalityScreenModel(private val queryBus: QueryBus, private val comman
     }
 
     fun editMunicipality(municipalityId: String, keyCode: String, name: String, federalEntityId: String?) {
-        screenModelScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(dispatcher) {
             formState = FormState.InProgress
             delay(500)
 
@@ -145,7 +150,7 @@ class MunicipalityScreenModel(private val queryBus: QueryBus, private val comman
     }
 
     fun deleteMunicipality(municipalityId: String) {
-        screenModelScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(dispatcher) {
             deleteState = DeleteState.InProgress
             delay(500)
 

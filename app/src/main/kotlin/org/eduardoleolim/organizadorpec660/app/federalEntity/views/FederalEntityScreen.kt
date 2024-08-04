@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import com.seanproctor.datatable.paging.rememberPaginatedDataTableState
+import kotlinx.coroutines.Dispatchers
 import org.eduardoleolim.organizadorpec660.app.federalEntity.model.FederalEntityScreenModel
 import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
 import org.eduardoleolim.organizadorpec660.app.generated.resources.federal_entities
@@ -27,7 +28,7 @@ import org.jetbrains.compose.resources.stringResource
 class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus: CommandBus) : Screen {
     @Composable
     override fun Content() {
-        val screenModel = rememberScreenModel { FederalEntityScreenModel(queryBus, commandBus) }
+        val screenModel = rememberScreenModel { FederalEntityScreenModel(queryBus, commandBus, Dispatchers.IO) }
         var showDeleteModal by remember { mutableStateOf(false) }
         var showFormModal by remember { mutableStateOf(false) }
         var showImportExportModal by remember { mutableStateOf(false) }

@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -49,7 +50,11 @@ sealed class DeleteState {
     data class Error(val message: String) : DeleteState()
 }
 
-class AgencyScreenModel(private val queryBus: QueryBus, private val commandBus: CommandBus) : ScreenModel {
+class AgencyScreenModel(
+    private val queryBus: QueryBus,
+    private val commandBus: CommandBus,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.Default
+) : ScreenModel {
     var agencies by mutableStateOf(AgenciesResponse(emptyList(), 0, null, null))
         private set
 
@@ -82,7 +87,7 @@ class AgencyScreenModel(private val queryBus: QueryBus, private val commandBus: 
         limit: Int? = null,
         offset: Int? = null,
     ) {
-        screenModelScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(dispatcher) {
             try {
                 val query = SearchAgenciesByTermQuery(search, orders, limit, offset)
                 agencies = queryBus.ask(query)
@@ -93,7 +98,7 @@ class AgencyScreenModel(private val queryBus: QueryBus, private val commandBus: 
     }
 
     fun searchMunicipalities(federalEntityId: String?) {
-        screenModelScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(dispatcher) {
             municipalities = federalEntityId?.let {
                 try {
                     val query = SearchMunicipalitiesByTermQuery(federalEntityId)
@@ -106,7 +111,7 @@ class AgencyScreenModel(private val queryBus: QueryBus, private val commandBus: 
     }
 
     fun searchAllFederalEntities() {
-        screenModelScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(dispatcher) {
             try {
                 val query = SearchFederalEntitiesByTermQuery()
                 federalEntities = queryBus.ask<FederalEntitiesResponse>(query).federalEntities
@@ -117,7 +122,7 @@ class AgencyScreenModel(private val queryBus: QueryBus, private val commandBus: 
     }
 
     fun searchAllStatisticTypes() {
-        screenModelScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(dispatcher) {
             try {
                 val query = SearchStatisticTypesByTermQuery()
                 statisticTypes = queryBus.ask<StatisticTypesResponse>(query).statisticTypes
@@ -128,7 +133,7 @@ class AgencyScreenModel(private val queryBus: QueryBus, private val commandBus: 
     }
 
     fun createAgency(name: String, consecutive: String, municipalityId: String?, statisticTypesId: List<String>) {
-        screenModelScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(dispatcher) {
             formState = FormState.InProgress
             delay(500)
 
@@ -171,7 +176,7 @@ class AgencyScreenModel(private val queryBus: QueryBus, private val commandBus: 
         municipalityId: String?,
         statisticTypesId: List<String>
     ) {
-        screenModelScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(dispatcher) {
             formState = FormState.InProgress
             delay(500)
 
@@ -208,7 +213,7 @@ class AgencyScreenModel(private val queryBus: QueryBus, private val commandBus: 
     }
 
     fun deleteAgency(agencyId: String) {
-        screenModelScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(dispatcher) {
             deleteState = DeleteState.InProgress
             delay(500)
 
