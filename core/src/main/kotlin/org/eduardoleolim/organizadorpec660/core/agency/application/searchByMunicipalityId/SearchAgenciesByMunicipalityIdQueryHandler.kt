@@ -24,10 +24,15 @@ class SearchAgenciesByMunicipalityIdQueryHandler(
         val agencies = searchAgencies(query.municipalityId())
 
         return agencies.map { agency ->
-            val municipality = searchMunicipality(agency.municipalityId().toString())
+            val municipalityId = agency.municipalityId().toString()
+            val municipality = municipalitiesCache[municipalityId] ?: searchMunicipality(municipalityId).also {
+                municipalitiesCache[municipalityId] = it
+            }
 
             val statisticTypes = agency.statisticTypeIds().map { statisticTypeId ->
-                searchStatisticType(statisticTypeId.value.toString())
+                val id = statisticTypeId.value.toString()
+
+                statisticTypesCache[id] ?: searchStatisticType(id).also { statisticTypesCache[id] = it }
             }.sortedBy { it.keyCode() }
 
             AgencyResponse.fromAggregate(agency, municipality, statisticTypes)
@@ -43,27 +48,11 @@ class SearchAgenciesByMunicipalityIdQueryHandler(
         agencySearcher.search(it)
     }
 
-    private fun searchMunicipality(municipalityId: String): Municipality {
-        if (municipalitiesCache.containsKey(municipalityId)) {
-            return municipalitiesCache[municipalityId]!!
-        }
-
-        val criteria = MunicipalityCriteria.idCriteria(municipalityId)
-
-        return municipalitySearcher.search(criteria).first().also { municipality ->
-            municipalitiesCache[municipalityId] = municipality
-        }
+    private fun searchMunicipality(municipalityId: String) = MunicipalityCriteria.idCriteria(municipalityId).let {
+        municipalitySearcher.search(it).first()
     }
 
-    private fun searchStatisticType(statisticTypeId: String): StatisticType {
-        if (statisticTypesCache.containsKey(statisticTypeId)) {
-            return statisticTypesCache[statisticTypeId]!!
-        }
-
-        val criteria = StatisticTypeCriteria.idCriteria(statisticTypeId)
-
-        return statisticTypeSearcher.search(criteria).first().also { statisticType ->
-            statisticTypesCache[statisticTypeId] = statisticType
-        }
+    private fun searchStatisticType(statisticTypeId: String) = StatisticTypeCriteria.idCriteria(statisticTypeId).let {
+        statisticTypeSearcher.search(it).first()
     }
 }
