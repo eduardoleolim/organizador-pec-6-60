@@ -15,7 +15,7 @@ class FederalEntityCreatorTest {
     private val creator = FederalEntityCreator(repository)
 
     @BeforeEach
-    fun before() {
+    fun beforeEach() {
         repository.records.clear()
     }
 
@@ -41,9 +41,9 @@ class FederalEntityCreatorTest {
     }
 
     @Nested
-    inner class ValidationTest {
+    inner class ValidationTests {
         @BeforeEach
-        fun before() {
+        fun beforeEach() {
             FederalEntity.create("30", "VERACRUZ").let {
                 repository.records[it.id().toString()] = it
             }

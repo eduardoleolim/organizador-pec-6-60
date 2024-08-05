@@ -25,7 +25,7 @@ class MunicipalityCreatorTest {
     private val veracruzId = "ae7434f1-a8d5-4300-971b-1ec04a701e61"
 
     @BeforeEach
-    fun before() {
+    fun beforeEach() {
         municipalityRepository.municipalities.clear()
         municipalityRepository.federalEntities.clear()
         federalEntityRepository.records.clear()
@@ -59,11 +59,11 @@ class MunicipalityCreatorTest {
     }
 
     @Nested
-    inner class ValidationTest {
+    inner class ValidationTests {
         private val municipalityId = "ae7434f1-a8d5-4300-971b-1ec04a701e62"
 
         @BeforeEach
-        fun before() {
+        fun beforeEach() {
             Municipality.from(municipalityId, "001", "AGUASCALIENTES", aguascalientesId, Date(), null).let {
                 municipalityRepository.municipalities[it.id().toString()] = it
             }
