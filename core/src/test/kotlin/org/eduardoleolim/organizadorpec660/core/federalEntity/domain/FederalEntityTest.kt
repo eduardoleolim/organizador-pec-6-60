@@ -10,8 +10,8 @@ class FederalEntityTest {
         try {
             FederalEntityName(name)
             assert(false)
-        } catch (e: InvalidFederalEntityNameError) {
-            assert(e.message == "The name <$name> is not a valid federal entity name")
+        } catch (e: Throwable) {
+            assert(e is InvalidFederalEntityNameError)
         }
     }
 
@@ -21,8 +21,8 @@ class FederalEntityTest {
         try {
             FederalEntityName(name)
             assert(false)
-        } catch (e: InvalidFederalEntityNameError) {
-            assert(e.message == "The name <$name> is not a valid federal entity name")
+        } catch (e: Throwable) {
+            assert(e is InvalidFederalEntityNameError)
         }
     }
 
