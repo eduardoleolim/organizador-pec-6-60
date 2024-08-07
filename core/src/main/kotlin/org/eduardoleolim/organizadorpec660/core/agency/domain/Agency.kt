@@ -197,7 +197,7 @@ data class AgencyConsecutive(val value: String) {
     }
 
     private fun validate() {
-        if (Regex("[0-9]{1,4}").matches(value).not()) {
+        if (Regex("[0-9]{4}").matches(value).not()) {
             throw InvalidAgencyConsecutiveException(value)
         }
     }

@@ -223,7 +223,7 @@ object SqliteKtormDatabase {
 
                         municipalityIds.find { it.second == "$federalEntityKeyCode-$municipalityKeyCode" }?.first?.let { municipalityId ->
                             val id = UUID.randomUUID()
-                            val consecutive = row["Consecutive"] ?: ""
+                            val consecutive = row["Consecutive"]?.padStart(4, '0') ?: ""
                             val name = row["Name"]?.uppercase() ?: ""
                             val createdAt = java.sql.Date.valueOf(LocalDate.now())
                             val statisticTypesOfAgency =
@@ -233,7 +233,7 @@ object SqliteKtormDatabase {
 
                             agencyStatement.setString(1, id.toString())
                             agencyStatement.setString(2, name)
-                            agencyStatement.setInt(3, consecutive.toInt())
+                            agencyStatement.setString(3, consecutive)
                             agencyStatement.setString(4, municipalityId.toString())
                             agencyStatement.setDate(5, createdAt)
                             agencyStatement.addBatch()

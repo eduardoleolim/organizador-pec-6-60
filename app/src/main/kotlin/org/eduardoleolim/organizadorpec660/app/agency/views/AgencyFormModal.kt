@@ -10,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import com.seanproctor.datatable.DataColumn
@@ -231,6 +232,11 @@ fun AgencyScreen.AgencyFormModal(
                             { Text(text = message, color = MaterialTheme.colorScheme.error) }
                         },
                         modifier = Modifier.width(240.dp)
+                            .onFocusChanged {
+                                if (!it.isFocused && consecutive.isNotEmpty()) {
+                                    consecutive = consecutive.padStart(4, '0')
+                                }
+                            }
                     )
                 }
 
