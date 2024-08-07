@@ -20,6 +20,7 @@ class KtormInstrumentsCriteriaParser(
     private val instrumentFiles: InstrumentFiles,
     private val agencies: Agencies,
     private val statisticTypes: StatisticTypes,
+    private val federalEntities: FederalEntities,
     private val municipalities: Municipalities
 ) {
     fun selectQuery(criteria: Criteria): Query {
@@ -28,6 +29,7 @@ class KtormInstrumentsCriteriaParser(
             .innerJoin(agencies, on = instruments.agencyId eq agencies.id)
             .innerJoin(municipalities, on = instruments.municipalityId eq municipalities.id)
             .innerJoin(statisticTypes, on = instruments.statisticTypeId eq statisticTypes.id)
+            .innerJoin(federalEntities, on = municipalities.federalEntityId eq federalEntities.id)
             .select().let {
                 addOrdersToQuery(it, criteria)
             }.let {
@@ -60,8 +62,15 @@ class KtormInstrumentsCriteriaParser(
             InstrumentFields.AgencyConsecutive -> agencies.consecutive
             InstrumentFields.Saved -> instruments.saved
             InstrumentFields.AgencyId -> instruments.agencyId
-            InstrumentFields.StatisticTypeId -> instruments.statisticTypeId
-            InstrumentFields.MunicipalityId -> instruments.municipalityId
+            InstrumentFields.StatisticTypeId -> statisticTypes.id
+            InstrumentFields.StatisticTypeKeyCode -> statisticTypes.keyCode
+            InstrumentFields.StatisticTypeName -> statisticTypes.name
+            InstrumentFields.FederalEntityId -> federalEntities.id
+            InstrumentFields.FederalEntityKeyCode -> federalEntities.keyCode
+            InstrumentFields.FederalEntityName -> federalEntities.name
+            InstrumentFields.MunicipalityId -> municipalities.id
+            InstrumentFields.MunicipalityKeyCode -> municipalities.keyCode
+            InstrumentFields.MunicipalityName -> municipalities.name
             InstrumentFields.CreatedAt -> instruments.createdAt
             InstrumentFields.UpdatedAt -> instruments.updatedAt
             null -> throw InvalidArgumentError()
@@ -188,11 +197,97 @@ class KtormInstrumentsCriteriaParser(
                 }
             }
 
+            InstrumentFields.StatisticTypeKeyCode -> {
+                when (operator) {
+                    FilterOperator.EQUAL -> statisticTypes.keyCode eq value
+                    FilterOperator.NOT_EQUAL -> statisticTypes.keyCode notEq value
+                    FilterOperator.GT -> statisticTypes.keyCode greater value
+                    FilterOperator.GTE -> statisticTypes.keyCode greaterEq value
+                    FilterOperator.LT -> statisticTypes.keyCode less value
+                    FilterOperator.LTE -> statisticTypes.keyCode lessEq value
+                    FilterOperator.CONTAINS -> statisticTypes.keyCode like "%$value%"
+                    FilterOperator.NOT_CONTAINS -> statisticTypes.keyCode notLike "%$value%"
+                }
+            }
+
+            InstrumentFields.StatisticTypeName -> {
+                when (operator) {
+                    FilterOperator.EQUAL -> statisticTypes.name eq value
+                    FilterOperator.NOT_EQUAL -> statisticTypes.name notEq value
+                    FilterOperator.GT -> statisticTypes.name greater value
+                    FilterOperator.GTE -> statisticTypes.name greaterEq value
+                    FilterOperator.LT -> statisticTypes.name less value
+                    FilterOperator.LTE -> statisticTypes.name lessEq value
+                    FilterOperator.CONTAINS -> statisticTypes.name like "%$value%"
+                    FilterOperator.NOT_CONTAINS -> statisticTypes.name notLike "%$value%"
+                }
+            }
+
+            InstrumentFields.FederalEntityId -> {
+                when (operator) {
+                    FilterOperator.EQUAL -> federalEntities.id eq value
+                    FilterOperator.NOT_EQUAL -> federalEntities.id notEq value
+                    else -> null
+                }
+            }
+
+            InstrumentFields.FederalEntityKeyCode -> {
+                when (operator) {
+                    FilterOperator.EQUAL -> federalEntities.keyCode eq value
+                    FilterOperator.NOT_EQUAL -> federalEntities.keyCode notEq value
+                    FilterOperator.GT -> federalEntities.keyCode greater value
+                    FilterOperator.GTE -> federalEntities.keyCode greaterEq value
+                    FilterOperator.LT -> federalEntities.keyCode less value
+                    FilterOperator.LTE -> federalEntities.keyCode lessEq value
+                    FilterOperator.CONTAINS -> federalEntities.keyCode like "%$value%"
+                    FilterOperator.NOT_CONTAINS -> federalEntities.keyCode notLike "%$value%"
+                }
+            }
+
+            InstrumentFields.FederalEntityName -> {
+                when (operator) {
+                    FilterOperator.EQUAL -> federalEntities.name eq value
+                    FilterOperator.NOT_EQUAL -> federalEntities.name notEq value
+                    FilterOperator.GT -> federalEntities.name greater value
+                    FilterOperator.GTE -> federalEntities.name greaterEq value
+                    FilterOperator.LT -> federalEntities.name less value
+                    FilterOperator.LTE -> federalEntities.name lessEq value
+                    FilterOperator.CONTAINS -> federalEntities.name like "%$value%"
+                    FilterOperator.NOT_CONTAINS -> federalEntities.name notLike "%$value%"
+                }
+            }
+
             InstrumentFields.MunicipalityId -> {
                 when (operator) {
                     FilterOperator.EQUAL -> instruments.municipalityId eq value
                     FilterOperator.NOT_EQUAL -> instruments.municipalityId notEq value
                     else -> null
+                }
+            }
+
+            InstrumentFields.MunicipalityKeyCode -> {
+                when (operator) {
+                    FilterOperator.EQUAL -> municipalities.keyCode eq value
+                    FilterOperator.NOT_EQUAL -> municipalities.keyCode notEq value
+                    FilterOperator.GT -> municipalities.keyCode greater value
+                    FilterOperator.GTE -> municipalities.keyCode greaterEq value
+                    FilterOperator.LT -> municipalities.keyCode less value
+                    FilterOperator.LTE -> municipalities.keyCode lessEq value
+                    FilterOperator.CONTAINS -> municipalities.keyCode like "%$value%"
+                    FilterOperator.NOT_CONTAINS -> municipalities.keyCode notLike "%$value%"
+                }
+            }
+
+            InstrumentFields.MunicipalityName -> {
+                when (operator) {
+                    FilterOperator.EQUAL -> municipalities.name eq value
+                    FilterOperator.NOT_EQUAL -> municipalities.name notEq value
+                    FilterOperator.GT -> municipalities.name greater value
+                    FilterOperator.GTE -> municipalities.name greaterEq value
+                    FilterOperator.LT -> municipalities.name less value
+                    FilterOperator.LTE -> municipalities.name lessEq value
+                    FilterOperator.CONTAINS -> municipalities.name like "%$value%"
+                    FilterOperator.NOT_CONTAINS -> municipalities.name notLike "%$value%"
                 }
             }
 

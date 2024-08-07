@@ -1,9 +1,6 @@
 package org.eduardoleolim.organizadorpec660.core.instrument.domain
 
-import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.AndFilters
-import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.Criteria
-import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.Orders
-import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.SingleFilter
+import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.*
 
 enum class InstrumentFields(val value: String) {
     Id("id"),
@@ -13,7 +10,14 @@ enum class InstrumentFields(val value: String) {
     AgencyId("agency.id"),
     AgencyConsecutive("agency.consecutive"),
     StatisticTypeId("statisticType.id"),
+    StatisticTypeKeyCode("statisticType.keyCode"),
+    StatisticTypeName("statisticType.name"),
+    FederalEntityId("federalEntity.id"),
+    FederalEntityKeyCode("federalEntity.keyCode"),
+    FederalEntityName("federalEntity.name"),
     MunicipalityId("municipality.id"),
+    MunicipalityKeyCode("municipality.keyCode"),
+    MunicipalityName("municipality.name"),
     CreatedAt("createdAt"),
     UpdatedAt("updatedAt")
 }
@@ -59,6 +63,58 @@ object InstrumentCriteria {
         Orders.none(),
         null,
         null
+    )
+
+    fun searchCriteria(
+        agencyId: String? = null,
+        statisticTypeId: String? = null,
+        federalEntityId: String? = null,
+        municipalityId: String? = null,
+        year: Int? = null,
+        month: Int? = null,
+        search: String? = null,
+        orders: Array<HashMap<String, String>>? = null,
+        limit: Int? = null,
+        offset: Int? = null
+    ) = Criteria(
+        AndFilters(
+            AndFilters(
+                agencyId?.let { SingleFilter.equal(InstrumentFields.AgencyId.value, it) } ?: EmptyFilters(),
+                statisticTypeId?.let { SingleFilter.equal(InstrumentFields.StatisticTypeId.value, it) }
+                    ?: EmptyFilters(),
+                federalEntityId?.let { SingleFilter.equal(InstrumentFields.AgencyId.value, it) } ?: EmptyFilters(),
+                municipalityId?.let { SingleFilter.equal(InstrumentFields.MunicipalityId.value, it) } ?: EmptyFilters(),
+                year?.let { SingleFilter.equal(InstrumentFields.StatisticYear.value, it.toString()) } ?: EmptyFilters(),
+                month?.let { SingleFilter.equal(InstrumentFields.StatisticMonth.value, it.toString()) }
+                    ?: EmptyFilters()
+            ),
+            search?.let {
+                OrFilters(
+                    SingleFilter.contains(InstrumentFields.StatisticYear.value, search),
+                    SingleFilter.contains(InstrumentFields.StatisticMonth.value, search),
+                    SingleFilter.contains(InstrumentFields.AgencyConsecutive.value, search),
+                    SingleFilter.contains(InstrumentFields.StatisticTypeName.value, search),
+                    SingleFilter.contains(InstrumentFields.StatisticTypeKeyCode.value, search),
+                    SingleFilter.contains(InstrumentFields.FederalEntityName.value, search),
+                    SingleFilter.contains(InstrumentFields.FederalEntityKeyCode.value, search),
+                    SingleFilter.contains(InstrumentFields.MunicipalityName.value, search),
+                    SingleFilter.contains(InstrumentFields.MunicipalityKeyCode.value, search),
+                )
+            } ?: EmptyFilters()
+        ),
+        orders?.let {
+            val fields = InstrumentFields.entries.map { it.value }
+            val filteredOrders = orders.mapNotNull { it.takeIf { fields.contains(it["orderBy"]) } }
+
+            Orders.fromValues(filteredOrders.toTypedArray())
+        } ?: Orders(
+            Order.asc(InstrumentFields.FederalEntityKeyCode.value),
+            Order.asc(InstrumentFields.MunicipalityKeyCode.value),
+            Order.asc(InstrumentFields.StatisticYear.value),
+            Order.asc(InstrumentFields.StatisticMonth.value)
+        ),
+        limit,
+        offset
     )
 
     fun agencyCriteria(agencyId: String) = Criteria(

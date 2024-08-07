@@ -23,9 +23,17 @@ class KtormInstrumentRepository(
     private val instrumentFiles = InstrumentFiles("if")
     private val agencies = Agencies("ag")
     private val statisticTypes = StatisticTypes("st")
+    private val federalEntities = FederalEntities("fe")
     private val municipalities = Municipalities("m")
-    private val criteriaParser =
-        KtormInstrumentsCriteriaParser(database, instruments, instrumentFiles, agencies, statisticTypes, municipalities)
+    private val criteriaParser = KtormInstrumentsCriteriaParser(
+        database,
+        instruments,
+        instrumentFiles,
+        agencies,
+        statisticTypes,
+        federalEntities,
+        municipalities
+    )
 
     override fun matching(criteria: Criteria): List<Instrument> {
         val query = criteriaParser.selectQuery(criteria)
