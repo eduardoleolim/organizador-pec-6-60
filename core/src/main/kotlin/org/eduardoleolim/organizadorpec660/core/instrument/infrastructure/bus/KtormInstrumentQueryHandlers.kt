@@ -5,6 +5,8 @@ import org.eduardoleolim.organizadorpec660.core.federalEntity.application.search
 import org.eduardoleolim.organizadorpec660.core.instrument.application.search.InstrumentSearcher
 import org.eduardoleolim.organizadorpec660.core.instrument.application.searchById.SearchInstrumentByIdQuery
 import org.eduardoleolim.organizadorpec660.core.instrument.application.searchById.SearchInstrumentByIdQueryHandler
+import org.eduardoleolim.organizadorpec660.core.instrument.application.searchByTerm.SearchInstrumentsByTermQuery
+import org.eduardoleolim.organizadorpec660.core.instrument.application.searchByTerm.SearchInstrumentsByTermQueryHandler
 import org.eduardoleolim.organizadorpec660.core.municipality.application.search.MunicipalitySearcher
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.Query
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryHandler
@@ -21,7 +23,8 @@ class KtormInstrumentQueryHandlers(context: KtormAppKoinContext) : KtormAppKoinC
     private val database: Database by inject()
 
     val handlers: Map<KClass<out Query>, QueryHandler<out Query, out Response>> = mapOf(
-        SearchInstrumentByIdQuery::class to searchByIdQueryHandler()
+        SearchInstrumentByIdQuery::class to searchByIdQueryHandler(),
+        SearchInstrumentsByTermQuery::class to searchByTermQueryHandler()
     )
 
     private fun searchByIdQueryHandler(): KtormQueryHandlerDecorator<out Query, out Response> {
@@ -36,6 +39,24 @@ class KtormInstrumentQueryHandlers(context: KtormAppKoinContext) : KtormAppKoinC
             federalEntitySearcher,
             agencySearcher,
             statisticTypeSearcher
+        )
+
+        return KtormQueryHandlerDecorator(database, queryHandler)
+    }
+
+    private fun searchByTermQueryHandler(): KtormQueryHandlerDecorator<out Query, out Response> {
+        val instrumentSearcher: InstrumentSearcher by inject()
+        val agencySearcher: AgencySearcher by inject()
+        val statisticTypeSearcher: StatisticTypeSearcher by inject()
+        val federalEntitySearcher: FederalEntitySearcher by inject()
+        val municipalitySearcher: MunicipalitySearcher by inject()
+
+        val queryHandler = SearchInstrumentsByTermQueryHandler(
+            instrumentSearcher,
+            agencySearcher,
+            statisticTypeSearcher,
+            federalEntitySearcher,
+            municipalitySearcher
         )
 
         return KtormQueryHandlerDecorator(database, queryHandler)
