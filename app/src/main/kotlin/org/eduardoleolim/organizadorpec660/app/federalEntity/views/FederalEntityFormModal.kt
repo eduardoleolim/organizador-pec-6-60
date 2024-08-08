@@ -31,6 +31,9 @@ fun FederalEntityScreen.FederalEntityFormModal(
     var keyCode by remember { mutableStateOf(federalEntity?.keyCode ?: "") }
     var name by remember { mutableStateOf(federalEntity?.name ?: "") }
 
+    val titleResource = remember {
+        if (federalEntity == null) Res.string.fe_form_add_title else Res.string.fe_form_edit_title
+    }
     var enabled by remember { mutableStateOf(true) }
     var isKeyCodeError by remember { mutableStateOf(false) }
     var isNameError by remember { mutableStateOf(false) }
@@ -107,13 +110,7 @@ fun FederalEntityScreen.FederalEntityFormModal(
         ),
         onDismissRequest = onDismissRequest,
         title = {
-            val textTitle = if (federalEntity == null) {
-                stringResource(Res.string.fe_form_add_title)
-            } else {
-                stringResource(Res.string.fe_form_edit_title)
-            }
-
-            Text(textTitle)
+            Text(stringResource(titleResource))
         },
         text = {
             Column {

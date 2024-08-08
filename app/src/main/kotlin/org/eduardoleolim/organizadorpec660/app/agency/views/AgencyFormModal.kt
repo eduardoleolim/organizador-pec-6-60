@@ -33,8 +33,6 @@ fun AgencyScreen.AgencyFormModal(
     onSuccess: () -> Unit,
     onDismissRequest: () -> Unit
 ) {
-    var enabled by remember { mutableStateOf(true) }
-
     val agencyId = remember { agency?.id }
     var name by remember { mutableStateOf(agency?.name ?: "") }
     var consecutive by remember { mutableStateOf(agency?.consecutive ?: "") }
@@ -45,6 +43,8 @@ fun AgencyScreen.AgencyFormModal(
     var statisticType by remember { mutableStateOf<StatisticTypeResponse?>(null) }
     var statisticTypes by remember { mutableStateOf(agency?.statisticTypes ?: emptyList()) }
 
+    val titleResource = remember { if (agency == null) Res.string.ag_form_add_title else Res.string.ag_form_edit_title }
+    var enabled by remember { mutableStateOf(true) }
     var isNameError by remember { mutableStateOf(false) }
     var isConsecutiveError by remember { mutableStateOf(false) }
     var isFederalEntityError by remember { mutableStateOf(false) }
@@ -60,9 +60,11 @@ fun AgencyScreen.AgencyFormModal(
 
     val statisticTypesColumns = remember {
         listOf(
-            DataColumn {
-                Text(stringResource(Res.string.ag_form_statistic_type))
-            },
+            DataColumn(
+                header = {
+                    Text(stringResource(Res.string.ag_form_statistic_type))
+                }
+            ),
             DataColumn(
                 width = TableColumnWidth.Fraction(0.3f),
                 alignment = Alignment.CenterHorizontally,
@@ -178,13 +180,7 @@ fun AgencyScreen.AgencyFormModal(
         ),
         onDismissRequest = onDismissRequest,
         title = {
-            val title = if (agency == null) {
-                stringResource(Res.string.ag_form_add_title)
-            } else {
-                stringResource(Res.string.ag_form_edit_title)
-            }
-
-            Text(title)
+            Text(stringResource(titleResource))
         },
         text = {
             Column(

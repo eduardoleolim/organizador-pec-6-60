@@ -31,6 +31,9 @@ fun StatisticTypeScreen.StatisticTypeFormModal(
     var keyCode by remember { mutableStateOf(statisticType?.keyCode ?: "") }
     var name by remember { mutableStateOf(statisticType?.name ?: "") }
 
+    val titleResource = remember {
+        if (statisticType == null) Res.string.st_form_add_title else Res.string.st_form_edit_title
+    }
     var enabled by remember { mutableStateOf(true) }
     var isKeyCodeError by remember { mutableStateOf(false) }
     var isNameError by remember { mutableStateOf(false) }
@@ -108,13 +111,7 @@ fun StatisticTypeScreen.StatisticTypeFormModal(
         ),
         onDismissRequest = onDismissRequest,
         title = {
-            val textTitle = if (statisticType == null) {
-                stringResource(Res.string.st_form_add_title)
-            } else {
-                stringResource(Res.string.st_form_edit_title)
-            }
-
-            Text(textTitle)
+            Text(stringResource(titleResource))
         },
         text = {
             Column {

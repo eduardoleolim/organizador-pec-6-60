@@ -15,10 +15,8 @@ import org.eduardoleolim.organizadorpec660.app.shared.composables.QuestionDialog
 import org.eduardoleolim.organizadorpec660.app.statisticType.model.DeleteState
 import org.eduardoleolim.organizadorpec660.app.statisticType.model.StatisticTypeScreenModel
 import org.eduardoleolim.organizadorpec660.core.statisticType.application.StatisticTypeResponse
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun StatisticTypeScreen.StatisticTypeDeleteModal(
     screenModel: StatisticTypeScreenModel,

@@ -73,10 +73,8 @@ class SaveInstrumentScreen(
 
     @Composable
     private fun SaveInstrumentScreenHeader(onCancelRequest: () -> Unit) {
-        val title = if (instrumentId == null) {
-            stringResource(Res.string.inst_form_add_title)
-        } else {
-            stringResource(Res.string.inst_form_edit_title)
+        val titleResource = remember {
+            if (instrumentId == null) Res.string.inst_form_add_title else Res.string.inst_form_edit_title
         }
 
         Row(
@@ -93,7 +91,7 @@ class SaveInstrumentScreen(
             }
 
             Text(
-                text = title,
+                text = stringResource(titleResource),
                 style = MaterialTheme.typography.titleLarge
             )
         }
