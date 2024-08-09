@@ -39,7 +39,7 @@ class DetailedInstrumentResponse(
                 instrument.id().toString(),
                 instrument.statisticYear(),
                 instrument.statisticMonth(),
-                instrument.saved(),
+                instrument.savedInSIRESO(),
                 InstrumentFileResponse.fromAggregate(instrumentFile),
                 SimpleMunicipalityResponse.fromAggregate(municipality),
                 FederalEntityResponse.fromAggregate(federalEntity),

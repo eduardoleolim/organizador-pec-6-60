@@ -74,7 +74,7 @@ class Instrument private constructor(
 
     fun statisticMonth() = statisticMonth.value
 
-    fun saved() = saved.value
+    fun savedInSIRESO() = saved.value
 
     fun instrumentFileId() = instrumentFileId.value
 
@@ -98,8 +98,13 @@ class Instrument private constructor(
         this.updatedAt = InstrumentUpdateDate.now()
     }
 
-    fun changeSaved(saved: Boolean) {
-        this.saved = InstrumentSaved(saved)
+    fun saveInSIRESO() {
+        this.saved = InstrumentSaved(true)
+        this.updatedAt = InstrumentUpdateDate.now()
+    }
+
+    fun unsaveInSIRESO() {
+        this.saved = InstrumentSaved(false)
         this.updatedAt = InstrumentUpdateDate.now()
     }
 

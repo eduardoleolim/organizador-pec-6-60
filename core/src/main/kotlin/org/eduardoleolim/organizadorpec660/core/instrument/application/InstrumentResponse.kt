@@ -33,7 +33,7 @@ class InstrumentResponse(
                 instrument.id().toString(),
                 instrument.statisticYear(),
                 instrument.statisticMonth(),
-                instrument.saved(),
+                instrument.savedInSIRESO(),
                 instrument.instrumentFileId().toString(),
                 SimpleAgencyResponse.fromAggregate(agency),
                 StatisticTypeResponse.fromAggregate(statisticType),
