@@ -3,6 +3,7 @@ package org.eduardoleolim.organizadorpec660.core.instrument.infrastructure.bus
 import org.eduardoleolim.organizadorpec660.core.instrument.application.create.CreateInstrumentCommand
 import org.eduardoleolim.organizadorpec660.core.instrument.application.create.CreateInstrumentCommandHandler
 import org.eduardoleolim.organizadorpec660.core.instrument.application.create.InstrumentCreator
+import org.eduardoleolim.organizadorpec660.core.instrument.application.save.*
 import org.eduardoleolim.organizadorpec660.core.instrument.application.update.InstrumentUpdater
 import org.eduardoleolim.organizadorpec660.core.instrument.application.update.UpdateInstrumentCommand
 import org.eduardoleolim.organizadorpec660.core.instrument.application.update.UpdateInstrumentCommandHandler
@@ -20,7 +21,9 @@ class KtormInstrumentCommandHandlers(context: KtormAppKoinContext) : KtormAppKoi
 
     val handlers: Map<KClass<out Command<*, *>>, CommandHandler<*, *, out Command<*, *>>> = mapOf(
         CreateInstrumentCommand::class to createCommandHandler(),
-        UpdateInstrumentCommand::class to updateCommandHandler()
+        UpdateInstrumentCommand::class to updateCommandHandler(),
+        UpdateInstrumentAsSavedCommand::class to updateAsSavedCommandHandler(),
+        UpdateInstrumentAsNotSavedCommand::class to updateAsNotSavedCommandHandler()
     )
 
     private fun createCommandHandler(): CommandHandler<*, *, out Command<*, *>> {
@@ -33,6 +36,20 @@ class KtormInstrumentCommandHandlers(context: KtormAppKoinContext) : KtormAppKoi
     private fun updateCommandHandler(): CommandHandler<*, *, out Command<*, *>> {
         val updater: InstrumentUpdater by inject()
         val commandHandler = UpdateInstrumentCommandHandler(updater)
+
+        return KtormCommandHandlerDecorator(database, commandHandler)
+    }
+
+    private fun updateAsSavedCommandHandler(): CommandHandler<*, *, out Command<*, *>> {
+        val updater: InstrumentSiresoSaver by inject()
+        val commandHandler = UpdateInstrumentAsSavedCommandHandler(updater)
+
+        return KtormCommandHandlerDecorator(database, commandHandler)
+    }
+
+    private fun updateAsNotSavedCommandHandler(): CommandHandler<*, *, out Command<*, *>> {
+        val updater: InstrumentSiresoSaver by inject()
+        val commandHandler = UpdateInstrumentAsNotSavedCommandHandler(updater)
 
         return KtormCommandHandlerDecorator(database, commandHandler)
     }
