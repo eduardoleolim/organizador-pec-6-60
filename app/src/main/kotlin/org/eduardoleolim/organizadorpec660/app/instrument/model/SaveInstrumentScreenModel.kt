@@ -19,7 +19,10 @@ import org.eduardoleolim.organizadorpec660.core.agency.application.searchByMunic
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntitiesResponse
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.searchByTerm.SearchFederalEntitiesByTermQuery
+import org.eduardoleolim.organizadorpec660.core.instrument.application.DetailedInstrumentResponse
 import org.eduardoleolim.organizadorpec660.core.instrument.application.create.CreateInstrumentCommand
+import org.eduardoleolim.organizadorpec660.core.instrument.application.searchById.SearchInstrumentByIdQuery
+import org.eduardoleolim.organizadorpec660.core.instrument.application.update.UpdateInstrumentCommand
 import org.eduardoleolim.organizadorpec660.core.municipality.application.MunicipalitiesResponse
 import org.eduardoleolim.organizadorpec660.core.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorpec660.core.municipality.application.searchByTerm.SearchMunicipalitiesByTermQuery
@@ -70,6 +73,10 @@ class SaveInstrumentScreenModel(
                 federalEntities = emptyList()
             }
         }
+    }
+
+    fun searchInstrument(instrumentId: String): DetailedInstrumentResponse {
+        return queryBus.ask(SearchInstrumentByIdQuery(instrumentId))
     }
 
     fun searchMunicipalities(federalEntityId: String?) {
@@ -146,8 +153,39 @@ class SaveInstrumentScreenModel(
         month: Int?,
         municipalityId: String?,
         agencyId: String?,
-        statisticTypeId: String?
+        statisticTypeId: String?,
+        documentPath: String?
     ) {
+        screenModelScope.launch(dispatcher) {
+            formState = InstrumentFormState.InProgress
+            delay(500)
 
+            if (year == null || month == null || municipalityId == null || agencyId == null || statisticTypeId == null || documentPath == null) {
+                formState = InstrumentFormState.Error(Exception("Campos Vacíos"))
+            } else {
+                try {
+                    val document = File(documentPath).readBytes()
+                    val command = UpdateInstrumentCommand(
+                        instrumentId,
+                        year,
+                        month,
+                        agencyId,
+                        statisticTypeId,
+                        municipalityId,
+                        document
+                    )
+                    commandBus.dispatch(command).fold(
+                        ifRight = {
+                            formState = InstrumentFormState.SuccessEdit
+                        },
+                        ifLeft = {
+                            formState = InstrumentFormState.Error(it)
+                        }
+                    )
+                } catch (e: Exception) {
+                    formState = InstrumentFormState.Error(e.cause!!)
+                }
+            }
+        }
     }
 }

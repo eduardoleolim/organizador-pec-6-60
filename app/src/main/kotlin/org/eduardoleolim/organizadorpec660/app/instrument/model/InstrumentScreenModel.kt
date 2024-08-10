@@ -12,6 +12,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.eduardoleolim.organizadorpec660.app.router.HomeProvider
 import org.eduardoleolim.organizadorpec660.core.instrument.application.InstrumentsResponse
+import org.eduardoleolim.organizadorpec660.core.instrument.application.save.UpdateInstrumentAsNotSavedCommand
+import org.eduardoleolim.organizadorpec660.core.instrument.application.save.UpdateInstrumentAsSavedCommand
 import org.eduardoleolim.organizadorpec660.core.instrument.application.searchByTerm.SearchInstrumentsByTermQuery
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
@@ -60,5 +62,15 @@ class InstrumentScreenModel(
                 instruments = InstrumentsResponse(emptyList(), 0, null, null)
             }
         }
+    }
+
+    fun updateInstrumentAsSavedInSIRESO(instrumentId: String) {
+        commandBus.dispatch(UpdateInstrumentAsSavedCommand(instrumentId))
+        searchInstruments()
+    }
+
+    fun updateInstrumentAsNotSavedInSIRESO(instrumentId: String) {
+        commandBus.dispatch(UpdateInstrumentAsNotSavedCommand(instrumentId))
+        searchInstruments()
     }
 }

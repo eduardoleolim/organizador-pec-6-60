@@ -16,7 +16,9 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.eduardoleolim.organizadorpec660.app.generated.resources.*
 import org.eduardoleolim.organizadorpec660.app.instrument.model.InstrumentFormState
 import org.eduardoleolim.organizadorpec660.app.instrument.model.SaveInstrumentScreenModel
@@ -24,6 +26,7 @@ import org.eduardoleolim.organizadorpec660.app.shared.composables.*
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
 import org.jetbrains.compose.resources.stringResource
+import java.io.File
 import java.text.DateFormatSymbols
 import java.time.LocalDate
 
@@ -118,7 +121,9 @@ class SaveInstrumentScreen(
         }
 
         var year by remember { mutableStateOf<Int?>(null) }
+        var yearIndex by remember { mutableStateOf<Int?>(null) }
         var month by remember { mutableStateOf<Int?>(null) }
+        var monthIndex by remember { mutableStateOf<Int?>(null) }
         var federalEntityId by remember { mutableStateOf<String?>(null) }
         var federalEntityIndex by remember { mutableStateOf<Int?>(null) }
         var municipalityId by remember { mutableStateOf<String?>(null) }
@@ -131,6 +136,47 @@ class SaveInstrumentScreen(
 
         LaunchedEffect(Unit) {
             screenModel.searchAllFederalEntities()
+            delay(500)
+
+            instrumentId?.let {
+                withContext(Dispatchers.IO) {
+                    val instrument = screenModel.searchInstrument(instrumentId)
+
+                    yearIndex = years
+                        .indexOf(instrument.statisticYear)
+                        .takeIf { it >= 0 }
+
+                    monthIndex = months
+                        .indexOfFirst { it.first == instrument.statisticMonth }
+                        .takeIf { it >= 0 }
+
+                    federalEntityIndex = screenModel.federalEntities
+                        .indexOfFirst { it.id == instrument.federalEntity.id }
+                        .takeIf { it >= 0 }
+
+                    delay(500)
+
+                    municipalityIndex = screenModel.municipalities
+                        .indexOfFirst { it.id == instrument.municipality.id }
+                        .takeIf { it >= 0 }
+
+                    delay(500)
+
+                    agencyIndex = screenModel.agencies
+                        .indexOfFirst { it.id == instrument.agency.id }
+                        .takeIf { it >= 0 }
+
+                    delay(500)
+
+                    statisticTypeIndex = screenModel.statisticTypes
+                        .indexOfFirst { it.id == instrument.statisticType.id }
+                        .takeIf { it >= 0 }
+
+                    val file = File(System.getProperty("java.io.tmpdir")).resolve("${instrument.filename}.pdf")
+                    file.writeBytes(instrument.instrumentFile.content)
+                    documentPath = file.absolutePath
+                }
+            }
         }
 
         LaunchedEffect(federalEntityId) {
@@ -206,8 +252,10 @@ class SaveInstrumentScreen(
                         Text(stringResource(Res.string.inst_year))
                     },
                     items = years,
-                    onValueSelected = { _, it ->
-                        year = it
+                    index = yearIndex,
+                    onValueSelected = { index, selectedYear ->
+                        yearIndex = index
+                        year = selectedYear
                     }
                 )
 
@@ -219,7 +267,9 @@ class SaveInstrumentScreen(
                         Text(stringResource(Res.string.inst_month))
                     },
                     items = months,
-                    onValueSelected = { _, it ->
+                    index = monthIndex,
+                    onValueSelected = { index, it ->
+                        monthIndex = index
                         month = it.first
                     },
                     visualTransformation = { it.second }
@@ -293,6 +343,7 @@ class SaveInstrumentScreen(
 
                 OutlinedFilePicker(
                     enabled = enabled,
+                    value = documentPath,
                     label = {
                         Text(stringResource(Res.string.inst_document))
                     },
@@ -322,7 +373,8 @@ class SaveInstrumentScreen(
                                 month,
                                 municipalityId,
                                 agencyId,
-                                statisticTypeId
+                                statisticTypeId,
+                                documentPath
                             )
                         }
                     },
