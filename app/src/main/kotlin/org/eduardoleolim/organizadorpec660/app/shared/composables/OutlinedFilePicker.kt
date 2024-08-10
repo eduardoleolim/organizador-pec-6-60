@@ -20,6 +20,7 @@ data class NameExtension(val description: String, val extension: String, val isD
 
 @Composable
 fun OutlinedFilePicker(
+    value: String? = null,
     enabled: Boolean = true,
     label: @Composable () -> Unit,
     extensions: List<NameExtension> = emptyList(),
@@ -41,6 +42,12 @@ fun OutlinedFilePicker(
         }
     }
 
+    LaunchedEffect(value) {
+        if (value != null) {
+            filePath = value
+        }
+    }
+
     LaunchedEffect(interactionSource) {
         interactionSource?.interactions?.collect { interaction ->
             if (interaction is ResetFilePickerInteraction) {
@@ -48,7 +55,6 @@ fun OutlinedFilePicker(
             }
         }
     }
-
 
     OutlinedTextField(
         enabled = enabled,
