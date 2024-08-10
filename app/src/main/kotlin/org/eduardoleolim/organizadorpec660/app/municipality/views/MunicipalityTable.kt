@@ -106,7 +106,9 @@ fun MunicipalityScreen.MunicipalitiesTable(
             DataColumn(
                 alignment = Alignment.CenterHorizontally,
                 width = TableColumnWidth.Fraction(0.2f),
-                header = { Text(actionsColumnName) }
+                header = {
+                    Text(actionsColumnName)
+                }
             )
         )
     }

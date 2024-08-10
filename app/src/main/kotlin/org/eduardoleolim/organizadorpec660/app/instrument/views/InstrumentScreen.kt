@@ -1,9 +1,6 @@
 package org.eduardoleolim.organizadorpec660.app.instrument.views
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ImportExport
@@ -11,7 +8,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -19,6 +16,8 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.seanproctor.datatable.paging.rememberPaginatedDataTableState
+import kotlinx.coroutines.Dispatchers
 import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
 import org.eduardoleolim.organizadorpec660.app.generated.resources.instruments
 import org.eduardoleolim.organizadorpec660.app.instrument.model.InstrumentScreenModel
@@ -30,7 +29,10 @@ class InstrumentScreen(private val queryBus: QueryBus, private val commandBus: C
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val screenModel = rememberScreenModel { InstrumentScreenModel(navigator, queryBus, commandBus) }
+        val screenModel = rememberScreenModel { InstrumentScreenModel(navigator, queryBus, commandBus, Dispatchers.IO) }
+        val pageSizes = remember { listOf(10, 25, 50, 100) }
+        val state = rememberPaginatedDataTableState(pageSizes.first())
+        var searchValue by remember { mutableStateOf("") }
 
         Column(modifier = Modifier.padding(24.dp)) {
             InstrumentScreenHeader(
@@ -38,6 +40,36 @@ class InstrumentScreen(private val queryBus: QueryBus, private val commandBus: C
                 onImportExportRequest = { }
             )
 
+            InstrumentsTable(
+                modifier = Modifier.fillMaxSize(),
+                value = searchValue,
+                screenModel = screenModel,
+                onValueChange = { searchValue = it },
+                pageSizes = pageSizes,
+                state = state,
+                data = screenModel.instruments,
+                onSearch = { search, federalEntityId, municipalityId, agencyId, statisticTypeId, statisticYear, statisticMonth, pageIndex, pageSize, orderBy, isAscending ->
+                    val orders = orderBy?.let {
+                        val orderType = if (isAscending) "ASC" else "DESC"
+                        arrayOf(hashMapOf("orderBy" to orderBy, "orderType" to orderType))
+                    }
+
+                    screenModel.searchInstruments(
+                        search,
+                        federalEntityId,
+                        municipalityId,
+                        agencyId,
+                        statisticTypeId,
+                        statisticYear,
+                        statisticMonth,
+                        orders,
+                        pageSize,
+                        pageIndex * pageSize
+                    )
+                },
+                onDeleteRequest = { },
+                onEditRequest = { screenModel.navigateToSaveInstrumentView(it.id) }
+            )
         }
     }
 
