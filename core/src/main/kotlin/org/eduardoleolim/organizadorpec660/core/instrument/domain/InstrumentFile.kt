@@ -2,7 +2,7 @@ package org.eduardoleolim.organizadorpec660.core.instrument.domain
 
 import java.util.*
 
-class InstrumentFile private constructor(private val id: InstrumentFileId, private val content: InstrumentContent) {
+class InstrumentFile private constructor(private val id: InstrumentFileId, private var content: InstrumentContent) {
     companion object {
         fun create(content: ByteArray) = InstrumentFile(InstrumentFileId.random(), InstrumentContent(content))
 
@@ -13,6 +13,10 @@ class InstrumentFile private constructor(private val id: InstrumentFileId, priva
     fun id() = id.value
 
     fun content() = content.value
+
+    fun changeContent(content: ByteArray) {
+        this.content = InstrumentContent(content)
+    }
 }
 
 data class InstrumentFileId(val value: UUID) {
