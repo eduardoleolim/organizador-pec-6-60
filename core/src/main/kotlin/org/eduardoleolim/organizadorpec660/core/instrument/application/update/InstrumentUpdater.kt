@@ -20,9 +20,13 @@ class InstrumentUpdater(
         statisticMonth: Int,
         agencyId: String,
         statisticTypeId: String,
-        municipalityId: String
+        municipalityId: String,
+        file: ByteArray
     ): Either<InstrumentError, Unit> {
         val instrument = searchInstrument(instrumentId) ?: return Left(InstrumentNotFoundError(instrumentId))
+        val instrumentFileId = instrument.instrumentFileId().toString()
+        val instrumentFile =
+            searchInstrumentFile(instrumentFileId) ?: return Left(InstrumentFileNotFoundError(instrumentFileId))
 
         val existsAnotherInstrument = existsAnotherInstrumentSameData(
             instrumentId,
@@ -55,16 +59,24 @@ class InstrumentUpdater(
             changeStatisticMonth(statisticMonth)
             changeStatisticTypeId(statisticTypeId)
             changeMunicipalityId(municipalityId)
-        }.let {
-            instrumentRepository.save(it)
-            return Right(Unit)
         }
+
+        instrumentFile.apply {
+            changeContent(file)
+        }
+
+        instrumentRepository.save(instrument, instrumentFile)
+
+        return Right(Unit)
     }
 
     private fun searchInstrument(instrumentId: String) =
         InstrumentCriteria.idCriteria(instrumentId).let {
             instrumentRepository.matching(it).firstOrNull()
         }
+
+    private fun searchInstrumentFile(instrumentFileId: String) =
+        instrumentRepository.searchInstrumentFile(instrumentFileId)
 
     private fun existsAnotherInstrumentSameData(
         instrumentId: String,
@@ -73,17 +85,16 @@ class InstrumentUpdater(
         agencyId: String,
         statisticTypeId: String,
         municipalityId: String
-    ) =
-        InstrumentCriteria.anotherInstrumentCriteria(
-            instrumentId,
-            statisticYear,
-            statisticMonth,
-            agencyId,
-            statisticTypeId,
-            municipalityId
-        ).let {
-            instrumentRepository.count(it) > 0
-        }
+    ) = InstrumentCriteria.anotherInstrumentCriteria(
+        instrumentId,
+        statisticYear,
+        statisticMonth,
+        agencyId,
+        statisticTypeId,
+        municipalityId
+    ).let {
+        instrumentRepository.count(it) > 0
+    }
 
     private fun existsStatisticType(statisticTypeId: String) =
         StatisticTypeCriteria.idCriteria(statisticTypeId).let {

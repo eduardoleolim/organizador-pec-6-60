@@ -13,7 +13,8 @@ class UpdateInstrumentCommandHandler(private val updater: InstrumentUpdater) :
             command.statisticMonth(),
             command.agencyId(),
             command.statisticTypeId(),
-            command.municipalityId()
+            command.municipalityId(),
+            command.file()
         )
     }
 }
