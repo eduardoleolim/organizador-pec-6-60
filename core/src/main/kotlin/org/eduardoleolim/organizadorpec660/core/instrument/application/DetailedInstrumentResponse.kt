@@ -26,6 +26,18 @@ class DetailedInstrumentResponse(
     val createdAt: Date,
     val updatedAt: Date?
 ) : Response {
+    val filename: String
+        get() {
+            val stKeyCode = statisticType.keyCode
+            val feKeyCode = federalEntity.keyCode
+            val formatedYear = statisticYear.toString().takeLast(2).padStart(2, '0')
+            val mpKeyCode = municipality.keyCode
+            val consecutive = agency.consecutive
+            val formatedMonth = statisticMonth.toString().padStart(2, '0')
+
+            return "$stKeyCode$feKeyCode${formatedYear}_$mpKeyCode-${consecutive}_$formatedMonth"
+        }
+
     companion object {
         fun fromAggregate(
             instrument: Instrument,
