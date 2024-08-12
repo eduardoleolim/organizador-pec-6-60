@@ -21,6 +21,7 @@ import org.eduardoleolim.organizadorpec660.app.shared.composables.sortAscending
 import org.eduardoleolim.organizadorpec660.app.shared.composables.sortColumnIndex
 import org.eduardoleolim.organizadorpec660.core.agency.application.AgenciesResponse
 import org.eduardoleolim.organizadorpec660.core.agency.application.AgencyResponse
+import org.eduardoleolim.organizadorpec660.core.agency.domain.AgencyFields
 import org.eduardoleolim.organizadorpec660.core.shared.domain.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
 import java.time.format.DateTimeFormatter
@@ -38,7 +39,6 @@ fun AgencyScreen.AgenciesTable(
     onEditRequest: (AgencyResponse) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val orders = remember { listOf("name", "consecutive", "municipality.keyCode", "createdAt", "updatedAt") }
     val nameColumnName = stringResource(Res.string.ag_name)
     val consecutiveColumnName = stringResource(Res.string.ag_consecutive)
     val municipalityColumnName = stringResource(Res.string.ag_municipality)
@@ -66,7 +66,7 @@ fun AgencyScreen.AgenciesTable(
             ),
             DataColumn(
                 onSort = ::onSort,
-                alignment = Alignment.CenterHorizontally,
+                alignment = Alignment.Start,
                 width = TableColumnWidth.Fraction(0.18f),
                 header = { Text(municipalityColumnName) }
             ),
@@ -113,7 +113,16 @@ fun AgencyScreen.AgenciesTable(
             state = state,
             pageSizes = pageSizes,
             onSearch = { search, pageIndex, pageSize, sortBy, isAscending ->
-                onSearch(search, pageIndex, pageSize, sortBy?.let { orders[it] }, isAscending)
+                val orderBy = when (sortBy) {
+                    0 -> AgencyFields.Name.value
+                    1 -> AgencyFields.Consecutive.value
+                    2 -> AgencyFields.MunicipalityKeyCode.value
+                    3 -> AgencyFields.CreatedAt.value
+                    4 -> AgencyFields.UpdatedAt.value
+                    else -> null
+                }
+
+                onSearch(search, pageIndex, pageSize, orderBy, isAscending)
             },
             modifier = Modifier.fillMaxWidth()
         ) {

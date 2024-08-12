@@ -66,12 +66,13 @@ class AgencyScreen(private val queryBus: QueryBus, private val commandBus: Comma
                 state = state,
                 data = screenModel.agencies,
                 onSearch = { search, pageIndex, pageSize, orderBy, isAscending ->
+                    val offset = pageIndex * pageSize
                     val orders = orderBy?.let {
                         val orderType = if (isAscending) "ASC" else "DESC"
                         arrayOf(hashMapOf("orderBy" to orderBy, "orderType" to orderType))
                     }
 
-                    screenModel.searchAgencies(search, orders, pageSize, pageIndex * pageSize)
+                    screenModel.searchAgencies(search, orders, pageSize, offset)
                 },
                 onDeleteRequest = { agency ->
                     selectedAgency = agency
