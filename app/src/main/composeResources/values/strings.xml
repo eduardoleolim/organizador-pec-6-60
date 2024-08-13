@@ -40,6 +40,7 @@
 
     <!-- Instrument -->
     <string name="instruments">Instruments</string>
+    <string name="inst_in_sireso">Save in SIRESO?</string>
     <string name="inst_federal_entity">Federal Entity</string>
     <string name="inst_municipality">Municipality</string>
     <string name="inst_agency">Agency</string>

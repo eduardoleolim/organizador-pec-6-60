@@ -11,13 +11,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import com.seanproctor.datatable.DataColumn
 import com.seanproctor.datatable.TableColumnWidth
 import com.seanproctor.datatable.paging.PaginatedDataTableState
-import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
-import org.eduardoleolim.organizadorpec660.app.generated.resources.delete
-import org.eduardoleolim.organizadorpec660.app.generated.resources.edit
-import org.eduardoleolim.organizadorpec660.app.generated.resources.table_col_actions
+import org.eduardoleolim.organizadorpec660.app.generated.resources.*
 import org.eduardoleolim.organizadorpec660.app.instrument.model.InstrumentScreenModel
 import org.eduardoleolim.organizadorpec660.app.shared.composables.PaginatedDataTable
 import org.eduardoleolim.organizadorpec660.app.shared.composables.PlainTextTooltip
@@ -25,9 +23,9 @@ import org.eduardoleolim.organizadorpec660.app.shared.composables.sortAscending
 import org.eduardoleolim.organizadorpec660.app.shared.composables.sortColumnIndex
 import org.eduardoleolim.organizadorpec660.core.instrument.application.InstrumentResponse
 import org.eduardoleolim.organizadorpec660.core.instrument.application.InstrumentsResponse
+import org.eduardoleolim.organizadorpec660.core.instrument.domain.InstrumentFields
 import org.jetbrains.compose.resources.stringResource
 import java.text.DateFormatSymbols
-import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -49,7 +47,12 @@ fun InstrumentScreen.InstrumentsTable(
             index + 1 to month.uppercase()
         }.toMap()
     }
-    val orders = remember { listOf("", "keyCode", "name", "createdAt", "updatedAt") }
+    val siresoColumnName = stringResource(Res.string.inst_in_sireso)
+    val yearColumnName = stringResource(Res.string.inst_year)
+    val monthColumnName = stringResource(Res.string.inst_month)
+    val statisticTypeColumnName = stringResource(Res.string.inst_statistic_type)
+    val federalEntityColumnName = stringResource(Res.string.inst_federal_entity)
+    val municipalityColumnName = stringResource(Res.string.inst_municipality)
     val actionsColumnName = stringResource(Res.string.table_col_actions)
 
     val columns = remember {
@@ -61,9 +64,12 @@ fun InstrumentScreen.InstrumentsTable(
         listOf(
             DataColumn(
                 alignment = Alignment.CenterHorizontally,
-                width = TableColumnWidth.MinIntrinsic,
+                width = TableColumnWidth.Fixed(140.dp),
                 header = {
-                    Text("¿En SIRESO?")
+                    Text(
+                        text = siresoColumnName,
+                        textAlign = TextAlign.Center
+                    )
                 }
             ),
             DataColumn(
@@ -72,7 +78,7 @@ fun InstrumentScreen.InstrumentsTable(
                 width = TableColumnWidth.MinIntrinsic,
                 header = {
                     Text(
-                        text = "Año",
+                        text = yearColumnName,
                         textAlign = TextAlign.Center
                     )
                 }
@@ -83,7 +89,7 @@ fun InstrumentScreen.InstrumentsTable(
                 width = TableColumnWidth.MinIntrinsic,
                 header = {
                     Text(
-                        text = "Mes",
+                        text = monthColumnName,
                         textAlign = TextAlign.Center
                     )
                 }
@@ -94,27 +100,27 @@ fun InstrumentScreen.InstrumentsTable(
                 width = TableColumnWidth.Fraction(0.18f),
                 header = {
                     Text(
-                        text = "Tipo de estadística",
+                        text = statisticTypeColumnName,
                         textAlign = TextAlign.Center
                     )
                 }
             ),
             DataColumn(
+                onSort = ::onSort,
                 alignment = Alignment.Start,
-                width = TableColumnWidth.Fraction(0.18f),
-                header = { Text("Entidad Federativa") }
+                width = TableColumnWidth.Fixed(180.dp),
+                header = { Text(federalEntityColumnName) }
             ),
             DataColumn(
+                onSort = ::onSort,
                 alignment = Alignment.Start,
-                width = TableColumnWidth.Fraction(0.18f),
-                header = { Text("Municipio") }
+                width = TableColumnWidth.Fixed(180.dp),
+                header = { Text(municipalityColumnName) }
             ),
             DataColumn(
                 alignment = Alignment.CenterHorizontally,
-                width = TableColumnWidth.Fraction(0.2f),
-                header = {
-                    Text(actionsColumnName)
-                }
+                width = TableColumnWidth.MinIntrinsic,
+                header = { Text(actionsColumnName) }
             )
         )
     }
@@ -132,6 +138,15 @@ fun InstrumentScreen.InstrumentsTable(
             state = state,
             pageSizes = pageSizes,
             onSearch = { search, pageIndex, pageSize, sortBy, isAscending ->
+                val orderBy = when (sortBy) {
+                    1 -> InstrumentFields.StatisticYear.value
+                    2 -> InstrumentFields.StatisticMonth.value
+                    3 -> InstrumentFields.StatisticTypeKeyCode.value
+                    4 -> InstrumentFields.FederalEntityKeyCode.value
+                    5 -> InstrumentFields.MunicipalityKeyCode.value
+                    else -> null
+                }
+
                 onSearch(
                     search,
                     null,
@@ -142,13 +157,12 @@ fun InstrumentScreen.InstrumentsTable(
                     null,
                     pageIndex,
                     pageSize,
-                    sortBy?.let { orders[it] },
+                    orderBy,
                     isAscending
                 )
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
             data.instruments.forEach { instrument ->
                 val statisticType = instrument.statisticType
                 val federalEntity = instrument.federalEntity

@@ -40,8 +40,9 @@
 
     <!-- Instrument -->
     <string name="instruments">Instrumentos</string>
+    <string name="inst_in_sireso">¿Guardado en SIRESO?</string>
     <string name="inst_federal_entity">Entidad federativa</string>
-    <string name="inst_municipality">Municipios</string>
+    <string name="inst_municipality">Municipio</string>
     <string name="inst_agency">Fuente</string>
     <string name="inst_statistic_type">Tipo de estadística</string>
     <string name="inst_year">Año</string>
