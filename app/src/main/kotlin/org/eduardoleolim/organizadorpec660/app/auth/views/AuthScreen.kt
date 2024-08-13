@@ -139,8 +139,13 @@ class AuthScreen(private val queryBus: QueryBus) : Screen {
             Text(
                 text = stringResource(Res.string.app_name),
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.displayMedium.copy(fontWeight = FontWeight.Medium),
-                modifier = Modifier.padding(vertical = 16.dp),
+                style = MaterialTheme.typography.displayMedium.copy(fontWeight = FontWeight.Medium)
+            )
+
+            Text(
+                text = stringResource(Res.string.app_version),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.titleMedium
             )
 
             Spacer(Modifier.height(24.dp))
