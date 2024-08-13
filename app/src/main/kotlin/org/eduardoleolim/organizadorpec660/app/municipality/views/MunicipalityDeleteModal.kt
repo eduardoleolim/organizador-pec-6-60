@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
 import org.eduardoleolim.organizadorpec660.app.generated.resources.mun_delete_text
 import org.eduardoleolim.organizadorpec660.app.generated.resources.mun_delete_title
-import org.eduardoleolim.organizadorpec660.app.municipality.model.DeleteState
+import org.eduardoleolim.organizadorpec660.app.municipality.model.MunicipalityDeleteState
 import org.eduardoleolim.organizadorpec660.app.municipality.model.MunicipalityScreenModel
 import org.eduardoleolim.organizadorpec660.app.shared.composables.QuestionDialog
 import org.eduardoleolim.organizadorpec660.core.municipality.application.MunicipalityResponse
@@ -26,19 +26,19 @@ fun MunicipalityScreen.MunicipalityDeleteModal(
     onDismissRequest: () -> Unit
 ) {
     when (val deleteState = screenModel.deleteState) {
-        DeleteState.Idle -> {
+        MunicipalityDeleteState.Idle -> {
 
         }
 
-        DeleteState.InProgress -> {
+        MunicipalityDeleteState.InProgress -> {
 
         }
 
-        DeleteState.Success -> {
+        MunicipalityDeleteState.Success -> {
             onSuccess()
         }
 
-        is DeleteState.Error -> {
+        is MunicipalityDeleteState.Error -> {
             onFail()
             println(deleteState.error.message)
         }

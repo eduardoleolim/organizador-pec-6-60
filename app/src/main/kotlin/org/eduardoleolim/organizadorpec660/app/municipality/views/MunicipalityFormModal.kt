@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import org.eduardoleolim.organizadorpec660.app.generated.resources.*
 import org.eduardoleolim.organizadorpec660.app.municipality.data.EmptyMunicipalityDataException
-import org.eduardoleolim.organizadorpec660.app.municipality.model.FormState
+import org.eduardoleolim.organizadorpec660.app.municipality.model.MunicipalityFormState
 import org.eduardoleolim.organizadorpec660.app.municipality.model.MunicipalityScreenModel
 import org.eduardoleolim.organizadorpec660.app.shared.composables.OutlinedSelect
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityNotFoundError
@@ -50,7 +50,7 @@ fun MunicipalityScreen.MunicipalityFormModal(
     }
 
     when (val formState = screenModel.formState) {
-        FormState.Idle -> {
+        MunicipalityFormState.Idle -> {
             enabled = true
             isFederalEntityError = false
             isKeyCodeError = false
@@ -60,7 +60,7 @@ fun MunicipalityScreen.MunicipalityFormModal(
             nameSupportingText = null
         }
 
-        FormState.InProgress -> {
+        MunicipalityFormState.InProgress -> {
             enabled = false
             isFederalEntityError = false
             isKeyCodeError = false
@@ -70,17 +70,17 @@ fun MunicipalityScreen.MunicipalityFormModal(
             nameSupportingText = null
         }
 
-        FormState.SuccessCreate -> {
+        MunicipalityFormState.SuccessCreate -> {
             enabled = true
             onSuccess()
         }
 
-        FormState.SuccessEdit -> {
+        MunicipalityFormState.SuccessEdit -> {
             enabled = true
             onSuccess()
         }
 
-        is FormState.Error -> {
+        is MunicipalityFormState.Error -> {
             enabled = true
 
             when (val error = formState.error) {

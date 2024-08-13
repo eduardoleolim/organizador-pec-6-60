@@ -18,8 +18,8 @@ import com.seanproctor.datatable.TableColumnWidth
 import com.seanproctor.datatable.material3.DataTable
 import kotlinx.coroutines.delay
 import org.eduardoleolim.organizadorpec660.app.agency.data.EmptyAgencyDataException
+import org.eduardoleolim.organizadorpec660.app.agency.model.AgencyFormState
 import org.eduardoleolim.organizadorpec660.app.agency.model.AgencyScreenModel
-import org.eduardoleolim.organizadorpec660.app.agency.model.FormState
 import org.eduardoleolim.organizadorpec660.app.generated.resources.*
 import org.eduardoleolim.organizadorpec660.app.shared.composables.OutlinedSelect
 import org.eduardoleolim.organizadorpec660.core.agency.application.AgencyResponse
@@ -101,7 +101,7 @@ fun AgencyScreen.AgencyFormModal(
     }
 
     when (val formState = screenModel.formState) {
-        FormState.Idle -> {
+        AgencyFormState.Idle -> {
             enabled = true
             isNameError = false
             isConsecutiveError = false
@@ -115,7 +115,7 @@ fun AgencyScreen.AgencyFormModal(
             statisticTypeSupportingText = null
         }
 
-        FormState.InProgress -> {
+        AgencyFormState.InProgress -> {
             enabled = false
             isNameError = false
             isConsecutiveError = false
@@ -129,17 +129,17 @@ fun AgencyScreen.AgencyFormModal(
             statisticTypeSupportingText = null
         }
 
-        FormState.SuccessCreate -> {
+        AgencyFormState.SuccessCreate -> {
             enabled = true
             onSuccess()
         }
 
-        FormState.SuccessEdit -> {
+        AgencyFormState.SuccessEdit -> {
             enabled = true
             onSuccess()
         }
 
-        is FormState.Error -> {
+        is AgencyFormState.Error -> {
             enabled = true
 
             when (val error = formState.error) {

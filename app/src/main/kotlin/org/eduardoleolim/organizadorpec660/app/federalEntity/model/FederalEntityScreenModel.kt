@@ -84,13 +84,13 @@ class FederalEntityScreenModel(
 
     fun searchFederalEntities(
         search: String? = null,
-        orders: Array<HashMap<String, String>>? = null,
+        orders: List<HashMap<String, String>>? = null,
         limit: Int? = null,
         offset: Int? = null,
     ) {
         screenModelScope.launch(dispatcher) {
             try {
-                val query = SearchFederalEntitiesByTermQuery(search, orders, limit, offset)
+                val query = SearchFederalEntitiesByTermQuery(search, orders?.toTypedArray(), limit, offset)
                 federalEntities = queryBus.ask(query)
             } catch (e: Exception) {
                 federalEntities = FederalEntitiesResponse(emptyList(), 0, null, null)

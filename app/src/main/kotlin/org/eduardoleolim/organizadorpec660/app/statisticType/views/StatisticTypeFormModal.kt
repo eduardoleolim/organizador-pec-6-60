@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import org.eduardoleolim.organizadorpec660.app.generated.resources.*
 import org.eduardoleolim.organizadorpec660.app.statisticType.data.EmptyStatisticTypeDataException
-import org.eduardoleolim.organizadorpec660.app.statisticType.model.FormState
+import org.eduardoleolim.organizadorpec660.app.statisticType.model.StatisticTypeFormState
 import org.eduardoleolim.organizadorpec660.app.statisticType.model.StatisticTypeScreenModel
 import org.eduardoleolim.organizadorpec660.core.statisticType.application.StatisticTypeResponse
 import org.eduardoleolim.organizadorpec660.core.statisticType.domain.InvalidStatisticTypeKeyCodeError
@@ -41,7 +41,7 @@ fun StatisticTypeScreen.StatisticTypeFormModal(
     var nameSupportingText: String? by remember { mutableStateOf(null) }
 
     when (val formState = screenModel.formState) {
-        FormState.Idle -> {
+        StatisticTypeFormState.Idle -> {
             enabled = true
             isKeyCodeError = false
             isNameError = false
@@ -49,7 +49,7 @@ fun StatisticTypeScreen.StatisticTypeFormModal(
             nameSupportingText = null
         }
 
-        FormState.InProgress -> {
+        StatisticTypeFormState.InProgress -> {
             enabled = false
             isKeyCodeError = false
             isNameError = false
@@ -57,17 +57,17 @@ fun StatisticTypeScreen.StatisticTypeFormModal(
             nameSupportingText = null
         }
 
-        FormState.SuccessCreate -> {
+        StatisticTypeFormState.SuccessCreate -> {
             enabled = true
             onSuccess()
         }
 
-        FormState.SuccessEdit -> {
+        StatisticTypeFormState.SuccessEdit -> {
             enabled = false
             onSuccess()
         }
 
-        is FormState.Error -> {
+        is StatisticTypeFormState.Error -> {
             enabled = true
 
             when (val error = formState.error) {

@@ -35,19 +35,26 @@ import org.eduardoleolim.organizadorpec660.core.statisticType.application.Statis
 import org.eduardoleolim.organizadorpec660.core.statisticType.application.searchByTerm.SearchStatisticTypesByTermQuery
 import org.jetbrains.compose.resources.getString
 
-sealed class FormState {
-    data object Idle : FormState()
-    data object InProgress : FormState()
-    data object SuccessCreate : FormState()
-    data object SuccessEdit : FormState()
-    data class Error(val error: Throwable) : FormState()
+data class SearchAgencyParameters(
+    val search: String?,
+    val orders: List<HashMap<String, String>>?,
+    val limit: Int?,
+    val offset: Int?
+)
+
+sealed class AgencyFormState {
+    data object Idle : AgencyFormState()
+    data object InProgress : AgencyFormState()
+    data object SuccessCreate : AgencyFormState()
+    data object SuccessEdit : AgencyFormState()
+    data class Error(val error: Throwable) : AgencyFormState()
 }
 
-sealed class DeleteState {
-    data object Idle : DeleteState()
-    data object InProgress : DeleteState()
-    data object Success : DeleteState()
-    data class Error(val message: String) : DeleteState()
+sealed class AgencyDeleteState {
+    data object Idle : AgencyDeleteState()
+    data object InProgress : AgencyDeleteState()
+    data object Success : AgencyDeleteState()
+    data class Error(val message: String) : AgencyDeleteState()
 }
 
 class AgencyScreenModel(
@@ -67,29 +74,29 @@ class AgencyScreenModel(
     var statisticTypes by mutableStateOf(emptyList<StatisticTypeResponse>())
         private set
 
-    var formState by mutableStateOf<FormState>(FormState.Idle)
+    var formState by mutableStateOf<AgencyFormState>(AgencyFormState.Idle)
         private set
 
-    var deleteState by mutableStateOf<DeleteState>(DeleteState.Idle)
+    var deleteState by mutableStateOf<AgencyDeleteState>(AgencyDeleteState.Idle)
         private set
 
     fun resetForm() {
-        formState = FormState.Idle
+        formState = AgencyFormState.Idle
     }
 
     fun resetDeleteModal() {
-        deleteState = DeleteState.Idle
+        deleteState = AgencyDeleteState.Idle
     }
 
     fun searchAgencies(
         search: String? = null,
-        orders: Array<HashMap<String, String>>? = null,
+        orders: List<HashMap<String, String>>? = null,
         limit: Int? = null,
         offset: Int? = null,
     ) {
         screenModelScope.launch(dispatcher) {
             try {
-                val query = SearchAgenciesByTermQuery(search, orders, limit, offset)
+                val query = SearchAgenciesByTermQuery(search, orders?.toTypedArray(), limit, offset)
                 agencies = queryBus.ask(query)
             } catch (e: Exception) {
                 agencies = AgenciesResponse(emptyList(), 0, null, null)
@@ -134,7 +141,7 @@ class AgencyScreenModel(
 
     fun createAgency(name: String, consecutive: String, municipalityId: String?, statisticTypesId: List<String>) {
         screenModelScope.launch(dispatcher) {
-            formState = FormState.InProgress
+            formState = AgencyFormState.InProgress
             delay(500)
 
             val isNameEmpty = name.isEmpty()
@@ -143,7 +150,7 @@ class AgencyScreenModel(
             val isStatisticTypesEmpty = statisticTypesId.isEmpty()
 
             if (isNameEmpty || isConsecutiveEmpty || isMunicipalityEmpty || isStatisticTypesEmpty) {
-                formState = FormState.Error(
+                formState = AgencyFormState.Error(
                     EmptyAgencyDataException(
                         isNameEmpty,
                         isConsecutiveEmpty,
@@ -156,14 +163,14 @@ class AgencyScreenModel(
                     val command = CreateAgencyCommand(name, consecutive, municipalityId!!, statisticTypesId)
                     commandBus.dispatch(command).fold(
                         ifRight = {
-                            formState = FormState.SuccessCreate
+                            formState = AgencyFormState.SuccessCreate
                         },
                         ifLeft = {
-                            formState = FormState.Error(it)
+                            formState = AgencyFormState.Error(it)
                         }
                     )
                 } catch (e: Exception) {
-                    formState = FormState.Error(e.cause!!)
+                    formState = AgencyFormState.Error(e.cause!!)
                 }
             }
         }
@@ -177,7 +184,7 @@ class AgencyScreenModel(
         statisticTypesId: List<String>
     ) {
         screenModelScope.launch(dispatcher) {
-            formState = FormState.InProgress
+            formState = AgencyFormState.InProgress
             delay(500)
 
             val isNameEmpty = name.isEmpty()
@@ -186,7 +193,7 @@ class AgencyScreenModel(
             val isStatisticTypesEmpty = statisticTypesId.isEmpty()
 
             if (isNameEmpty || isConsecutiveEmpty || isMunicipalityEmpty || isStatisticTypesEmpty) {
-                formState = FormState.Error(
+                formState = AgencyFormState.Error(
                     EmptyAgencyDataException(
                         isNameEmpty,
                         isConsecutiveEmpty,
@@ -199,14 +206,14 @@ class AgencyScreenModel(
                     val command = UpdateAgencyCommand(agencyId, name, consecutive, municipalityId!!, statisticTypesId)
                     commandBus.dispatch(command).fold(
                         ifRight = {
-                            formState = FormState.SuccessEdit
+                            formState = AgencyFormState.SuccessEdit
                         },
                         ifLeft = {
-                            formState = FormState.Error(it)
+                            formState = AgencyFormState.Error(it)
                         }
                     )
                 } catch (e: Exception) {
-                    formState = FormState.Error(e.cause!!)
+                    formState = AgencyFormState.Error(e.cause!!)
                 }
             }
         }
@@ -214,13 +221,13 @@ class AgencyScreenModel(
 
     fun deleteAgency(agencyId: String) {
         screenModelScope.launch(dispatcher) {
-            deleteState = DeleteState.InProgress
+            deleteState = AgencyDeleteState.InProgress
             delay(500)
 
             try {
                 commandBus.dispatch(DeleteAgencyCommand(agencyId)).foldAsync(
                     ifRight = {
-                        deleteState = DeleteState.Success
+                        deleteState = AgencyDeleteState.Success
                     },
                     ifLeft = { error ->
                         val message = when (error) {
@@ -233,11 +240,11 @@ class AgencyScreenModel(
                             else -> getString(Res.string.ag_delete_error_default)
                         }
 
-                        deleteState = DeleteState.Error(message)
+                        deleteState = AgencyDeleteState.Error(message)
                     }
                 )
             } catch (e: Exception) {
-                deleteState = DeleteState.Error(getString(Res.string.ag_delete_error_default))
+                deleteState = AgencyDeleteState.Error(getString(Res.string.ag_delete_error_default))
             }
         }
     }

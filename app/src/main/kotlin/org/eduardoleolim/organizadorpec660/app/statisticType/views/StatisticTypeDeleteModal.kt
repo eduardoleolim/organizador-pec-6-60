@@ -12,7 +12,7 @@ import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
 import org.eduardoleolim.organizadorpec660.app.generated.resources.st_delete_text
 import org.eduardoleolim.organizadorpec660.app.generated.resources.st_delete_title
 import org.eduardoleolim.organizadorpec660.app.shared.composables.QuestionDialog
-import org.eduardoleolim.organizadorpec660.app.statisticType.model.DeleteState
+import org.eduardoleolim.organizadorpec660.app.statisticType.model.StatisticTypeDeleteState
 import org.eduardoleolim.organizadorpec660.app.statisticType.model.StatisticTypeScreenModel
 import org.eduardoleolim.organizadorpec660.core.statisticType.application.StatisticTypeResponse
 import org.jetbrains.compose.resources.stringResource
@@ -26,19 +26,19 @@ fun StatisticTypeScreen.StatisticTypeDeleteModal(
     onDismissRequest: () -> Unit
 ) {
     when (val deleteState = screenModel.deleteState) {
-        DeleteState.Idle -> {
+        StatisticTypeDeleteState.Idle -> {
 
         }
 
-        DeleteState.InProgress -> {
+        StatisticTypeDeleteState.InProgress -> {
 
         }
 
-        DeleteState.Success -> {
+        StatisticTypeDeleteState.Success -> {
             onSuccess()
         }
 
-        is DeleteState.Error -> {
+        is StatisticTypeDeleteState.Error -> {
             onFail()
             println(deleteState.error.message)
         }

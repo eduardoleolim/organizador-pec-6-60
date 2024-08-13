@@ -21,19 +21,19 @@ import org.eduardoleolim.organizadorpec660.core.municipality.application.update.
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
 
-sealed class FormState {
-    data object Idle : FormState()
-    data object InProgress : FormState()
-    data object SuccessCreate : FormState()
-    data object SuccessEdit : FormState()
-    data class Error(val error: Throwable) : FormState()
+sealed class MunicipalityFormState {
+    data object Idle : MunicipalityFormState()
+    data object InProgress : MunicipalityFormState()
+    data object SuccessCreate : MunicipalityFormState()
+    data object SuccessEdit : MunicipalityFormState()
+    data class Error(val error: Throwable) : MunicipalityFormState()
 }
 
-sealed class DeleteState {
-    data object Idle : DeleteState()
-    data object InProgress : DeleteState()
-    data object Success : DeleteState()
-    data class Error(val error: Throwable) : DeleteState()
+sealed class MunicipalityDeleteState {
+    data object Idle : MunicipalityDeleteState()
+    data object InProgress : MunicipalityDeleteState()
+    data object Success : MunicipalityDeleteState()
+    data class Error(val error: Throwable) : MunicipalityDeleteState()
 }
 
 class MunicipalityScreenModel(
@@ -47,18 +47,18 @@ class MunicipalityScreenModel(
     var federalEntities by mutableStateOf(emptyList<FederalEntityResponse>())
         private set
 
-    var formState by mutableStateOf<FormState>(FormState.Idle)
+    var formState by mutableStateOf<MunicipalityFormState>(MunicipalityFormState.Idle)
         private set
 
-    var deleteState by mutableStateOf<DeleteState>(DeleteState.Idle)
+    var deleteState by mutableStateOf<MunicipalityDeleteState>(MunicipalityDeleteState.Idle)
         private set
 
     fun resetForm() {
-        formState = FormState.Idle
+        formState = MunicipalityFormState.Idle
     }
 
     fun resetDeleteModal() {
-        deleteState = DeleteState.Idle
+        deleteState = MunicipalityDeleteState.Idle
     }
 
     fun searchMunicipalities(
@@ -91,7 +91,7 @@ class MunicipalityScreenModel(
 
     fun createMunicipality(keyCode: String, name: String, federalEntityId: String?) {
         screenModelScope.launch(dispatcher) {
-            formState = FormState.InProgress
+            formState = MunicipalityFormState.InProgress
             delay(500)
 
             val isFederalEntityEmpty = federalEntityId.isNullOrBlank()
@@ -100,28 +100,34 @@ class MunicipalityScreenModel(
 
             if (isFederalEntityEmpty || isKeyCodeEmpty || isNameEmpty) {
                 formState =
-                    FormState.Error(EmptyMunicipalityDataException(isFederalEntityEmpty, isKeyCodeEmpty, isNameEmpty))
+                    MunicipalityFormState.Error(
+                        EmptyMunicipalityDataException(
+                            isFederalEntityEmpty,
+                            isKeyCodeEmpty,
+                            isNameEmpty
+                        )
+                    )
                 return@launch
             }
 
             try {
                 commandBus.dispatch(CreateMunicipalityCommand(keyCode, name, federalEntityId!!)).fold(
                     ifRight = {
-                        formState = FormState.SuccessCreate
+                        formState = MunicipalityFormState.SuccessCreate
                     },
                     ifLeft = {
-                        formState = FormState.Error(it)
+                        formState = MunicipalityFormState.Error(it)
                     }
                 )
             } catch (e: Exception) {
-                formState = FormState.Error(e.cause!!)
+                formState = MunicipalityFormState.Error(e.cause!!)
             }
         }
     }
 
     fun editMunicipality(municipalityId: String, keyCode: String, name: String, federalEntityId: String?) {
         screenModelScope.launch(dispatcher) {
-            formState = FormState.InProgress
+            formState = MunicipalityFormState.InProgress
             delay(500)
 
             val isFederalEntityEmpty = federalEntityId.isNullOrBlank()
@@ -130,42 +136,48 @@ class MunicipalityScreenModel(
 
             if (isFederalEntityEmpty || isKeyCodeEmpty || isNameEmpty) {
                 formState =
-                    FormState.Error(EmptyMunicipalityDataException(isFederalEntityEmpty, isKeyCodeEmpty, isNameEmpty))
+                    MunicipalityFormState.Error(
+                        EmptyMunicipalityDataException(
+                            isFederalEntityEmpty,
+                            isKeyCodeEmpty,
+                            isNameEmpty
+                        )
+                    )
                 return@launch
             }
 
             try {
                 commandBus.dispatch(UpdateMunicipalityCommand(municipalityId, keyCode, name, federalEntityId!!)).fold(
                     ifRight = {
-                        formState = FormState.SuccessEdit
+                        formState = MunicipalityFormState.SuccessEdit
                     },
                     ifLeft = {
-                        formState = FormState.Error(it)
+                        formState = MunicipalityFormState.Error(it)
                     }
                 )
             } catch (e: Exception) {
-                formState = FormState.Error(e.cause!!)
+                formState = MunicipalityFormState.Error(e.cause!!)
             }
         }
     }
 
     fun deleteMunicipality(municipalityId: String) {
         screenModelScope.launch(dispatcher) {
-            deleteState = DeleteState.InProgress
+            deleteState = MunicipalityDeleteState.InProgress
             delay(500)
 
             try {
                 commandBus.dispatch(DeleteMunicipalityCommand(municipalityId)).fold(
                     ifRight = {
-                        deleteState = DeleteState.Success
+                        deleteState = MunicipalityDeleteState.Success
                     },
                     ifLeft = {
-                        deleteState = DeleteState.Error(it)
+                        deleteState = MunicipalityDeleteState.Error(it)
                     }
                 )
 
             } catch (e: Exception) {
-                deleteState = DeleteState.Error(e.cause!!)
+                deleteState = MunicipalityDeleteState.Error(e.cause!!)
             }
         }
     }

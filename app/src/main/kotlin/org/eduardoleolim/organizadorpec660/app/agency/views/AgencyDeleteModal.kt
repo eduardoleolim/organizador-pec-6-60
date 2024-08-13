@@ -10,8 +10,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import org.eduardoleolim.organizadorpec660.app.agency.model.AgencyDeleteState
 import org.eduardoleolim.organizadorpec660.app.agency.model.AgencyScreenModel
-import org.eduardoleolim.organizadorpec660.app.agency.model.DeleteState
 import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
 import org.eduardoleolim.organizadorpec660.app.generated.resources.ag_delete_text
 import org.eduardoleolim.organizadorpec660.app.generated.resources.ag_delete_title
@@ -31,21 +31,21 @@ fun AgencyScreen.AgencyDeleteModal(
     var errorMessage: String? by remember { mutableStateOf(null) }
 
     when (val deleteState = screenModel.deleteState) {
-        DeleteState.Idle -> {
+        AgencyDeleteState.Idle -> {
             errorOccurred = false
             errorMessage = null
         }
 
-        DeleteState.InProgress -> {
+        AgencyDeleteState.InProgress -> {
             errorOccurred = false
             errorMessage = null
         }
 
-        DeleteState.Success -> {
+        AgencyDeleteState.Success -> {
             onSuccess()
         }
 
-        is DeleteState.Error -> {
+        is AgencyDeleteState.Error -> {
             errorOccurred = true
             errorMessage = deleteState.message
         }

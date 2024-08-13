@@ -69,7 +69,7 @@ class AgencyScreen(private val queryBus: QueryBus, private val commandBus: Comma
                     val offset = pageIndex * pageSize
                     val orders = orderBy?.let {
                         val orderType = if (isAscending) "ASC" else "DESC"
-                        arrayOf(hashMapOf("orderBy" to orderBy, "orderType" to orderType))
+                        listOf(hashMapOf("orderBy" to orderBy, "orderType" to orderType))
                     }
 
                     screenModel.searchAgencies(search, orders, pageSize, offset)
