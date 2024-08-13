@@ -41,6 +41,7 @@ fun InstrumentScreen.InstrumentsTable(
     onSearch: (search: String, federalEntityId: String?, municipalityId: String?, agencyId: String?, statisticTypeId: String?, statisticYear: Int?, statisticMonth: Int?, pageIndex: Int, pageSize: Int, orderBy: String?, isAscending: Boolean) -> Unit,
     onDeleteRequest: (InstrumentResponse) -> Unit,
     onEditRequest: (InstrumentResponse) -> Unit,
+    onChangeStateRequest: (InstrumentResponse, Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val months = remember {
@@ -101,16 +102,12 @@ fun InstrumentScreen.InstrumentsTable(
             DataColumn(
                 alignment = Alignment.Start,
                 width = TableColumnWidth.Fraction(0.18f),
-                header = {
-                    Text("Entidad Federativa")
-                }
+                header = { Text("Entidad Federativa") }
             ),
             DataColumn(
                 alignment = Alignment.Start,
                 width = TableColumnWidth.Fraction(0.18f),
-                header = {
-                    Text("Municipio")
-                }
+                header = { Text("Municipio") }
             ),
             DataColumn(
                 alignment = Alignment.CenterHorizontally,
@@ -161,13 +158,7 @@ fun InstrumentScreen.InstrumentsTable(
                     cell {
                         Checkbox(
                             checked = instrument.savedInSIRESO,
-                            onCheckedChange = { save ->
-                                if (save) {
-                                    screenModel.updateInstrumentAsSavedInSIRESO(instrument.id)
-                                } else {
-                                    screenModel.updateInstrumentAsNotSavedInSIRESO(instrument.id)
-                                }
-                            }
+                            onCheckedChange = { onChangeStateRequest(instrument, it) }
                         )
                     }
 
