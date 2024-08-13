@@ -39,7 +39,7 @@ class InstrumentScreenModel(
         statisticTypeId: String? = null,
         statisticYear: Int? = null,
         statisticMonth: Int? = null,
-        orders: Array<HashMap<String, String>>? = null,
+        orders: List<HashMap<String, String>>? = null,
         limit: Int? = null,
         offset: Int? = null,
     ) {
@@ -53,7 +53,7 @@ class InstrumentScreenModel(
                     statisticYear,
                     statisticMonth,
                     search,
-                    orders,
+                    orders?.toTypedArray(),
                     limit,
                     offset
                 )

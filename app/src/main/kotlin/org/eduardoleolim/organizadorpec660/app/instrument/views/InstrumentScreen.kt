@@ -51,7 +51,7 @@ class InstrumentScreen(private val queryBus: QueryBus, private val commandBus: C
                 onSearch = { search, federalEntityId, municipalityId, agencyId, statisticTypeId, statisticYear, statisticMonth, pageIndex, pageSize, orderBy, isAscending ->
                     val orders = orderBy?.let {
                         val orderType = if (isAscending) "ASC" else "DESC"
-                        arrayOf(hashMapOf("orderBy" to orderBy, "orderType" to orderType))
+                        listOf(hashMapOf("orderBy" to orderBy, "orderType" to orderType))
                     }
 
                     screenModel.searchInstruments(

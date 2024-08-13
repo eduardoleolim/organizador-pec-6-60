@@ -64,13 +64,14 @@ class MunicipalityScreenModel(
     fun searchMunicipalities(
         search: String? = null,
         federalEntityId: String? = null,
-        orders: Array<HashMap<String, String>>? = null,
+        orders: List<HashMap<String, String>>? = null,
         limit: Int? = null,
         offset: Int? = null
     ) {
         screenModelScope.launch(dispatcher) {
             try {
-                val query = SearchMunicipalitiesByTermQuery(federalEntityId, search, orders, limit, offset)
+                val query =
+                    SearchMunicipalitiesByTermQuery(federalEntityId, search, orders?.toTypedArray(), limit, offset)
                 municipalities = queryBus.ask(query)
             } catch (e: Exception) {
                 municipalities = MunicipalitiesResponse(emptyList(), 0, null, null)

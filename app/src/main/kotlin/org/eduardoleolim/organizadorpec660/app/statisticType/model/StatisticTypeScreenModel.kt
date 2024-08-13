@@ -33,7 +33,6 @@ sealed class StatisticTypeDeleteState {
     data class Error(val error: Throwable) : StatisticTypeDeleteState()
 }
 
-
 class StatisticTypeScreenModel(
     private val queryBus: QueryBus,
     private val commandBus: CommandBus,

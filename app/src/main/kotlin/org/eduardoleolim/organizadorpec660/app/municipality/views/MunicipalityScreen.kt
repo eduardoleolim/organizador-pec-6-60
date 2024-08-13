@@ -72,7 +72,7 @@ class MunicipalityScreen(private val queryBus: QueryBus, private val commandBus:
                     selectedFederalEntityId = federalEntityId
                     val orders = orderBy?.let {
                         val orderType = if (isAscending) "ASC" else "DESC"
-                        arrayOf(hashMapOf("orderBy" to orderBy, "orderType" to orderType))
+                        listOf(hashMapOf("orderBy" to orderBy, "orderType" to orderType))
                     }
 
                     screenModel.searchMunicipalities(search, federalEntityId, orders, pageSize, pageIndex * pageSize)
