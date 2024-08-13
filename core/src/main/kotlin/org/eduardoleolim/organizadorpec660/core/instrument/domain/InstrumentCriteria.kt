@@ -82,7 +82,8 @@ object InstrumentCriteria {
                 agencyId?.let { SingleFilter.equal(InstrumentFields.AgencyId.value, it) } ?: EmptyFilters(),
                 statisticTypeId?.let { SingleFilter.equal(InstrumentFields.StatisticTypeId.value, it) }
                     ?: EmptyFilters(),
-                federalEntityId?.let { SingleFilter.equal(InstrumentFields.AgencyId.value, it) } ?: EmptyFilters(),
+                federalEntityId?.let { SingleFilter.equal(InstrumentFields.FederalEntityId.value, it) }
+                    ?: EmptyFilters(),
                 municipalityId?.let { SingleFilter.equal(InstrumentFields.MunicipalityId.value, it) } ?: EmptyFilters(),
                 year?.let { SingleFilter.equal(InstrumentFields.StatisticYear.value, it.toString()) } ?: EmptyFilters(),
                 month?.let { SingleFilter.equal(InstrumentFields.StatisticMonth.value, it.toString()) }
