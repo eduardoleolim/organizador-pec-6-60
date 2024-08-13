@@ -54,7 +54,7 @@ class SaveInstrumentScreen(
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(24.dp)
                 ) {
-                    InstrumentForm(
+                    SaveInstrumentForm(
                         screenModel = screenModel,
                         onInstrumentSelected = { instrumentSelected = it }
                     )
@@ -101,7 +101,7 @@ class SaveInstrumentScreen(
     }
 
     @Composable
-    private fun InstrumentForm(
+    private fun SaveInstrumentForm(
         screenModel: SaveInstrumentScreenModel,
         onInstrumentSelected: (String?) -> Unit
     ) {

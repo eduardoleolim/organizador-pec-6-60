@@ -75,10 +75,6 @@ class SaveInstrumentScreenModel(
         }
     }
 
-    fun searchInstrument(instrumentId: String): DetailedInstrumentResponse {
-        return queryBus.ask(SearchInstrumentByIdQuery(instrumentId))
-    }
-
     fun searchMunicipalities(federalEntityId: String?) {
         screenModelScope.launch(dispatcher) {
             municipalities = federalEntityId?.let { id ->
@@ -111,6 +107,10 @@ class SaveInstrumentScreenModel(
         } catch (e: Exception) {
             emptyList()
         }
+    }
+
+    fun searchInstrument(instrumentId: String): DetailedInstrumentResponse {
+        return queryBus.ask(SearchInstrumentByIdQuery(instrumentId))
     }
 
     fun saveInstrument(
