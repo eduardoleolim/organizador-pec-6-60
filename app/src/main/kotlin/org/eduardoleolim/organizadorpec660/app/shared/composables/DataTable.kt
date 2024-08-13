@@ -1,6 +1,6 @@
 package org.eduardoleolim.organizadorpec660.app.shared.composables
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -83,48 +83,23 @@ fun PaginatedDataTable(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
-                .padding(horizontal = horizontalPadding, vertical = verticalPadding)
+                .padding(horizontal = horizontalPadding, vertical = verticalPadding),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            var expandedPageSize by remember { mutableStateOf(false) }
+            val horizontalScrollState = rememberScrollState(0)
 
-            Box {
-                TextButton(
-                    onClick = { expandedPageSize = true },
-                    enabled = state.pageSize > 1,
-                ) {
-                    Text(
-                        text = stringResource(Res.string.table_show_items, state.pageSize),
-                        fontWeight = FontWeight.Normal,
-                        color = MaterialTheme.colorScheme.onSurface,
-                    )
-                    Icon(
-                        imageVector = if (expandedPageSize) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
-                        contentDescription = "Expand"
-                    )
-                }
-                DropdownMenu(
-                    expanded = expandedPageSize,
-                    onDismissRequest = { expandedPageSize = false },
-                    modifier = Modifier.background(MaterialTheme.colorScheme.surface)
-                ) {
-                    pageSizes.forEach { pageSize ->
-                        DropdownMenuItem(
-                            text = {
-                                Text(text = pageSize.toString(), color = MaterialTheme.colorScheme.onSurface)
-                            },
-                            onClick = {
-                                expandedPageSize = false
-                                state.pageSize = pageSize
-                                state.pageIndex = 0
-                            }
-                        )
-                    }
-                }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.weight(1f).horizontalScroll(horizontalScrollState)
+            ) {
+                SelectPageSize(
+                    state = state,
+                    pageSizes = pageSizes
+                )
+
+                header()
             }
-
-            header()
-
-            Spacer(Modifier.weight(1f))
 
             OutlinedTextField(
                 value = value,
@@ -143,7 +118,7 @@ fun PaginatedDataTable(
                     )
                 },
                 singleLine = true,
-                modifier = Modifier.width(250.dp),
+                modifier = Modifier.widthIn(min = 250.dp),
                 shape = MaterialTheme.shapes.extraLarge,
                 trailingIcon = {
                     if (value.isNotEmpty()) {
@@ -160,7 +135,7 @@ fun PaginatedDataTable(
         }
 
         val stateVertical = rememberScrollState(0)
-        val stateHorizontal = rememberScrollState(0)
+        // val stateHorizontal = rememberScrollState(0)
 
         Column(
             modifier = Modifier.weight(1.0f)
@@ -218,6 +193,46 @@ fun PaginatedDataTable(
                 enabled = state.pageIndex < pageCount - 1
             ) {
                 Icon(Icons.AutoMirrored.Filled.LastPage, "Last")
+            }
+        }
+    }
+}
+
+@Composable
+private fun SelectPageSize(state: PaginatedDataTableState, pageSizes: List<Int>) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Box {
+        TextButton(
+            onClick = { expanded = true },
+            enabled = state.pageSize > 1,
+        ) {
+            Text(
+                text = stringResource(Res.string.table_show_items, state.pageSize),
+                fontWeight = FontWeight.Normal,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            Icon(
+                imageVector = if (expanded) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
+                contentDescription = "Expand"
+            )
+        }
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            pageSizes.forEach { pageSize ->
+                DropdownMenuItem(
+                    text = {
+                        Text(text = pageSize.toString(), color = MaterialTheme.colorScheme.onSurface)
+                    },
+                    onClick = {
+                        expanded = false
+                        state.pageSize = pageSize
+                        state.pageIndex = 0
+                    }
+                )
             }
         }
     }
