@@ -1,4 +1,4 @@
-package org.eduardoleolim.organizadorpec660.app.window
+package org.eduardoleolim.organizadorpec660.app.shared.window
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
@@ -22,7 +22,7 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogWindowScope
 import androidx.compose.ui.window.FrameWindowScope
-import org.eduardoleolim.organizadorpec660.app.window.icons.*
+import org.eduardoleolim.organizadorpec660.app.shared.window.icons.*
 import java.beans.PropertyChangeListener
 
 @Composable

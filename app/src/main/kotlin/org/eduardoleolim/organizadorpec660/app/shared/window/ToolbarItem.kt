@@ -1,4 +1,4 @@
-package org.eduardoleolim.organizadorpec660.app.window
+package org.eduardoleolim.organizadorpec660.app.shared.window
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.*
@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogWindowScope
 import androidx.compose.ui.window.FrameWindowScope
-import org.eduardoleolim.organizadorpec660.app.window.utils.CustomWindowDecorationAccessing
+import org.eduardoleolim.organizadorpec660.app.shared.window.utils.CustomWindowDecorationAccessing
 import java.awt.Rectangle
 import java.awt.Shape
 import java.awt.Window

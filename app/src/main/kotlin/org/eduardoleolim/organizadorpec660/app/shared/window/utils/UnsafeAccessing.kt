@@ -1,4 +1,4 @@
-package org.eduardoleolim.organizadorpec660.app.window.utils
+package org.eduardoleolim.organizadorpec660.app.shared.window.utils
 
 import sun.misc.Unsafe
 import java.lang.reflect.AccessibleObject

@@ -1,4 +1,4 @@
-package org.eduardoleolim.organizadorpec660.app.window
+package org.eduardoleolim.organizadorpec660.app.shared.window
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.awt.ComposeWindow

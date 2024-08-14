@@ -1,4 +1,4 @@
-package org.eduardoleolim.organizadorpec660.app.window.utils
+package org.eduardoleolim.organizadorpec660.app.shared.window.utils
 
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp

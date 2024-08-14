@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.rememberDialogState
 import org.eduardoleolim.organizadorpec660.app.generated.resources.*
-import org.eduardoleolim.organizadorpec660.app.window.CustomDialogWindow
+import org.eduardoleolim.organizadorpec660.app.shared.window.CustomDialogWindow
 import org.jetbrains.compose.resources.stringResource
 
 class Dialogs {

@@ -29,9 +29,9 @@ import org.eduardoleolim.organizadorpec660.app.shared.theme.AppTheme
 import org.eduardoleolim.organizadorpec660.app.shared.theme.Contrast
 import org.eduardoleolim.organizadorpec660.app.shared.utils.AppConfig
 import org.eduardoleolim.organizadorpec660.app.shared.utils.isSystemInDarkTheme
-import org.eduardoleolim.organizadorpec660.app.window.CustomWindow
-import org.eduardoleolim.organizadorpec660.app.window.DecoratedWindow
-import org.eduardoleolim.organizadorpec660.app.window.TitleBar
+import org.eduardoleolim.organizadorpec660.app.shared.window.CustomWindow
+import org.eduardoleolim.organizadorpec660.app.shared.window.DecoratedWindow
+import org.eduardoleolim.organizadorpec660.app.shared.window.TitleBar
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.bus.KtormCommandBus

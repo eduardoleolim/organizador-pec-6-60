@@ -1,4 +1,4 @@
-package org.eduardoleolim.organizadorpec660.app.window
+package org.eduardoleolim.organizadorpec660.app.shared.window
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -12,32 +12,70 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.awt.ComposeDialog
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.input.key.KeyEvent
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.DialogState
-import androidx.compose.ui.window.DialogWindow
-import androidx.compose.ui.window.DialogWindowScope
-import androidx.compose.ui.window.rememberDialogState
-import org.eduardoleolim.organizadorpec660.app.window.utils.CustomWindowDecorationAccessing
+import androidx.compose.ui.window.FrameWindowScope
+import androidx.compose.ui.window.Window
+import androidx.compose.ui.window.WindowPlacement
+import androidx.compose.ui.window.WindowState
+import org.eduardoleolim.organizadorpec660.app.shared.window.utils.CustomWindowDecorationAccessing
+import org.eduardoleolim.organizadorpec660.app.shared.window.utils.WindowSize
 
-class DialogWindowController {
+@Composable
+fun rememberWindowSize(): WindowSize {
+    val windowState = LocalWindowState.current
+    var windowSize by remember { mutableStateOf(WindowSize.fromWidth(windowState.size.width)) }
+
+    LaunchedEffect(windowState.size) {
+        windowSize = WindowSize.fromWidth(windowState.size.width)
+    }
+
+    return windowSize
+}
+
+@Composable
+fun isWindowFocused(): Boolean {
+    return LocalWindowInfo.current.isWindowFocused
+}
+
+@Composable
+fun isWindowMaximized(): Boolean {
+    return LocalWindowState.current.placement == WindowPlacement.Maximized
+}
+
+@Composable
+fun isWindowFloating(): Boolean {
+    return LocalWindowState.current.placement == WindowPlacement.Floating
+}
+
+class WindowController {
     var title: String? by mutableStateOf(null)
     var icon: Painter? by mutableStateOf(null)
     var onIconClick: (() -> Unit)? by mutableStateOf(null)
+    var center: (@Composable () -> Unit)? by mutableStateOf(null)
 }
 
-val LocalDialogWindow = compositionLocalOf<ComposeDialog> { error("window not provided") }
-private val LocalDialogWindowController =
-    compositionLocalOf<DialogWindowController> { error("window controller not provided") }
-private val LocalDialogWindowState = compositionLocalOf<DialogState> { error("window controller not provided") }
+private val LocalWindowController = compositionLocalOf<WindowController> { error("window controller not provided") }
+private val LocalWindowState = compositionLocalOf<WindowState> { error("window controller not provided") }
 
 @Composable
-fun DialogWindowTitle(title: String) {
-    val c = LocalDialogWindowController.current
+fun WindowCenter(content: @Composable () -> Unit) {
+    val c = LocalWindowController.current
+
+    DisposableEffect(Unit) {
+        c.center = content
+        onDispose {
+            c.center = null
+        }
+    }
+}
+
+@Composable
+fun WindowTitle(title: String) {
+    val c = LocalWindowController.current
     LaunchedEffect(title) {
         c.title = title
     }
@@ -49,8 +87,8 @@ fun DialogWindowTitle(title: String) {
 }
 
 @Composable
-fun DialogWindowIcon(icon: Painter, onClick: () -> Unit) {
-    val current = LocalDialogWindowController.current
+fun WindowIcon(icon: Painter, onClick: () -> Unit) {
+    val current = LocalWindowController.current
     DisposableEffect(icon) {
         current.let {
             it.icon = icon
@@ -65,27 +103,30 @@ fun DialogWindowIcon(icon: Painter, onClick: () -> Unit) {
 }
 
 @Composable
-private fun DialogWindowScope.FrameContent(
+private fun FrameWindowScope.FrameContent(
     title: String,
     windowIcon: Painter? = null,
+    center: @Composable () -> Unit,
+    onRequestMinimize: (() -> Unit)?,
+    onRequestToggleMaximize: (() -> Unit)?,
     onRequestClose: () -> Unit,
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(30.dp)
+            .height(40.dp)
             .background(MaterialTheme.colorScheme.primaryContainer),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Spacer(Modifier.width(16.dp))
         windowIcon?.let {
-            val onIconClick = LocalDialogWindowController.current.onIconClick
+            val onIconClick = LocalWindowController.current.onIconClick
 
             Image(
                 painter = it,
-                contentDescription = "DialogWindow Icon",
+                contentDescription = "Window Icon",
                 modifier = Modifier
-                    .dialogWindowFrameItem("icon-window", HitSpots.OTHER_HIT_SPOT)
+                    .windowFrameItem("icon-window", HitSpots.OTHER_HIT_SPOT)
                     .size(16.dp)
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
@@ -97,6 +138,7 @@ private fun DialogWindowScope.FrameContent(
                         }
                     )
             )
+            Spacer(Modifier.width(16.dp))
         }
 
         CompositionLocalProvider(
@@ -107,41 +149,49 @@ private fun DialogWindowScope.FrameContent(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 fontSize = 14.sp,
-                modifier = Modifier.dialogWindowFrameItem("title", HitSpots.DRAGGABLE_AREA),
+                modifier = Modifier.windowFrameItem("title", HitSpots.DRAGGABLE_AREA),
                 color = MaterialTheme.colorScheme.onPrimaryContainer
             )
         }
-
-        Spacer(Modifier.weight(1.0f))
-
-        DialogWindowsActionButtons(
+        Box(Modifier.weight(1f)) {
+            center()
+        }
+        WindowsActionButtons(
             onRequestClose = onRequestClose,
+            onRequestMinimize = onRequestMinimize,
+            onToggleMaximize = onRequestToggleMaximize,
         )
     }
 }
 
 @Composable
-fun DialogWindowScope.SnapDraggableToolbar(
+fun FrameWindowScope.SnapDraggableToolbar(
     title: String,
     windowIcon: Painter? = null,
+    center: @Composable () -> Unit,
+    onRequestMinimize: (() -> Unit)?,
+    onRequestToggleMaximize: (() -> Unit)?,
     onRequestClose: () -> Unit,
 ) {
     ProvideWindowSpotContainer {
         if (CustomWindowDecorationAccessing.isSupported) {
-            FrameContent(title, windowIcon, onRequestClose)
+            FrameContent(title, windowIcon, center, onRequestMinimize, onRequestToggleMaximize, onRequestClose)
         } else {
             WindowDraggableArea {
-                FrameContent(title, windowIcon, onRequestClose)
+                FrameContent(title, windowIcon, center, onRequestMinimize, onRequestToggleMaximize, onRequestClose)
             }
         }
     }
 }
 
 @Composable
-private fun DialogWindowScope.CustomDialogWindowFrame(
+private fun FrameWindowScope.CustomWindowFrame(
+    onRequestMinimize: (() -> Unit)?,
     onRequestClose: () -> Unit,
+    onRequestToggleMaximize: (() -> Unit)?,
     title: String,
     windowIcon: Painter? = null,
+    center: @Composable () -> Unit,
     content: @Composable () -> Unit,
 ) {
     CompositionLocalProvider(
@@ -155,7 +205,10 @@ private fun DialogWindowScope.CustomDialogWindowFrame(
             SnapDraggableToolbar(
                 title = title,
                 windowIcon = windowIcon,
-                onRequestClose = onRequestClose
+                center = center,
+                onRequestMinimize = onRequestMinimize,
+                onRequestClose = onRequestClose,
+                onRequestToggleMaximize = onRequestToggleMaximize
             )
             content()
         }
@@ -163,21 +216,25 @@ private fun DialogWindowScope.CustomDialogWindowFrame(
 }
 
 @Composable
-fun CustomDialogWindow(
+fun CustomWindow(
+    state: WindowState,
     onCloseRequest: () -> Unit,
-    state: DialogState = rememberDialogState(),
-    visible: Boolean = true,
+    onRequestMinimize: (() -> Unit)? = {
+        state.isMinimized = true
+    },
+    onRequestToggleMaximize: (() -> Unit)? = {
+        if (state.placement == WindowPlacement.Maximized) {
+            state.placement = WindowPlacement.Floating
+        } else {
+            state.placement = WindowPlacement.Maximized
+        }
+    },
     defaultTitle: String = "Untitled",
     defaultIcon: Painter? = null,
-    resizable: Boolean = true,
-    enabled: Boolean = true,
-    focusable: Boolean = true,
-    alwaysOnTop: Boolean = false,
-    onPreviewKeyEvent: ((KeyEvent) -> Boolean) = { false },
-    onKeyEvent: ((KeyEvent) -> Boolean) = { false },
-    content: @Composable DialogWindowScope.() -> Unit
+    content: @Composable FrameWindowScope.() -> Unit,
 ) {
-    val windowController = remember { DialogWindowController() }
+    val windowController = remember { WindowController() }
+    val center = windowController.center ?: {}
 
     val transparent: Boolean
     val undecorated: Boolean
@@ -191,19 +248,12 @@ fun CustomDialogWindow(
         undecorated = true
     }
 
-    DialogWindow(
+    Window(
         state = state,
-        enabled = enabled,
-        visible = visible,
-        resizable = resizable,
-        focusable = focusable,
-        alwaysOnTop = alwaysOnTop,
-        onPreviewKeyEvent = onPreviewKeyEvent,
-        onKeyEvent = onKeyEvent,
         transparent = transparent,
         undecorated = undecorated,
         icon = defaultIcon,
-        onCloseRequest = onCloseRequest
+        onCloseRequest = onCloseRequest,
     ) {
         val title = windowController.title ?: defaultTitle
         val icon = windowController.icon ?: defaultIcon
@@ -213,17 +263,24 @@ fun CustomDialogWindow(
         }
 
         CompositionLocalProvider(
-            LocalDialogWindowController provides windowController,
-            LocalDialogWindowState provides state,
-            LocalDialogWindow provides window
+            LocalWindowController provides windowController,
+            LocalWindowState provides state,
+            LocalWindow provides window
         ) {
-            CustomDialogWindowFrame(
+            // val onIconClick by rememberUpdatedState(windowController.onIconClick)
+
+            CustomWindowFrame(
+                onRequestMinimize = onRequestMinimize,
                 onRequestClose = onCloseRequest,
+                onRequestToggleMaximize = onRequestToggleMaximize,
                 title = title,
-                windowIcon = icon
+                windowIcon = icon,
+                center = { center() }
             ) {
                 content()
             }
         }
     }
 }
+
+
