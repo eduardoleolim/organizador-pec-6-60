@@ -28,6 +28,7 @@ import org.eduardoleolim.organizadorpec660.app.shared.router.Router
 import org.eduardoleolim.organizadorpec660.app.shared.theme.AppTheme
 import org.eduardoleolim.organizadorpec660.app.shared.theme.Contrast
 import org.eduardoleolim.organizadorpec660.app.shared.utils.AppConfig
+import org.eduardoleolim.organizadorpec660.app.shared.utils.DesktopPlatform
 import org.eduardoleolim.organizadorpec660.app.shared.utils.isSystemInDarkTheme
 import org.eduardoleolim.organizadorpec660.app.shared.window.DecoratedWindow
 import org.eduardoleolim.organizadorpec660.app.shared.window.TitleBar
@@ -107,16 +108,18 @@ class App(
                 }
 
                 TitleBar {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(10.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.align(Alignment.Start).padding(start = 10.dp)
-                    ) {
-                        Image(
-                            painter = icon,
-                            contentDescription = "icon",
-                            modifier = Modifier.size(16.dp)
-                        )
+                    if (DesktopPlatform.Current == DesktopPlatform.Windows) {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(10.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.align(Alignment.Start).padding(start = 10.dp)
+                        ) {
+                            Image(
+                                painter = icon,
+                                contentDescription = "icon",
+                                modifier = Modifier.size(16.dp)
+                            )
+                        }
                     }
 
                     Text(title)
@@ -228,11 +231,13 @@ class App(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.align(Alignment.Start).padding(start = 10.dp)
                         ) {
-                            Image(
-                                painter = icon,
-                                contentDescription = "icon",
-                                modifier = Modifier.size(16.dp)
-                            )
+                            if (DesktopPlatform.Current == DesktopPlatform.Windows) {
+                                Image(
+                                    painter = icon,
+                                    contentDescription = "icon",
+                                    modifier = Modifier.size(16.dp)
+                                )
+                            }
 
                             Row(
                                 horizontalArrangement = Arrangement.spacedBy(8.dp),
