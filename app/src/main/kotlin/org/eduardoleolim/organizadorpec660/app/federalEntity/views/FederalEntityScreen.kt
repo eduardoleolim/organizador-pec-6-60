@@ -137,7 +137,7 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
     }
 
     @Composable
-    fun FederalEntityScreenHeader(
+    private fun FederalEntityScreenHeader(
         onSaveRequest: () -> Unit,
         onImportExportRequest: () -> Unit
     ) {

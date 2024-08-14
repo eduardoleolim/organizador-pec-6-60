@@ -113,7 +113,7 @@ class MunicipalityScreen(private val queryBus: QueryBus, private val commandBus:
     }
 
     @Composable
-    fun MunicipalityScreenHeader(
+    private fun MunicipalityScreenHeader(
         onSaveRequest: () -> Unit,
         onImportExportRequest: () -> Unit
     ) {

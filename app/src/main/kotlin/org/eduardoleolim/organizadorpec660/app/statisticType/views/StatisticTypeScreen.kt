@@ -108,7 +108,7 @@ class StatisticTypeScreen(private val queryBus: QueryBus, private val commandBus
     }
 
     @Composable
-    fun StatisticTypeScreenHeader(
+    private fun StatisticTypeScreenHeader(
         onSaveRequest: () -> Unit,
         onImportExportRequest: () -> Unit
     ) {

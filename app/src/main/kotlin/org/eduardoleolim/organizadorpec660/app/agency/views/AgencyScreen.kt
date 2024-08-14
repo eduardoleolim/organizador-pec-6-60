@@ -109,7 +109,7 @@ class AgencyScreen(private val queryBus: QueryBus, private val commandBus: Comma
     }
 
     @Composable
-    fun AgencyScreenHeader(
+    private fun AgencyScreenHeader(
         onSaveRequest: () -> Unit,
         onImportExportRequest: () -> Unit
     ) {

@@ -81,7 +81,7 @@ class InstrumentScreen(private val queryBus: QueryBus, private val commandBus: C
     }
 
     @Composable
-    fun InstrumentScreenHeader(
+    private fun InstrumentScreenHeader(
         onSaveRequest: () -> Unit,
         onImportExportRequest: () -> Unit
     ) {
