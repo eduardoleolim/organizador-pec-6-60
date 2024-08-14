@@ -69,6 +69,8 @@ class InstrumentScreen(private val queryBus: QueryBus, private val commandBus: C
                 },
                 onDeleteRequest = { },
                 onEditRequest = { screenModel.navigateToSaveInstrumentView(it.id) },
+                onCopyRequest = { },
+                onShowDetailsRequest = { },
                 onChangeStateRequest = { instrument, save ->
                     if (save) {
                         screenModel.updateInstrumentAsSavedInSIRESO(instrument.id)

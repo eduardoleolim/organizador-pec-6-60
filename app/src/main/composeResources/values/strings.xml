@@ -54,6 +54,8 @@
     <string name="inst_select_all_federal_entities">All federal entities</string>
     <string name="inst_select_all_municipalities">All municipalities</string>
     <string name="inst_select_all_agencies">All agencies</string>
+    <string name="inst_copy_document">Copy document</string>
+    <string name="inst_show_details">Show details</string>
 
     <string name="inst_form_add_title">Add instrument</string>
     <string name="inst_form_edit_title">Edit instrument</string>

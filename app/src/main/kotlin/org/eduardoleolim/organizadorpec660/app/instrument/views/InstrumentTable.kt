@@ -5,10 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.ArrowDropUp
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -48,6 +45,8 @@ fun InstrumentScreen.InstrumentsTable(
     onSearch: (search: String, federalEntityId: String?, municipalityId: String?, agencyId: String?, statisticTypeId: String?, statisticYear: Int?, statisticMonth: Int?, pageIndex: Int, pageSize: Int, orderBy: String?, isAscending: Boolean) -> Unit,
     onDeleteRequest: (InstrumentResponse) -> Unit,
     onEditRequest: (InstrumentResponse) -> Unit,
+    onCopyRequest: (InstrumentResponse) -> Unit,
+    onShowDetailsRequest: (InstrumentResponse) -> Unit,
     onChangeStateRequest: (InstrumentResponse, Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -258,7 +257,32 @@ fun InstrumentScreen.InstrumentsTable(
                     cell {
                         Checkbox(
                             checked = instrument.savedInSIRESO,
-                            onCheckedChange = { onChangeStateRequest(instrument, it) }
+                            onCheckedChange = {
+                                onChangeStateRequest(instrument, it)
+
+                                val orderBy = when (state.sortColumnIndex) {
+                                    1 -> InstrumentFields.StatisticYear.value
+                                    2 -> InstrumentFields.StatisticMonth.value
+                                    3 -> InstrumentFields.StatisticTypeKeyCode.value
+                                    4 -> InstrumentFields.FederalEntityKeyCode.value
+                                    5 -> InstrumentFields.MunicipalityKeyCode.value
+                                    else -> null
+                                }
+
+                                onSearch(
+                                    value,
+                                    federalEntityId,
+                                    municipalityId,
+                                    agencyId,
+                                    statisticTypeId,
+                                    statisticYear,
+                                    statisticMonth,
+                                    state.pageIndex,
+                                    state.pageSize,
+                                    orderBy,
+                                    state.sortAscending
+                                )
+                            }
                         )
                     }
 
@@ -283,6 +307,36 @@ fun InstrumentScreen.InstrumentsTable(
                     }
 
                     cell {
+                        PlainTextTooltip(
+                            tooltip = {
+                                Text(stringResource(Res.string.inst_show_details))
+                            }
+                        ) {
+                            IconButton(
+                                onClick = { onShowDetailsRequest(instrument) }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Visibility,
+                                    contentDescription = "Show details"
+                                )
+                            }
+                        }
+
+                        PlainTextTooltip(
+                            tooltip = {
+                                Text(stringResource(Res.string.inst_copy_document))
+                            }
+                        ) {
+                            IconButton(
+                                onClick = { onCopyRequest(instrument) }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.FileCopy,
+                                    contentDescription = "Copy instrument file"
+                                )
+                            }
+                        }
+
                         PlainTextTooltip(
                             tooltip = {
                                 Text(stringResource(Res.string.edit))

@@ -54,6 +54,8 @@
     <string name="inst_select_all_federal_entities">Todas la entidades federativas</string>
     <string name="inst_select_all_municipalities">Todos los municipios</string>
     <string name="inst_select_all_agencies">Todas las fuentes</string>
+    <string name="inst_copy_document">Copiar documento</string>
+    <string name="inst_show_details">Mostrar detalles</string>
 
     <string name="inst_form_add_title">Agregar instrumento</string>
     <string name="inst_form_edit_title">Editar instrumento</string>
