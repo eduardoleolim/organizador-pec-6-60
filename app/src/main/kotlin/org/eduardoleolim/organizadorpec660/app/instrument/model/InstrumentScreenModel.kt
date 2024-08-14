@@ -3,6 +3,8 @@ package org.eduardoleolim.organizadorpec660.app.instrument.model
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.window.Notification
+import androidx.compose.ui.window.TrayState
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import cafe.adriel.voyager.core.registry.ScreenRegistry
@@ -10,6 +12,9 @@ import cafe.adriel.voyager.navigator.Navigator
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
+import org.eduardoleolim.organizadorpec660.app.generated.resources.inst_copy_notification_message
+import org.eduardoleolim.organizadorpec660.app.generated.resources.inst_copy_notification_title
 import org.eduardoleolim.organizadorpec660.app.router.HomeProvider
 import org.eduardoleolim.organizadorpec660.core.agency.application.AgencyResponse
 import org.eduardoleolim.organizadorpec660.core.agency.application.MunicipalityAgenciesResponse
@@ -17,9 +22,11 @@ import org.eduardoleolim.organizadorpec660.core.agency.application.searchByMunic
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntitiesResponse
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.searchByTerm.SearchFederalEntitiesByTermQuery
+import org.eduardoleolim.organizadorpec660.core.instrument.application.DetailedInstrumentResponse
 import org.eduardoleolim.organizadorpec660.core.instrument.application.InstrumentsResponse
 import org.eduardoleolim.organizadorpec660.core.instrument.application.save.UpdateInstrumentAsNotSavedCommand
 import org.eduardoleolim.organizadorpec660.core.instrument.application.save.UpdateInstrumentAsSavedCommand
+import org.eduardoleolim.organizadorpec660.core.instrument.application.searchById.SearchInstrumentByIdQuery
 import org.eduardoleolim.organizadorpec660.core.instrument.application.searchByTerm.SearchInstrumentsByTermQuery
 import org.eduardoleolim.organizadorpec660.core.municipality.application.MunicipalitiesResponse
 import org.eduardoleolim.organizadorpec660.core.municipality.application.MunicipalityResponse
@@ -29,13 +36,22 @@ import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
 import org.eduardoleolim.organizadorpec660.core.statisticType.application.StatisticTypeResponse
 import org.eduardoleolim.organizadorpec660.core.statisticType.application.StatisticTypesResponse
 import org.eduardoleolim.organizadorpec660.core.statisticType.application.searchByTerm.SearchStatisticTypesByTermQuery
+import org.jetbrains.compose.resources.getString
+import java.awt.Toolkit
+import java.awt.datatransfer.Clipboard
+import java.awt.datatransfer.StringSelection
+import java.io.File
+
 
 class InstrumentScreenModel(
     private val navigator: Navigator,
+    private val trayState: TrayState,
     private val queryBus: QueryBus,
     private val commandBus: CommandBus,
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default
 ) : ScreenModel {
+    private val clipboard: Clipboard = Toolkit.getDefaultToolkit().systemClipboard
+
     var instruments by mutableStateOf(InstrumentsResponse(emptyList(), 0, null, null))
         private set
 
@@ -139,5 +155,21 @@ class InstrumentScreenModel(
 
     fun updateInstrumentAsNotSavedInSIRESO(instrumentId: String) {
         commandBus.dispatch(UpdateInstrumentAsNotSavedCommand(instrumentId))
+    }
+
+    fun copyInstrumentToClipboard(instrumentId: String) {
+        screenModelScope.launch(dispatcher) {
+            val tempDir = System.getProperty("java.io.tmpdir")
+            val instrument = queryBus.ask<DetailedInstrumentResponse>(SearchInstrumentByIdQuery(instrumentId))
+            val file = File(tempDir).resolve("${instrument.filename}.pdf")
+            file.writeBytes(instrument.instrumentFile.content)
+            clipboard.setContents(StringSelection(file.absolutePath), null)
+
+            val notification = Notification(
+                getString(Res.string.inst_copy_notification_title),
+                getString(Res.string.inst_copy_notification_message, file.absolutePath)
+            )
+            trayState.sendNotification(notification)
+        }
     }
 }

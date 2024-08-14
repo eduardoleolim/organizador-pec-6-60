@@ -56,6 +56,8 @@
     <string name="inst_select_all_agencies">All agencies</string>
     <string name="inst_copy_document">Copy document</string>
     <string name="inst_show_details">Show details</string>
+    <string name="inst_copy_notification_title">Instrument copied to clipboard</string>
+    <string name="inst_copy_notification_message">Instrument path copied from %1$s</string>
 
     <string name="inst_form_add_title">Add instrument</string>
     <string name="inst_form_edit_title">Edit instrument</string>

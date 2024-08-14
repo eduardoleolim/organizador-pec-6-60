@@ -21,6 +21,7 @@ import kotlinx.coroutines.Dispatchers
 import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
 import org.eduardoleolim.organizadorpec660.app.generated.resources.instruments
 import org.eduardoleolim.organizadorpec660.app.instrument.model.InstrumentScreenModel
+import org.eduardoleolim.organizadorpec660.app.shared.notification.LocalTrayState
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
 import org.jetbrains.compose.resources.stringResource
@@ -29,7 +30,9 @@ class InstrumentScreen(private val queryBus: QueryBus, private val commandBus: C
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val screenModel = rememberScreenModel { InstrumentScreenModel(navigator, queryBus, commandBus, Dispatchers.IO) }
+        val trayState = LocalTrayState.current
+        val screenModel =
+            rememberScreenModel { InstrumentScreenModel(navigator, trayState, queryBus, commandBus, Dispatchers.IO) }
         val pageSizes = remember { listOf(10, 25, 50, 100) }
         val state = rememberPaginatedDataTableState(pageSizes.first())
         var searchValue by remember { mutableStateOf("") }
@@ -69,7 +72,7 @@ class InstrumentScreen(private val queryBus: QueryBus, private val commandBus: C
                 },
                 onDeleteRequest = { },
                 onEditRequest = { screenModel.navigateToSaveInstrumentView(it.id) },
-                onCopyRequest = { },
+                onCopyRequest = { screenModel.copyInstrumentToClipboard(it.id) },
                 onShowDetailsRequest = { },
                 onChangeStateRequest = { instrument, save ->
                     if (save) {
