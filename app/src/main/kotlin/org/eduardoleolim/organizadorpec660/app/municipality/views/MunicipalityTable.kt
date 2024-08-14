@@ -113,6 +113,10 @@ fun MunicipalityScreen.MunicipalitiesTable(
         )
     }
 
+    LaunchedEffect(Unit) {
+        screenModel.searchAllFederalEntities()
+    }
+
     Surface(
         modifier = Modifier.then(modifier),
         shape = MaterialTheme.shapes.small,
@@ -129,69 +133,13 @@ fun MunicipalityScreen.MunicipalitiesTable(
                 onSearch(search, federalEntityId, pageIndex, pageSize, sortBy?.let { orders[it] }, isAscending)
             },
             header = {
-                Box {
-                    var expanded by remember { mutableStateOf(false) }
-                    var selectedFederalEntity by remember { mutableStateOf<FederalEntityResponse?>(null) }
-
-                    LaunchedEffect(selectedFederalEntity) {
-                        federalEntityId = selectedFederalEntity?.id
+                SelectFederalEntity(
+                    federalEntities = screenModel.federalEntities,
+                    onFederalEntitySelected = { federalEntity ->
+                        federalEntityId = federalEntity?.id
                         state.pageIndex = -1
                     }
-
-                    LaunchedEffect(Unit) {
-                        screenModel.searchAllFederalEntities()
-                    }
-
-                    TextButton(
-                        onClick = { expanded = true },
-                    ) {
-                        Text(
-                            text = selectedFederalEntity?.let { "${it.keyCode} - ${it.name}" }
-                                ?: stringResource(Res.string.mun_form_select_all),
-                            fontWeight = FontWeight.Normal,
-                            color = MaterialTheme.colorScheme.onSurface,
-                        )
-                        Icon(
-                            imageVector = if (expanded) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
-                            contentDescription = "Expand"
-                        )
-                    }
-
-                    DropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false },
-                        modifier = Modifier.heightIn(0.dp, 300.dp)
-                            .background(MaterialTheme.colorScheme.surface)
-                    ) {
-                        DropdownMenuItem(
-                            text = {
-                                Text(
-                                    text = stringResource(Res.string.mun_form_select_all),
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
-                            },
-                            onClick = {
-                                expanded = false
-                                selectedFederalEntity = null
-                            }
-                        )
-
-                        screenModel.federalEntities.forEach { federalEntity ->
-                            DropdownMenuItem(
-                                text = {
-                                    Text(
-                                        text = "${federalEntity.keyCode} - ${federalEntity.name}",
-                                        color = MaterialTheme.colorScheme.onSurface
-                                    )
-                                },
-                                onClick = {
-                                    expanded = false
-                                    selectedFederalEntity = federalEntity
-                                }
-                            )
-                        }
-                    }
-                }
+                )
             }
         ) {
             val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
@@ -250,3 +198,69 @@ fun MunicipalityScreen.MunicipalitiesTable(
         }
     }
 }
+
+@Composable
+private fun SelectFederalEntity(
+    federalEntities: List<FederalEntityResponse>,
+    onFederalEntitySelected: (FederalEntityResponse?) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    var selectedFederalEntity by remember { mutableStateOf<FederalEntityResponse?>(null) }
+
+    LaunchedEffect(selectedFederalEntity) {
+        onFederalEntitySelected(selectedFederalEntity)
+    }
+
+    Box {
+        TextButton(
+            onClick = { expanded = true },
+        ) {
+            Text(
+                text = selectedFederalEntity?.let { "${it.keyCode} - ${it.name}" }
+                    ?: stringResource(Res.string.mun_form_select_all),
+                fontWeight = FontWeight.Normal,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            Icon(
+                imageVector = if (expanded) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
+                contentDescription = "Expand"
+            )
+        }
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier.heightIn(0.dp, 300.dp)
+                .background(MaterialTheme.colorScheme.surface)
+        ) {
+            DropdownMenuItem(
+                text = {
+                    Text(
+                        text = stringResource(Res.string.mun_form_select_all),
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                },
+                onClick = {
+                    expanded = false
+                    selectedFederalEntity = null
+                }
+            )
+
+            federalEntities.forEach { federalEntity ->
+                DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = "${federalEntity.keyCode} - ${federalEntity.name}",
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    },
+                    onClick = {
+                        expanded = false
+                        selectedFederalEntity = federalEntity
+                    }
+                )
+            }
+        }
+    }
+}
+

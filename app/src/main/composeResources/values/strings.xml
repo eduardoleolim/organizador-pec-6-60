@@ -48,6 +48,12 @@
     <string name="inst_year">Year</string>
     <string name="inst_month">Month</string>
     <string name="inst_document">Document</string>
+    <string name="inst_select_all_years">All years</string>
+    <string name="inst_select_all_months">All months</string>
+    <string name="inst_select_all_statistic_types">All statistic types</string>
+    <string name="inst_select_all_federal_entities">All federal entities</string>
+    <string name="inst_select_all_municipalities">All municipalities</string>
+    <string name="inst_select_all_agencies">All agencies</string>
 
     <string name="inst_form_add_title">Add instrument</string>
     <string name="inst_form_edit_title">Edit instrument</string>
