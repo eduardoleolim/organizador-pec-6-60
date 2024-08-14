@@ -20,11 +20,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.application
-import androidx.compose.ui.window.rememberWindowState
+import androidx.compose.ui.window.*
 import kotlinx.coroutines.launch
 import org.eduardoleolim.organizadorpec660.app.generated.resources.*
 import org.eduardoleolim.organizadorpec660.app.router.Router
+import org.eduardoleolim.organizadorpec660.app.shared.notification.LocalTrayState
 import org.eduardoleolim.organizadorpec660.app.shared.theme.AppTheme
 import org.eduardoleolim.organizadorpec660.app.shared.theme.Contrast
 import org.eduardoleolim.organizadorpec660.app.shared.utils.AppConfig
@@ -169,7 +169,7 @@ class App(
     }
 
     @Composable
-    private fun MainWindow(onCloseRequest: () -> Unit) {
+    private fun ApplicationScope.MainWindow(onCloseRequest: () -> Unit) {
         val state = rememberWindowState()
         var theme by remember { mutableStateOf(SystemTheme.DEFAULT) }
         val isSystemInDarkTheme = isSystemInDarkTheme()
@@ -187,40 +187,51 @@ class App(
             }
         ) {
             val icon = painterResource(Res.drawable.logo)
-            DecoratedWindow(
-                onCloseRequest = onCloseRequest,
-                state = state,
-                icon = icon,
-                title = stringResource(Res.string.app_name)
-            ) {
-                TitleBar {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(10.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.align(Alignment.Start).padding(start = 10.dp)
-                    ) {
-                        Image(
-                            painter = icon,
-                            contentDescription = "icon",
-                            modifier = Modifier.size(16.dp)
-                        )
+            val trayState = rememberTrayState()
 
+            Tray(
+                icon = icon,
+                state = trayState
+            )
+
+            CompositionLocalProvider(
+                LocalTrayState provides trayState
+            ) {
+                DecoratedWindow(
+                    onCloseRequest = onCloseRequest,
+                    state = state,
+                    icon = icon,
+                    title = stringResource(Res.string.app_name)
+                ) {
+                    TitleBar {
                         Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                            horizontalArrangement = Arrangement.spacedBy(10.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.align(Alignment.Start).padding(start = 10.dp)
                         ) {
-                            ThemeSelector(onThemeSelected = { theme = it })
+                            Image(
+                                painter = icon,
+                                contentDescription = "icon",
+                                modifier = Modifier.size(16.dp)
+                            )
+
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                ThemeSelector(onThemeSelected = { theme = it })
+                            }
                         }
+
+                        Text(title)
                     }
 
-                    Text(title)
-                }
-
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.surfaceContainer
-                ) {
-                    Router(commandBus, queryBus)
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.surfaceContainer
+                    ) {
+                        Router(commandBus, queryBus)
+                    }
                 }
             }
         }
