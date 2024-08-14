@@ -29,7 +29,6 @@ import org.eduardoleolim.organizadorpec660.app.shared.theme.AppTheme
 import org.eduardoleolim.organizadorpec660.app.shared.theme.Contrast
 import org.eduardoleolim.organizadorpec660.app.shared.utils.AppConfig
 import org.eduardoleolim.organizadorpec660.app.shared.utils.isSystemInDarkTheme
-import org.eduardoleolim.organizadorpec660.app.shared.window.CustomWindow
 import org.eduardoleolim.organizadorpec660.app.shared.window.DecoratedWindow
 import org.eduardoleolim.organizadorpec660.app.shared.window.TitleBar
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
@@ -92,12 +91,11 @@ class App(
 
         AppTheme(isDarkMode = isSystemInDarkTheme) {
             val icon = painterResource(Res.drawable.logo)
-            CustomWindow(
+            DecoratedWindow(
                 state = state,
                 onCloseRequest = onCloseRequest,
-                onRequestToggleMaximize = null,
-                defaultTitle = stringResource(Res.string.app_name),
-                defaultIcon = icon
+                title = stringResource(Res.string.app_name),
+                icon = icon
             ) {
                 val density = LocalDensity.current
                 LaunchedEffect(Unit) {
@@ -108,60 +106,81 @@ class App(
                     }
                 }
 
-                Column(
-                    modifier = Modifier.fillMaxSize()
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    val coroutineScope = rememberCoroutineScope()
-                    var password by remember { mutableStateOf("") }
-
-                    Text(
-                        text = "¡Bienvenido a Organizador PEC-6-60!",
-                        style = TextStyle(
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    )
-
-                    Spacer(Modifier.height(16.dp))
-
-                    Text(
-                        text = "Para comenzar, establezca una contraseña para la base de datos",
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(start = 16.dp, end = 16.dp),
-                        style = TextStyle(
-                            fontSize = 16.sp,
-                            color = Color.Gray
-                        )
-                    )
-
-                    Spacer(Modifier.height(32.dp))
-
-                    OutlinedTextField(
-                        value = password,
-                        onValueChange = { password = it },
-                        label = {
-                            Text(stringResource(Res.string.password))
-                        }
-                    )
-
-                    Spacer(Modifier.height(32.dp))
-
-                    Button(
-                        onClick = {
-                            coroutineScope.launch {
-
-                            }
-                            onPasswordSet(password)
-                        },
-                        modifier = Modifier.width(200.dp)
+                TitleBar {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.align(Alignment.Start).padding(start = 10.dp)
                     ) {
-                        Text(
-                            text = stringResource(Res.string.save),
-                            fontSize = 16.sp
+                        Image(
+                            painter = icon,
+                            contentDescription = "icon",
+                            modifier = Modifier.size(16.dp)
                         )
+                    }
+
+                    Text(title)
+                }
+
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.surfaceContainer
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxSize()
+                            .padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        val coroutineScope = rememberCoroutineScope()
+                        var password by remember { mutableStateOf("") }
+
+                        Text(
+                            text = "¡Bienvenido a Organizador PEC-6-60!",
+                            style = TextStyle(
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        )
+
+                        Spacer(Modifier.height(16.dp))
+
+                        Text(
+                            text = "Para comenzar, establezca una contraseña para la base de datos",
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+                            style = TextStyle(
+                                fontSize = 16.sp,
+                                color = Color.Gray
+                            )
+                        )
+
+                        Spacer(Modifier.height(32.dp))
+
+                        OutlinedTextField(
+                            value = password,
+                            onValueChange = { password = it },
+                            label = {
+                                Text(stringResource(Res.string.password))
+                            }
+                        )
+
+                        Spacer(Modifier.height(32.dp))
+
+                        Button(
+                            onClick = {
+                                coroutineScope.launch {
+
+                                }
+                                onPasswordSet(password)
+                            },
+                            modifier = Modifier.width(200.dp)
+                        ) {
+                            Text(
+                                text = stringResource(Res.string.save),
+                                fontSize = 16.sp
+                            )
+                        }
                     }
                 }
             }

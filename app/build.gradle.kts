@@ -22,6 +22,7 @@ dependencies {
     implementation(compose.components.resources)
     implementation(compose.materialIconsExtended)
     implementation(compose.material3)
+    implementation(libs.jna.core)
     implementation(libs.kotlinx.coroutines.swing)
     implementation(libs.voyager.navigator)
     implementation(libs.voyager.screenmodel)
