@@ -12,7 +12,7 @@ import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.FadeTransition
 import kotlinx.coroutines.launch
 import org.eduardoleolim.organizadorpec660.app.auth.views.AuthScreen
-import org.eduardoleolim.organizadorpec660.app.router.HomeProvider
+import org.eduardoleolim.organizadorpec660.app.shared.router.HomeProvider
 
 class HomeScreenModel(
     private val navigator: Navigator,

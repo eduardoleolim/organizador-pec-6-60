@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
 import org.eduardoleolim.organizadorpec660.app.generated.resources.inst_copy_notification_message
 import org.eduardoleolim.organizadorpec660.app.generated.resources.inst_copy_notification_title
-import org.eduardoleolim.organizadorpec660.app.router.HomeProvider
+import org.eduardoleolim.organizadorpec660.app.shared.router.HomeProvider
 import org.eduardoleolim.organizadorpec660.core.agency.application.AgencyResponse
 import org.eduardoleolim.organizadorpec660.core.agency.application.MunicipalityAgenciesResponse
 import org.eduardoleolim.organizadorpec660.core.agency.application.searchByMunicipalityId.SearchAgenciesByMunicipalityIdQuery

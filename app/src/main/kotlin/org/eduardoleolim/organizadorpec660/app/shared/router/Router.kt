@@ -1,4 +1,4 @@
-package org.eduardoleolim.organizadorpec660.app.router
+package org.eduardoleolim.organizadorpec660.app.shared.router
 
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.core.registry.ScreenRegistry
