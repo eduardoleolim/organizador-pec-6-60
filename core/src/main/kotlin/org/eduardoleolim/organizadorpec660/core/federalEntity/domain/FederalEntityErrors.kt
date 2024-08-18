@@ -16,3 +16,5 @@ class CanNotSaveFederalEntityError(cause: Throwable?) :
 
 class CanNotDeleteFederalEntityError(cause: Throwable?) :
     FederalEntityError("The federal entity could not be saved", cause)
+
+class CanNotImportFederalEntitiesError : FederalEntityError("The federal entities can not be imported")

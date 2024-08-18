@@ -38,7 +38,6 @@ class KtormFederalEntityRepository(private val database: Database) : FederalEnti
         }
     }
 
-
     override fun save(federalEntity: FederalEntity) {
         database.useTransaction {
             database.insertOrUpdate(federalEntities) {
