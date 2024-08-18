@@ -11,10 +11,14 @@ import org.eduardoleolim.organizadorpec660.core.auth.domain.AuthRepository
 import org.eduardoleolim.organizadorpec660.core.auth.infrastructure.persistence.KtormAuthRepository
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.create.FederalEntityCreator
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.delete.FederalEntityDeleter
+import org.eduardoleolim.organizadorpec660.core.federalEntity.application.importer.FederalEntityImporter
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.search.FederalEntitySearcher
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.update.FederalEntityUpdater
+import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityImportReader
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityRepository
 import org.eduardoleolim.organizadorpec660.core.federalEntity.infrastructure.persistence.KtormFederalEntityRepository
+import org.eduardoleolim.organizadorpec660.core.federalEntity.infrastructure.services.CsvFederalEntityImportInput
+import org.eduardoleolim.organizadorpec660.core.federalEntity.infrastructure.services.CsvFederalEntityImportReader
 import org.eduardoleolim.organizadorpec660.core.instrument.application.create.InstrumentCreator
 import org.eduardoleolim.organizadorpec660.core.instrument.application.save.InstrumentSiresoSaver
 import org.eduardoleolim.organizadorpec660.core.instrument.application.search.InstrumentSearcher
@@ -67,6 +71,8 @@ object KtormAppModule {
         single { FederalEntityDeleter(get(), get()) }
         single { FederalEntitySearcher(get()) }
         single { FederalEntityUpdater(get()) }
+        single<FederalEntityImportReader<CsvFederalEntityImportInput>> { CsvFederalEntityImportReader() }
+        single<FederalEntityImporter<CsvFederalEntityImportInput>> { FederalEntityImporter(get(), get()) }
 
         // Instrument services
         single { InstrumentCreator(get(), get(), get(), get()) }

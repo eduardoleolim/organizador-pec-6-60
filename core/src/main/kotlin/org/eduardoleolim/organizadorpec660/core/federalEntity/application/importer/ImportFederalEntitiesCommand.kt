@@ -4,7 +4,7 @@ import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEnti
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityImportInput
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.Command
 
-class ImportFederalEntitiesCommand<I : FederalEntityImportInput>(
+open class ImportFederalEntitiesCommand<I : FederalEntityImportInput>(
     private val input: I,
     private val overrideIfExists: Boolean
 ) : Command<FederalEntityError, List<FederalEntityImportWarning>> {
