@@ -12,18 +12,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.eduardoleolim.organizadorpec660.app.federalEntity.data.EmptyFederalEntityDataException
-import org.eduardoleolim.organizadorpec660.app.federalEntity.data.FederalEntityImportException
 import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
 import org.eduardoleolim.organizadorpec660.app.generated.resources.fe_keycode
 import org.eduardoleolim.organizadorpec660.app.generated.resources.fe_name
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntitiesResponse
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.create.CreateFederalEntityCommand
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.delete.DeleteFederalEntityCommand
+import org.eduardoleolim.organizadorpec660.core.federalEntity.application.importer.CsvImportFederalEntitiesCommand
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.searchByTerm.SearchFederalEntitiesByTermQuery
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.update.UpdateFederalEntityCommand
+import org.eduardoleolim.organizadorpec660.core.federalEntity.infrastructure.services.KotlinCsvFederalEntityImportInput
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
-import org.eduardoleolim.organizadorpec660.core.shared.domain.onLeft
 import org.jetbrains.compose.resources.getString
 import java.io.File
 import java.io.IOException
@@ -192,33 +192,21 @@ class FederalEntityScreenModel(
 
     fun importFederalEntities(file: File) {
         screenModelScope.launch(dispatcher) {
+            val keyCodeHeader = getString(Res.string.fe_keycode)
+            val nameHeader = getString(Res.string.fe_name)
             importState = FederalEntityImportState.InProgress
             delay(500)
 
-            var totalRecords = 0
-            val warnings = mutableListOf<Throwable>()
-            val keyCodeHeader = getString(Res.string.fe_keycode)
-            val nameHeader = getString(Res.string.fe_name)
-
-            csvReader.open(file) {
-                val records = readAllWithHeaderAsSequence().toList()
-                totalRecords = records.count()
-
-                records.forEach { row ->
-                    val keyCode = row[keyCodeHeader]?.padStart(2, '0') ?: ""
-                    val name = row[nameHeader] ?: ""
-
-                    commandBus.dispatch(CreateFederalEntityCommand(keyCode, name)).onLeft {
-                        warnings.add(it)
+            val input = KotlinCsvFederalEntityImportInput(file, keyCodeHeader, nameHeader)
+            importState = commandBus.dispatch(CsvImportFederalEntitiesCommand(input, true))
+                .fold(
+                    ifRight = { warnings ->
+                        FederalEntityImportState.Success(warnings.map { it.error })
+                    },
+                    ifLeft = {
+                        FederalEntityImportState.Error(it)
                     }
-                }
-            }
-
-            importState = if (totalRecords > 0 && totalRecords == warnings.size) {
-                FederalEntityImportState.Error(FederalEntityImportException(warnings))
-            } else {
-                FederalEntityImportState.Success(warnings)
-            }
+                )
         }
     }
 }
