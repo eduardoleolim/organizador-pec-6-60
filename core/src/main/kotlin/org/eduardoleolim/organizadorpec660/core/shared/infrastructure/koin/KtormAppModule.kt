@@ -14,10 +14,10 @@ import org.eduardoleolim.organizadorpec660.core.federalEntity.application.delete
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.importer.FederalEntityImporter
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.search.FederalEntitySearcher
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.update.FederalEntityUpdater
+import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.CsvFederalEntityImportInput
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityImportReader
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityRepository
 import org.eduardoleolim.organizadorpec660.core.federalEntity.infrastructure.persistence.KtormFederalEntityRepository
-import org.eduardoleolim.organizadorpec660.core.federalEntity.infrastructure.services.CsvFederalEntityImportInput
 import org.eduardoleolim.organizadorpec660.core.federalEntity.infrastructure.services.CsvFederalEntityImportReader
 import org.eduardoleolim.organizadorpec660.core.instrument.application.create.InstrumentCreator
 import org.eduardoleolim.organizadorpec660.core.instrument.application.save.InstrumentSiresoSaver

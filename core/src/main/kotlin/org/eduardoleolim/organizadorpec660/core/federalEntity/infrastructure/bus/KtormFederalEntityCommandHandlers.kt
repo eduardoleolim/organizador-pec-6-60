@@ -6,12 +6,13 @@ import org.eduardoleolim.organizadorpec660.core.federalEntity.application.create
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.delete.DeleteFederalEntityCommand
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.delete.DeleteFederalEntityCommandHandler
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.delete.FederalEntityDeleter
+import org.eduardoleolim.organizadorpec660.core.federalEntity.application.importer.CsvImportFederalEntitiesCommand
+import org.eduardoleolim.organizadorpec660.core.federalEntity.application.importer.CsvImportFederalEntitiesCommandHandler
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.importer.FederalEntityImporter
-import org.eduardoleolim.organizadorpec660.core.federalEntity.application.importer.ImportFederalEntitiesCommandHandler
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.update.FederalEntityUpdater
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.update.UpdateFederalEntityCommand
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.update.UpdateFederalEntityCommandHandler
-import org.eduardoleolim.organizadorpec660.core.federalEntity.infrastructure.services.CsvFederalEntityImportInput
+import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.CsvFederalEntityImportInput
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.Command
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandHandler
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.bus.KtormCommandHandlerDecorator
@@ -28,7 +29,7 @@ class KtormFederalEntityCommandHandlers(context: KtormAppKoinContext) : KtormApp
         CreateFederalEntityCommand::class to createCommandHandler(),
         UpdateFederalEntityCommand::class to updateCommandHandler(),
         DeleteFederalEntityCommand::class to deleteCommandHandler(),
-        ImportFederalEntitiesFromCsvCommand::class to importFromCsvCommandHandler()
+        CsvImportFederalEntitiesCommand::class to importFromCsvCommandHandler()
     )
 
     private fun createCommandHandler(): CommandHandler<*, *, out Command<*, *>> {
@@ -54,7 +55,7 @@ class KtormFederalEntityCommandHandlers(context: KtormAppKoinContext) : KtormApp
 
     private fun importFromCsvCommandHandler(): CommandHandler<*, *, out Command<*, *>> {
         val importer: FederalEntityImporter<CsvFederalEntityImportInput> by inject()
-        val commandHandler = ImportFederalEntitiesCommandHandler(importer)
+        val commandHandler = CsvImportFederalEntitiesCommandHandler(importer)
 
         return KtormCommandHandlerDecorator(database, commandHandler)
     }

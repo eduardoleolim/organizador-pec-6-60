@@ -15,6 +15,8 @@ class FederalEntityImportData(keyCode: String, name: String) {
 
 abstract class FederalEntityImportInput
 
+abstract class CsvFederalEntityImportInput : FederalEntityImportInput()
+
 interface FederalEntityImportReader<I : FederalEntityImportInput> {
     fun read(input: I): List<FederalEntityImportData>
 }

@@ -1,10 +1,10 @@
 package org.eduardoleolim.organizadorpec660.core.federalEntity.application.importer
 
+import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.CsvFederalEntityImportInput
 import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityError
-import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityImportInput
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.Command
 
-open class ImportFederalEntitiesCommand<I : FederalEntityImportInput>(
+open class CsvImportFederalEntitiesCommand<I : CsvFederalEntityImportInput>(
     private val input: I,
     private val overrideIfExists: Boolean
 ) : Command<FederalEntityError, List<FederalEntityImportWarning>> {
