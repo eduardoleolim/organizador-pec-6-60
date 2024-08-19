@@ -155,12 +155,12 @@ class KtormInstrumentRepository(
             val instrument = matching(InstrumentCriteria.idCriteria(instrumentId)).firstOrNull()
                 ?: throw InstrumentNotFoundError(instrumentId)
 
-            database.delete(instrumentFiles) {
-                it.id eq instrument.instrumentFileId().toString()
-            }
-
             database.delete(instruments) {
                 it.id eq instrument.id().toString()
+            }
+
+            database.delete(instrumentFiles) {
+                it.id eq instrument.instrumentFileId().toString()
             }
         }
     }
