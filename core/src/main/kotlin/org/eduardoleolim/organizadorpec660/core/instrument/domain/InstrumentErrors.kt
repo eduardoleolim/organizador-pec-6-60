@@ -25,3 +25,6 @@ class InstrumentAlreadyExistsError(
     statisticTypeId: String,
     municipalityId: String
 ) : InstrumentError("The instrument with statistic year <$statisticYear>, statistic month <$statisticMonth>, agency id <$agencyId>, statistic type id <$statisticTypeId>, and municipality id <$municipalityId> already exists")
+
+class CanNotDeleteSavedInstrumentError :
+    InstrumentError("The instrument can not be deleted because its status is saved in SIRESO")

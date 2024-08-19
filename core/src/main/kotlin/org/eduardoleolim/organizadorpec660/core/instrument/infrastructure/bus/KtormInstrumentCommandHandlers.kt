@@ -3,6 +3,9 @@ package org.eduardoleolim.organizadorpec660.core.instrument.infrastructure.bus
 import org.eduardoleolim.organizadorpec660.core.instrument.application.create.CreateInstrumentCommand
 import org.eduardoleolim.organizadorpec660.core.instrument.application.create.CreateInstrumentCommandHandler
 import org.eduardoleolim.organizadorpec660.core.instrument.application.create.InstrumentCreator
+import org.eduardoleolim.organizadorpec660.core.instrument.application.delete.DeleteInstrumentCommand
+import org.eduardoleolim.organizadorpec660.core.instrument.application.delete.DeleteInstrumentCommandHandler
+import org.eduardoleolim.organizadorpec660.core.instrument.application.delete.InstrumentDeleter
 import org.eduardoleolim.organizadorpec660.core.instrument.application.save.*
 import org.eduardoleolim.organizadorpec660.core.instrument.application.update.InstrumentUpdater
 import org.eduardoleolim.organizadorpec660.core.instrument.application.update.UpdateInstrumentCommand
@@ -23,7 +26,8 @@ class KtormInstrumentCommandHandlers(context: KtormAppKoinContext) : KtormAppKoi
         CreateInstrumentCommand::class to createCommandHandler(),
         UpdateInstrumentCommand::class to updateCommandHandler(),
         UpdateInstrumentAsSavedCommand::class to updateAsSavedCommandHandler(),
-        UpdateInstrumentAsNotSavedCommand::class to updateAsNotSavedCommandHandler()
+        UpdateInstrumentAsNotSavedCommand::class to updateAsNotSavedCommandHandler(),
+        DeleteInstrumentCommand::class to deleteCommandHandler()
     )
 
     private fun createCommandHandler(): CommandHandler<*, *, out Command<*, *>> {
@@ -50,6 +54,13 @@ class KtormInstrumentCommandHandlers(context: KtormAppKoinContext) : KtormAppKoi
     private fun updateAsNotSavedCommandHandler(): CommandHandler<*, *, out Command<*, *>> {
         val updater: InstrumentSiresoSaver by inject()
         val commandHandler = UpdateInstrumentAsNotSavedCommandHandler(updater)
+
+        return KtormCommandHandlerDecorator(database, commandHandler)
+    }
+
+    private fun deleteCommandHandler(): CommandHandler<*, *, out Command<*, *>> {
+        val deleter: InstrumentDeleter by inject()
+        val commandHandler = DeleteInstrumentCommandHandler(deleter)
 
         return KtormCommandHandlerDecorator(database, commandHandler)
     }

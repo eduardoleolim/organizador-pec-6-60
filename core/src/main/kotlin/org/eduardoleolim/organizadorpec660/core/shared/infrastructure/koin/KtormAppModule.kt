@@ -20,6 +20,7 @@ import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEnti
 import org.eduardoleolim.organizadorpec660.core.federalEntity.infrastructure.persistence.KtormFederalEntityRepository
 import org.eduardoleolim.organizadorpec660.core.federalEntity.infrastructure.services.CsvFederalEntityImportReader
 import org.eduardoleolim.organizadorpec660.core.instrument.application.create.InstrumentCreator
+import org.eduardoleolim.organizadorpec660.core.instrument.application.delete.InstrumentDeleter
 import org.eduardoleolim.organizadorpec660.core.instrument.application.save.InstrumentSiresoSaver
 import org.eduardoleolim.organizadorpec660.core.instrument.application.search.InstrumentSearcher
 import org.eduardoleolim.organizadorpec660.core.instrument.application.update.InstrumentUpdater
@@ -79,6 +80,7 @@ object KtormAppModule {
         single { InstrumentUpdater(get(), get(), get()) }
         single { InstrumentSiresoSaver(get()) }
         single { InstrumentSearcher(get()) }
+        single { InstrumentDeleter(get()) }
 
         // Municipality services
         single { MunicipalityCreator(get(), get()) }
