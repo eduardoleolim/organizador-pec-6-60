@@ -31,13 +31,16 @@ class InstrumentScreen(private val queryBus: QueryBus, private val commandBus: C
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
         val trayState = LocalTrayState.current
-        val screenModel =
-            rememberScreenModel { InstrumentScreenModel(navigator, trayState, queryBus, commandBus, Dispatchers.IO) }
+        val screenModel = rememberScreenModel {
+            InstrumentScreenModel(navigator, trayState, queryBus, commandBus, Dispatchers.IO)
+        }
         val pageSizes = remember { listOf(10, 25, 50, 100) }
         val state = rememberPaginatedDataTableState(pageSizes.first())
         var searchValue by remember { mutableStateOf("") }
 
-        Column(modifier = Modifier.padding(24.dp)) {
+        Column(
+            modifier = Modifier.padding(24.dp)
+        ) {
             InstrumentScreenHeader(
                 onSaveRequest = { screenModel.navigateToSaveInstrumentView(null) },
                 onImportExportRequest = { }
@@ -70,7 +73,7 @@ class InstrumentScreen(private val queryBus: QueryBus, private val commandBus: C
                         pageIndex * pageSize
                     )
                 },
-                onDeleteRequest = { },
+                onDeleteRequest = { screenModel.deleteInstrument(it.id) },
                 onEditRequest = { screenModel.navigateToSaveInstrumentView(it.id) },
                 onCopyRequest = { screenModel.copyInstrumentToClipboard(it.id) },
                 onShowDetailsRequest = { },

@@ -24,6 +24,7 @@ import org.eduardoleolim.organizadorpec660.core.federalEntity.application.Federa
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.searchByTerm.SearchFederalEntitiesByTermQuery
 import org.eduardoleolim.organizadorpec660.core.instrument.application.DetailedInstrumentResponse
 import org.eduardoleolim.organizadorpec660.core.instrument.application.InstrumentsResponse
+import org.eduardoleolim.organizadorpec660.core.instrument.application.delete.DeleteInstrumentCommand
 import org.eduardoleolim.organizadorpec660.core.instrument.application.save.UpdateInstrumentAsNotSavedCommand
 import org.eduardoleolim.organizadorpec660.core.instrument.application.save.UpdateInstrumentAsSavedCommand
 import org.eduardoleolim.organizadorpec660.core.instrument.application.searchById.SearchInstrumentByIdQuery
@@ -42,6 +43,12 @@ import java.awt.datatransfer.Clipboard
 import java.awt.datatransfer.StringSelection
 import java.io.File
 
+sealed class InstrumentDeleteState {
+    data object Idle : InstrumentDeleteState()
+    data object InProgress : InstrumentDeleteState()
+    data object Success : InstrumentDeleteState()
+    data class Error(val error: Throwable) : InstrumentDeleteState()
+}
 
 class InstrumentScreenModel(
     private val navigator: Navigator,
@@ -170,6 +177,12 @@ class InstrumentScreenModel(
                 getString(Res.string.inst_copy_notification_message, file.absolutePath)
             )
             trayState.sendNotification(notification)
+        }
+    }
+
+    fun deleteInstrument(instrumentId: String) {
+        screenModelScope.launch(dispatcher) {
+            commandBus.dispatch(DeleteInstrumentCommand(instrumentId))
         }
     }
 }
