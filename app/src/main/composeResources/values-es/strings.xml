@@ -22,6 +22,10 @@
     <string name="no">No</string>
     <string name="ok">Aceptar</string>
 
+    <!-- Init screen -->
+    <string name="init_screen_title">¡Bienvenido a Organizador PEC-6-60!</string>
+    <string name="init_request_password">Para comenzar, establezca una contraseña para cifrar la base de datos.</string>
+
     <!-- Pdf Viewer -->
     <string name="pdf_viewer_show_all">Todas las páginas</string>
     <string name="pdf_viewer_zoom">Zoom</string>

@@ -139,7 +139,8 @@ class App(
                         var password by remember { mutableStateOf("") }
 
                         Text(
-                            text = "¡Bienvenido a Organizador PEC-6-60!",
+                            text = stringResource(Res.string.init_screen_title),
+                            textAlign = TextAlign.Center,
                             style = TextStyle(
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold
@@ -149,7 +150,7 @@ class App(
                         Spacer(Modifier.height(16.dp))
 
                         Text(
-                            text = "Para comenzar, establezca una contraseña para la base de datos",
+                            text = stringResource(Res.string.init_request_password),
                             textAlign = TextAlign.Center,
                             modifier = Modifier.padding(start = 16.dp, end = 16.dp),
                             style = TextStyle(
@@ -173,11 +174,10 @@ class App(
                         Button(
                             onClick = {
                                 coroutineScope.launch {
-
+                                    onPasswordSet(password)
                                 }
-                                onPasswordSet(password)
                             },
-                            modifier = Modifier.width(200.dp)
+                            modifier = Modifier.width(280.dp)
                         ) {
                             Text(
                                 text = stringResource(Res.string.save),
