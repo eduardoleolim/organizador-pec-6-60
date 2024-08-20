@@ -59,16 +59,20 @@ compose.desktop {
             appResourcesRootDir.set(project.layout.projectDirectory.dir("resources"))
 
             windows {
-                iconFile.set(file("src/main/composeResources/drawable/icon.ico"))
+                iconFile.set(file("icons/icon.ico"))
                 dirChooser = true
                 shortcut = true
                 menuGroup = "Inegi"
             }
 
             linux {
-                iconFile.set(file("src/main/composeResources/drawable/logo.png"))
+                iconFile.set(file("icons/icon.png"))
                 shortcut = true
                 menuGroup = "Inegi"
+            }
+
+            macOS {
+                iconFile.set(file("icons/icon.icns"))
             }
 
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
