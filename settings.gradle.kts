@@ -1,4 +1,4 @@
-rootProject.name = "organizador-pec-660"
+rootProject.name = "organizador-pec-6-60"
 include("app", "core")
 
 pluginManagement {
