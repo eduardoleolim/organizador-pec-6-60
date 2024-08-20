@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -55,7 +54,6 @@ class FederalEntityScreenModel(
     private val commandBus: CommandBus,
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default
 ) : ScreenModel {
-    private val csvReader = csvReader()
     private val csvWriter = csvWriter()
 
     var federalEntities by mutableStateOf(FederalEntitiesResponse(emptyList(), 0, null, null))
