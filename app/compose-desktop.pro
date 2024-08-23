@@ -27,3 +27,4 @@
 -keep class * implements org.apache.log.** { *; }
 -keep class org.apache.avalon.framework.logger.** { *; }
 -keep class * implements org.apache.avalon.framework.logger.** { *; }
+-keep class com.jetbrains.** { *; }
