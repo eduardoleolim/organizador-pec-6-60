@@ -22,6 +22,7 @@ import androidx.compose.ui.node.ParentDataModifierNode
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.unit.*
 import org.eduardoleolim.organizadorpec660.app.shared.utils.DesktopPlatform
+import org.eduardoleolim.organizadorpec660.app.shared.window.utils.macos.MacUtil
 import java.awt.Window
 import kotlin.math.max
 
@@ -54,6 +55,27 @@ fun DecoratedWindowScope.TitleBar(
 }
 
 @Composable
+fun DecoratedDialogWindowScope.TitleBar(
+    modifier: Modifier = Modifier,
+    gradientStartColor: Color = Color.Unspecified,
+    content: @Composable TitleBarScope.(DecoratedDialogWindowState) -> Unit,
+) {
+    CompositionLocalProvider(
+        LocalContentColor provides MaterialTheme.colorScheme.onPrimaryContainer,
+        // LocalIconButtonStyle provides style.iconButtonStyle,
+        // LocalDefaultDropdownStyle provides style.dropdownStyle,
+    ) {
+        when (DesktopPlatform.Current) {
+            // DesktopPlatform.Linux -> TitleBarOnLinux(modifier, gradientStartColor, content)
+            DesktopPlatform.Windows -> TitleBarOnWindows(modifier, gradientStartColor, content)
+            DesktopPlatform.MacOS -> TitleBarOnMacOs(modifier, gradientStartColor, content)
+            DesktopPlatform.Unknown -> error("TitleBar is not supported on this platform(${System.getProperty("os.name")})")
+            else -> {}
+        }
+    }
+}
+
+@Composable
 internal fun DecoratedWindowScope.TitleBarImpl(
     minHeight: Dp,
     modifier: Modifier = Modifier,
@@ -62,8 +84,63 @@ internal fun DecoratedWindowScope.TitleBarImpl(
     content: @Composable TitleBarScope.(DecoratedWindowState) -> Unit,
 ) {
     val titleBarInfo = LocalTitleBarInfo.current
-    val background = MaterialTheme.colorScheme.primaryContainer
     val density = LocalDensity.current
+
+    TitleBarImpl(
+        minHeight = minHeight,
+        modifier = modifier,
+        gradientStartColor = gradientStartColor,
+        onSizeChanged = { with(density) { applyTitleBar(it.height.toDp(), state) } },
+        content = {
+            val scope = TitleBarScopeImpl(titleBarInfo.title, titleBarInfo.icon)
+            scope.content(state)
+        },
+        measurePolicy = rememberDecoratedWindowTitleBarMeasurePolicy(
+            window,
+            state,
+            applyTitleBar,
+        )
+    )
+}
+
+@Composable
+internal fun DecoratedDialogWindowScope.TitleBarImpl(
+    minHeight: Dp,
+    modifier: Modifier = Modifier,
+    gradientStartColor: Color = Color.Unspecified,
+    applyTitleBar: (Dp, DecoratedDialogWindowState) -> PaddingValues,
+    content: @Composable TitleBarScope.(DecoratedDialogWindowState) -> Unit,
+) {
+    val titleBarInfo = LocalTitleBarInfo.current
+    val density = LocalDensity.current
+
+    TitleBarImpl(
+        minHeight = minHeight,
+        modifier = modifier,
+        gradientStartColor = gradientStartColor,
+        onSizeChanged = { with(density) { applyTitleBar(it.height.toDp(), state) } },
+        content = {
+            val scope = TitleBarScopeImpl(titleBarInfo.title, titleBarInfo.icon)
+            scope.content(state)
+        },
+        measurePolicy = rememberDecoratedDialogTitleBarMeasurePolicy(
+            window,
+            state,
+            applyTitleBar,
+        )
+    )
+}
+
+@Composable
+private fun TitleBarImpl(
+    minHeight: Dp,
+    modifier: Modifier = Modifier,
+    gradientStartColor: Color = Color.Unspecified,
+    onSizeChanged: (IntSize) -> Unit,
+    measurePolicy: MeasurePolicy,
+    content: @Composable () -> Unit
+) {
+    val background = MaterialTheme.colorScheme.primaryContainer
 
     val backgroundBrush =
         remember(background, gradientStartColor) {
@@ -81,24 +158,14 @@ internal fun DecoratedWindowScope.TitleBarImpl(
         }
 
     Layout(
-        content = {
-            // OverrideDarkMode(background.isDark()) {
-            val scope = TitleBarScopeImpl(titleBarInfo.title, titleBarInfo.icon)
-            scope.content(state)
-            // }
-        },
+        content = content,
         modifier = modifier.background(backgroundBrush)
             .focusProperties { canFocus = false }
             .layoutId(TITLE_BAR_LAYOUT_ID)
             .heightIn(min = minHeight)
-            .onSizeChanged { with(density) { applyTitleBar(it.height.toDp(), state) } }
+            .onSizeChanged { onSizeChanged(it) }
             .fillMaxWidth(),
-        measurePolicy =
-        rememberTitleBarMeasurePolicy(
-            window,
-            state,
-            applyTitleBar,
-        ),
+        measurePolicy = measurePolicy
     )
 
     Spacer(
@@ -110,15 +177,12 @@ internal fun DecoratedWindowScope.TitleBarImpl(
     )
 }
 
-internal class TitleBarMeasurePolicy(
+internal class DecoratedWindowTitleBarMeasurePolicy(
     private val window: Window,
     private val state: DecoratedWindowState,
     private val applyTitleBar: (Dp, DecoratedWindowState) -> PaddingValues,
 ) : MeasurePolicy {
-    override fun MeasureScope.measure(
-        measurables: List<Measurable>,
-        constraints: Constraints,
-    ): MeasureResult {
+    override fun MeasureScope.measure(measurables: List<Measurable>, constraints: Constraints): MeasureResult {
         if (measurables.isEmpty()) {
             return layout(width = constraints.minWidth, height = constraints.minHeight) {}
         }
@@ -153,7 +217,7 @@ internal class TitleBarMeasurePolicy(
 
         return layout(boxWidth, boxHeight) {
             if (state.isFullscreen) {
-                // MacUtil.updateFullScreenButtons(window)
+                MacUtil.updateFullScreenButtons(window)
             }
             val placeableGroups = measuredPlaceable.groupBy { (measurable, _) ->
                 (measurable.parentData as? TitleBarChildDataNode)?.horizontalAlignment ?: Alignment.CenterHorizontally
@@ -201,14 +265,109 @@ internal class TitleBarMeasurePolicy(
     }
 }
 
+internal class DecoratedDialogWindowTitleBarMeasurePolicy(
+    private val window: Window,
+    private val state: DecoratedDialogWindowState,
+    private val applyTitleBar: (Dp, DecoratedDialogWindowState) -> PaddingValues,
+) : MeasurePolicy {
+    override fun MeasureScope.measure(measurables: List<Measurable>, constraints: Constraints): MeasureResult {
+        if (measurables.isEmpty()) {
+            return layout(width = constraints.minWidth, height = constraints.minHeight) {}
+        }
+
+        var occupiedSpaceHorizontally = 0
+
+        var maxSpaceVertically = constraints.minHeight
+        val contentConstraints = constraints.copy(minWidth = 0, minHeight = 0)
+        val measuredPlaceable = mutableListOf<Pair<Measurable, Placeable>>()
+
+        for (it in measurables) {
+            val placeable = it.measure(contentConstraints.offset(horizontal = -occupiedSpaceHorizontally))
+            if (constraints.maxWidth < occupiedSpaceHorizontally + placeable.width) {
+                break
+            }
+            occupiedSpaceHorizontally += placeable.width
+            maxSpaceVertically = max(maxSpaceVertically, placeable.height)
+            measuredPlaceable += it to placeable
+        }
+
+        val boxHeight = maxSpaceVertically
+
+        val contentPadding = applyTitleBar(boxHeight.toDp(), state)
+
+        val leftInset = contentPadding.calculateLeftPadding(layoutDirection).roundToPx()
+        val rightInset = contentPadding.calculateRightPadding(layoutDirection).roundToPx()
+
+        occupiedSpaceHorizontally += leftInset
+        occupiedSpaceHorizontally += rightInset
+
+        val boxWidth = maxOf(constraints.minWidth, occupiedSpaceHorizontally)
+
+        return layout(boxWidth, boxHeight) {
+            val placeableGroups = measuredPlaceable.groupBy { (measurable, _) ->
+                (measurable.parentData as? TitleBarChildDataNode)?.horizontalAlignment ?: Alignment.CenterHorizontally
+            }
+
+            var headUsedSpace = leftInset
+            var trailerUsedSpace = rightInset
+
+            placeableGroups[Alignment.Start]?.forEach { (_, placeable) ->
+                val x = headUsedSpace
+                val y = Alignment.CenterVertically.align(placeable.height, boxHeight)
+                placeable.placeRelative(x, y)
+                headUsedSpace += placeable.width
+            }
+            placeableGroups[Alignment.End]?.forEach { (_, placeable) ->
+                val x = boxWidth - placeable.width - trailerUsedSpace
+                val y = Alignment.CenterVertically.align(placeable.height, boxHeight)
+                placeable.placeRelative(x, y)
+                trailerUsedSpace += placeable.width
+            }
+
+            val centerPlaceable = placeableGroups[Alignment.CenterHorizontally].orEmpty()
+
+            val requiredCenterSpace = centerPlaceable.sumOf { it.second.width }
+            val minX = headUsedSpace
+            val maxX = boxWidth - trailerUsedSpace - requiredCenterSpace
+            var centerX = (boxWidth - requiredCenterSpace) / 2
+
+            if (minX <= maxX) {
+                if (centerX > maxX) {
+                    centerX = maxX
+                }
+                if (centerX < minX) {
+                    centerX = minX
+                }
+
+                centerPlaceable.forEach { (_, placeable) ->
+                    val x = centerX
+                    val y = Alignment.CenterVertically.align(placeable.height, boxHeight)
+                    placeable.placeRelative(x, y)
+                    centerX += placeable.width
+                }
+            }
+        }
+    }
+}
+
 @Composable
-internal fun rememberTitleBarMeasurePolicy(
+internal fun rememberDecoratedWindowTitleBarMeasurePolicy(
     window: Window,
     state: DecoratedWindowState,
     applyTitleBar: (Dp, DecoratedWindowState) -> PaddingValues,
 ): MeasurePolicy =
     remember(window, state, applyTitleBar) {
-        TitleBarMeasurePolicy(window, state, applyTitleBar)
+        DecoratedWindowTitleBarMeasurePolicy(window, state, applyTitleBar)
+    }
+
+@Composable
+internal fun rememberDecoratedDialogTitleBarMeasurePolicy(
+    window: Window,
+    state: DecoratedDialogWindowState,
+    applyTitleBar: (Dp, DecoratedDialogWindowState) -> PaddingValues,
+): MeasurePolicy =
+    remember(window, state, applyTitleBar) {
+        DecoratedDialogWindowTitleBarMeasurePolicy(window, state, applyTitleBar)
     }
 
 interface TitleBarScope {

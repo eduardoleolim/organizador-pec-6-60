@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.jetbrains.JBR
 import org.eduardoleolim.organizadorpec660.app.shared.window.utils.macos.MacUtil
 
-public fun Modifier.newFullscreenControls(newControls: Boolean = true): Modifier =
+fun Modifier.newFullscreenControls(newControls: Boolean = true): Modifier =
     this then
         NewFullscreenControlsElement(
             newControls,
@@ -100,5 +100,48 @@ internal fun DecoratedWindowScope.TitleBarOnMacOs(
         },
         content = content,
         minHeight = minHeight
+    )
+}
+
+@Composable
+internal fun DecoratedDialogWindowScope.TitleBarOnMacOs(
+    modifier: Modifier = Modifier,
+    gradientStartColor: Color = Color.Unspecified,
+    content: @Composable TitleBarScope.(DecoratedDialogWindowState) -> Unit,
+) {
+    val newFullscreenControls =
+        modifier.foldOut(false) { e, r ->
+            if (e is NewFullscreenControlsElement) {
+                e.newControls
+            } else {
+                r
+            }
+        }
+
+    if (newFullscreenControls) {
+        System.setProperty("apple.awt.newFullScreeControls", true.toString())
+        System.setProperty(
+            "apple.awt.newFullScreeControls.background",
+            "${MaterialTheme.colorScheme.primaryContainer.toArgb()}",
+        )
+        MacUtil.updateColors(window)
+    } else {
+        System.clearProperty("apple.awt.newFullScreeControls")
+        System.clearProperty("apple.awt.newFullScreeControls.background")
+    }
+
+    val titleBar = remember { JBR.windowDecorations!!.createCustomTitleBar()!! }
+
+    TitleBarImpl(
+        minHeight = 30.dp,
+        modifier = modifier.customTitleBarMouseEventHandler(titleBar),
+        gradientStartColor = gradientStartColor,
+        applyTitleBar = { height, state ->
+            titleBar.height = height.value
+            JBR.windowDecorations!!.setCustomTitleBar(window, titleBar)
+
+            PaddingValues(start = titleBar.leftInset.dp, end = titleBar.rightInset.dp)
+        },
+        content = content
     )
 }

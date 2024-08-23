@@ -54,6 +54,41 @@ internal fun DecoratedWindowScope.TitleBarOnWindows(
     )
 }
 
+@Composable
+internal fun DecoratedDialogWindowScope.TitleBarOnWindows(
+    modifier: Modifier = Modifier,
+    gradientStartColor: Color = Color.Unspecified,
+    content: @Composable TitleBarScope.(DecoratedDialogWindowState) -> Unit,
+) {
+    val titleBar = remember { JBR.windowDecorations!!.createCustomTitleBar()!! }
+    val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5
+    val foreground = LocalContentColor.current
+    val foregroundColor = java.awt.Color(foreground.red, foreground.green, foreground.blue, 0.7f)
+    val foregroundColorFocused = java.awt.Color(foreground.red, foreground.green, foreground.blue, 1f)
+    val foregroundColorInactive = java.awt.Color(foreground.red, foreground.green, foreground.blue, 0.5f)
+
+    TitleBarImpl(
+        minHeight = 30.dp,
+        modifier = modifier.customTitleBarMouseEventHandler(titleBar),
+        gradientStartColor = gradientStartColor,
+        applyTitleBar = { height, _ ->
+            titleBar.also {
+                it.height = height.value
+                it.putProperty("controls.dark", isDark)
+                it.putProperty("controls.foreground.normal", foregroundColor)
+                it.putProperty("controls.foreground.hovered", foregroundColorFocused)
+                it.putProperty("controls.foreground.pressed", foregroundColorFocused)
+                it.putProperty("controls.foreground.disabled", foregroundColorInactive)
+                it.putProperty("controls.foreground.inactive", foregroundColorInactive)
+            }
+
+            JBR.windowDecorations!!.setCustomTitleBar(window, titleBar)
+            PaddingValues(start = titleBar.leftInset.dp, end = titleBar.rightInset.dp)
+        },
+        content = content,
+    )
+}
+
 internal fun Modifier.customTitleBarMouseEventHandler(titleBar: CustomTitleBar): Modifier =
     pointerInput(Unit) {
         val currentContext = currentCoroutineContext()

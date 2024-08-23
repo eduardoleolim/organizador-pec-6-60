@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.rememberDialogState
 import org.eduardoleolim.organizadorpec660.app.generated.resources.*
-import org.eduardoleolim.organizadorpec660.app.shared.window.CustomDialogWindow
+import org.eduardoleolim.organizadorpec660.app.shared.window.DecoratedDialogWindow
 import org.jetbrains.compose.resources.stringResource
 
 class Dialogs {
@@ -88,9 +88,9 @@ class Dialogs {
             var result by remember { mutableStateOf<Response?>(null) }
 
             if (isShowing) {
-                CustomDialogWindow(
+                DecoratedDialogWindow(
                     state = rememberDialogState(size = DpSize(400.dp, 200.dp)),
-                    defaultTitle = title,
+                    title = title,
                     onCloseRequest = {
                         result = Response.CLOSED
                         isShowing = false
