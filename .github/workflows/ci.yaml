@@ -71,7 +71,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: 📦 Package
-        run: ./gradlew packageDistributionForCurrentOS
+        run: ./gradlew packageReleaseDistributionForCurrentOS
 
       - name: 📁 Upload artifact
         uses: actions/upload-artifact@v2
