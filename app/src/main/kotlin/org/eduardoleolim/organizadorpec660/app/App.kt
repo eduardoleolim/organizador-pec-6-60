@@ -47,35 +47,54 @@ enum class SystemTheme {
 }
 
 class App(
-    private val databasePath: String,
+    private val databaseDirectory: String,
     private var databasePassword: String,
-    private val databaseExtensionPath: String,
-    private val instrumentsPath: String
+    private val databaseExtensionsDirectory: String,
+    private val instrumentsDirectory: String,
+    private val tempDirectory: String
 ) {
     private val databaseExtensions by lazy {
-        File(databaseExtensionPath).listFiles()?.map { it.absolutePath } ?: emptyList()
+        File(databaseExtensionsDirectory).listFiles()?.map { it.absolutePath } ?: emptyList()
     }
 
     private val commandBus: CommandBus by lazy {
-        val database = SqliteKtormDatabase.connect(databasePath, databasePassword, databaseExtensions)
-        KtormCommandBus(database, instrumentsPath)
+        val database = SqliteKtormDatabase.connect(databaseDirectory, databasePassword, databaseExtensions)
+        KtormCommandBus(database, instrumentsDirectory)
     }
 
     private val queryBus: QueryBus by lazy {
-        val database = SqliteKtormDatabase.connectReadOnly(databasePath, databasePassword, databaseExtensions)
-        KtormQueryBus(database, instrumentsPath)
+        val database = SqliteKtormDatabase.connectReadOnly(databaseDirectory, databasePassword, databaseExtensions)
+        KtormQueryBus(database, instrumentsDirectory)
+    }
+
+    private fun createTempDirectory() {
+        File(tempDirectory).mkdirs()
+    }
+
+    private fun deleteTempDirectory() {
+        File(tempDirectory).delete()
     }
 
     fun start() = application {
-        var existsDatabase by remember { mutableStateOf(SqliteKtormDatabase.exists(databasePath)) }
+        var existsDatabase by remember { mutableStateOf(SqliteKtormDatabase.exists(databaseDirectory)) }
+
+        LaunchedEffect(Unit) {
+            createTempDirectory()
+        }
 
         if (existsDatabase) {
             MainWindow(
-                onCloseRequest = { exitApplication() }
+                onCloseRequest = {
+                    deleteTempDirectory()
+                    exitApplication()
+                }
             )
         } else {
             ConfigWindow(
-                onCloseRequest = { exitApplication() },
+                onCloseRequest = {
+                    deleteTempDirectory()
+                    exitApplication()
+                },
                 onPasswordSet = { password ->
                     AppConfig["database.password"] = password
                     databasePassword = password
