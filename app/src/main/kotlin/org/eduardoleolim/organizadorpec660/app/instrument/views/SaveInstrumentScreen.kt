@@ -33,13 +33,15 @@ import java.time.LocalDate
 class SaveInstrumentScreen(
     private val instrumentId: String?,
     private val queryBus: QueryBus,
-    private val commandBus: CommandBus
+    private val commandBus: CommandBus,
+    private val tempDirectory: String
 ) : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val screenModel =
-            rememberScreenModel { SaveInstrumentScreenModel(navigator, queryBus, commandBus, Dispatchers.IO) }
+        val screenModel = rememberScreenModel {
+            SaveInstrumentScreenModel(navigator, queryBus, commandBus, Dispatchers.IO)
+        }
         var instrumentSelected by remember { mutableStateOf<String?>(null) }
 
         Column(modifier = Modifier.padding(24.dp)) {
@@ -172,8 +174,10 @@ class SaveInstrumentScreen(
                         .indexOfFirst { it.id == instrument.statisticType.id }
                         .takeIf { it >= 0 }
 
-                    val file = File(System.getProperty("java.io.tmpdir")).resolve("${instrument.filename}.pdf")
-                    file.writeBytes(instrument.instrumentFile.content)
+                    val file = File(tempDirectory).resolve("edit/${instrument.filename}.pdf").apply {
+                        parentFile.mkdirs()
+                        writeBytes(instrument.instrumentFile.content)
+                    }
                     documentPath = file.absolutePath
                 }
             }

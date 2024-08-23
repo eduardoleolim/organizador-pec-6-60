@@ -26,13 +26,17 @@ import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.Comman
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
 import org.jetbrains.compose.resources.stringResource
 
-class InstrumentScreen(private val queryBus: QueryBus, private val commandBus: CommandBus) : Screen {
+class InstrumentScreen(
+    private val queryBus: QueryBus,
+    private val commandBus: CommandBus,
+    private val tempDirectory: String
+) : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
         val trayState = LocalTrayState.current
         val screenModel = rememberScreenModel {
-            InstrumentScreenModel(navigator, trayState, queryBus, commandBus, Dispatchers.IO)
+            InstrumentScreenModel(navigator, trayState, queryBus, commandBus, tempDirectory, Dispatchers.IO)
         }
         val pageSizes = remember { listOf(10, 25, 50, 100) }
         val state = rememberPaginatedDataTableState(pageSizes.first())

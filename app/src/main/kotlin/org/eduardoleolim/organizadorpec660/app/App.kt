@@ -273,7 +273,11 @@ class App(
                         modifier = Modifier.fillMaxSize(),
                         color = MaterialTheme.colorScheme.surfaceContainer
                     ) {
-                        Router(commandBus, queryBus)
+                        Router(
+                            commandBus = commandBus,
+                            queryBus = queryBus,
+                            tempDirectory = tempDirectory
+                        )
                     }
                 }
             }

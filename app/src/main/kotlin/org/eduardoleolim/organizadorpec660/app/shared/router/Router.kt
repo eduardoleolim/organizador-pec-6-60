@@ -15,7 +15,7 @@ import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.Comman
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
 
 @Composable
-fun Router(commandBus: CommandBus, queryBus: QueryBus) {
+fun Router(commandBus: CommandBus, queryBus: QueryBus, tempDirectory: String) {
     ScreenRegistry {
         register<MainProvider.AuthScreen> { AuthScreen(queryBus) }
         register<MainProvider.HomeScreen> { provider ->
@@ -24,9 +24,9 @@ fun Router(commandBus: CommandBus, queryBus: QueryBus) {
         register<HomeProvider.FederalEntityScreen> { FederalEntityScreen(queryBus, commandBus) }
         register<HomeProvider.MunicipalityScreen> { MunicipalityScreen(queryBus, commandBus) }
         register<HomeProvider.StatisticTypeScreen> { StatisticTypeScreen(queryBus, commandBus) }
-        register<HomeProvider.InstrumentScreen> { InstrumentScreen(queryBus, commandBus) }
+        register<HomeProvider.InstrumentScreen> { InstrumentScreen(queryBus, commandBus, tempDirectory) }
         register<HomeProvider.SaveInstrumentScreen> { provider ->
-            SaveInstrumentScreen(provider.instrumentId, queryBus, commandBus)
+            SaveInstrumentScreen(provider.instrumentId, queryBus, commandBus, tempDirectory)
         }
         register<HomeProvider.AgencyScreen> { AgencyScreen(queryBus, commandBus) }
     }

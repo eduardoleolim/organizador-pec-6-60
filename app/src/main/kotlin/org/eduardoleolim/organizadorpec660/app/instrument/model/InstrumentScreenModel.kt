@@ -55,6 +55,7 @@ class InstrumentScreenModel(
     private val trayState: TrayState,
     private val queryBus: QueryBus,
     private val commandBus: CommandBus,
+    private val tempDirectory: String,
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default
 ) : ScreenModel {
     private val clipboard: Clipboard = Toolkit.getDefaultToolkit().systemClipboard
@@ -166,10 +167,11 @@ class InstrumentScreenModel(
 
     fun copyInstrumentToClipboard(instrumentId: String) {
         screenModelScope.launch(dispatcher) {
-            val tempDir = System.getProperty("java.io.tmpdir")
             val instrument = queryBus.ask<DetailedInstrumentResponse>(SearchInstrumentByIdQuery(instrumentId))
-            val file = File(tempDir).resolve("${instrument.filename}.pdf")
-            file.writeBytes(instrument.instrumentFile.content)
+            val file = File(tempDirectory).resolve("${instrument.filename}.pdf").apply {
+                parentFile.mkdirs()
+                writeBytes(instrument.instrumentFile.content)
+            }
             clipboard.setContents(StringSelection(file.absolutePath), null)
 
             val notification = Notification(
