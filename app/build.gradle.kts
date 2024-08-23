@@ -1,17 +1,10 @@
 import org.gradle.internal.os.OperatingSystem
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     alias(libs.plugins.jvm)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose)
-}
-
-tasks.withType<KotlinCompile>().configureEach {
-    compilerOptions {
-        freeCompilerArgs.addAll("-Xcontext-receivers")
-    }
 }
 
 dependencies {
@@ -23,6 +16,7 @@ dependencies {
     implementation(compose.materialIconsExtended)
     implementation(compose.material3)
     implementation(libs.jna.core)
+    implementation(libs.jna.platform)
     implementation(libs.kotlinx.coroutines.swing)
     implementation(libs.voyager.navigator)
     implementation(libs.voyager.screenmodel)
@@ -33,6 +27,7 @@ dependencies {
     }
     implementation(libs.jSystemThemeDetector) {
         exclude("org.slf4j")
+        exclude("net.java.dev.jna")
     }
     implementation(libs.properlty)
 }
