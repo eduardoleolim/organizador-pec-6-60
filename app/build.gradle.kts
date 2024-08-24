@@ -46,7 +46,7 @@ compose.desktop {
         nativeDistributions {
             packageName = "Organizador PEC-6-60"
             description = "Organizador de formatos PEC-6-60"
-            copyright = "Copyright © 2023 Angel Eduardo Martinez Leo Lim. All rights reserved."
+            copyright = "Copyright © 2024 Angel Eduardo Martinez Leo Lim. All rights reserved."
             vendor = "Angel Eduardo Martinez Leo Lim"
 
             includeAllModules = true
