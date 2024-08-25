@@ -113,12 +113,8 @@ class SaveInstrumentScreen(
         val filePickerInteractionSource = remember { MutableInteractionSource() }
         val years = remember { (LocalDate.now().year downTo 1983).toList() }
         val months = remember {
-            DateFormatSymbols().months.mapIndexedNotNull { index, month ->
-                if (index == 12) {
-                    null
-                } else {
-                    Pair(index + 1, month.uppercase())
-                }
+            DateFormatSymbols().months.take(12).mapIndexed { index, month ->
+                Pair(index + 1, month.uppercase())
             }
         }
 
