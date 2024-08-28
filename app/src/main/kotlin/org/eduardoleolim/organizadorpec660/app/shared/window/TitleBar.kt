@@ -45,11 +45,10 @@ fun DecoratedWindowScope.TitleBar(
         // LocalDefaultDropdownStyle provides style.dropdownStyle,
     ) {
         when (DesktopPlatform.Current) {
-            // DesktopPlatform.Linux -> TitleBarOnLinux(modifier, gradientStartColor, content)
+            DesktopPlatform.Linux -> TitleBarOnLinux(minHeight, modifier, gradientStartColor, content)
             DesktopPlatform.Windows -> TitleBarOnWindows(minHeight, modifier, gradientStartColor, content)
             DesktopPlatform.MacOS -> TitleBarOnMacOs(minHeight, modifier, gradientStartColor, content)
             DesktopPlatform.Unknown -> error("TitleBar is not supported on this platform(${System.getProperty("os.name")})")
-            else -> {}
         }
     }
 }
@@ -66,11 +65,10 @@ fun DecoratedDialogWindowScope.TitleBar(
         // LocalDefaultDropdownStyle provides style.dropdownStyle,
     ) {
         when (DesktopPlatform.Current) {
-            // DesktopPlatform.Linux -> TitleBarOnLinux(modifier, gradientStartColor, content)
+            DesktopPlatform.Linux -> TitleBarOnLinux(modifier, gradientStartColor, content)
             DesktopPlatform.Windows -> TitleBarOnWindows(modifier, gradientStartColor, content)
             DesktopPlatform.MacOS -> TitleBarOnMacOs(modifier, gradientStartColor, content)
             DesktopPlatform.Unknown -> error("TitleBar is not supported on this platform(${System.getProperty("os.name")})")
-            else -> {}
         }
     }
 }
