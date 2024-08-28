@@ -128,7 +128,7 @@ class App(
                 }
 
                 TitleBar {
-                    if (DesktopPlatform.Current == DesktopPlatform.Windows) {
+                    if (DesktopPlatform.Current != DesktopPlatform.MacOS) {
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(10.dp),
                             verticalAlignment = Alignment.CenterVertically,
@@ -251,7 +251,7 @@ class App(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.align(Alignment.Start).padding(start = 10.dp)
                         ) {
-                            if (DesktopPlatform.Current == DesktopPlatform.Windows) {
+                            if (DesktopPlatform.Current != DesktopPlatform.MacOS) {
                                 Image(
                                     painter = icon,
                                     contentDescription = "icon",
