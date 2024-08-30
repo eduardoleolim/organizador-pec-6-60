@@ -28,14 +28,20 @@ internal fun DecoratedWindowScope.TitleBarOnLinux(
     gradientStartColor: Color = Color.Unspecified,
     content: @Composable TitleBarScope.(DecoratedWindowState) -> Unit,
 ) {
+    fun toggleMaximize() {
+        if (state.isMaximized) {
+            window.extendedState = Frame.NORMAL
+        } else {
+            window.extendedState = Frame.MAXIMIZED_BOTH
+        }
+    }
+
     TitleBarImpl(
         modifier = modifier.pointerInput(Unit) {
             detectTapGestures(
                 onDoubleTap = {
-                    if (state.isMaximized) {
-                        window.extendedState = Frame.NORMAL
-                    } else {
-                        window.extendedState = Frame.MAXIMIZED_BOTH
+                    if (window.isResizable) {
+                        toggleMaximize()
                     }
                 },
                 onPress = {
@@ -59,11 +65,10 @@ internal fun DecoratedWindowScope.TitleBarOnLinux(
                 )
 
                 ControlButton(
+                    enabled = window.isResizable,
                     onClick = {
-                        if (state.isMaximized) {
-                            window.extendedState = Frame.NORMAL
-                        } else {
-                            window.extendedState = Frame.MAXIMIZED_BOTH
+                        if (window.isResizable) {
+                            toggleMaximize()
                         }
                     },
                     icon = if (state.isMaximized) CustomIcons.Floating else CustomIcons.Maximize,
@@ -120,6 +125,7 @@ internal fun DecoratedDialogWindowScope.TitleBarOnLinux(
 
 @Composable
 private fun ControlButton(
+    enabled: Boolean = true,
     onClick: () -> Unit,
     icon: ImageVector,
     description: String
@@ -127,6 +133,7 @@ private fun ControlButton(
     val background = LocalContentColor.current
 
     IconButton(
+        enabled = enabled,
         onClick = onClick,
         modifier = Modifier.size(22.dp).focusable(false),
         colors = IconButtonDefaults.iconButtonColors().copy(containerColor = background.copy(0.1f))
