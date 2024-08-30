@@ -48,6 +48,7 @@ compose.desktop {
             description = "Organizador de formatos PEC-6-60"
             copyright = "Copyright © 2024 Angel Eduardo Martinez Leo Lim. All rights reserved."
             vendor = "Angel Eduardo Martinez Leo Lim"
+            licenseFile.set(project.file("../LICENSE.txt"))
 
             includeAllModules = true
 
