@@ -1,11 +1,17 @@
 package org.eduardoleolim.organizadorpec660.app.shared.window
 
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.awt.ComposeDialog
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.offset
 import androidx.compose.ui.window.DialogState
 import androidx.compose.ui.window.DialogWindow
@@ -13,6 +19,7 @@ import androidx.compose.ui.window.DialogWindowScope
 import androidx.compose.ui.window.rememberDialogState
 import com.jetbrains.JBR
 import org.eduardoleolim.organizadorpec660.app.shared.utils.DesktopPlatform
+import org.eduardoleolim.organizadorpec660.app.shared.window.modifier.trackWindowActivation
 import java.awt.event.ComponentEvent
 import java.awt.event.ComponentListener
 import java.awt.event.WindowAdapter
@@ -39,7 +46,6 @@ fun DecoratedDialogWindow(
         }
     }
 
-    // Using undecorated window for linux
     val undecorated = DesktopPlatform.Linux == DesktopPlatform.Current
 
     DialogWindow(
@@ -125,7 +131,9 @@ fun DecoratedDialogWindow(
                         }
                     scope.content()
                 },
-                // modifier = undecoratedWindowBorder.trackWindowActivation(window),
+                modifier = Modifier.border(1.dp, MaterialTheme.colorScheme.primaryContainer, RectangleShape)
+                    .padding(1.dp)
+                    .trackWindowActivation(window),
                 measurePolicy = DecoratedDialogWindowMeasurePolicy,
             )
         }

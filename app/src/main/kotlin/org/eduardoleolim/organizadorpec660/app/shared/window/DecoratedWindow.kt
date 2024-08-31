@@ -1,15 +1,22 @@
 package org.eduardoleolim.organizadorpec660.app.shared.window
 
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.awt.ComposeWindow
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.offset
 import androidx.compose.ui.window.*
 import com.jetbrains.JBR
 import org.eduardoleolim.organizadorpec660.app.shared.utils.DesktopPlatform
+import org.eduardoleolim.organizadorpec660.app.shared.window.modifier.trackWindowActivation
 import java.awt.event.ComponentEvent
 import java.awt.event.ComponentListener
 import java.awt.event.WindowAdapter
@@ -106,19 +113,13 @@ fun DecoratedWindow(
             }
         }
 
-        /*
         val undecoratedWindowBorder =
             if (undecorated && !decoratedWindowState.isMaximized) {
-                Modifier.border(
-                    Stroke.Alignment.Inside,
-                    style.metrics.borderWidth,
-                    style.colors.borderFor(decoratedWindowState).value,
-                    RectangleShape,
-                ).padding(style.metrics.borderWidth)
+                Modifier.border(1.dp, MaterialTheme.colorScheme.primaryContainer, RectangleShape)
+                    .padding(1.dp)
             } else {
                 Modifier
             }
-        */
 
         CompositionLocalProvider(
             LocalTitleBarInfo provides TitleBarInfo(title, icon),
@@ -136,7 +137,7 @@ fun DecoratedWindow(
                         }
                     scope.content()
                 },
-                // modifier = undecoratedWindowBorder.trackWindowActivation(window),
+                modifier = undecoratedWindowBorder.trackWindowActivation(window),
                 measurePolicy = DecoratedWindowMeasurePolicy,
             )
         }
