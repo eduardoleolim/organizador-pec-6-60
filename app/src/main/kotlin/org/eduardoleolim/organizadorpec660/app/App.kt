@@ -73,7 +73,7 @@ class App(
     }
 
     private fun deleteTempDirectory() {
-        File(tempDirectory).delete()
+        File(tempDirectory).deleteRecursively()
     }
 
     fun start() = application {
