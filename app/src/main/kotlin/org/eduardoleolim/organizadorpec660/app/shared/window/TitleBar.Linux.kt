@@ -19,14 +19,14 @@ import com.jetbrains.JBR
 import org.eduardoleolim.organizadorpec660.app.shared.window.icons.*
 import java.awt.Frame
 import java.awt.event.MouseEvent
-import java.awt.event.WindowEvent
 
 @Composable
 internal fun DecoratedWindowScope.TitleBarOnLinux(
     minHeight: Dp = 40.dp,
     modifier: Modifier = Modifier,
     gradientStartColor: Color = Color.Unspecified,
-    content: @Composable TitleBarScope.(DecoratedWindowState) -> Unit,
+    onCloseRequest: () -> Unit,
+    content: @Composable() (TitleBarScope.(DecoratedWindowState) -> Unit),
 ) {
     fun toggleMaximize() {
         if (state.isMaximized) {
@@ -76,7 +76,7 @@ internal fun DecoratedWindowScope.TitleBarOnLinux(
                 )
 
                 ControlButton(
-                    onClick = { window.dispatchEvent(WindowEvent(window, WindowEvent.WINDOW_CLOSING)) },
+                    onClick = onCloseRequest,
                     icon = CustomIcons.Close,
                     description = "Close"
                 )
@@ -91,7 +91,8 @@ internal fun DecoratedWindowScope.TitleBarOnLinux(
 internal fun DecoratedDialogWindowScope.TitleBarOnLinux(
     modifier: Modifier = Modifier,
     gradientStartColor: Color = Color.Unspecified,
-    content: @Composable TitleBarScope.(DecoratedDialogWindowState) -> Unit,
+    onCloseRequest: () -> Unit,
+    content: @Composable (TitleBarScope.(DecoratedDialogWindowState) -> Unit),
 ) {
 
 
@@ -113,7 +114,7 @@ internal fun DecoratedDialogWindowScope.TitleBarOnLinux(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 ControlButton(
-                    onClick = { window.dispatchEvent(WindowEvent(window, WindowEvent.WINDOW_CLOSING)) },
+                    onClick = onCloseRequest,
                     icon = CustomIcons.Close,
                     description = "Close"
                 )

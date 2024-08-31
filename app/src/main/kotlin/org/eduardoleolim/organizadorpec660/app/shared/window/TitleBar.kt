@@ -37,6 +37,7 @@ fun DecoratedWindowScope.TitleBar(
     minHeight: Dp = 40.dp,
     modifier: Modifier = Modifier,
     gradientStartColor: Color = Color.Unspecified,
+    onCloseRequest: () -> Unit,
     content: @Composable TitleBarScope.(DecoratedWindowState) -> Unit,
 ) {
     CompositionLocalProvider(
@@ -45,7 +46,7 @@ fun DecoratedWindowScope.TitleBar(
         // LocalDefaultDropdownStyle provides style.dropdownStyle,
     ) {
         when (DesktopPlatform.Current) {
-            DesktopPlatform.Linux -> TitleBarOnLinux(minHeight, modifier, gradientStartColor, content)
+            DesktopPlatform.Linux -> TitleBarOnLinux(minHeight, modifier, gradientStartColor, onCloseRequest, content)
             DesktopPlatform.Windows -> TitleBarOnWindows(minHeight, modifier, gradientStartColor, content)
             DesktopPlatform.MacOS -> TitleBarOnMacOs(minHeight, modifier, gradientStartColor, content)
             DesktopPlatform.Unknown -> error("TitleBar is not supported on this platform(${System.getProperty("os.name")})")
@@ -57,6 +58,7 @@ fun DecoratedWindowScope.TitleBar(
 fun DecoratedDialogWindowScope.TitleBar(
     modifier: Modifier = Modifier,
     gradientStartColor: Color = Color.Unspecified,
+    onCloseRequest: () -> Unit,
     content: @Composable TitleBarScope.(DecoratedDialogWindowState) -> Unit,
 ) {
     CompositionLocalProvider(
@@ -65,7 +67,7 @@ fun DecoratedDialogWindowScope.TitleBar(
         // LocalDefaultDropdownStyle provides style.dropdownStyle,
     ) {
         when (DesktopPlatform.Current) {
-            DesktopPlatform.Linux -> TitleBarOnLinux(modifier, gradientStartColor, content)
+            DesktopPlatform.Linux -> TitleBarOnLinux(modifier, gradientStartColor, onCloseRequest, content)
             DesktopPlatform.Windows -> TitleBarOnWindows(modifier, gradientStartColor, content)
             DesktopPlatform.MacOS -> TitleBarOnMacOs(modifier, gradientStartColor, content)
             DesktopPlatform.Unknown -> error("TitleBar is not supported on this platform(${System.getProperty("os.name")})")

@@ -127,7 +127,9 @@ class App(
                     }
                 }
 
-                TitleBar {
+                TitleBar(
+                    onCloseRequest = onCloseRequest
+                ) {
                     if (DesktopPlatform.Current != DesktopPlatform.MacOS) {
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(10.dp),
@@ -245,7 +247,9 @@ class App(
                     icon = icon,
                     title = stringResource(Res.string.app_name)
                 ) {
-                    TitleBar {
+                    TitleBar(
+                        onCloseRequest = onCloseRequest
+                    ) {
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(10.dp),
                             verticalAlignment = Alignment.CenterVertically,
