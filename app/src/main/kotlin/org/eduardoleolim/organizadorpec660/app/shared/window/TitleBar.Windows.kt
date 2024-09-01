@@ -17,6 +17,7 @@ import com.jetbrains.JBR
 import com.jetbrains.WindowDecorations.CustomTitleBar
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.isActive
+import org.eduardoleolim.organizadorpec660.app.shared.utils.toAwt
 
 @Composable
 internal fun DecoratedWindowScope.TitleBarOnWindows(
@@ -28,23 +29,20 @@ internal fun DecoratedWindowScope.TitleBarOnWindows(
     val titleBar = remember { JBR.windowDecorations!!.createCustomTitleBar()!! }
     val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5
     val foreground = LocalContentColor.current
-    val foregroundColor = java.awt.Color(foreground.red, foreground.green, foreground.blue, 0.7f)
-    val foregroundColorFocused = java.awt.Color(foreground.red, foreground.green, foreground.blue, 1f)
-    val foregroundColorInactive = java.awt.Color(foreground.red, foreground.green, foreground.blue, 0.5f)
 
     TitleBarImpl(
         minHeight = minHeight,
         modifier = modifier.customTitleBarMouseEventHandler(titleBar),
         gradientStartColor = gradientStartColor,
-        applyTitleBar = { height, _ ->
-            titleBar.also {
-                it.height = height.value
-                it.putProperty("controls.dark", isDark)
-                it.putProperty("controls.foreground.normal", foregroundColor)
-                it.putProperty("controls.foreground.hovered", foregroundColorFocused)
-                it.putProperty("controls.foreground.pressed", foregroundColorFocused)
-                it.putProperty("controls.foreground.disabled", foregroundColorInactive)
-                it.putProperty("controls.foreground.inactive", foregroundColorInactive)
+        applyTitleBar = { newHeight, _ ->
+            titleBar.apply {
+                height = newHeight.value
+                putProperty("controls.dark", isDark)
+                putProperty("controls.foreground.normal", foreground.toAwt(alpha = 0.7f))
+                putProperty("controls.foreground.hovered", foreground.toAwt(alpha = 1f))
+                putProperty("controls.foreground.pressed", foreground.toAwt(alpha = 1f))
+                putProperty("controls.foreground.disabled", foreground.toAwt(alpha = 0.5f))
+                putProperty("controls.foreground.inactive", foreground.toAwt(alpha = 0.5f))
             }
 
             JBR.windowDecorations!!.setCustomTitleBar(window, titleBar)
@@ -63,23 +61,20 @@ internal fun DecoratedDialogWindowScope.TitleBarOnWindows(
     val titleBar = remember { JBR.windowDecorations!!.createCustomTitleBar()!! }
     val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5
     val foreground = LocalContentColor.current
-    val foregroundColor = java.awt.Color(foreground.red, foreground.green, foreground.blue, 0.7f)
-    val foregroundColorFocused = java.awt.Color(foreground.red, foreground.green, foreground.blue, 1f)
-    val foregroundColorInactive = java.awt.Color(foreground.red, foreground.green, foreground.blue, 0.5f)
 
     TitleBarImpl(
         minHeight = 30.dp,
         modifier = modifier.customTitleBarMouseEventHandler(titleBar),
         gradientStartColor = gradientStartColor,
-        applyTitleBar = { height, _ ->
-            titleBar.also {
-                it.height = height.value
-                it.putProperty("controls.dark", isDark)
-                it.putProperty("controls.foreground.normal", foregroundColor)
-                it.putProperty("controls.foreground.hovered", foregroundColorFocused)
-                it.putProperty("controls.foreground.pressed", foregroundColorFocused)
-                it.putProperty("controls.foreground.disabled", foregroundColorInactive)
-                it.putProperty("controls.foreground.inactive", foregroundColorInactive)
+        applyTitleBar = { newHeight, _ ->
+            titleBar.apply {
+                height = newHeight.value
+                putProperty("controls.dark", isDark)
+                putProperty("controls.foreground.normal", foreground.toAwt(alpha = 0.7f))
+                putProperty("controls.foreground.hovered", foreground.toAwt(alpha = 1f))
+                putProperty("controls.foreground.pressed", foreground.toAwt(alpha = 1f))
+                putProperty("controls.foreground.disabled", foreground.toAwt(alpha = 0.5f))
+                putProperty("controls.foreground.inactive", foreground.toAwt(alpha = 0.5f))
             }
 
             JBR.windowDecorations!!.setCustomTitleBar(window, titleBar)
