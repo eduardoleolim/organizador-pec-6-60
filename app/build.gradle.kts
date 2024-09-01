@@ -48,7 +48,7 @@ compose.desktop {
             description = "Organizador de formatos PEC-6-60"
             copyright = "Copyright © 2024 Angel Eduardo Martinez Leo Lim. All rights reserved."
             vendor = "Angel Eduardo Martinez Leo Lim"
-            licenseFile.set(project.file("../LICENSE.txt"))
+            licenseFile.set(file("../LICENSE.txt"))
 
             includeAllModules = true
 
@@ -58,20 +58,23 @@ compose.desktop {
                 iconFile.set(file("icons/icon.ico"))
                 dirChooser = true
                 shortcut = true
-                menuGroup = "Inegi"
+                menuGroup = "Inegij"
             }
 
             linux {
                 iconFile.set(file("icons/icon.png"))
                 shortcut = true
                 menuGroup = "Inegi"
+                debMaintainer = "eduardoleolim@hotmail.com"
+                appCategory = "Office"
             }
 
             macOS {
                 iconFile.set(file("icons/icon.icns"))
+                appCategory = "public.app-category.productivity"
             }
 
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            targetFormats(TargetFormat.Msi, TargetFormat.Deb, TargetFormat.Dmg)
         }
 
         buildTypes.release.proguard {
