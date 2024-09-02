@@ -58,7 +58,7 @@ compose.desktop {
                 iconFile.set(file("icons/icon.ico"))
                 dirChooser = true
                 shortcut = true
-                menuGroup = "Inegij"
+                menuGroup = "Inegi"
             }
 
             linux {
