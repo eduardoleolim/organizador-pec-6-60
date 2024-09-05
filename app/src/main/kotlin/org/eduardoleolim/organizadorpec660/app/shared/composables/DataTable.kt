@@ -1,9 +1,7 @@
 package org.eduardoleolim.organizadorpec660.app.shared.composables
 
-import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.LastPage
 import androidx.compose.material.icons.filled.*
@@ -29,6 +27,7 @@ import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
 import org.eduardoleolim.organizadorpec660.app.generated.resources.table_pagination
 import org.eduardoleolim.organizadorpec660.app.generated.resources.table_search
 import org.eduardoleolim.organizadorpec660.app.generated.resources.table_show_items
+import org.eduardoleolim.organizadorpec660.app.shared.utils.conditional
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.min
 
@@ -87,18 +86,33 @@ fun PaginatedDataTable(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             val horizontalScrollState = rememberScrollState(0)
+            val horizontalScrollbarAdapter = rememberScrollbarAdapter(horizontalScrollState)
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.weight(1f).horizontalScroll(horizontalScrollState)
+            Box(
+                modifier = Modifier.weight(1f)
             ) {
-                SelectPageSize(
-                    state = state,
-                    pageSizes = pageSizes
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.horizontalScroll(horizontalScrollState)
+                        .conditional(
+                            condition = horizontalScrollbarAdapter.contentSize > horizontalScrollbarAdapter.viewportSize,
+                            ifTrue = { padding(bottom = 6.dp) }
+                        )
+                ) {
+                    SelectPageSize(
+                        state = state,
+                        pageSizes = pageSizes
+                    )
 
-                header()
+                    header()
+                }
+
+                HorizontalScrollbar(
+                    adapter = horizontalScrollbarAdapter,
+                    modifier = Modifier.align(Alignment.BottomStart)
+                        .fillMaxWidth()
+                )
             }
 
             OutlinedTextField(
