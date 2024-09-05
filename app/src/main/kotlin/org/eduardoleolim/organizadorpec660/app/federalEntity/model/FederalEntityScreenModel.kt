@@ -115,7 +115,7 @@ class FederalEntityScreenModel(
                         formState = FederalEntityFormState.SuccessCreate
                     },
                     ifLeft = {
-                        deleteState = FederalEntityDeleteState.Error(it)
+                        formState = FederalEntityFormState.Error(it)
                     }
                 )
             } catch (e: Exception) {
@@ -143,7 +143,7 @@ class FederalEntityScreenModel(
                         formState = FederalEntityFormState.SuccessEdit
                     },
                     ifLeft = {
-                        deleteState = FederalEntityDeleteState.Error(it)
+                        formState = FederalEntityFormState.Error(it)
                     }
                 )
             } catch (e: Exception) {
