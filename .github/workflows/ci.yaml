@@ -49,6 +49,13 @@ jobs:
     strategy:
       matrix:
         os: [ windows-latest, ubuntu-latest, macos-latest ]
+        include:
+          - os: windows-latest
+            installer: ./app/**/*.msi
+          - os: ubuntu-latest
+            installer: ./app/**/*.deb
+          - os: macos-latest
+            installer: ./app/**/*.dmg
 
     steps:
       - name: 👍 Checkout
