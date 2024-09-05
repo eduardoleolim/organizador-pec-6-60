@@ -64,16 +64,17 @@ internal fun DecoratedWindowScope.TitleBarOnLinux(
                     description = "Minimize"
                 )
 
-                ControlButton(
-                    enabled = window.isResizable,
-                    onClick = {
-                        if (window.isResizable) {
-                            toggleMaximize()
-                        }
-                    },
-                    icon = if (state.isMaximized) CustomIcons.Floating else CustomIcons.Maximize,
-                    description = "Maximize"
-                )
+                if (window.isResizable) {
+                    ControlButton(
+                        onClick = {
+                            if (window.isResizable) {
+                                toggleMaximize()
+                            }
+                        },
+                        icon = if (state.isMaximized) CustomIcons.Floating else CustomIcons.Maximize,
+                        description = "Maximize"
+                    )
+                }
 
                 ControlButton(
                     onClick = onCloseRequest,
@@ -94,8 +95,6 @@ internal fun DecoratedDialogWindowScope.TitleBarOnLinux(
     onCloseRequest: () -> Unit,
     content: @Composable (TitleBarScope.(DecoratedDialogWindowState) -> Unit),
 ) {
-
-
     TitleBarImpl(
         modifier = modifier.pointerInput(Unit) {
             detectTapGestures(
