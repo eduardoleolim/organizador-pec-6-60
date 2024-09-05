@@ -80,7 +80,7 @@ class InstrumentScreen(
                 onDeleteRequest = { screenModel.deleteInstrument(it.id) },
                 onEditRequest = { screenModel.navigateToSaveInstrumentView(it.id) },
                 onCopyRequest = { screenModel.copyInstrumentToClipboard(it.id) },
-                onShowDetailsRequest = { },
+                onShowDetailsRequest = { screenModel.navigateToShowInstrumentDetailsView(it.id) },
                 onChangeStateRequest = { instrument, save ->
                     if (save) {
                         screenModel.updateInstrumentAsSavedInSIRESO(instrument.id)

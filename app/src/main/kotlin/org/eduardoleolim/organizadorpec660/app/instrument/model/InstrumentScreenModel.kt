@@ -124,6 +124,10 @@ class InstrumentScreenModel(
         navigator.push(ScreenRegistry.get(HomeProvider.SaveInstrumentScreen(instrumentId)))
     }
 
+    fun navigateToShowInstrumentDetailsView(instrumentId: String) {
+        navigator.push(ScreenRegistry.get(HomeProvider.ShowInstrumentDetailsScreen(instrumentId)))
+    }
+
     fun searchInstruments(
         search: String? = null,
         federalEntityId: String? = null,

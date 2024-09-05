@@ -45,6 +45,8 @@
     <!-- Instrument -->
     <string name="instruments">Instrumentos</string>
     <string name="inst_in_sireso">¿Guardado en SIRESO?</string>
+    <string name="inst_in_sireso_yes">Si</string>
+    <string name="inst_in_sireso_no">No</string>
     <string name="inst_federal_entity">Entidad federativa</string>
     <string name="inst_municipality">Municipio</string>
     <string name="inst_agency">Fuente</string>
@@ -62,7 +64,7 @@
     <string name="inst_show_details">Mostrar detalles</string>
     <string name="inst_copy_notification_title">Instrumento copiado a portapapeles</string>
     <string name="inst_copy_notification_message">Ruta del instrumento copiada desde %1$s</string>
-
+    <string name="inst_show_details_title">Datos del instrumento</string>
     <string name="inst_form_add_title">Agregar instrumento</string>
     <string name="inst_form_edit_title">Editar instrumento</string>
 

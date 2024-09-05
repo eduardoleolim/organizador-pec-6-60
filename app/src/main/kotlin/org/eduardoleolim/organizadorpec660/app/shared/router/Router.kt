@@ -9,6 +9,7 @@ import org.eduardoleolim.organizadorpec660.app.federalEntity.views.FederalEntity
 import org.eduardoleolim.organizadorpec660.app.home.views.HomeScreen
 import org.eduardoleolim.organizadorpec660.app.instrument.views.InstrumentScreen
 import org.eduardoleolim.organizadorpec660.app.instrument.views.SaveInstrumentScreen
+import org.eduardoleolim.organizadorpec660.app.instrument.views.ShowInstrumentDetailsScreen
 import org.eduardoleolim.organizadorpec660.app.municipality.views.MunicipalityScreen
 import org.eduardoleolim.organizadorpec660.app.statisticType.views.StatisticTypeScreen
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
@@ -27,6 +28,9 @@ fun Router(commandBus: CommandBus, queryBus: QueryBus, tempDirectory: String) {
         register<HomeProvider.InstrumentScreen> { InstrumentScreen(queryBus, commandBus, tempDirectory) }
         register<HomeProvider.SaveInstrumentScreen> { provider ->
             SaveInstrumentScreen(provider.instrumentId, queryBus, commandBus, tempDirectory)
+        }
+        register<HomeProvider.ShowInstrumentDetailsScreen> { provider ->
+            ShowInstrumentDetailsScreen(provider.instrumentId, queryBus, tempDirectory)
         }
         register<HomeProvider.AgencyScreen> { AgencyScreen(queryBus, commandBus) }
     }

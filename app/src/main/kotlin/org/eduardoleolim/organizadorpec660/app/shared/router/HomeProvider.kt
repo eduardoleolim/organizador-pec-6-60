@@ -13,5 +13,7 @@ sealed class HomeProvider : ScreenProvider {
 
     data class SaveInstrumentScreen(val instrumentId: String?) : HomeProvider()
 
+    data class ShowInstrumentDetailsScreen(val instrumentId: String) : HomeProvider()
+
     data object AgencyScreen : HomeProvider()
 }
