@@ -30,7 +30,6 @@ import org.eduardoleolim.organizadorpec660.app.shared.theme.Contrast
 import org.eduardoleolim.organizadorpec660.app.shared.utils.AppConfig
 import org.eduardoleolim.organizadorpec660.app.shared.utils.DesktopPlatform
 import org.eduardoleolim.organizadorpec660.app.shared.utils.isSystemInDarkTheme
-import org.eduardoleolim.organizadorpec660.app.shared.window.DecoratedDialogWindow
 import org.eduardoleolim.organizadorpec660.app.shared.window.DecoratedWindow
 import org.eduardoleolim.organizadorpec660.app.shared.window.TitleBar
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
@@ -107,12 +106,12 @@ class App(
 
     @Composable
     private fun ConfigWindow(onCloseRequest: () -> Unit, onPasswordSet: (String) -> Unit) {
-        val state = rememberDialogState()
+        val state = rememberWindowState()
         val isSystemInDarkTheme = isSystemInDarkTheme()
 
         AppTheme(isDarkMode = isSystemInDarkTheme) {
             val icon = painterResource(Res.drawable.logo)
-            DecoratedDialogWindow(
+            DecoratedWindow(
                 state = state,
                 onCloseRequest = onCloseRequest,
                 title = stringResource(Res.string.app_name),
