@@ -9,8 +9,8 @@ import java.math.BigInteger
 import java.util.*
 
 object AppConfig {
-    private val resourcesPath = System.getProperty("compose.application.resources.dir")
-    private val propertiesFile = File(resourcesPath).resolve("app.properties")
+    private val resourcesDirectory = System.getProperty("compose.application.resources.dir")
+    private val propertiesFile = File(resourcesDirectory).resolve("app.properties")
     private var properties = Properlty.builder()
         .add(SystemPropertiesReader())
         .add(propertiesFile.path)
