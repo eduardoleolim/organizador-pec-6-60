@@ -1,19 +1,28 @@
 import org.eduardoleolim.organizadorpec660.app.App
 import org.eduardoleolim.organizadorpec660.app.shared.utils.AppConfig
+import java.io.File
 
 fun main() {
     try {
-        val databaseDirectory = AppConfig["app.database.dir"] ?: error("Database path not found")
-        val password = AppConfig["app.database.password"] ?: error("Database password not found")
-        val extensionsDirectory = AppConfig["app.database.extensions.dir"] ?: error("Database extension path not found")
-        val instrumentsDirectory = AppConfig["app.instruments.dir"] ?: error("Instruments path not found")
-        val tempDirectory = AppConfig["app.temp.dir"] ?: run {
-            val defaultTempDir = "\${java.io.tmpdir}/organizador-pec-6-60"
-            AppConfig["app.temp.dir"] = defaultTempDir
-            defaultTempDir
-        }
+        val dataDir = File(AppConfig.getDataDirectory())
 
-        App(databaseDirectory, password, extensionsDirectory, instrumentsDirectory, tempDirectory).start()
+        val databaseDir = AppConfig["app.database.dir"] ?: error("Database directory is not defined")
+        val databasePassword = AppConfig["app.database.password"] ?: error("Database password is not defined")
+        val databaseExtensionsDir =
+            AppConfig["app.database.extensions.dir"] ?: error("Database extensions directory is not defined")
+        val instrumentsDir = AppConfig["app.instruments.dir"] ?: error("Instrument files directory is not defined")
+        val tempDir = AppConfig["app.temp.dir"] ?: error("Temp directory is not defined")
+
+        val absoluteDatabaseDir = dataDir.resolve(databaseDir).normalize().absolutePath
+        val absoluteInstrumentsDir = dataDir.resolve(instrumentsDir).normalize().absolutePath
+
+        App(
+            absoluteDatabaseDir,
+            databasePassword,
+            databaseExtensionsDir,
+            absoluteInstrumentsDir,
+            tempDir
+        ).start()
     } catch (e: Exception) {
         println(e.localizedMessage)
     }

@@ -3,6 +3,7 @@ package org.eduardoleolim.organizadorpec660.app.shared.utils
 import com.ufoscout.properlty.Default
 import com.ufoscout.properlty.Properlty
 import com.ufoscout.properlty.reader.SystemPropertiesReader
+import net.harawata.appdirs.AppDirsFactory
 import java.io.File
 import java.math.BigDecimal
 import java.math.BigInteger
@@ -11,10 +12,13 @@ import java.util.*
 object AppConfig {
     private val resourcesDirectory = System.getProperty("compose.application.resources.dir")
     private val propertiesFile = File(resourcesDirectory).resolve("app.properties")
-    private var properties = Properlty.builder()
-        .add(SystemPropertiesReader())
-        .add(propertiesFile.path)
-        .build()
+    private var properties = Properlty.builder().add(SystemPropertiesReader()).add(propertiesFile.path).build()
+    private val appDirs = AppDirsFactory.getInstance()
+
+    val name = properties["app.name"]
+    val version = properties["app.version"]
+
+    fun getDataDirectory(): String = System.getenv("DEVELOPMENT_DATA_DIR") ?: appDirs.getSiteDataDir(name, null, null)
 
     operator fun get(key: String): String? = properties[key]
 

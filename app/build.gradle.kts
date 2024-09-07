@@ -30,12 +30,13 @@ dependencies {
         exclude("net.java.dev.jna")
     }
     implementation(libs.properlty)
+    implementation(libs.appdirs)
 }
 
 compose.desktop {
     application {
         mainClass = "MainKt"
-        jvmArgs("-Dfile.encoding=UTF-8")
+        jvmArgs("-Dfile.encoding=UTF-8", "-Dapp.name=${rootProject.name}", "-Dapp.version=${rootProject.version}")
 
         if (OperatingSystem.current().isMacOsX) {
             jvmArgs("-Dskiko.renderApi=METAL")
@@ -44,14 +45,13 @@ compose.desktop {
         }
 
         nativeDistributions {
-            packageName = "Organizador PEC-6-60"
+            packageName = rootProject.name
             description = "Organizador de formatos PEC-6-60"
             copyright = "Copyright © 2024 Angel Eduardo Martinez Leo Lim. All rights reserved."
             vendor = "Angel Eduardo Martinez Leo Lim"
             licenseFile.set(file("../LICENSE.txt"))
 
             includeAllModules = true
-
             appResourcesRootDir.set(project.layout.projectDirectory.dir("resources"))
 
             windows {
