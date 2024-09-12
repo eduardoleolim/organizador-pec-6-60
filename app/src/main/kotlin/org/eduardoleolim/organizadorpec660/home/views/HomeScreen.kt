@@ -26,10 +26,10 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import org.eduardoleolim.organizadorpec660.app.generated.resources.*
-import org.eduardoleolim.organizadorpec660.home.model.HomeScreenModel
-import org.eduardoleolim.organizadorpec660.shared.window.LocalWindow
 import org.eduardoleolim.organizadorpec660.auth.application.AuthUserResponse
+import org.eduardoleolim.organizadorpec660.home.model.HomeScreenModel
+import org.eduardoleolim.organizadorpec660.shared.resources.*
+import org.eduardoleolim.organizadorpec660.shared.window.LocalWindow
 import org.jetbrains.compose.resources.stringResource
 import java.awt.Dimension
 

@@ -23,12 +23,12 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import kotlinx.coroutines.Dispatchers
 import org.eduardoleolim.organizadorpec660.auth.data.InvalidCredentialsException
+import org.eduardoleolim.organizadorpec660.auth.domain.InvalidAuthCredentialsError
 import org.eduardoleolim.organizadorpec660.auth.model.AuthScreenModel
 import org.eduardoleolim.organizadorpec660.auth.model.AuthState
-import org.eduardoleolim.organizadorpec660.app.generated.resources.*
-import org.eduardoleolim.organizadorpec660.shared.window.LocalWindow
-import org.eduardoleolim.organizadorpec660.auth.domain.InvalidAuthCredentialsError
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.shared.resources.*
+import org.eduardoleolim.organizadorpec660.shared.window.LocalWindow
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import java.awt.Dimension

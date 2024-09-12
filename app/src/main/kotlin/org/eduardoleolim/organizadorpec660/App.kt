@@ -22,8 +22,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.*
 import kotlinx.coroutines.launch
-import org.eduardoleolim.organizadorpec660.app.generated.resources.*
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.shared.infrastructure.bus.KtormCommandBus
+import org.eduardoleolim.organizadorpec660.shared.infrastructure.bus.KtormQueryBus
+import org.eduardoleolim.organizadorpec660.shared.infrastructure.models.SqliteKtormDatabase
 import org.eduardoleolim.organizadorpec660.shared.notification.LocalTrayState
+import org.eduardoleolim.organizadorpec660.shared.resources.*
 import org.eduardoleolim.organizadorpec660.shared.router.Router
 import org.eduardoleolim.organizadorpec660.shared.theme.AppTheme
 import org.eduardoleolim.organizadorpec660.shared.theme.Contrast
@@ -32,11 +37,6 @@ import org.eduardoleolim.organizadorpec660.shared.utils.DesktopPlatform
 import org.eduardoleolim.organizadorpec660.shared.utils.isSystemInDarkTheme
 import org.eduardoleolim.organizadorpec660.shared.window.DecoratedWindow
 import org.eduardoleolim.organizadorpec660.shared.window.TitleBar
-import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
-import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
-import org.eduardoleolim.organizadorpec660.shared.infrastructure.bus.KtormCommandBus
-import org.eduardoleolim.organizadorpec660.shared.infrastructure.bus.KtormQueryBus
-import org.eduardoleolim.organizadorpec660.shared.infrastructure.models.SqliteKtormDatabase
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import java.awt.Dimension

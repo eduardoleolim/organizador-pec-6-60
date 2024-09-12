@@ -9,7 +9,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.eduardoleolim.organizadorpec660.statisticType.data.EmptyStatisticTypeDataException
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
 import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypesResponse
@@ -17,6 +16,7 @@ import org.eduardoleolim.organizadorpec660.statisticType.application.create.Crea
 import org.eduardoleolim.organizadorpec660.statisticType.application.delete.DeleteStatisticTypeCommand
 import org.eduardoleolim.organizadorpec660.statisticType.application.searchByTerm.SearchStatisticTypesByTermQuery
 import org.eduardoleolim.organizadorpec660.statisticType.application.update.UpdateStatisticTypeCommand
+import org.eduardoleolim.organizadorpec660.statisticType.data.EmptyStatisticTypeDataException
 
 sealed class StatisticTypeFormState {
     data object Idle : StatisticTypeFormState()

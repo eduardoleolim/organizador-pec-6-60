@@ -8,13 +8,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
-import org.eduardoleolim.organizadorpec660.app.generated.resources.mun_delete_text
-import org.eduardoleolim.organizadorpec660.app.generated.resources.mun_delete_title
+import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorpec660.municipality.model.MunicipalityDeleteState
 import org.eduardoleolim.organizadorpec660.municipality.model.MunicipalityScreenModel
 import org.eduardoleolim.organizadorpec660.shared.composables.QuestionDialog
-import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalityResponse
+import org.eduardoleolim.organizadorpec660.shared.resources.Res
+import org.eduardoleolim.organizadorpec660.shared.resources.mun_delete_text
+import org.eduardoleolim.organizadorpec660.shared.resources.mun_delete_title
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

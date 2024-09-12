@@ -7,7 +7,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import org.eduardoleolim.organizadorpec660.app.generated.resources.*
+import org.eduardoleolim.organizadorpec660.shared.resources.*
 import org.jetbrains.compose.resources.Font
 
 val RobotoFontFamily

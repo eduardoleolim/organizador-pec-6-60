@@ -15,10 +15,6 @@ import kotlinx.coroutines.launch
 import org.eduardoleolim.organizadorpec660.agency.application.AgencyResponse
 import org.eduardoleolim.organizadorpec660.agency.application.MunicipalityAgenciesResponse
 import org.eduardoleolim.organizadorpec660.agency.application.searchByMunicipalityId.SearchAgenciesByMunicipalityIdQuery
-import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
-import org.eduardoleolim.organizadorpec660.app.generated.resources.inst_copy_notification_message
-import org.eduardoleolim.organizadorpec660.app.generated.resources.inst_copy_notification_title
-import org.eduardoleolim.organizadorpec660.shared.router.HomeProvider
 import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntitiesResponse
 import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorpec660.federalEntity.application.searchByTerm.SearchFederalEntitiesByTermQuery
@@ -34,6 +30,10 @@ import org.eduardoleolim.organizadorpec660.municipality.application.Municipality
 import org.eduardoleolim.organizadorpec660.municipality.application.searchByTerm.SearchMunicipalitiesByTermQuery
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.shared.resources.Res
+import org.eduardoleolim.organizadorpec660.shared.resources.inst_copy_notification_message
+import org.eduardoleolim.organizadorpec660.shared.resources.inst_copy_notification_title
+import org.eduardoleolim.organizadorpec660.shared.router.HomeProvider
 import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypeResponse
 import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypesResponse
 import org.eduardoleolim.organizadorpec660.statisticType.application.searchByTerm.SearchStatisticTypesByTermQuery

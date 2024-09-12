@@ -12,9 +12,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.eduardoleolim.organizadorpec660.instrument.views.InstrumentScreen
 import org.eduardoleolim.organizadorpec660.instrument.application.DetailedInstrumentResponse
 import org.eduardoleolim.organizadorpec660.instrument.application.searchById.SearchInstrumentByIdQuery
+import org.eduardoleolim.organizadorpec660.instrument.views.InstrumentScreen
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
 import java.io.File
 

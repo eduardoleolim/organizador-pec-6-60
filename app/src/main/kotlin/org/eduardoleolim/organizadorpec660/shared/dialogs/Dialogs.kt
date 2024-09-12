@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.rememberDialogState
-import org.eduardoleolim.organizadorpec660.app.generated.resources.*
+import org.eduardoleolim.organizadorpec660.shared.resources.*
 import org.eduardoleolim.organizadorpec660.shared.window.DecoratedDialogWindow
 import org.jetbrains.compose.resources.stringResource
 

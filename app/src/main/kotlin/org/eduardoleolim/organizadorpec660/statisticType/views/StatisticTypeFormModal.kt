@@ -10,14 +10,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import org.eduardoleolim.organizadorpec660.app.generated.resources.*
-import org.eduardoleolim.organizadorpec660.statisticType.data.EmptyStatisticTypeDataException
-import org.eduardoleolim.organizadorpec660.statisticType.model.StatisticTypeFormState
-import org.eduardoleolim.organizadorpec660.statisticType.model.StatisticTypeScreenModel
+import org.eduardoleolim.organizadorpec660.shared.resources.*
 import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypeResponse
+import org.eduardoleolim.organizadorpec660.statisticType.data.EmptyStatisticTypeDataException
 import org.eduardoleolim.organizadorpec660.statisticType.domain.InvalidStatisticTypeKeyCodeError
 import org.eduardoleolim.organizadorpec660.statisticType.domain.InvalidStatisticTypeNameError
 import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeAlreadyExistsError
+import org.eduardoleolim.organizadorpec660.statisticType.model.StatisticTypeFormState
+import org.eduardoleolim.organizadorpec660.statisticType.model.StatisticTypeScreenModel
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

@@ -11,9 +11,9 @@ import org.eduardoleolim.organizadorpec660.instrument.views.InstrumentScreen
 import org.eduardoleolim.organizadorpec660.instrument.views.SaveInstrumentScreen
 import org.eduardoleolim.organizadorpec660.instrument.views.ShowInstrumentDetailsScreen
 import org.eduardoleolim.organizadorpec660.municipality.views.MunicipalityScreen
-import org.eduardoleolim.organizadorpec660.statisticType.views.StatisticTypeScreen
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.statisticType.views.StatisticTypeScreen
 
 @Composable
 fun Router(commandBus: CommandBus, queryBus: QueryBus, tempDirectory: String) {

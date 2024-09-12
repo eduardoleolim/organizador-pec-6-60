@@ -11,12 +11,12 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.eduardoleolim.organizadorpec660.auth.data.InvalidCredentialsException
-import org.eduardoleolim.organizadorpec660.shared.router.MainProvider
 import org.eduardoleolim.organizadorpec660.auth.application.AuthUserResponse
 import org.eduardoleolim.organizadorpec660.auth.application.authenticate.AuthenticateUserQuery
+import org.eduardoleolim.organizadorpec660.auth.data.InvalidCredentialsException
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryHandlerExecutionError
+import org.eduardoleolim.organizadorpec660.shared.router.MainProvider
 
 sealed class AuthState {
     data object Idle : AuthState()

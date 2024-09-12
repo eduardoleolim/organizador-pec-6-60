@@ -13,11 +13,11 @@ import androidx.compose.ui.unit.dp
 import org.eduardoleolim.organizadorpec660.agency.application.AgencyResponse
 import org.eduardoleolim.organizadorpec660.agency.model.AgencyDeleteState
 import org.eduardoleolim.organizadorpec660.agency.model.AgencyScreenModel
-import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
-import org.eduardoleolim.organizadorpec660.app.generated.resources.ag_delete_text
-import org.eduardoleolim.organizadorpec660.app.generated.resources.ag_delete_title
 import org.eduardoleolim.organizadorpec660.shared.composables.ErrorDialog
 import org.eduardoleolim.organizadorpec660.shared.composables.QuestionDialog
+import org.eduardoleolim.organizadorpec660.shared.resources.Res
+import org.eduardoleolim.organizadorpec660.shared.resources.ag_delete_text
+import org.eduardoleolim.organizadorpec660.shared.resources.ag_delete_title
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

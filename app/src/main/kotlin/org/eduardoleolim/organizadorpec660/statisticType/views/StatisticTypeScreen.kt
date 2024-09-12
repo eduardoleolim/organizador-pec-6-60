@@ -16,13 +16,13 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import com.seanproctor.datatable.paging.rememberPaginatedDataTableState
 import kotlinx.coroutines.Dispatchers
-import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
-import org.eduardoleolim.organizadorpec660.app.generated.resources.statistic_types
 import org.eduardoleolim.organizadorpec660.shared.composables.reset
-import org.eduardoleolim.organizadorpec660.statisticType.model.StatisticTypeScreenModel
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.shared.resources.Res
+import org.eduardoleolim.organizadorpec660.shared.resources.statistic_types
 import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypeResponse
+import org.eduardoleolim.organizadorpec660.statisticType.model.StatisticTypeScreenModel
 import org.jetbrains.compose.resources.stringResource
 
 class StatisticTypeScreen(private val queryBus: QueryBus, private val commandBus: CommandBus) : Screen {

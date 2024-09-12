@@ -33,6 +33,10 @@ dependencies {
     implementation(libs.appdirs)
 }
 
+compose.resources {
+    packageOfResClass = "org.eduardoleolim.organizadorpec660.shared.resources"
+}
+
 compose.desktop {
     application {
         mainClass = "MainKt"

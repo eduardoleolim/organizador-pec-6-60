@@ -15,7 +15,6 @@ import kotlinx.coroutines.launch
 import org.eduardoleolim.organizadorpec660.agency.application.AgencyResponse
 import org.eduardoleolim.organizadorpec660.agency.application.MunicipalityAgenciesResponse
 import org.eduardoleolim.organizadorpec660.agency.application.searchByMunicipalityId.SearchAgenciesByMunicipalityIdQuery
-import org.eduardoleolim.organizadorpec660.instrument.views.InstrumentScreen
 import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntitiesResponse
 import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorpec660.federalEntity.application.searchByTerm.SearchFederalEntitiesByTermQuery
@@ -23,6 +22,7 @@ import org.eduardoleolim.organizadorpec660.instrument.application.DetailedInstru
 import org.eduardoleolim.organizadorpec660.instrument.application.create.CreateInstrumentCommand
 import org.eduardoleolim.organizadorpec660.instrument.application.searchById.SearchInstrumentByIdQuery
 import org.eduardoleolim.organizadorpec660.instrument.application.update.UpdateInstrumentCommand
+import org.eduardoleolim.organizadorpec660.instrument.views.InstrumentScreen
 import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalitiesResponse
 import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorpec660.municipality.application.searchByTerm.SearchMunicipalitiesByTermQuery

@@ -14,14 +14,10 @@ import org.eduardoleolim.organizadorpec660.agency.application.create.CreateAgenc
 import org.eduardoleolim.organizadorpec660.agency.application.delete.DeleteAgencyCommand
 import org.eduardoleolim.organizadorpec660.agency.application.searchByTerm.SearchAgenciesByTermQuery
 import org.eduardoleolim.organizadorpec660.agency.application.update.UpdateAgencyCommand
+import org.eduardoleolim.organizadorpec660.agency.data.EmptyAgencyDataException
 import org.eduardoleolim.organizadorpec660.agency.domain.AgencyHasInstrumentsError
 import org.eduardoleolim.organizadorpec660.agency.domain.AgencyNotFoundError
 import org.eduardoleolim.organizadorpec660.agency.domain.CanNotDeleteAgencyError
-import org.eduardoleolim.organizadorpec660.agency.data.EmptyAgencyDataException
-import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
-import org.eduardoleolim.organizadorpec660.app.generated.resources.ag_delete_error_default
-import org.eduardoleolim.organizadorpec660.app.generated.resources.ag_delete_error_has_instruments
-import org.eduardoleolim.organizadorpec660.app.generated.resources.ag_delete_error_not_found
 import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntitiesResponse
 import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorpec660.federalEntity.application.searchByTerm.SearchFederalEntitiesByTermQuery
@@ -30,6 +26,10 @@ import org.eduardoleolim.organizadorpec660.municipality.application.Municipality
 import org.eduardoleolim.organizadorpec660.municipality.application.searchByTerm.SearchMunicipalitiesByTermQuery
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.shared.resources.Res
+import org.eduardoleolim.organizadorpec660.shared.resources.ag_delete_error_default
+import org.eduardoleolim.organizadorpec660.shared.resources.ag_delete_error_has_instruments
+import org.eduardoleolim.organizadorpec660.shared.resources.ag_delete_error_not_found
 import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypeResponse
 import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypesResponse
 import org.eduardoleolim.organizadorpec660.statisticType.application.searchByTerm.SearchStatisticTypesByTermQuery

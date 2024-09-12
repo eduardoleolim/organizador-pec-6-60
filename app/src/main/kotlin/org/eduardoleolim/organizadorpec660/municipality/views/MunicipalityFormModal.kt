@@ -10,16 +10,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import org.eduardoleolim.organizadorpec660.app.generated.resources.*
-import org.eduardoleolim.organizadorpec660.municipality.data.EmptyMunicipalityDataException
-import org.eduardoleolim.organizadorpec660.municipality.model.MunicipalityFormState
-import org.eduardoleolim.organizadorpec660.municipality.model.MunicipalityScreenModel
-import org.eduardoleolim.organizadorpec660.shared.composables.OutlinedSelect
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityNotFoundError
 import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalityResponse
+import org.eduardoleolim.organizadorpec660.municipality.data.EmptyMunicipalityDataException
 import org.eduardoleolim.organizadorpec660.municipality.domain.InvalidMunicipalityKeyCodeError
 import org.eduardoleolim.organizadorpec660.municipality.domain.InvalidMunicipalityNameError
 import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityAlreadyExistsError
+import org.eduardoleolim.organizadorpec660.municipality.model.MunicipalityFormState
+import org.eduardoleolim.organizadorpec660.municipality.model.MunicipalityScreenModel
+import org.eduardoleolim.organizadorpec660.shared.composables.OutlinedSelect
+import org.eduardoleolim.organizadorpec660.shared.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

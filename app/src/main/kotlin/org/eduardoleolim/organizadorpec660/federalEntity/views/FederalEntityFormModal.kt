@@ -10,14 +10,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import org.eduardoleolim.organizadorpec660.federalEntity.data.EmptyFederalEntityDataException
-import org.eduardoleolim.organizadorpec660.federalEntity.model.FederalEntityFormState
-import org.eduardoleolim.organizadorpec660.federalEntity.model.FederalEntityScreenModel
-import org.eduardoleolim.organizadorpec660.app.generated.resources.*
 import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntityResponse
+import org.eduardoleolim.organizadorpec660.federalEntity.data.EmptyFederalEntityDataException
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityAlreadyExistsError
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.InvalidFederalEntityKeyCodeError
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.InvalidFederalEntityNameError
+import org.eduardoleolim.organizadorpec660.federalEntity.model.FederalEntityFormState
+import org.eduardoleolim.organizadorpec660.federalEntity.model.FederalEntityScreenModel
+import org.eduardoleolim.organizadorpec660.shared.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

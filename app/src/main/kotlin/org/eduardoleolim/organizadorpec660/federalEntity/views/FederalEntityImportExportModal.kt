@@ -17,10 +17,10 @@ import kotlinx.coroutines.withContext
 import org.eduardoleolim.organizadorpec660.federalEntity.data.FederalEntityImportException
 import org.eduardoleolim.organizadorpec660.federalEntity.model.FederalEntityImportState
 import org.eduardoleolim.organizadorpec660.federalEntity.model.FederalEntityScreenModel
-import org.eduardoleolim.organizadorpec660.app.generated.resources.*
 import org.eduardoleolim.organizadorpec660.shared.composables.ErrorDialog
 import org.eduardoleolim.organizadorpec660.shared.dialogs.Dialogs
 import org.eduardoleolim.organizadorpec660.shared.dialogs.Dialogs.Option
+import org.eduardoleolim.organizadorpec660.shared.resources.*
 import org.jetbrains.compose.resources.stringResource
 import java.io.File
 import javax.swing.JFileChooser

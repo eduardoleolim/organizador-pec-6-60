@@ -27,9 +27,9 @@ import kotlinx.coroutines.launch
 import org.apache.pdfbox.Loader
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.rendering.PDFRenderer
-import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
-import org.eduardoleolim.organizadorpec660.app.generated.resources.pdf_viewer_show_all
-import org.eduardoleolim.organizadorpec660.app.generated.resources.pdf_viewer_zoom
+import org.eduardoleolim.organizadorpec660.shared.resources.Res
+import org.eduardoleolim.organizadorpec660.shared.resources.pdf_viewer_show_all
+import org.eduardoleolim.organizadorpec660.shared.resources.pdf_viewer_zoom
 import org.jetbrains.compose.resources.stringResource
 import java.io.File
 import javax.swing.JFileChooser

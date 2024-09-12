@@ -19,12 +19,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.eduardoleolim.organizadorpec660.app.generated.resources.*
 import org.eduardoleolim.organizadorpec660.instrument.model.InstrumentFormState
 import org.eduardoleolim.organizadorpec660.instrument.model.SaveInstrumentScreenModel
 import org.eduardoleolim.organizadorpec660.shared.composables.*
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.shared.resources.*
 import org.jetbrains.compose.resources.stringResource
 import java.io.File
 import java.text.DateFormatSymbols

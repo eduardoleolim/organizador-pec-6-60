@@ -16,13 +16,13 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import com.seanproctor.datatable.paging.rememberPaginatedDataTableState
 import kotlinx.coroutines.Dispatchers
-import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
-import org.eduardoleolim.organizadorpec660.app.generated.resources.municipalities
+import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorpec660.municipality.model.MunicipalityScreenModel
 import org.eduardoleolim.organizadorpec660.shared.composables.reset
-import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.shared.resources.Res
+import org.eduardoleolim.organizadorpec660.shared.resources.municipalities
 import org.jetbrains.compose.resources.stringResource
 
 class MunicipalityScreen(private val queryBus: QueryBus, private val commandBus: CommandBus) : Screen {

@@ -17,12 +17,12 @@ import com.seanproctor.datatable.paging.PaginatedDataTableState
 import org.eduardoleolim.organizadorpec660.agency.application.AgenciesResponse
 import org.eduardoleolim.organizadorpec660.agency.application.AgencyResponse
 import org.eduardoleolim.organizadorpec660.agency.domain.AgencyFields
-import org.eduardoleolim.organizadorpec660.app.generated.resources.*
 import org.eduardoleolim.organizadorpec660.shared.composables.PaginatedDataTable
 import org.eduardoleolim.organizadorpec660.shared.composables.PlainTextTooltip
 import org.eduardoleolim.organizadorpec660.shared.composables.sortAscending
 import org.eduardoleolim.organizadorpec660.shared.composables.sortColumnIndex
 import org.eduardoleolim.organizadorpec660.shared.domain.toLocalDateTime
+import org.eduardoleolim.organizadorpec660.shared.resources.*
 import org.jetbrains.compose.resources.stringResource
 import java.time.format.DateTimeFormatter
 

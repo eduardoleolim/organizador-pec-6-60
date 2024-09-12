@@ -18,12 +18,12 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.seanproctor.datatable.paging.rememberPaginatedDataTableState
 import kotlinx.coroutines.Dispatchers
-import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
-import org.eduardoleolim.organizadorpec660.app.generated.resources.instruments
 import org.eduardoleolim.organizadorpec660.instrument.model.InstrumentScreenModel
-import org.eduardoleolim.organizadorpec660.shared.notification.LocalTrayState
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.shared.notification.LocalTrayState
+import org.eduardoleolim.organizadorpec660.shared.resources.Res
+import org.eduardoleolim.organizadorpec660.shared.resources.instruments
 import org.jetbrains.compose.resources.stringResource
 
 class InstrumentScreen(

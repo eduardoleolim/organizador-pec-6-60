@@ -9,7 +9,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.eduardoleolim.organizadorpec660.municipality.data.EmptyMunicipalityDataException
 import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntitiesResponse
 import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorpec660.federalEntity.application.searchByTerm.SearchFederalEntitiesByTermQuery
@@ -18,6 +17,7 @@ import org.eduardoleolim.organizadorpec660.municipality.application.create.Creat
 import org.eduardoleolim.organizadorpec660.municipality.application.delete.DeleteMunicipalityCommand
 import org.eduardoleolim.organizadorpec660.municipality.application.searchByTerm.SearchMunicipalitiesByTermQuery
 import org.eduardoleolim.organizadorpec660.municipality.application.update.UpdateMunicipalityCommand
+import org.eduardoleolim.organizadorpec660.municipality.data.EmptyMunicipalityDataException
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
 

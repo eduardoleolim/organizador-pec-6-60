@@ -23,10 +23,10 @@ import com.seanproctor.datatable.DataTableScope
 import com.seanproctor.datatable.material3.Material3CellContentProvider
 import com.seanproctor.datatable.paging.PaginatedDataTableState
 import com.seanproctor.datatable.paging.rememberPaginatedDataTableState
-import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
-import org.eduardoleolim.organizadorpec660.app.generated.resources.table_pagination
-import org.eduardoleolim.organizadorpec660.app.generated.resources.table_search
-import org.eduardoleolim.organizadorpec660.app.generated.resources.table_show_items
+import org.eduardoleolim.organizadorpec660.shared.resources.Res
+import org.eduardoleolim.organizadorpec660.shared.resources.table_pagination
+import org.eduardoleolim.organizadorpec660.shared.resources.table_search
+import org.eduardoleolim.organizadorpec660.shared.resources.table_show_items
 import org.eduardoleolim.organizadorpec660.shared.utils.conditional
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.min

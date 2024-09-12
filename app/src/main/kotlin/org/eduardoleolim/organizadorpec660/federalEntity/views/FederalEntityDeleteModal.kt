@@ -10,13 +10,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.eduardoleolim.organizadorpec660.federalEntity.model.FederalEntityDeleteState
-import org.eduardoleolim.organizadorpec660.federalEntity.model.FederalEntityScreenModel
-import org.eduardoleolim.organizadorpec660.app.generated.resources.*
-import org.eduardoleolim.organizadorpec660.shared.composables.ErrorDialog
-import org.eduardoleolim.organizadorpec660.shared.composables.QuestionDialog
 import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityHasMunicipalitiesError
+import org.eduardoleolim.organizadorpec660.federalEntity.model.FederalEntityDeleteState
+import org.eduardoleolim.organizadorpec660.federalEntity.model.FederalEntityScreenModel
+import org.eduardoleolim.organizadorpec660.shared.composables.ErrorDialog
+import org.eduardoleolim.organizadorpec660.shared.composables.QuestionDialog
+import org.eduardoleolim.organizadorpec660.shared.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

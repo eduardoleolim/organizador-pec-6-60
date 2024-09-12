@@ -21,8 +21,8 @@ import org.eduardoleolim.organizadorpec660.agency.application.AgencyResponse
 import org.eduardoleolim.organizadorpec660.agency.data.EmptyAgencyDataException
 import org.eduardoleolim.organizadorpec660.agency.model.AgencyFormState
 import org.eduardoleolim.organizadorpec660.agency.model.AgencyScreenModel
-import org.eduardoleolim.organizadorpec660.app.generated.resources.*
 import org.eduardoleolim.organizadorpec660.shared.composables.OutlinedSelect
+import org.eduardoleolim.organizadorpec660.shared.resources.*
 import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypeResponse
 import org.jetbrains.compose.resources.stringResource
 
