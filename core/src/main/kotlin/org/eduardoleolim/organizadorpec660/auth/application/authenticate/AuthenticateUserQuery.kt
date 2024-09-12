@@ -1,4 +1,4 @@
-package org.eduardoleolim.organizadorpec660.core.auth.application.authenticate
+package org.eduardoleolim.organizadorpec660.auth.application.authenticate
 
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.Query
 

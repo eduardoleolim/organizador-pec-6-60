@@ -1,4 +1,4 @@
-package org.eduardoleolim.organizadorpec660.core.auth.application
+package org.eduardoleolim.organizadorpec660.auth.application
 
 import org.eduardoleolim.organizadorpec660.core.role.application.RoleResponse
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.Response

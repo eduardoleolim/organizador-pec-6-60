@@ -6,9 +6,9 @@ import org.eduardoleolim.organizadorpec660.agency.application.search.AgencySearc
 import org.eduardoleolim.organizadorpec660.agency.application.update.AgencyUpdater
 import org.eduardoleolim.organizadorpec660.agency.domain.AgencyRepository
 import org.eduardoleolim.organizadorpec660.agency.infrastructure.persistence.KtormAgencyRepository
-import org.eduardoleolim.organizadorpec660.core.auth.application.authenticate.UserAuthenticator
-import org.eduardoleolim.organizadorpec660.core.auth.domain.AuthRepository
-import org.eduardoleolim.organizadorpec660.core.auth.infrastructure.persistence.KtormAuthRepository
+import org.eduardoleolim.organizadorpec660.auth.application.authenticate.UserAuthenticator
+import org.eduardoleolim.organizadorpec660.auth.domain.AuthRepository
+import org.eduardoleolim.organizadorpec660.auth.infrastructure.persistence.KtormAuthRepository
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.create.FederalEntityCreator
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.delete.FederalEntityDeleter
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.importer.FederalEntityImporter

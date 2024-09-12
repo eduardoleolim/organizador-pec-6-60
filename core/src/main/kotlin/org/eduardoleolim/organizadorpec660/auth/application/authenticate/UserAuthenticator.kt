@@ -1,6 +1,6 @@
-package org.eduardoleolim.organizadorpec660.core.auth.application.authenticate
+package org.eduardoleolim.organizadorpec660.auth.application.authenticate
 
-import org.eduardoleolim.organizadorpec660.core.auth.domain.AuthRepository
+import org.eduardoleolim.organizadorpec660.auth.domain.AuthRepository
 
 class UserAuthenticator(private val authRepository: AuthRepository) {
     fun authenticate(emailOrUsername: String, password: String): Boolean {

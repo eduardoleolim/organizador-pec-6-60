@@ -1,7 +1,7 @@
-package org.eduardoleolim.organizadorpec660.core.auth.application.authenticate
+package org.eduardoleolim.organizadorpec660.auth.application.authenticate
 
-import org.eduardoleolim.organizadorpec660.core.auth.application.AuthUserResponse
-import org.eduardoleolim.organizadorpec660.core.auth.domain.InvalidAuthCredentialsError
+import org.eduardoleolim.organizadorpec660.auth.application.AuthUserResponse
+import org.eduardoleolim.organizadorpec660.auth.domain.InvalidAuthCredentialsError
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryHandler
 import org.eduardoleolim.organizadorpec660.core.user.application.search.UserSearcher
 import org.eduardoleolim.organizadorpec660.core.user.domain.UserCriteria

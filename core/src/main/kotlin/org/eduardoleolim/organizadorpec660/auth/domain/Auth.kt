@@ -1,4 +1,4 @@
-package org.eduardoleolim.organizadorpec660.core.auth.domain
+package org.eduardoleolim.organizadorpec660.auth.domain
 
 class Auth private constructor(
     private val emailOrUsername: AuthEmailOrUsername,

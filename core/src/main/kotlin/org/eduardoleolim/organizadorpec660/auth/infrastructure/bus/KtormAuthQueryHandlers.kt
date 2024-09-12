@@ -1,8 +1,8 @@
-package org.eduardoleolim.organizadorpec660.core.auth.infrastructure.bus
+package org.eduardoleolim.organizadorpec660.auth.infrastructure.bus
 
-import org.eduardoleolim.organizadorpec660.core.auth.application.authenticate.AuthenticateUserQuery
-import org.eduardoleolim.organizadorpec660.core.auth.application.authenticate.AuthenticateUserQueryHandler
-import org.eduardoleolim.organizadorpec660.core.auth.application.authenticate.UserAuthenticator
+import org.eduardoleolim.organizadorpec660.auth.application.authenticate.AuthenticateUserQuery
+import org.eduardoleolim.organizadorpec660.auth.application.authenticate.AuthenticateUserQueryHandler
+import org.eduardoleolim.organizadorpec660.auth.application.authenticate.UserAuthenticator
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.Query
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryHandler
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.Response
