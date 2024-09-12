@@ -2,7 +2,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=gradle,intellij
 
 ### Project ###
-/app/data
+/app/debug
 
 ### Kotlin ###
 .kotlin

@@ -5,18 +5,37 @@ import com.ufoscout.properlty.Properlty
 import com.ufoscout.properlty.reader.SystemPropertiesReader
 import net.harawata.appdirs.AppDirsFactory
 import java.io.File
+import java.io.IOException
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.util.*
 
 object AppConfig {
-    private val resourcesDirectory = System.getProperty("compose.application.resources.dir")
-    private val propertiesFile = File(resourcesDirectory).resolve("app.properties")
-    private var properties = Properlty.builder().add(SystemPropertiesReader()).add(propertiesFile.path).build()
-    private val appDirs = AppDirsFactory.getInstance()
+    val name = System.getProperty("app.name")!!
+    val version = System.getProperty("app.version")!!
 
-    val name = properties["app.name"]
-    val version = properties["app.version"]
+    private val appDirs = AppDirsFactory.getInstance()
+    private val resourcesDirectory = System.getProperty("compose.application.resources.dir")
+    private val propertiesFile: File by lazy {
+        val configDirectory = File(getConfigDirectory())
+        val configFile = configDirectory.resolve("app.properties")
+
+        if (!configFile.exists()) {
+            val defaultConfigFile = File(resourcesDirectory).resolve("app.properties")
+            try {
+                defaultConfigFile.copyTo(configFile, overwrite = true)
+            } catch (e: IOException) {
+                throw RuntimeException("Error copying default properties file to config directory", e)
+            }
+        }
+
+        configFile
+    }
+
+    private var properties = Properlty.builder().add(SystemPropertiesReader()).add(propertiesFile.path).build()
+
+    fun getConfigDirectory(): String =
+        System.getenv("DEVELOPMENT_CONFIG_DIR") ?: appDirs.getSiteConfigDir(name, null, null)
 
     fun getDataDirectory(): String = System.getenv("DEVELOPMENT_DATA_DIR") ?: appDirs.getSiteDataDir(name, null, null)
 
