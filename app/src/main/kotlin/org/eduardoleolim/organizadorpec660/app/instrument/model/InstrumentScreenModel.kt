@@ -12,13 +12,13 @@ import cafe.adriel.voyager.navigator.Navigator
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.eduardoleolim.organizadorpec660.agency.application.AgencyResponse
+import org.eduardoleolim.organizadorpec660.agency.application.MunicipalityAgenciesResponse
+import org.eduardoleolim.organizadorpec660.agency.application.searchByMunicipalityId.SearchAgenciesByMunicipalityIdQuery
 import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
 import org.eduardoleolim.organizadorpec660.app.generated.resources.inst_copy_notification_message
 import org.eduardoleolim.organizadorpec660.app.generated.resources.inst_copy_notification_title
 import org.eduardoleolim.organizadorpec660.app.shared.router.HomeProvider
-import org.eduardoleolim.organizadorpec660.core.agency.application.AgencyResponse
-import org.eduardoleolim.organizadorpec660.core.agency.application.MunicipalityAgenciesResponse
-import org.eduardoleolim.organizadorpec660.core.agency.application.searchByMunicipalityId.SearchAgenciesByMunicipalityIdQuery
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntitiesResponse
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.searchByTerm.SearchFederalEntitiesByTermQuery

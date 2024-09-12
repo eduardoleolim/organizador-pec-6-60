@@ -1,6 +1,6 @@
 package org.eduardoleolim.organizadorpec660.core.shared.infrastructure.bus
 
-import org.eduardoleolim.organizadorpec660.core.agency.infrastructure.bus.KtormAgencyCommandHandlers
+import org.eduardoleolim.organizadorpec660.agency.infrastructure.bus.KtormAgencyCommandHandlers
 import org.eduardoleolim.organizadorpec660.core.federalEntity.infrastructure.bus.KtormFederalEntityCommandHandlers
 import org.eduardoleolim.organizadorpec660.core.instrument.infrastructure.bus.KtormInstrumentCommandHandlers
 import org.eduardoleolim.organizadorpec660.core.municipality.infrastructure.bus.KtormMunicipalityCommandHandlers

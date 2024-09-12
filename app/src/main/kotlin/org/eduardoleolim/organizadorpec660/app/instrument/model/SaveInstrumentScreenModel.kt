@@ -12,10 +12,10 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.eduardoleolim.organizadorpec660.agency.application.AgencyResponse
+import org.eduardoleolim.organizadorpec660.agency.application.MunicipalityAgenciesResponse
+import org.eduardoleolim.organizadorpec660.agency.application.searchByMunicipalityId.SearchAgenciesByMunicipalityIdQuery
 import org.eduardoleolim.organizadorpec660.app.instrument.views.InstrumentScreen
-import org.eduardoleolim.organizadorpec660.core.agency.application.AgencyResponse
-import org.eduardoleolim.organizadorpec660.core.agency.application.MunicipalityAgenciesResponse
-import org.eduardoleolim.organizadorpec660.core.agency.application.searchByMunicipalityId.SearchAgenciesByMunicipalityIdQuery
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntitiesResponse
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.searchByTerm.SearchFederalEntitiesByTermQuery

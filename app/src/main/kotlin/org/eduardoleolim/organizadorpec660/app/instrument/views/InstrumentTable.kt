@@ -16,13 +16,13 @@ import androidx.compose.ui.unit.dp
 import com.seanproctor.datatable.DataColumn
 import com.seanproctor.datatable.TableColumnWidth
 import com.seanproctor.datatable.paging.PaginatedDataTableState
+import org.eduardoleolim.organizadorpec660.agency.application.AgencyResponse
 import org.eduardoleolim.organizadorpec660.app.generated.resources.*
 import org.eduardoleolim.organizadorpec660.app.instrument.model.InstrumentScreenModel
 import org.eduardoleolim.organizadorpec660.app.shared.composables.PaginatedDataTable
 import org.eduardoleolim.organizadorpec660.app.shared.composables.PlainTextTooltip
 import org.eduardoleolim.organizadorpec660.app.shared.composables.sortAscending
 import org.eduardoleolim.organizadorpec660.app.shared.composables.sortColumnIndex
-import org.eduardoleolim.organizadorpec660.core.agency.application.AgencyResponse
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorpec660.core.instrument.application.InstrumentResponse
 import org.eduardoleolim.organizadorpec660.core.instrument.application.InstrumentsResponse

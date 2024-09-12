@@ -16,11 +16,11 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import com.seanproctor.datatable.paging.rememberPaginatedDataTableState
 import kotlinx.coroutines.Dispatchers
+import org.eduardoleolim.organizadorpec660.agency.application.AgencyResponse
 import org.eduardoleolim.organizadorpec660.app.agency.model.AgencyScreenModel
 import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
 import org.eduardoleolim.organizadorpec660.app.generated.resources.agencies
 import org.eduardoleolim.organizadorpec660.app.shared.composables.reset
-import org.eduardoleolim.organizadorpec660.core.agency.application.AgencyResponse
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
 import org.jetbrains.compose.resources.stringResource

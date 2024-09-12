@@ -1,7 +1,7 @@
 package org.eduardoleolim.organizadorpec660.core.statisticType.application.delete
 
-import org.eduardoleolim.organizadorpec660.core.agency.domain.AgencyCriteria
-import org.eduardoleolim.organizadorpec660.core.agency.domain.AgencyRepository
+import org.eduardoleolim.organizadorpec660.agency.domain.AgencyCriteria
+import org.eduardoleolim.organizadorpec660.agency.domain.AgencyRepository
 import org.eduardoleolim.organizadorpec660.core.shared.domain.Either
 import org.eduardoleolim.organizadorpec660.core.shared.domain.Left
 import org.eduardoleolim.organizadorpec660.core.shared.domain.Right

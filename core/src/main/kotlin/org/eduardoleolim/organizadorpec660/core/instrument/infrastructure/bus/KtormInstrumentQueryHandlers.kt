@@ -1,6 +1,6 @@
 package org.eduardoleolim.organizadorpec660.core.instrument.infrastructure.bus
 
-import org.eduardoleolim.organizadorpec660.core.agency.application.search.AgencySearcher
+import org.eduardoleolim.organizadorpec660.agency.application.search.AgencySearcher
 import org.eduardoleolim.organizadorpec660.core.federalEntity.application.search.FederalEntitySearcher
 import org.eduardoleolim.organizadorpec660.core.instrument.application.search.InstrumentSearcher
 import org.eduardoleolim.organizadorpec660.core.instrument.application.searchById.SearchInstrumentByIdQuery

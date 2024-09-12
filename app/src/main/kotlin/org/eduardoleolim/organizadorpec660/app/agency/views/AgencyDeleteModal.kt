@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import org.eduardoleolim.organizadorpec660.agency.application.AgencyResponse
 import org.eduardoleolim.organizadorpec660.app.agency.model.AgencyDeleteState
 import org.eduardoleolim.organizadorpec660.app.agency.model.AgencyScreenModel
 import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
@@ -17,7 +18,6 @@ import org.eduardoleolim.organizadorpec660.app.generated.resources.ag_delete_tex
 import org.eduardoleolim.organizadorpec660.app.generated.resources.ag_delete_title
 import org.eduardoleolim.organizadorpec660.app.shared.composables.ErrorDialog
 import org.eduardoleolim.organizadorpec660.app.shared.composables.QuestionDialog
-import org.eduardoleolim.organizadorpec660.core.agency.application.AgencyResponse
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

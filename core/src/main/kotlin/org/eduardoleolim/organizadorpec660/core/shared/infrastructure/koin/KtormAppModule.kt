@@ -1,11 +1,11 @@
 package org.eduardoleolim.organizadorpec660.core.shared.infrastructure.koin
 
-import org.eduardoleolim.organizadorpec660.core.agency.application.create.AgencyCreator
-import org.eduardoleolim.organizadorpec660.core.agency.application.delete.AgencyDeleter
-import org.eduardoleolim.organizadorpec660.core.agency.application.search.AgencySearcher
-import org.eduardoleolim.organizadorpec660.core.agency.application.update.AgencyUpdater
-import org.eduardoleolim.organizadorpec660.core.agency.domain.AgencyRepository
-import org.eduardoleolim.organizadorpec660.core.agency.infrastructure.persistence.KtormAgencyRepository
+import org.eduardoleolim.organizadorpec660.agency.application.create.AgencyCreator
+import org.eduardoleolim.organizadorpec660.agency.application.delete.AgencyDeleter
+import org.eduardoleolim.organizadorpec660.agency.application.search.AgencySearcher
+import org.eduardoleolim.organizadorpec660.agency.application.update.AgencyUpdater
+import org.eduardoleolim.organizadorpec660.agency.domain.AgencyRepository
+import org.eduardoleolim.organizadorpec660.agency.infrastructure.persistence.KtormAgencyRepository
 import org.eduardoleolim.organizadorpec660.core.auth.application.authenticate.UserAuthenticator
 import org.eduardoleolim.organizadorpec660.core.auth.domain.AuthRepository
 import org.eduardoleolim.organizadorpec660.core.auth.infrastructure.persistence.KtormAuthRepository

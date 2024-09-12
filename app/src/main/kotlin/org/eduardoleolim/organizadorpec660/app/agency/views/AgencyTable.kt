@@ -14,14 +14,14 @@ import androidx.compose.ui.text.style.TextAlign
 import com.seanproctor.datatable.DataColumn
 import com.seanproctor.datatable.TableColumnWidth
 import com.seanproctor.datatable.paging.PaginatedDataTableState
+import org.eduardoleolim.organizadorpec660.agency.application.AgenciesResponse
+import org.eduardoleolim.organizadorpec660.agency.application.AgencyResponse
+import org.eduardoleolim.organizadorpec660.agency.domain.AgencyFields
 import org.eduardoleolim.organizadorpec660.app.generated.resources.*
 import org.eduardoleolim.organizadorpec660.app.shared.composables.PaginatedDataTable
 import org.eduardoleolim.organizadorpec660.app.shared.composables.PlainTextTooltip
 import org.eduardoleolim.organizadorpec660.app.shared.composables.sortAscending
 import org.eduardoleolim.organizadorpec660.app.shared.composables.sortColumnIndex
-import org.eduardoleolim.organizadorpec660.core.agency.application.AgenciesResponse
-import org.eduardoleolim.organizadorpec660.core.agency.application.AgencyResponse
-import org.eduardoleolim.organizadorpec660.core.agency.domain.AgencyFields
 import org.eduardoleolim.organizadorpec660.core.shared.domain.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
 import java.time.format.DateTimeFormatter
