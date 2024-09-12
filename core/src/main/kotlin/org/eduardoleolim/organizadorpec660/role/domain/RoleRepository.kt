@@ -1,4 +1,4 @@
-package org.eduardoleolim.organizadorpec660.core.role.domain
+package org.eduardoleolim.organizadorpec660.role.domain
 
 import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.Criteria
 

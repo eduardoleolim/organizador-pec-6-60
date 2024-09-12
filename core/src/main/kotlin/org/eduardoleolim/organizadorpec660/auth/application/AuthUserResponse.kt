@@ -1,8 +1,8 @@
 package org.eduardoleolim.organizadorpec660.auth.application
 
-import org.eduardoleolim.organizadorpec660.core.role.application.RoleResponse
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.Response
 import org.eduardoleolim.organizadorpec660.core.user.domain.User
+import org.eduardoleolim.organizadorpec660.role.application.RoleResponse
 import java.util.*
 
 class AuthUserResponse(

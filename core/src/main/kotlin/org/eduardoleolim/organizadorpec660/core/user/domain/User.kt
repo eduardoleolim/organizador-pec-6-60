@@ -1,6 +1,6 @@
 package org.eduardoleolim.organizadorpec660.core.user.domain
 
-import org.eduardoleolim.organizadorpec660.core.role.domain.Role
+import org.eduardoleolim.organizadorpec660.role.domain.Role
 import java.util.*
 
 class User private constructor(
