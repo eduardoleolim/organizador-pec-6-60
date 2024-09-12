@@ -96,7 +96,7 @@ class App(
                     exitApplication()
                 },
                 onPasswordSet = { password ->
-                    AppConfig["database.password"] = password
+                    AppConfig["app.database.password"] = password
                     databasePassword = password
                     existsDatabase = true
                 }
