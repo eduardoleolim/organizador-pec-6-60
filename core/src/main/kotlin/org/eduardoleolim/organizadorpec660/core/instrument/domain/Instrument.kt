@@ -2,7 +2,7 @@ package org.eduardoleolim.organizadorpec660.core.instrument.domain
 
 import org.eduardoleolim.organizadorpec660.agency.domain.AgencyId
 import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityId
-import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeId
+import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeId
 import java.util.*
 
 class Instrument private constructor(

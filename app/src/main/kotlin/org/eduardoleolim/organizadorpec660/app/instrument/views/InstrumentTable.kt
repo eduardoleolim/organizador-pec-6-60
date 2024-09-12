@@ -28,7 +28,7 @@ import org.eduardoleolim.organizadorpec660.core.instrument.application.Instrumen
 import org.eduardoleolim.organizadorpec660.core.instrument.application.InstrumentsResponse
 import org.eduardoleolim.organizadorpec660.core.instrument.domain.InstrumentFields
 import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalityResponse
-import org.eduardoleolim.organizadorpec660.core.statisticType.application.StatisticTypeResponse
+import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypeResponse
 import org.jetbrains.compose.resources.stringResource
 import java.text.DateFormatSymbols
 import java.time.LocalDate

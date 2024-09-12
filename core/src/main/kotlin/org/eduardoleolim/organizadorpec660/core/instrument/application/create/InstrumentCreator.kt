@@ -8,8 +8,8 @@ import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityRepos
 import org.eduardoleolim.organizadorpec660.core.shared.domain.Either
 import org.eduardoleolim.organizadorpec660.core.shared.domain.Left
 import org.eduardoleolim.organizadorpec660.core.shared.domain.Right
-import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeCriteria
-import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeRepository
+import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeCriteria
+import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeRepository
 import java.util.*
 
 class InstrumentCreator(

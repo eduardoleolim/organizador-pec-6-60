@@ -23,7 +23,7 @@ import org.eduardoleolim.organizadorpec660.app.agency.model.AgencyFormState
 import org.eduardoleolim.organizadorpec660.app.agency.model.AgencyScreenModel
 import org.eduardoleolim.organizadorpec660.app.generated.resources.*
 import org.eduardoleolim.organizadorpec660.app.shared.composables.OutlinedSelect
-import org.eduardoleolim.organizadorpec660.core.statisticType.application.StatisticTypeResponse
+import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypeResponse
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

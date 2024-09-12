@@ -14,7 +14,7 @@ import org.eduardoleolim.organizadorpec660.app.generated.resources.st_delete_tit
 import org.eduardoleolim.organizadorpec660.app.shared.composables.QuestionDialog
 import org.eduardoleolim.organizadorpec660.app.statisticType.model.StatisticTypeDeleteState
 import org.eduardoleolim.organizadorpec660.app.statisticType.model.StatisticTypeScreenModel
-import org.eduardoleolim.organizadorpec660.core.statisticType.application.StatisticTypeResponse
+import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypeResponse
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

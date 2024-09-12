@@ -11,9 +11,9 @@ import org.eduardoleolim.organizadorpec660.core.instrument.domain.*
 import org.eduardoleolim.organizadorpec660.municipality.application.search.MunicipalitySearcher
 import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityCriteria
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryHandler
-import org.eduardoleolim.organizadorpec660.core.statisticType.application.search.StatisticTypeSearcher
-import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeCriteria
-import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeNotFoundError
+import org.eduardoleolim.organizadorpec660.statisticType.application.search.StatisticTypeSearcher
+import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeCriteria
+import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeNotFoundError
 
 class SearchInstrumentByIdQueryHandler(
     private val instrumentSearcher: InstrumentSearcher,

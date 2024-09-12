@@ -1,7 +1,7 @@
 package org.eduardoleolim.organizadorpec660.agency.domain
 
 import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityId
-import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeId
+import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeId
 import java.util.*
 
 /**

@@ -7,8 +7,8 @@ import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntity
 import org.eduardoleolim.organizadorpec660.core.instrument.domain.Instrument
 import org.eduardoleolim.organizadorpec660.municipality.application.SimpleMunicipalityResponse
 import org.eduardoleolim.organizadorpec660.municipality.domain.Municipality
-import org.eduardoleolim.organizadorpec660.core.statisticType.application.StatisticTypeResponse
-import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticType
+import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypeResponse
+import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticType
 
 class InstrumentResponse(
     val id: String,

@@ -30,9 +30,9 @@ import org.eduardoleolim.organizadorpec660.municipality.application.Municipality
 import org.eduardoleolim.organizadorpec660.municipality.application.searchByTerm.SearchMunicipalitiesByTermQuery
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
-import org.eduardoleolim.organizadorpec660.core.statisticType.application.StatisticTypeResponse
-import org.eduardoleolim.organizadorpec660.core.statisticType.application.StatisticTypesResponse
-import org.eduardoleolim.organizadorpec660.core.statisticType.application.searchByTerm.SearchStatisticTypesByTermQuery
+import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypeResponse
+import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypesResponse
+import org.eduardoleolim.organizadorpec660.statisticType.application.searchByTerm.SearchStatisticTypesByTermQuery
 import org.jetbrains.compose.resources.getString
 
 data class SearchAgencyParameters(

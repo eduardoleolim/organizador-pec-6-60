@@ -7,7 +7,7 @@ import org.eduardoleolim.organizadorpec660.municipality.infrastructure.bus.Ktorm
 import org.eduardoleolim.organizadorpec660.core.shared.domain.Either
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.*
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.koin.KtormAppKoinContext
-import org.eduardoleolim.organizadorpec660.core.statisticType.infrastructure.bus.KtormStatisticTypeCommandHandlers
+import org.eduardoleolim.organizadorpec660.statisticType.infrastructure.bus.KtormStatisticTypeCommandHandlers
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
 

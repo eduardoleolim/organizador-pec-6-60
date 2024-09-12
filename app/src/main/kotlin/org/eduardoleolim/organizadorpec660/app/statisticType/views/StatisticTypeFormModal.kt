@@ -14,10 +14,10 @@ import org.eduardoleolim.organizadorpec660.app.generated.resources.*
 import org.eduardoleolim.organizadorpec660.app.statisticType.data.EmptyStatisticTypeDataException
 import org.eduardoleolim.organizadorpec660.app.statisticType.model.StatisticTypeFormState
 import org.eduardoleolim.organizadorpec660.app.statisticType.model.StatisticTypeScreenModel
-import org.eduardoleolim.organizadorpec660.core.statisticType.application.StatisticTypeResponse
-import org.eduardoleolim.organizadorpec660.core.statisticType.domain.InvalidStatisticTypeKeyCodeError
-import org.eduardoleolim.organizadorpec660.core.statisticType.domain.InvalidStatisticTypeNameError
-import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeAlreadyExistsError
+import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypeResponse
+import org.eduardoleolim.organizadorpec660.statisticType.domain.InvalidStatisticTypeKeyCodeError
+import org.eduardoleolim.organizadorpec660.statisticType.domain.InvalidStatisticTypeNameError
+import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeAlreadyExistsError
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

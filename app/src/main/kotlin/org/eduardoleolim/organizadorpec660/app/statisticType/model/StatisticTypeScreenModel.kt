@@ -12,11 +12,11 @@ import kotlinx.coroutines.launch
 import org.eduardoleolim.organizadorpec660.app.statisticType.data.EmptyStatisticTypeDataException
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
-import org.eduardoleolim.organizadorpec660.core.statisticType.application.StatisticTypesResponse
-import org.eduardoleolim.organizadorpec660.core.statisticType.application.create.CreateStatisticTypeCommand
-import org.eduardoleolim.organizadorpec660.core.statisticType.application.delete.DeleteStatisticTypeCommand
-import org.eduardoleolim.organizadorpec660.core.statisticType.application.searchByTerm.SearchStatisticTypesByTermQuery
-import org.eduardoleolim.organizadorpec660.core.statisticType.application.update.UpdateStatisticTypeCommand
+import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypesResponse
+import org.eduardoleolim.organizadorpec660.statisticType.application.create.CreateStatisticTypeCommand
+import org.eduardoleolim.organizadorpec660.statisticType.application.delete.DeleteStatisticTypeCommand
+import org.eduardoleolim.organizadorpec660.statisticType.application.searchByTerm.SearchStatisticTypesByTermQuery
+import org.eduardoleolim.organizadorpec660.statisticType.application.update.UpdateStatisticTypeCommand
 
 sealed class StatisticTypeFormState {
     data object Idle : StatisticTypeFormState()

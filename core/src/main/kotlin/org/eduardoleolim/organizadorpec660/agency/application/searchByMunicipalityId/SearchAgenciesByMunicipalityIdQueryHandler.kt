@@ -8,9 +8,9 @@ import org.eduardoleolim.organizadorpec660.municipality.application.search.Munic
 import org.eduardoleolim.organizadorpec660.municipality.domain.Municipality
 import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityCriteria
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryHandler
-import org.eduardoleolim.organizadorpec660.core.statisticType.application.search.StatisticTypeSearcher
-import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticType
-import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticTypeCriteria
+import org.eduardoleolim.organizadorpec660.statisticType.application.search.StatisticTypeSearcher
+import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticType
+import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeCriteria
 
 class SearchAgenciesByMunicipalityIdQueryHandler(
     private val agencySearcher: AgencySearcher,

@@ -14,7 +14,7 @@ import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.Response
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.bus.KtormQueryHandlerDecorator
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.koin.KtormAppKoinComponent
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.koin.KtormAppKoinContext
-import org.eduardoleolim.organizadorpec660.core.statisticType.application.search.StatisticTypeSearcher
+import org.eduardoleolim.organizadorpec660.statisticType.application.search.StatisticTypeSearcher
 import org.koin.core.component.inject
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
