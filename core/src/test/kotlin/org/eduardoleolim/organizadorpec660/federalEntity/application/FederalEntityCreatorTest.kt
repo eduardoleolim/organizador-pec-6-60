@@ -1,9 +1,9 @@
-package org.eduardoleolim.organizadorpec660.core.federalEntity.application
+package org.eduardoleolim.organizadorpec660.federalEntity.application
 
 import org.eduardoleolim.organizadorpec660.federalEntity.application.create.FederalEntityCreator
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntity
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityAlreadyExistsError
-import org.eduardoleolim.organizadorpec660.core.federalEntity.infrastructure.persistence.InMemoryFederalEntityRepository
+import org.eduardoleolim.organizadorpec660.federalEntity.infrastructure.persistence.InMemoryFederalEntityRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test

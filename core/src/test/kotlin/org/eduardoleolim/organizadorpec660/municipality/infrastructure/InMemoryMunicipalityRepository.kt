@@ -1,4 +1,4 @@
-package org.eduardoleolim.organizadorpec660.core.municipality.infrastructure
+package org.eduardoleolim.organizadorpec660.municipality.infrastructure
 
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntity
 import org.eduardoleolim.organizadorpec660.municipality.domain.Municipality
