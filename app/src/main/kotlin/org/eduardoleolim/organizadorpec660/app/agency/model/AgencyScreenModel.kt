@@ -28,8 +28,8 @@ import org.eduardoleolim.organizadorpec660.federalEntity.application.searchByTer
 import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalitiesResponse
 import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorpec660.municipality.application.searchByTerm.SearchMunicipalitiesByTermQuery
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
 import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypeResponse
 import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypesResponse
 import org.eduardoleolim.organizadorpec660.statisticType.application.searchByTerm.SearchStatisticTypesByTermQuery

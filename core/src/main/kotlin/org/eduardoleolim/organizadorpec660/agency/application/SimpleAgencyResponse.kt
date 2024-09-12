@@ -1,7 +1,7 @@
 package org.eduardoleolim.organizadorpec660.agency.application
 
 import org.eduardoleolim.organizadorpec660.agency.domain.Agency
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.Response
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Response
 import java.util.*
 
 class SimpleAgencyResponse(

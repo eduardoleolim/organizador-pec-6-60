@@ -1,8 +1,8 @@
 package org.eduardoleolim.organizadorpec660.municipality.application.update
 
 import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityError
-import org.eduardoleolim.organizadorpec660.core.shared.domain.Either
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandHandler
+import org.eduardoleolim.organizadorpec660.shared.domain.Either
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandHandler
 
 class UpdateMunicipalityCommandHandler(private val updater: MunicipalityUpdater) :
     CommandHandler<MunicipalityError, Unit, UpdateMunicipalityCommand> {

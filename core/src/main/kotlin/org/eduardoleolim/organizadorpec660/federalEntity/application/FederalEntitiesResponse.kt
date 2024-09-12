@@ -1,7 +1,7 @@
 package org.eduardoleolim.organizadorpec660.federalEntity.application
 
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntity
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.Response
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Response
 
 class FederalEntitiesResponse(
     val federalEntities: List<FederalEntityResponse>,

@@ -1,9 +1,9 @@
 package org.eduardoleolim.organizadorpec660.user.domain
 
-import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.Criteria
-import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.OrFilters
-import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.Orders
-import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.SingleFilter
+import org.eduardoleolim.organizadorpec660.shared.domain.criteria.Criteria
+import org.eduardoleolim.organizadorpec660.shared.domain.criteria.OrFilters
+import org.eduardoleolim.organizadorpec660.shared.domain.criteria.Orders
+import org.eduardoleolim.organizadorpec660.shared.domain.criteria.SingleFilter
 
 enum class UserFields(val value: String) {
     Id("id"),

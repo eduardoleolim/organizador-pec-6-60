@@ -1,10 +1,10 @@
 package org.eduardoleolim.organizadorpec660.statisticType.infrastructure.bus
 
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.Command
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandHandler
-import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.bus.KtormCommandHandlerDecorator
-import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.koin.KtormAppKoinComponent
-import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.koin.KtormAppKoinContext
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.Command
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandHandler
+import org.eduardoleolim.organizadorpec660.shared.infrastructure.bus.KtormCommandHandlerDecorator
+import org.eduardoleolim.organizadorpec660.shared.infrastructure.koin.KtormAppKoinComponent
+import org.eduardoleolim.organizadorpec660.shared.infrastructure.koin.KtormAppKoinContext
 import org.eduardoleolim.organizadorpec660.statisticType.application.create.CreateStatisticTypeCommand
 import org.eduardoleolim.organizadorpec660.statisticType.application.create.CreateStatisticTypeCommandHandler
 import org.eduardoleolim.organizadorpec660.statisticType.application.create.StatisticTypeCreator

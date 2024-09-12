@@ -1,6 +1,6 @@
 package org.eduardoleolim.organizadorpec660.municipality.domain
 
-import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.*
+import org.eduardoleolim.organizadorpec660.shared.domain.criteria.*
 
 enum class MunicipalityFields(val value: String) {
     Id("id"),

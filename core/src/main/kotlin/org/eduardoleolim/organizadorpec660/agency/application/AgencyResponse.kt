@@ -3,7 +3,7 @@ package org.eduardoleolim.organizadorpec660.agency.application
 import org.eduardoleolim.organizadorpec660.agency.domain.Agency
 import org.eduardoleolim.organizadorpec660.municipality.application.SimpleMunicipalityResponse
 import org.eduardoleolim.organizadorpec660.municipality.domain.Municipality
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.Response
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Response
 import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypeResponse
 import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticType
 import java.util.*

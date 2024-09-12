@@ -1,6 +1,6 @@
 package org.eduardoleolim.organizadorpec660.statisticType.application.searchByTerm
 
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryHandler
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryHandler
 import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypesResponse
 import org.eduardoleolim.organizadorpec660.statisticType.application.search.StatisticTypeSearcher
 import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeCriteria

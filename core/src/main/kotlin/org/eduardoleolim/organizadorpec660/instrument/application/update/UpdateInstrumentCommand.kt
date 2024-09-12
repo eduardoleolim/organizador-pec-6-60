@@ -1,7 +1,7 @@
 package org.eduardoleolim.organizadorpec660.instrument.application.update
 
 import org.eduardoleolim.organizadorpec660.instrument.domain.InstrumentError
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.Command
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.Command
 
 class UpdateInstrumentCommand(
     instrumentId: String,

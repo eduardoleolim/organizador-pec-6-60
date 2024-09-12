@@ -1,9 +1,9 @@
 package org.eduardoleolim.organizadorpec660.federalEntity.infrastructure.persistence
 
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityFields
-import org.eduardoleolim.organizadorpec660.core.shared.domain.InvalidArgumentError
-import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.*
-import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.FederalEntities
+import org.eduardoleolim.organizadorpec660.shared.domain.InvalidArgumentError
+import org.eduardoleolim.organizadorpec660.shared.domain.criteria.*
+import org.eduardoleolim.organizadorpec660.shared.infrastructure.models.FederalEntities
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
 import org.ktorm.expression.OrderByExpression

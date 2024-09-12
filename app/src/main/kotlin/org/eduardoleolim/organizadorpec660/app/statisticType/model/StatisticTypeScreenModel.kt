@@ -10,8 +10,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.eduardoleolim.organizadorpec660.app.statisticType.data.EmptyStatisticTypeDataException
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
 import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypesResponse
 import org.eduardoleolim.organizadorpec660.statisticType.application.create.CreateStatisticTypeCommand
 import org.eduardoleolim.organizadorpec660.statisticType.application.delete.DeleteStatisticTypeCommand

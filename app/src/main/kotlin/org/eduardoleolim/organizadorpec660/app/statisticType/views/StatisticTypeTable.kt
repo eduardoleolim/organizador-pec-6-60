@@ -19,7 +19,7 @@ import org.eduardoleolim.organizadorpec660.app.shared.composables.PaginatedDataT
 import org.eduardoleolim.organizadorpec660.app.shared.composables.PlainTextTooltip
 import org.eduardoleolim.organizadorpec660.app.shared.composables.sortAscending
 import org.eduardoleolim.organizadorpec660.app.shared.composables.sortColumnIndex
-import org.eduardoleolim.organizadorpec660.core.shared.domain.toLocalDateTime
+import org.eduardoleolim.organizadorpec660.shared.domain.toLocalDateTime
 import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypeResponse
 import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypesResponse
 import org.jetbrains.compose.resources.stringResource

@@ -3,7 +3,7 @@ package org.eduardoleolim.organizadorpec660.municipality.application
 import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntity
 import org.eduardoleolim.organizadorpec660.municipality.domain.Municipality
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.Response
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Response
 import java.util.*
 
 

@@ -22,8 +22,8 @@ import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
 import org.eduardoleolim.organizadorpec660.app.generated.resources.instruments
 import org.eduardoleolim.organizadorpec660.app.instrument.model.InstrumentScreenModel
 import org.eduardoleolim.organizadorpec660.app.shared.notification.LocalTrayState
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
 import org.jetbrains.compose.resources.stringResource
 
 class InstrumentScreen(

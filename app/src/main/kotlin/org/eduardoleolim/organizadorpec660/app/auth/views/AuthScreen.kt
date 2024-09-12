@@ -28,7 +28,7 @@ import org.eduardoleolim.organizadorpec660.app.auth.model.AuthState
 import org.eduardoleolim.organizadorpec660.app.generated.resources.*
 import org.eduardoleolim.organizadorpec660.app.shared.window.LocalWindow
 import org.eduardoleolim.organizadorpec660.auth.domain.InvalidAuthCredentialsError
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import java.awt.Dimension

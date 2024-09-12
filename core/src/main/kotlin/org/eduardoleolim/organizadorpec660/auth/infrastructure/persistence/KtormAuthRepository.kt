@@ -2,7 +2,7 @@ package org.eduardoleolim.organizadorpec660.auth.infrastructure.persistence
 
 import org.eduardoleolim.organizadorpec660.auth.domain.Auth
 import org.eduardoleolim.organizadorpec660.auth.domain.AuthRepository
-import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.Credentials
+import org.eduardoleolim.organizadorpec660.shared.infrastructure.models.Credentials
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
 

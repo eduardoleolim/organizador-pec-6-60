@@ -1,11 +1,11 @@
 package org.eduardoleolim.organizadorpec660.statisticType.infrastructure.bus
 
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.Query
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryHandler
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.Response
-import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.bus.KtormQueryHandlerDecorator
-import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.koin.KtormAppKoinComponent
-import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.koin.KtormAppKoinContext
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Query
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryHandler
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Response
+import org.eduardoleolim.organizadorpec660.shared.infrastructure.bus.KtormQueryHandlerDecorator
+import org.eduardoleolim.organizadorpec660.shared.infrastructure.koin.KtormAppKoinComponent
+import org.eduardoleolim.organizadorpec660.shared.infrastructure.koin.KtormAppKoinContext
 import org.eduardoleolim.organizadorpec660.statisticType.application.search.StatisticTypeSearcher
 import org.eduardoleolim.organizadorpec660.statisticType.application.searchById.SearchStatisticTypeByIdQuery
 import org.eduardoleolim.organizadorpec660.statisticType.application.searchById.SearchStatisticTypeByIdQueryHandler

@@ -21,7 +21,7 @@ import org.eduardoleolim.organizadorpec660.app.generated.resources.*
 import org.eduardoleolim.organizadorpec660.app.instrument.model.ShowInstrumentDetailsScreenModel
 import org.eduardoleolim.organizadorpec660.app.shared.composables.PdfViewer
 import org.eduardoleolim.organizadorpec660.instrument.application.DetailedInstrumentResponse
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
 import org.jetbrains.compose.resources.stringResource
 import java.text.DateFormatSymbols
 

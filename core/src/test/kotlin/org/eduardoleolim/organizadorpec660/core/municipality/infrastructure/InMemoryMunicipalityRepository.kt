@@ -3,7 +3,7 @@ package org.eduardoleolim.organizadorpec660.core.municipality.infrastructure
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntity
 import org.eduardoleolim.organizadorpec660.municipality.domain.Municipality
 import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityRepository
-import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.Criteria
+import org.eduardoleolim.organizadorpec660.shared.domain.criteria.Criteria
 
 class InMemoryMunicipalityRepository : MunicipalityRepository {
     val municipalities: MutableMap<String, Municipality> = mutableMapOf()

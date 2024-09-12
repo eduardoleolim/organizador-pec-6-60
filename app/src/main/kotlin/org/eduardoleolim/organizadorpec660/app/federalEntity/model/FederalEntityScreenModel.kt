@@ -21,8 +21,8 @@ import org.eduardoleolim.organizadorpec660.federalEntity.application.importer.Cs
 import org.eduardoleolim.organizadorpec660.federalEntity.application.searchByTerm.SearchFederalEntitiesByTermQuery
 import org.eduardoleolim.organizadorpec660.federalEntity.application.update.UpdateFederalEntityCommand
 import org.eduardoleolim.organizadorpec660.federalEntity.infrastructure.services.KotlinCsvFederalEntityImportInput
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
 import org.jetbrains.compose.resources.getString
 import java.io.File
 import java.io.IOException

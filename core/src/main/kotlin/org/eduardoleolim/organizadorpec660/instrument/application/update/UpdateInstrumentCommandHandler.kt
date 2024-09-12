@@ -1,8 +1,8 @@
 package org.eduardoleolim.organizadorpec660.instrument.application.update
 
 import org.eduardoleolim.organizadorpec660.instrument.domain.InstrumentError
-import org.eduardoleolim.organizadorpec660.core.shared.domain.Either
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandHandler
+import org.eduardoleolim.organizadorpec660.shared.domain.Either
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandHandler
 
 class UpdateInstrumentCommandHandler(private val updater: InstrumentUpdater) :
     CommandHandler<InstrumentError, Unit, UpdateInstrumentCommand> {

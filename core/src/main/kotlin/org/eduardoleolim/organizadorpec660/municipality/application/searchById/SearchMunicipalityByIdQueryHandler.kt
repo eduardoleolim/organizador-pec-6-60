@@ -6,7 +6,7 @@ import org.eduardoleolim.organizadorpec660.municipality.application.Municipality
 import org.eduardoleolim.organizadorpec660.municipality.application.search.MunicipalitySearcher
 import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityCriteria
 import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityNotFoundError
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryHandler
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryHandler
 
 class SearchMunicipalityByIdQueryHandler(
     private val municipalitySearcher: MunicipalitySearcher,

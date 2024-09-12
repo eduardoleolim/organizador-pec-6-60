@@ -1,6 +1,6 @@
 package org.eduardoleolim.organizadorpec660.statisticType.application.searchByTerm
 
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.Query
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Query
 
 class SearchStatisticTypesByTermQuery(
     search: String? = null,

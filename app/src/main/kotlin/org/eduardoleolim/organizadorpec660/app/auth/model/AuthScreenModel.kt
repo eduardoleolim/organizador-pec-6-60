@@ -15,8 +15,8 @@ import org.eduardoleolim.organizadorpec660.app.auth.data.InvalidCredentialsExcep
 import org.eduardoleolim.organizadorpec660.app.shared.router.MainProvider
 import org.eduardoleolim.organizadorpec660.auth.application.AuthUserResponse
 import org.eduardoleolim.organizadorpec660.auth.application.authenticate.AuthenticateUserQuery
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryHandlerExecutionError
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryHandlerExecutionError
 
 sealed class AuthState {
     data object Idle : AuthState()

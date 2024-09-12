@@ -26,8 +26,8 @@ import org.eduardoleolim.organizadorpec660.instrument.application.update.UpdateI
 import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalitiesResponse
 import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorpec660.municipality.application.searchByTerm.SearchMunicipalitiesByTermQuery
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
 import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypeResponse
 import java.io.File
 

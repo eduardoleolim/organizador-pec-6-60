@@ -18,8 +18,8 @@ import org.eduardoleolim.organizadorpec660.municipality.application.create.Creat
 import org.eduardoleolim.organizadorpec660.municipality.application.delete.DeleteMunicipalityCommand
 import org.eduardoleolim.organizadorpec660.municipality.application.searchByTerm.SearchMunicipalitiesByTermQuery
 import org.eduardoleolim.organizadorpec660.municipality.application.update.UpdateMunicipalityCommand
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
 
 sealed class MunicipalityFormState {
     data object Idle : MunicipalityFormState()

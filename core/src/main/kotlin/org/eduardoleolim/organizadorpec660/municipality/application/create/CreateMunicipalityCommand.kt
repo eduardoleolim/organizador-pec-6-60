@@ -1,7 +1,7 @@
 package org.eduardoleolim.organizadorpec660.municipality.application.create
 
 import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityError
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.Command
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.Command
 import java.util.*
 
 class CreateMunicipalityCommand(keyCode: String, name: String, federalEntityId: String) :

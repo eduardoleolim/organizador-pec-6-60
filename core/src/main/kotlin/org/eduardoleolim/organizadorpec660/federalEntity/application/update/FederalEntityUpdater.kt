@@ -1,9 +1,9 @@
 package org.eduardoleolim.organizadorpec660.federalEntity.application.update
 
-import org.eduardoleolim.organizadorpec660.core.shared.domain.Either
-import org.eduardoleolim.organizadorpec660.core.shared.domain.Left
-import org.eduardoleolim.organizadorpec660.core.shared.domain.Right
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.*
+import org.eduardoleolim.organizadorpec660.shared.domain.Either
+import org.eduardoleolim.organizadorpec660.shared.domain.Left
+import org.eduardoleolim.organizadorpec660.shared.domain.Right
 
 class FederalEntityUpdater(private val repository: FederalEntityRepository) {
     fun update(id: String, keyCode: String, name: String): Either<FederalEntityError, Unit> {

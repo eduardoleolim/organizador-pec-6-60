@@ -4,11 +4,11 @@ import org.eduardoleolim.organizadorpec660.municipality.domain.Municipality
 import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityCriteria
 import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityNotFoundError
 import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityRepository
-import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.Criteria
-import org.eduardoleolim.organizadorpec660.core.shared.domain.toDate
-import org.eduardoleolim.organizadorpec660.core.shared.domain.toLocalDateTime
-import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.FederalEntities
-import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.Municipalities
+import org.eduardoleolim.organizadorpec660.shared.domain.criteria.Criteria
+import org.eduardoleolim.organizadorpec660.shared.domain.toDate
+import org.eduardoleolim.organizadorpec660.shared.domain.toLocalDateTime
+import org.eduardoleolim.organizadorpec660.shared.infrastructure.models.FederalEntities
+import org.eduardoleolim.organizadorpec660.shared.infrastructure.models.Municipalities
 import org.ktorm.database.Database
 import org.ktorm.dsl.delete
 import org.ktorm.dsl.eq

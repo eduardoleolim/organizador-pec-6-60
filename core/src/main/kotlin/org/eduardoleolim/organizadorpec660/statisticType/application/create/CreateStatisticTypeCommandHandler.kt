@@ -1,7 +1,7 @@
 package org.eduardoleolim.organizadorpec660.statisticType.application.create
 
-import org.eduardoleolim.organizadorpec660.core.shared.domain.Either
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandHandler
+import org.eduardoleolim.organizadorpec660.shared.domain.Either
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandHandler
 import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeError
 import java.util.*
 

@@ -32,11 +32,11 @@ import org.eduardoleolim.organizadorpec660.app.shared.utils.DesktopPlatform
 import org.eduardoleolim.organizadorpec660.app.shared.utils.isSystemInDarkTheme
 import org.eduardoleolim.organizadorpec660.app.shared.window.DecoratedWindow
 import org.eduardoleolim.organizadorpec660.app.shared.window.TitleBar
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
-import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.bus.KtormCommandBus
-import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.bus.KtormQueryBus
-import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.SqliteKtormDatabase
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.shared.infrastructure.bus.KtormCommandBus
+import org.eduardoleolim.organizadorpec660.shared.infrastructure.bus.KtormQueryBus
+import org.eduardoleolim.organizadorpec660.shared.infrastructure.models.SqliteKtormDatabase
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import java.awt.Dimension

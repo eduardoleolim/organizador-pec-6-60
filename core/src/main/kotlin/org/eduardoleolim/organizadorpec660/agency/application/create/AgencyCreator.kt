@@ -3,9 +3,9 @@ package org.eduardoleolim.organizadorpec660.agency.application.create
 import org.eduardoleolim.organizadorpec660.agency.domain.*
 import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityCriteria
 import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityRepository
-import org.eduardoleolim.organizadorpec660.core.shared.domain.Either
-import org.eduardoleolim.organizadorpec660.core.shared.domain.Left
-import org.eduardoleolim.organizadorpec660.core.shared.domain.Right
+import org.eduardoleolim.organizadorpec660.shared.domain.Either
+import org.eduardoleolim.organizadorpec660.shared.domain.Left
+import org.eduardoleolim.organizadorpec660.shared.domain.Right
 import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeCriteria
 import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeRepository
 import java.util.*

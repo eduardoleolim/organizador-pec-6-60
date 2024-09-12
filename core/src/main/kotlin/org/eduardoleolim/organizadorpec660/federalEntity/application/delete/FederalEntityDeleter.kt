@@ -1,11 +1,11 @@
 package org.eduardoleolim.organizadorpec660.federalEntity.application.delete
 
+import org.eduardoleolim.organizadorpec660.federalEntity.domain.*
 import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityCriteria
 import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityRepository
-import org.eduardoleolim.organizadorpec660.core.shared.domain.Either
-import org.eduardoleolim.organizadorpec660.core.shared.domain.Left
-import org.eduardoleolim.organizadorpec660.core.shared.domain.Right
-import org.eduardoleolim.organizadorpec660.federalEntity.domain.*
+import org.eduardoleolim.organizadorpec660.shared.domain.Either
+import org.eduardoleolim.organizadorpec660.shared.domain.Left
+import org.eduardoleolim.organizadorpec660.shared.domain.Right
 
 class FederalEntityDeleter(
     private val federalEntityRepository: FederalEntityRepository,

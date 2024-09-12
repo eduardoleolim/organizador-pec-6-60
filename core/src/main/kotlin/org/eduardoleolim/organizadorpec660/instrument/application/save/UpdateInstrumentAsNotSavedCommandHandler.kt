@@ -1,8 +1,8 @@
 package org.eduardoleolim.organizadorpec660.instrument.application.save
 
 import org.eduardoleolim.organizadorpec660.instrument.domain.InstrumentError
-import org.eduardoleolim.organizadorpec660.core.shared.domain.Either
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandHandler
+import org.eduardoleolim.organizadorpec660.shared.domain.Either
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandHandler
 
 class UpdateInstrumentAsNotSavedCommandHandler(private val instrumentSiresoSaver: InstrumentSiresoSaver) :
     CommandHandler<InstrumentError, Unit, UpdateInstrumentAsNotSavedCommand> {

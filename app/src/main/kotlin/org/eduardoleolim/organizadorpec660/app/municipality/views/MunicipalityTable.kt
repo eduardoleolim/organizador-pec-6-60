@@ -28,7 +28,7 @@ import org.eduardoleolim.organizadorpec660.app.shared.composables.sortColumnInde
 import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalitiesResponse
 import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalityResponse
-import org.eduardoleolim.organizadorpec660.core.shared.domain.toLocalDateTime
+import org.eduardoleolim.organizadorpec660.shared.domain.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
 import java.time.format.DateTimeFormatter
 

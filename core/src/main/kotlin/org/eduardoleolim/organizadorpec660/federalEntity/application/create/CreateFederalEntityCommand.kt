@@ -1,7 +1,7 @@
 package org.eduardoleolim.organizadorpec660.federalEntity.application.create
 
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityError
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.Command
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.Command
 import java.util.*
 
 class CreateFederalEntityCommand(keyCode: String, name: String) : Command<FederalEntityError, UUID> {

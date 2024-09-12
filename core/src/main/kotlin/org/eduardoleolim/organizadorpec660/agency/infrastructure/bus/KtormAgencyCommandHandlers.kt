@@ -9,11 +9,11 @@ import org.eduardoleolim.organizadorpec660.agency.application.delete.DeleteAgenc
 import org.eduardoleolim.organizadorpec660.agency.application.update.AgencyUpdater
 import org.eduardoleolim.organizadorpec660.agency.application.update.UpdateAgencyCommand
 import org.eduardoleolim.organizadorpec660.agency.application.update.UpdateAgencyCommandHandler
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.Command
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandHandler
-import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.bus.KtormCommandHandlerDecorator
-import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.koin.KtormAppKoinComponent
-import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.koin.KtormAppKoinContext
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.Command
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandHandler
+import org.eduardoleolim.organizadorpec660.shared.infrastructure.bus.KtormCommandHandlerDecorator
+import org.eduardoleolim.organizadorpec660.shared.infrastructure.koin.KtormAppKoinComponent
+import org.eduardoleolim.organizadorpec660.shared.infrastructure.koin.KtormAppKoinContext
 import org.koin.core.component.inject
 import org.ktorm.database.Database
 import kotlin.reflect.KClass

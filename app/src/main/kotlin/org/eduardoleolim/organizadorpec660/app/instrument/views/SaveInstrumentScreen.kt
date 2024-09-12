@@ -23,8 +23,8 @@ import org.eduardoleolim.organizadorpec660.app.generated.resources.*
 import org.eduardoleolim.organizadorpec660.app.instrument.model.InstrumentFormState
 import org.eduardoleolim.organizadorpec660.app.instrument.model.SaveInstrumentScreenModel
 import org.eduardoleolim.organizadorpec660.app.shared.composables.*
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
 import org.jetbrains.compose.resources.stringResource
 import java.io.File
 import java.text.DateFormatSymbols

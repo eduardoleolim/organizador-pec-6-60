@@ -1,9 +1,9 @@
 package org.eduardoleolim.organizadorpec660.instrument.infrastructure.persistence
 
 import org.eduardoleolim.organizadorpec660.instrument.domain.InstrumentFields
-import org.eduardoleolim.organizadorpec660.core.shared.domain.InvalidArgumentError
-import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.*
-import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.*
+import org.eduardoleolim.organizadorpec660.shared.domain.InvalidArgumentError
+import org.eduardoleolim.organizadorpec660.shared.domain.criteria.*
+import org.eduardoleolim.organizadorpec660.shared.infrastructure.models.*
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
 import org.ktorm.expression.OrderByExpression

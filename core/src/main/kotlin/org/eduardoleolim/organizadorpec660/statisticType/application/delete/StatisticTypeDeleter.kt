@@ -2,9 +2,9 @@ package org.eduardoleolim.organizadorpec660.statisticType.application.delete
 
 import org.eduardoleolim.organizadorpec660.agency.domain.AgencyCriteria
 import org.eduardoleolim.organizadorpec660.agency.domain.AgencyRepository
-import org.eduardoleolim.organizadorpec660.core.shared.domain.Either
-import org.eduardoleolim.organizadorpec660.core.shared.domain.Left
-import org.eduardoleolim.organizadorpec660.core.shared.domain.Right
+import org.eduardoleolim.organizadorpec660.shared.domain.Either
+import org.eduardoleolim.organizadorpec660.shared.domain.Left
+import org.eduardoleolim.organizadorpec660.shared.domain.Right
 import org.eduardoleolim.organizadorpec660.statisticType.domain.*
 
 class StatisticTypeDeleter(

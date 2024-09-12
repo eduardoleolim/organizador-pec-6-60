@@ -1,7 +1,7 @@
 package org.eduardoleolim.organizadorpec660.municipality.application.update
 
 import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityError
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.Command
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.Command
 
 class UpdateMunicipalityCommand(municipalityId: String, keyCode: String, name: String, federalEntityId: String) :
     Command<MunicipalityError, Unit> {

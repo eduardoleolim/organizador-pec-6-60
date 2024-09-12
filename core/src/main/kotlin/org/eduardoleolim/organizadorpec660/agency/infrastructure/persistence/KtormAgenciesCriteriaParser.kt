@@ -1,11 +1,11 @@
 package org.eduardoleolim.organizadorpec660.agency.infrastructure.persistence
 
 import org.eduardoleolim.organizadorpec660.agency.domain.AgencyFields
-import org.eduardoleolim.organizadorpec660.core.shared.domain.InvalidArgumentError
-import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.*
-import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.Agencies
-import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.Municipalities
-import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.StatisticTypesOfAgencies
+import org.eduardoleolim.organizadorpec660.shared.domain.InvalidArgumentError
+import org.eduardoleolim.organizadorpec660.shared.domain.criteria.*
+import org.eduardoleolim.organizadorpec660.shared.infrastructure.models.Agencies
+import org.eduardoleolim.organizadorpec660.shared.infrastructure.models.Municipalities
+import org.eduardoleolim.organizadorpec660.shared.infrastructure.models.StatisticTypesOfAgencies
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
 import org.ktorm.expression.OrderByExpression

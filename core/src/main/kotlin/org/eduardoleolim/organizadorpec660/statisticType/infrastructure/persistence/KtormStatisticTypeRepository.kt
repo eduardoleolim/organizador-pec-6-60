@@ -1,9 +1,9 @@
 package org.eduardoleolim.organizadorpec660.statisticType.infrastructure.persistence
 
-import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.Criteria
-import org.eduardoleolim.organizadorpec660.core.shared.domain.toDate
-import org.eduardoleolim.organizadorpec660.core.shared.domain.toLocalDateTime
-import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.StatisticTypes
+import org.eduardoleolim.organizadorpec660.shared.domain.criteria.Criteria
+import org.eduardoleolim.organizadorpec660.shared.domain.toDate
+import org.eduardoleolim.organizadorpec660.shared.domain.toLocalDateTime
+import org.eduardoleolim.organizadorpec660.shared.infrastructure.models.StatisticTypes
 import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticType
 import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeCriteria
 import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeNotFoundError

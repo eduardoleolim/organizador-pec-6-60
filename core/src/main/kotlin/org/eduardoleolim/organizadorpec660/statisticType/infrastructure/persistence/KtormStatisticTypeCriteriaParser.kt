@@ -1,8 +1,8 @@
 package org.eduardoleolim.organizadorpec660.statisticType.infrastructure.persistence
 
-import org.eduardoleolim.organizadorpec660.core.shared.domain.InvalidArgumentError
-import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.*
-import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.StatisticTypes
+import org.eduardoleolim.organizadorpec660.shared.domain.InvalidArgumentError
+import org.eduardoleolim.organizadorpec660.shared.domain.criteria.*
+import org.eduardoleolim.organizadorpec660.shared.infrastructure.models.StatisticTypes
 import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeFields
 import org.ktorm.database.Database
 import org.ktorm.dsl.*

@@ -1,6 +1,6 @@
 package org.eduardoleolim.organizadorpec660.statisticType.domain
 
-import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.*
+import org.eduardoleolim.organizadorpec660.shared.domain.criteria.*
 
 enum class StatisticTypeFields(val value: String) {
     Id("id"),

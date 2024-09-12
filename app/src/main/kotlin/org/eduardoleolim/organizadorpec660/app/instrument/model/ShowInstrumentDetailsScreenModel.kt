@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import org.eduardoleolim.organizadorpec660.app.instrument.views.InstrumentScreen
 import org.eduardoleolim.organizadorpec660.instrument.application.DetailedInstrumentResponse
 import org.eduardoleolim.organizadorpec660.instrument.application.searchById.SearchInstrumentByIdQuery
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
 import java.io.File
 
 class ShowInstrumentDetailsScreenModel(

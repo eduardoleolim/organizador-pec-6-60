@@ -2,8 +2,8 @@ package org.eduardoleolim.organizadorpec660.core.federalEntity.infrastructure.pe
 
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntity
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityFields
-import org.eduardoleolim.organizadorpec660.core.shared.domain.InvalidArgumentError
-import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.*
+import org.eduardoleolim.organizadorpec660.shared.domain.InvalidArgumentError
+import org.eduardoleolim.organizadorpec660.shared.domain.criteria.*
 import java.time.Instant
 import java.util.*
 

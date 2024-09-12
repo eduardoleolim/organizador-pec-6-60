@@ -7,10 +7,10 @@ import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityCri
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityNotFoundError
 import org.eduardoleolim.organizadorpec660.instrument.application.DetailedInstrumentResponse
 import org.eduardoleolim.organizadorpec660.instrument.application.search.InstrumentSearcher
+import org.eduardoleolim.organizadorpec660.instrument.domain.*
 import org.eduardoleolim.organizadorpec660.municipality.application.search.MunicipalitySearcher
 import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityCriteria
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryHandler
-import org.eduardoleolim.organizadorpec660.instrument.domain.*
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryHandler
 import org.eduardoleolim.organizadorpec660.statisticType.application.search.StatisticTypeSearcher
 import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeCriteria
 import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeNotFoundError

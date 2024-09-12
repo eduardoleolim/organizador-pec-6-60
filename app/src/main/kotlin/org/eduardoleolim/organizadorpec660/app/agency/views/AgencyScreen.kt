@@ -21,8 +21,8 @@ import org.eduardoleolim.organizadorpec660.app.agency.model.AgencyScreenModel
 import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
 import org.eduardoleolim.organizadorpec660.app.generated.resources.agencies
 import org.eduardoleolim.organizadorpec660.app.shared.composables.reset
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
 import org.jetbrains.compose.resources.stringResource
 
 class AgencyScreen(private val queryBus: QueryBus, private val commandBus: CommandBus) : Screen {

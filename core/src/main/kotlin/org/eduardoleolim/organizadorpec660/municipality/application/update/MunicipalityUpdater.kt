@@ -2,10 +2,10 @@ package org.eduardoleolim.organizadorpec660.municipality.application.update
 
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityCriteria
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityRepository
-import org.eduardoleolim.organizadorpec660.core.shared.domain.Either
-import org.eduardoleolim.organizadorpec660.core.shared.domain.Left
-import org.eduardoleolim.organizadorpec660.core.shared.domain.Right
 import org.eduardoleolim.organizadorpec660.municipality.domain.*
+import org.eduardoleolim.organizadorpec660.shared.domain.Either
+import org.eduardoleolim.organizadorpec660.shared.domain.Left
+import org.eduardoleolim.organizadorpec660.shared.domain.Right
 
 class MunicipalityUpdater(
     private val municipalityRepository: MunicipalityRepository,

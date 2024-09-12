@@ -12,8 +12,8 @@ import org.eduardoleolim.organizadorpec660.app.instrument.views.SaveInstrumentSc
 import org.eduardoleolim.organizadorpec660.app.instrument.views.ShowInstrumentDetailsScreen
 import org.eduardoleolim.organizadorpec660.app.municipality.views.MunicipalityScreen
 import org.eduardoleolim.organizadorpec660.app.statisticType.views.StatisticTypeScreen
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
-import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
 
 @Composable
 fun Router(commandBus: CommandBus, queryBus: QueryBus, tempDirectory: String) {

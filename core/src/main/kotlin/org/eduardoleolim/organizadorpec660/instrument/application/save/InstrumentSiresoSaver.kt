@@ -4,9 +4,9 @@ import org.eduardoleolim.organizadorpec660.instrument.domain.InstrumentCriteria
 import org.eduardoleolim.organizadorpec660.instrument.domain.InstrumentError
 import org.eduardoleolim.organizadorpec660.instrument.domain.InstrumentNotFoundError
 import org.eduardoleolim.organizadorpec660.instrument.domain.InstrumentRepository
-import org.eduardoleolim.organizadorpec660.core.shared.domain.Either
-import org.eduardoleolim.organizadorpec660.core.shared.domain.Left
-import org.eduardoleolim.organizadorpec660.core.shared.domain.Right
+import org.eduardoleolim.organizadorpec660.shared.domain.Either
+import org.eduardoleolim.organizadorpec660.shared.domain.Left
+import org.eduardoleolim.organizadorpec660.shared.domain.Right
 
 class InstrumentSiresoSaver(private val instrumentRepository: InstrumentRepository) {
     fun saveInSIRESO(instrumentId: String): Either<InstrumentError, Unit> {

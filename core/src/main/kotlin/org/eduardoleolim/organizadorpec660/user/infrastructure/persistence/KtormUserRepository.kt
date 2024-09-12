@@ -1,12 +1,12 @@
 package org.eduardoleolim.organizadorpec660.user.infrastructure.persistence
 
-import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.Criteria
-import org.eduardoleolim.organizadorpec660.core.shared.domain.toDate
-import org.eduardoleolim.organizadorpec660.core.shared.domain.toLocalDateTime
-import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.Credentials
-import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.Roles
-import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.Users
 import org.eduardoleolim.organizadorpec660.role.domain.Role
+import org.eduardoleolim.organizadorpec660.shared.domain.criteria.Criteria
+import org.eduardoleolim.organizadorpec660.shared.domain.toDate
+import org.eduardoleolim.organizadorpec660.shared.domain.toLocalDateTime
+import org.eduardoleolim.organizadorpec660.shared.infrastructure.models.Credentials
+import org.eduardoleolim.organizadorpec660.shared.infrastructure.models.Roles
+import org.eduardoleolim.organizadorpec660.shared.infrastructure.models.Users
 import org.eduardoleolim.organizadorpec660.user.domain.User
 import org.eduardoleolim.organizadorpec660.user.domain.UserCriteria
 import org.eduardoleolim.organizadorpec660.user.domain.UserNotFoundError
