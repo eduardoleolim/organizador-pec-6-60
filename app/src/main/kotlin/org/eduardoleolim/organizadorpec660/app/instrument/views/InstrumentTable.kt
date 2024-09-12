@@ -24,9 +24,9 @@ import org.eduardoleolim.organizadorpec660.app.shared.composables.PlainTextToolt
 import org.eduardoleolim.organizadorpec660.app.shared.composables.sortAscending
 import org.eduardoleolim.organizadorpec660.app.shared.composables.sortColumnIndex
 import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntityResponse
-import org.eduardoleolim.organizadorpec660.core.instrument.application.InstrumentResponse
-import org.eduardoleolim.organizadorpec660.core.instrument.application.InstrumentsResponse
-import org.eduardoleolim.organizadorpec660.core.instrument.domain.InstrumentFields
+import org.eduardoleolim.organizadorpec660.instrument.application.InstrumentResponse
+import org.eduardoleolim.organizadorpec660.instrument.application.InstrumentsResponse
+import org.eduardoleolim.organizadorpec660.instrument.domain.InstrumentFields
 import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypeResponse
 import org.jetbrains.compose.resources.stringResource

@@ -3,7 +3,7 @@ package org.eduardoleolim.organizadorpec660.core.shared.infrastructure.bus
 import org.eduardoleolim.organizadorpec660.agency.infrastructure.bus.KtormAgencyQueryHandlers
 import org.eduardoleolim.organizadorpec660.auth.infrastructure.bus.KtormAuthQueryHandlers
 import org.eduardoleolim.organizadorpec660.federalEntity.infrastructure.bus.KtormFederalEntityQueryHandlers
-import org.eduardoleolim.organizadorpec660.core.instrument.infrastructure.bus.KtormInstrumentQueryHandlers
+import org.eduardoleolim.organizadorpec660.instrument.infrastructure.bus.KtormInstrumentQueryHandlers
 import org.eduardoleolim.organizadorpec660.municipality.infrastructure.bus.KtormMunicipalityQueryHandlers
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.*
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.koin.KtormAppKoinContext
