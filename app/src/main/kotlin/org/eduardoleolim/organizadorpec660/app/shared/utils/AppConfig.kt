@@ -20,6 +20,8 @@ object AppConfig {
 
     fun getDataDirectory(): String = System.getenv("DEVELOPMENT_DATA_DIR") ?: appDirs.getSiteDataDir(name, null, null)
 
+    fun getLogsDirectory(): String = appDirs.getUserLogDir(name, null, null)
+
     operator fun get(key: String): String? = properties[key]
 
     operator fun set(key: String, value: String) {
