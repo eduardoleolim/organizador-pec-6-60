@@ -19,9 +19,9 @@ import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
 import org.eduardoleolim.organizadorpec660.app.generated.resources.inst_copy_notification_message
 import org.eduardoleolim.organizadorpec660.app.generated.resources.inst_copy_notification_title
 import org.eduardoleolim.organizadorpec660.app.shared.router.HomeProvider
-import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntitiesResponse
-import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntityResponse
-import org.eduardoleolim.organizadorpec660.core.federalEntity.application.searchByTerm.SearchFederalEntitiesByTermQuery
+import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntitiesResponse
+import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntityResponse
+import org.eduardoleolim.organizadorpec660.federalEntity.application.searchByTerm.SearchFederalEntitiesByTermQuery
 import org.eduardoleolim.organizadorpec660.core.instrument.application.DetailedInstrumentResponse
 import org.eduardoleolim.organizadorpec660.core.instrument.application.InstrumentsResponse
 import org.eduardoleolim.organizadorpec660.core.instrument.application.delete.DeleteInstrumentCommand

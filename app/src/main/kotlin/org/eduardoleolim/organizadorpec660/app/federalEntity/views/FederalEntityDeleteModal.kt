@@ -15,8 +15,8 @@ import org.eduardoleolim.organizadorpec660.app.federalEntity.model.FederalEntity
 import org.eduardoleolim.organizadorpec660.app.generated.resources.*
 import org.eduardoleolim.organizadorpec660.app.shared.composables.ErrorDialog
 import org.eduardoleolim.organizadorpec660.app.shared.composables.QuestionDialog
-import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntityResponse
-import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityHasMunicipalitiesError
+import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntityResponse
+import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityHasMunicipalitiesError
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

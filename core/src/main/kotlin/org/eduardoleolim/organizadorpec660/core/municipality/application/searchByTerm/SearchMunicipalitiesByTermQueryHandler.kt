@@ -1,8 +1,8 @@
 package org.eduardoleolim.organizadorpec660.core.municipality.application.searchByTerm
 
-import org.eduardoleolim.organizadorpec660.core.federalEntity.application.search.FederalEntitySearcher
-import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntity
-import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityCriteria
+import org.eduardoleolim.organizadorpec660.federalEntity.application.search.FederalEntitySearcher
+import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntity
+import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityCriteria
 import org.eduardoleolim.organizadorpec660.core.municipality.application.MunicipalitiesResponse
 import org.eduardoleolim.organizadorpec660.core.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorpec660.core.municipality.application.search.MunicipalitySearcher

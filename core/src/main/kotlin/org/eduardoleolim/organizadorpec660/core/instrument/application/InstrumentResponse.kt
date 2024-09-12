@@ -2,8 +2,8 @@ package org.eduardoleolim.organizadorpec660.core.instrument.application
 
 import org.eduardoleolim.organizadorpec660.agency.application.SimpleAgencyResponse
 import org.eduardoleolim.organizadorpec660.agency.domain.Agency
-import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntityResponse
-import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntity
+import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntityResponse
+import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntity
 import org.eduardoleolim.organizadorpec660.core.instrument.domain.Instrument
 import org.eduardoleolim.organizadorpec660.core.municipality.application.SimpleMunicipalityResponse
 import org.eduardoleolim.organizadorpec660.core.municipality.domain.Municipality

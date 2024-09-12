@@ -1,6 +1,6 @@
 package org.eduardoleolim.organizadorpec660.core.municipality.infrastructure.bus
 
-import org.eduardoleolim.organizadorpec660.core.federalEntity.application.search.FederalEntitySearcher
+import org.eduardoleolim.organizadorpec660.federalEntity.application.search.FederalEntitySearcher
 import org.eduardoleolim.organizadorpec660.core.municipality.application.search.MunicipalitySearcher
 import org.eduardoleolim.organizadorpec660.core.municipality.application.searchById.SearchMunicipalityByIdQuery
 import org.eduardoleolim.organizadorpec660.core.municipality.application.searchById.SearchMunicipalityByIdQueryHandler

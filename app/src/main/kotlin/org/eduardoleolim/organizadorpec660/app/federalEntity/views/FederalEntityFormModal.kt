@@ -14,10 +14,10 @@ import org.eduardoleolim.organizadorpec660.app.federalEntity.data.EmptyFederalEn
 import org.eduardoleolim.organizadorpec660.app.federalEntity.model.FederalEntityFormState
 import org.eduardoleolim.organizadorpec660.app.federalEntity.model.FederalEntityScreenModel
 import org.eduardoleolim.organizadorpec660.app.generated.resources.*
-import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntityResponse
-import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityAlreadyExistsError
-import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.InvalidFederalEntityKeyCodeError
-import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.InvalidFederalEntityNameError
+import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntityResponse
+import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityAlreadyExistsError
+import org.eduardoleolim.organizadorpec660.federalEntity.domain.InvalidFederalEntityKeyCodeError
+import org.eduardoleolim.organizadorpec660.federalEntity.domain.InvalidFederalEntityNameError
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

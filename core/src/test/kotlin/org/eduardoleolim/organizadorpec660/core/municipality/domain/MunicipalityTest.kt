@@ -1,6 +1,6 @@
 package org.eduardoleolim.organizadorpec660.core.municipality.domain
 
-import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityId
+import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityId
 import org.junit.jupiter.api.Test
 import java.util.*
 

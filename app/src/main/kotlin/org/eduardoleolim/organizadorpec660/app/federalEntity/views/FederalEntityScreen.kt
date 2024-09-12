@@ -20,7 +20,7 @@ import org.eduardoleolim.organizadorpec660.app.federalEntity.model.FederalEntity
 import org.eduardoleolim.organizadorpec660.app.generated.resources.Res
 import org.eduardoleolim.organizadorpec660.app.generated.resources.federal_entities
 import org.eduardoleolim.organizadorpec660.app.shared.composables.reset
-import org.eduardoleolim.organizadorpec660.core.federalEntity.application.FederalEntityResponse
+import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
 import org.jetbrains.compose.resources.stringResource

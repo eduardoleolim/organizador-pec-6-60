@@ -1,7 +1,7 @@
 package org.eduardoleolim.organizadorpec660.core.municipality.application.update
 
-import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityCriteria
-import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityRepository
+import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityCriteria
+import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityRepository
 import org.eduardoleolim.organizadorpec660.core.municipality.domain.*
 import org.eduardoleolim.organizadorpec660.core.shared.domain.Either
 import org.eduardoleolim.organizadorpec660.core.shared.domain.Left

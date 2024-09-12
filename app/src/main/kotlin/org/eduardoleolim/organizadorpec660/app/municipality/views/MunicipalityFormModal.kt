@@ -15,7 +15,7 @@ import org.eduardoleolim.organizadorpec660.app.municipality.data.EmptyMunicipali
 import org.eduardoleolim.organizadorpec660.app.municipality.model.MunicipalityFormState
 import org.eduardoleolim.organizadorpec660.app.municipality.model.MunicipalityScreenModel
 import org.eduardoleolim.organizadorpec660.app.shared.composables.OutlinedSelect
-import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityNotFoundError
+import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityNotFoundError
 import org.eduardoleolim.organizadorpec660.core.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorpec660.core.municipality.domain.InvalidMunicipalityKeyCodeError
 import org.eduardoleolim.organizadorpec660.core.municipality.domain.InvalidMunicipalityNameError

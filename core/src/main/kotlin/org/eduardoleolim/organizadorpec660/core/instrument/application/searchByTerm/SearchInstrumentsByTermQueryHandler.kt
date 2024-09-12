@@ -3,9 +3,9 @@ package org.eduardoleolim.organizadorpec660.core.instrument.application.searchBy
 import org.eduardoleolim.organizadorpec660.agency.application.search.AgencySearcher
 import org.eduardoleolim.organizadorpec660.agency.domain.Agency
 import org.eduardoleolim.organizadorpec660.agency.domain.AgencyCriteria
-import org.eduardoleolim.organizadorpec660.core.federalEntity.application.search.FederalEntitySearcher
-import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntity
-import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityCriteria
+import org.eduardoleolim.organizadorpec660.federalEntity.application.search.FederalEntitySearcher
+import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntity
+import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityCriteria
 import org.eduardoleolim.organizadorpec660.core.instrument.application.InstrumentResponse
 import org.eduardoleolim.organizadorpec660.core.instrument.application.InstrumentsResponse
 import org.eduardoleolim.organizadorpec660.core.instrument.application.search.InstrumentSearcher

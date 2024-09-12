@@ -1,6 +1,6 @@
 package org.eduardoleolim.organizadorpec660.core.municipality.application
 
-import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntity
+import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntity
 import org.eduardoleolim.organizadorpec660.core.federalEntity.infrastructure.persistence.InMemoryFederalEntityRepository
 import org.eduardoleolim.organizadorpec660.core.municipality.application.create.MunicipalityCreator
 import org.eduardoleolim.organizadorpec660.core.municipality.domain.Municipality

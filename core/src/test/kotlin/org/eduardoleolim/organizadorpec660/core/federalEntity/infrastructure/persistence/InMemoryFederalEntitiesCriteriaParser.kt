@@ -1,7 +1,7 @@
 package org.eduardoleolim.organizadorpec660.core.federalEntity.infrastructure.persistence
 
-import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntity
-import org.eduardoleolim.organizadorpec660.core.federalEntity.domain.FederalEntityFields
+import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntity
+import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityFields
 import org.eduardoleolim.organizadorpec660.core.shared.domain.InvalidArgumentError
 import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.*
 import java.time.Instant
