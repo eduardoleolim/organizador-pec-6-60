@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Organizador PEC-6-60</string>
-    <string name="app_version">v2.0.0</string>
 
     <!-- Common -->
     <string name="table_col_actions">Acciones</string>
