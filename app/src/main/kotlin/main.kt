@@ -1,5 +1,5 @@
-import org.eduardoleolim.organizadorpec660.app.App
-import org.eduardoleolim.organizadorpec660.app.shared.utils.AppConfig
+import org.eduardoleolim.organizadorpec660.App
+import org.eduardoleolim.organizadorpec660.shared.utils.AppConfig
 import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
