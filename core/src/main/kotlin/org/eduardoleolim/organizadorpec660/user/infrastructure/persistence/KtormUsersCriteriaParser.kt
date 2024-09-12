@@ -1,11 +1,11 @@
-package org.eduardoleolim.organizadorpec660.core.user.infrastructure.persistence
+package org.eduardoleolim.organizadorpec660.user.infrastructure.persistence
 
 import org.eduardoleolim.organizadorpec660.core.shared.domain.InvalidArgumentError
 import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.*
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.Credentials
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.Roles
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.models.Users
-import org.eduardoleolim.organizadorpec660.core.user.domain.UserFields
+import org.eduardoleolim.organizadorpec660.user.domain.UserFields
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
 import org.ktorm.expression.OrderByExpression

@@ -9,7 +9,7 @@ import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.Response
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.bus.KtormQueryHandlerDecorator
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.koin.KtormAppKoinComponent
 import org.eduardoleolim.organizadorpec660.core.shared.infrastructure.koin.KtormAppKoinContext
-import org.eduardoleolim.organizadorpec660.core.user.application.search.UserSearcher
+import org.eduardoleolim.organizadorpec660.user.application.search.UserSearcher
 import org.koin.core.component.inject
 import org.ktorm.database.Database
 import kotlin.reflect.KClass
