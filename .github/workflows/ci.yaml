@@ -83,7 +83,7 @@ jobs:
       - name: 📁 Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: installer
+          name: installers
           path: ${{ matrix.installer }}
           retention-days: 1
 
@@ -96,15 +96,24 @@ jobs:
       - name: 📦 Download artifacts
         uses: actions/download-artifact@v2
         with:
-          name: installer
+          name: installers
 
       - name: 🗑️ Delete artifacts
         uses: geekyeggo/delete-artifact@v2
         with:
-          name: installer
+          name: installers
           failOnError: false
 
-      - name: 🚀 Release
-        uses: softprops/action-gh-release@v1
+      - name: 📝 Generate changelog
+        id: release_changelog
+        uses: requarks/changelog-action@v1
         with:
-          files: .
+          token: ${{ secrets.GITHUB_TOKEN}}
+          tag: ${{ github.ref_name }}
+
+      - name: 🚀 Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body: ${{ steps.release_changelog.outputs.changes }}
+          files: ./build/**/*
+          token: ${{ secrets.GITHUB_TOKEN }}
