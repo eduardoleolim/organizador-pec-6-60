@@ -5,8 +5,8 @@ import org.eduardoleolim.organizadorpec660.agency.domain.Agency
 import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntity
 import org.eduardoleolim.organizadorpec660.core.instrument.domain.Instrument
-import org.eduardoleolim.organizadorpec660.core.municipality.application.SimpleMunicipalityResponse
-import org.eduardoleolim.organizadorpec660.core.municipality.domain.Municipality
+import org.eduardoleolim.organizadorpec660.municipality.application.SimpleMunicipalityResponse
+import org.eduardoleolim.organizadorpec660.municipality.domain.Municipality
 import org.eduardoleolim.organizadorpec660.core.statisticType.application.StatisticTypeResponse
 import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticType
 

@@ -3,8 +3,8 @@ package org.eduardoleolim.organizadorpec660.core.instrument.application.create
 import org.eduardoleolim.organizadorpec660.agency.domain.AgencyCriteria
 import org.eduardoleolim.organizadorpec660.agency.domain.AgencyRepository
 import org.eduardoleolim.organizadorpec660.core.instrument.domain.*
-import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityCriteria
-import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityRepository
+import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityCriteria
+import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityRepository
 import org.eduardoleolim.organizadorpec660.core.shared.domain.Either
 import org.eduardoleolim.organizadorpec660.core.shared.domain.Left
 import org.eduardoleolim.organizadorpec660.core.shared.domain.Right

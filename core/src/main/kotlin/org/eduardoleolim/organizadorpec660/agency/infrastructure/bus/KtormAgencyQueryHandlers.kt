@@ -7,7 +7,7 @@ import org.eduardoleolim.organizadorpec660.agency.application.searchByMunicipali
 import org.eduardoleolim.organizadorpec660.agency.application.searchByMunicipalityId.SearchAgenciesByMunicipalityIdQueryHandler
 import org.eduardoleolim.organizadorpec660.agency.application.searchByTerm.SearchAgenciesByTermQuery
 import org.eduardoleolim.organizadorpec660.agency.application.searchByTerm.SearchAgenciesByTermQueryHandler
-import org.eduardoleolim.organizadorpec660.core.municipality.application.search.MunicipalitySearcher
+import org.eduardoleolim.organizadorpec660.municipality.application.search.MunicipalitySearcher
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.Query
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryHandler
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.Response

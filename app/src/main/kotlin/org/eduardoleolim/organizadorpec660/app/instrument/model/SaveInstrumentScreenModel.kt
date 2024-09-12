@@ -23,9 +23,9 @@ import org.eduardoleolim.organizadorpec660.core.instrument.application.DetailedI
 import org.eduardoleolim.organizadorpec660.core.instrument.application.create.CreateInstrumentCommand
 import org.eduardoleolim.organizadorpec660.core.instrument.application.searchById.SearchInstrumentByIdQuery
 import org.eduardoleolim.organizadorpec660.core.instrument.application.update.UpdateInstrumentCommand
-import org.eduardoleolim.organizadorpec660.core.municipality.application.MunicipalitiesResponse
-import org.eduardoleolim.organizadorpec660.core.municipality.application.MunicipalityResponse
-import org.eduardoleolim.organizadorpec660.core.municipality.application.searchByTerm.SearchMunicipalitiesByTermQuery
+import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalitiesResponse
+import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalityResponse
+import org.eduardoleolim.organizadorpec660.municipality.application.searchByTerm.SearchMunicipalitiesByTermQuery
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryBus
 import org.eduardoleolim.organizadorpec660.core.statisticType.application.StatisticTypeResponse

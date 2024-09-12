@@ -2,9 +2,9 @@ package org.eduardoleolim.organizadorpec660.core.municipality.application
 
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntity
 import org.eduardoleolim.organizadorpec660.core.federalEntity.infrastructure.persistence.InMemoryFederalEntityRepository
-import org.eduardoleolim.organizadorpec660.core.municipality.application.create.MunicipalityCreator
-import org.eduardoleolim.organizadorpec660.core.municipality.domain.Municipality
-import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityAlreadyExistsError
+import org.eduardoleolim.organizadorpec660.municipality.application.create.MunicipalityCreator
+import org.eduardoleolim.organizadorpec660.municipality.domain.Municipality
+import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityAlreadyExistsError
 import org.eduardoleolim.organizadorpec660.core.municipality.infrastructure.InMemoryMunicipalityRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested

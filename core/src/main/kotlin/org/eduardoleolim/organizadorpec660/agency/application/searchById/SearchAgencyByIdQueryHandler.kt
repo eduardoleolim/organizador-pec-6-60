@@ -4,9 +4,9 @@ import org.eduardoleolim.organizadorpec660.agency.application.AgencyResponse
 import org.eduardoleolim.organizadorpec660.agency.application.search.AgencySearcher
 import org.eduardoleolim.organizadorpec660.agency.domain.AgencyCriteria
 import org.eduardoleolim.organizadorpec660.agency.domain.AgencyNotFoundError
-import org.eduardoleolim.organizadorpec660.core.municipality.application.search.MunicipalitySearcher
-import org.eduardoleolim.organizadorpec660.core.municipality.domain.Municipality
-import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityCriteria
+import org.eduardoleolim.organizadorpec660.municipality.application.search.MunicipalitySearcher
+import org.eduardoleolim.organizadorpec660.municipality.domain.Municipality
+import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityCriteria
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryHandler
 import org.eduardoleolim.organizadorpec660.core.statisticType.application.search.StatisticTypeSearcher
 import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticType

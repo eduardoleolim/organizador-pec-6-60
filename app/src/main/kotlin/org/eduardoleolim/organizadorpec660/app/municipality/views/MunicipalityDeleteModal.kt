@@ -14,7 +14,7 @@ import org.eduardoleolim.organizadorpec660.app.generated.resources.mun_delete_ti
 import org.eduardoleolim.organizadorpec660.app.municipality.model.MunicipalityDeleteState
 import org.eduardoleolim.organizadorpec660.app.municipality.model.MunicipalityScreenModel
 import org.eduardoleolim.organizadorpec660.app.shared.composables.QuestionDialog
-import org.eduardoleolim.organizadorpec660.core.municipality.application.MunicipalityResponse
+import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalityResponse
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

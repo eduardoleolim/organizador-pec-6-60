@@ -27,7 +27,7 @@ import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEnti
 import org.eduardoleolim.organizadorpec660.core.instrument.application.InstrumentResponse
 import org.eduardoleolim.organizadorpec660.core.instrument.application.InstrumentsResponse
 import org.eduardoleolim.organizadorpec660.core.instrument.domain.InstrumentFields
-import org.eduardoleolim.organizadorpec660.core.municipality.application.MunicipalityResponse
+import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorpec660.core.statisticType.application.StatisticTypeResponse
 import org.jetbrains.compose.resources.stringResource
 import java.text.DateFormatSymbols

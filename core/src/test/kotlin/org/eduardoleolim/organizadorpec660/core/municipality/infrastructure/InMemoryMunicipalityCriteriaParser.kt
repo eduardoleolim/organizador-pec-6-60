@@ -1,7 +1,7 @@
 package org.eduardoleolim.organizadorpec660.core.municipality.infrastructure
 
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntity
-import org.eduardoleolim.organizadorpec660.core.municipality.domain.Municipality
+import org.eduardoleolim.organizadorpec660.municipality.domain.Municipality
 import org.eduardoleolim.organizadorpec660.core.shared.domain.InvalidArgumentError
 import org.eduardoleolim.organizadorpec660.core.shared.domain.criteria.*
 import java.time.Instant

@@ -10,9 +10,9 @@ import org.eduardoleolim.organizadorpec660.core.instrument.application.Instrumen
 import org.eduardoleolim.organizadorpec660.core.instrument.application.InstrumentsResponse
 import org.eduardoleolim.organizadorpec660.core.instrument.application.search.InstrumentSearcher
 import org.eduardoleolim.organizadorpec660.core.instrument.domain.InstrumentCriteria
-import org.eduardoleolim.organizadorpec660.core.municipality.application.search.MunicipalitySearcher
-import org.eduardoleolim.organizadorpec660.core.municipality.domain.Municipality
-import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityCriteria
+import org.eduardoleolim.organizadorpec660.municipality.application.search.MunicipalitySearcher
+import org.eduardoleolim.organizadorpec660.municipality.domain.Municipality
+import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityCriteria
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryHandler
 import org.eduardoleolim.organizadorpec660.core.statisticType.application.search.StatisticTypeSearcher
 import org.eduardoleolim.organizadorpec660.core.statisticType.domain.StatisticType

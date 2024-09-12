@@ -7,7 +7,7 @@ import org.eduardoleolim.organizadorpec660.core.instrument.application.searchByI
 import org.eduardoleolim.organizadorpec660.core.instrument.application.searchById.SearchInstrumentByIdQueryHandler
 import org.eduardoleolim.organizadorpec660.core.instrument.application.searchByTerm.SearchInstrumentsByTermQuery
 import org.eduardoleolim.organizadorpec660.core.instrument.application.searchByTerm.SearchInstrumentsByTermQueryHandler
-import org.eduardoleolim.organizadorpec660.core.municipality.application.search.MunicipalitySearcher
+import org.eduardoleolim.organizadorpec660.municipality.application.search.MunicipalitySearcher
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.Query
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.QueryHandler
 import org.eduardoleolim.organizadorpec660.core.shared.domain.bus.query.Response

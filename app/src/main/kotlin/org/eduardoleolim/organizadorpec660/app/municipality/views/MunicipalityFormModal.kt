@@ -16,10 +16,10 @@ import org.eduardoleolim.organizadorpec660.app.municipality.model.MunicipalityFo
 import org.eduardoleolim.organizadorpec660.app.municipality.model.MunicipalityScreenModel
 import org.eduardoleolim.organizadorpec660.app.shared.composables.OutlinedSelect
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityNotFoundError
-import org.eduardoleolim.organizadorpec660.core.municipality.application.MunicipalityResponse
-import org.eduardoleolim.organizadorpec660.core.municipality.domain.InvalidMunicipalityKeyCodeError
-import org.eduardoleolim.organizadorpec660.core.municipality.domain.InvalidMunicipalityNameError
-import org.eduardoleolim.organizadorpec660.core.municipality.domain.MunicipalityAlreadyExistsError
+import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalityResponse
+import org.eduardoleolim.organizadorpec660.municipality.domain.InvalidMunicipalityKeyCodeError
+import org.eduardoleolim.organizadorpec660.municipality.domain.InvalidMunicipalityNameError
+import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityAlreadyExistsError
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
