@@ -1,5 +1,6 @@
 import org.gradle.internal.os.OperatingSystem
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.compose.desktop.application.tasks.AbstractJPackageTask
 
 plugins {
     alias(libs.plugins.jvm)
@@ -67,6 +68,7 @@ compose.desktop {
 
             linux {
                 iconFile.set(file("icons/icon.png"))
+                appRelease = "1"
                 shortcut = true
                 menuGroup = "Inegi"
                 debMaintainer = "eduardoleolim@hotmail.com"
@@ -83,6 +85,57 @@ compose.desktop {
 
         buildTypes.release.proguard {
             configurationFiles.from(file("compose-desktop.pro"))
+        }
+    }
+}
+
+afterEvaluate {
+    tasks.named<AbstractJPackageTask>("packageDeb") {
+        val installerDir = destinationDir.get().asFile
+        val tempDir = temporaryDir.resolve("deb-mod")
+        val desktopDir = tempDir.resolve("./opt/${packageName.get()}/lib")
+        val launcherDir = "/opt/${packageName.get()}/bin/${packageName.get()}.sh"
+        val launcherScript = tempDir.resolve(".$launcherDir")
+        val modifiedInstaller = File(tempDir, "${packageName.get()}_modified${targetFormat.fileExt}")
+
+        val scriptContent = """
+                #!/bin/sh
+
+                pkexec env DISPLAY=${"$"}DISPLAY XAUTHORITY=${"$"}XAUTHORITY /opt/${packageName.get()}/bin/${packageName.get()}
+            """.trimIndent()
+
+        doLast {
+            tempDir.mkdirs()
+            val debInstaller: File = installerDir.walk().first { it.isFile && it.name.endsWith(targetFormat.fileExt) }
+
+            val unpackProcess = ProcessBuilder("dpkg-deb", "-R", debInstaller.absolutePath, tempDir.absolutePath)
+                .inheritIO()
+                .start()
+            unpackProcess.waitFor()
+
+            val desktopFile = desktopDir.walk().first { it.isFile && it.name.endsWith(".desktop") }
+            val desktopContent = desktopFile.readLines().joinToString("\n") {
+                when {
+                    it.startsWith("Exec=") -> "Exec=$launcherDir"
+                    it.startsWith("Name=") -> "Name=Organizador PEC-6-60"
+                    else -> it
+                }
+            }
+            desktopFile.writeText(desktopContent)
+            launcherScript.writeText(scriptContent)
+            launcherScript.setExecutable(true)
+
+            val repackProcess =
+                ProcessBuilder("dpkg-deb", "--build", tempDir.absolutePath, modifiedInstaller.absolutePath)
+                    .inheritIO()
+                    .start()
+            repackProcess.waitFor()
+
+            modifiedInstaller.copyTo(debInstaller, true)
+
+            tempDir.deleteRecursively()
+
+            logger.lifecycle("The distribution was modified with a custom launcher script")
         }
     }
 }
