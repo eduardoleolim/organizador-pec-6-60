@@ -1,6 +1,6 @@
-<h1 style="text-align: center;">Organizador PEC-6-60</h1>
+<h1 align="center">Organizador PEC-6-60</h1>
 
-<p style="text-align: center;">
+<p align="center">
     <a href="https://github.com/eduardoleolim/organizador-pec-6-60/actions/workflows/ci.yaml"><img src="https://github.com/eduardoleolim/organizador-pec-6-60/actions/workflows/ci.yaml/badge.svg" alt="Build status"/></a>
     <a href="https://github.com/eduardoleolim/organizador-pec-6-60/blob/main/LICENSE.txt">
         <img src="https://img.shields.io/github/license/eduardoleolim/organizador-pec-6-60" alt="License"/>
