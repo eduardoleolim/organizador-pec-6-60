@@ -13,10 +13,7 @@ import androidx.compose.ui.layout.*
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.offset
-import androidx.compose.ui.window.DialogState
-import androidx.compose.ui.window.DialogWindow
-import androidx.compose.ui.window.DialogWindowScope
-import androidx.compose.ui.window.rememberDialogState
+import androidx.compose.ui.window.*
 import com.jetbrains.JBR
 import org.eduardoleolim.organizadorpec660.shared.utils.DesktopPlatform
 import org.eduardoleolim.organizadorpec660.shared.window.modifier.trackWindowActivation
@@ -46,7 +43,7 @@ fun DecoratedDialogWindow(
         }
     }
 
-    val undecorated = DesktopPlatform.Linux == DesktopPlatform.Current
+    val isRunningInLinux = DesktopPlatform.Linux == DesktopPlatform.Current
 
     DialogWindow(
         onCloseRequest = onCloseRequest,
@@ -54,7 +51,7 @@ fun DecoratedDialogWindow(
         visible = visible,
         title = title,
         icon = icon,
-        undecorated = undecorated,
+        decoration = if (isRunningInLinux) WindowDecoration.Undecorated() else WindowDecoration.SystemDefault,
         transparent = false,
         resizable = resizable,
         enabled = enabled,

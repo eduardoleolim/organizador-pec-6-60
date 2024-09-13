@@ -43,8 +43,7 @@ fun DecoratedWindow(
         }
     }
 
-    // Using undecorated window for linux
-    val undecorated = DesktopPlatform.Linux == DesktopPlatform.Current
+    val isRunningInLinux = DesktopPlatform.Linux == DesktopPlatform.Current
 
     Window(
         onCloseRequest = onCloseRequest,
@@ -52,7 +51,7 @@ fun DecoratedWindow(
         visible = visible,
         title = title,
         icon = icon,
-        undecorated = undecorated,
+        decoration = if (isRunningInLinux) WindowDecoration.Undecorated() else WindowDecoration.SystemDefault,
         transparent = false,
         resizable = resizable,
         enabled = enabled,
@@ -114,7 +113,7 @@ fun DecoratedWindow(
         }
 
         val undecoratedWindowBorder =
-            if (undecorated && !decoratedWindowState.isMaximized) {
+            if (isRunningInLinux && !decoratedWindowState.isMaximized) {
                 Modifier.border(1.dp, MaterialTheme.colorScheme.primaryContainer, RectangleShape)
                     .padding(1.dp)
             } else {
