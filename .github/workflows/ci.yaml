@@ -98,12 +98,6 @@ jobs:
         with:
           name: installers
 
-      - name: 🗑️ Delete artifacts
-        uses: geekyeggo/delete-artifact@v2
-        with:
-          name: installers
-          failOnError: false
-
       - name: 📝 Generate changelog
         id: release_changelog
         uses: requarks/changelog-action@v1
