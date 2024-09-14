@@ -1,6 +1,8 @@
 import org.gradle.internal.os.OperatingSystem
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.compose.desktop.application.tasks.AbstractJPackageTask
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 
 plugins {
     alias(libs.plugins.jvm)
@@ -91,18 +93,18 @@ compose.desktop {
 
 afterEvaluate {
     tasks.named<AbstractJPackageTask>("packageDeb") {
+        val tempDir = project.layout.buildDirectory.dir("./compose/tmp/$name/deb-mod").get().asFile
+        val helpersDir = project.layout.projectDirectory.dir("helpers/linux").asFile
         val installerDir = destinationDir.get().asFile
-        val tempDir = temporaryDir.resolve("deb-mod")
-        val desktopDir = tempDir.resolve("./opt/${packageName.get()}/lib")
-        val launcherDir = "/opt/${packageName.get()}/bin/${packageName.get()}.sh"
-        val launcherScript = tempDir.resolve(".$launcherDir")
-        val modifiedInstaller = File(tempDir, "${packageName.get()}_modified${targetFormat.fileExt}")
 
-        val scriptContent = """
-                #!/bin/sh
-
-                pkexec env DISPLAY=${"$"}DISPLAY XAUTHORITY=${"$"}XAUTHORITY /opt/${packageName.get()}/bin/${packageName.get()}
-            """.trimIndent()
+        val policy = helpersDir.resolve("./org.eduardoleolim.organizador-pec-6-60.policy").normalize()
+        val postInstScript = helpersDir.resolve("./DEBIAN/postinst").normalize()
+        val preRmScript = helpersDir.resolve("./DEBIAN/prerm").normalize()
+        val newPolicy = tempDir.resolve("./usr/local/share/${packageName.get()}/${policy.name}").normalize()
+        val newPostInstScript = tempDir.resolve("./DEBIAN/postinst").normalize()
+        val newPreRmScript = tempDir.resolve("./DEBIAN/prerm").normalize()
+        val desktopDir = tempDir.resolve("./opt/${packageName.get()}/lib").normalize()
+        val modifiedInstaller = tempDir.resolve("./${packageName.get()}_modified${targetFormat.fileExt}").normalize()
 
         doLast {
             tempDir.mkdirs()
@@ -114,16 +116,38 @@ afterEvaluate {
             unpackProcess.waitFor()
 
             val desktopFile = desktopDir.walk().first { it.isFile && it.name.endsWith(".desktop") }
-            val desktopContent = desktopFile.readLines().joinToString("\n") {
-                when {
-                    it.startsWith("Exec=") -> "Exec=$launcherDir"
-                    it.startsWith("Name=") -> "Name=Organizador PEC-6-60"
-                    else -> it
+
+            desktopFile.apply {
+                val desktopContent = readLines().joinToString("\n") {
+                    when {
+                        it.startsWith("Exec=") -> "Exec=pkexec /opt/${packageName.get()}/bin/${packageName.get()}"
+                        it.startsWith("Name=") -> "Name=Organizador PEC-6-60"
+                        else -> it
+                    }
                 }
+                writeText(desktopContent)
+                renameTo(desktopFile.parentFile.resolve("org.eduardoleolim.${packageName.get()}.desktop"))
             }
-            desktopFile.writeText(desktopContent)
-            launcherScript.writeText(scriptContent)
-            launcherScript.setExecutable(true)
+
+            newPolicy.parentFile.mkdirs()
+            Files.copy(
+                policy.toPath(),
+                newPolicy.toPath(),
+                StandardCopyOption.COPY_ATTRIBUTES,
+                StandardCopyOption.REPLACE_EXISTING
+            )
+            Files.copy(
+                postInstScript.toPath(),
+                newPostInstScript.toPath(),
+                StandardCopyOption.COPY_ATTRIBUTES,
+                StandardCopyOption.REPLACE_EXISTING
+            )
+            Files.copy(
+                preRmScript.toPath(),
+                newPreRmScript.toPath(),
+                StandardCopyOption.COPY_ATTRIBUTES,
+                StandardCopyOption.REPLACE_EXISTING
+            )
 
             val repackProcess =
                 ProcessBuilder("dpkg-deb", "--build", tempDir.absolutePath, modifiedInstaller.absolutePath)

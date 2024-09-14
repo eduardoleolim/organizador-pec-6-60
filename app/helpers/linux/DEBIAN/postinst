@@ -1,0 +1,37 @@
+#!/bin/sh
+# postinst script for organizador-pec-6-60
+#
+# see: dh_installdeb(1)
+
+set -e
+
+# summary of how this script can be called:
+#        * <postinst> `configure' <most-recently-configured-version>
+#        * <old-postinst> `abort-upgrade' <new version>
+#        * <conflictor's-postinst> `abort-remove' `in-favour' <package>
+#          <new-version>
+#        * <postinst> `abort-remove'
+#        * <deconfigured's-postinst> `abort-deconfigure' `in-favour'
+#          <failed-install-package> <version> `removing'
+#          <conflicting-package> <version>
+# for details, see https://www.debian.org/doc/debian-policy/ or
+# the debian-policy package
+
+case "$1" in
+    configure)
+xdg-desktop-menu install /opt/organizador-pec-6-60/lib/org.eduardoleolim.organizador-pec-6-60.desktop
+
+cp /usr/local/share/organizador-pec-6-60/org.eduardoleolim.organizador-pec-6-60.policy /usr/share/polkit-1/actions/
+chmod 644 /usr/share/polkit-1/actions/org.eduardoleolim.organizador-pec-6-60.policy
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+exit 0
