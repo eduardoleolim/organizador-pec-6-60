@@ -1,6 +1,7 @@
 package org.eduardoleolim.organizadorpec660.federalEntity.views
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -54,7 +55,7 @@ fun FederalEntityScreen.FederalEntitiesTable(
         listOf(
             DataColumn(
                 onSort = ::onSort,
-                alignment = Alignment.CenterHorizontally,
+                alignment = Alignment.Center,
                 width = TableColumnWidth.MinIntrinsic,
                 header = { Text(keyCodeColumnName) }
             ),
@@ -65,7 +66,7 @@ fun FederalEntityScreen.FederalEntitiesTable(
             ),
             DataColumn(
                 onSort = ::onSort,
-                alignment = Alignment.CenterHorizontally,
+                alignment = Alignment.Center,
                 width = TableColumnWidth.Fraction(0.18f),
                 header = {
                     Text(
@@ -76,7 +77,7 @@ fun FederalEntityScreen.FederalEntitiesTable(
             ),
             DataColumn(
                 onSort = ::onSort,
-                alignment = Alignment.CenterHorizontally,
+                alignment = Alignment.Center,
                 width = TableColumnWidth.Fraction(0.18f),
                 header = {
                     Text(
@@ -86,7 +87,7 @@ fun FederalEntityScreen.FederalEntitiesTable(
                 }
             ),
             DataColumn(
-                alignment = Alignment.CenterHorizontally,
+                alignment = Alignment.Center,
                 width = TableColumnWidth.Fraction(0.18f),
                 header = { Text(actionsColumnName) }
             )
@@ -128,33 +129,35 @@ fun FederalEntityScreen.FederalEntitiesTable(
                     }
 
                     cell {
-                        PlainTextTooltip(
-                            tooltip = {
-                                Text(stringResource(Res.string.edit))
-                            }
-                        ) {
-                            IconButton(
-                                onClick = { onEditRequest(federalEntity) }
+                        Row {
+                            PlainTextTooltip(
+                                tooltip = {
+                                    Text(stringResource(Res.string.edit))
+                                }
                             ) {
-                                Icon(
-                                    imageVector = Icons.Default.Edit,
-                                    contentDescription = "Edit"
-                                )
+                                IconButton(
+                                    onClick = { onEditRequest(federalEntity) }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Edit,
+                                        contentDescription = "Edit"
+                                    )
+                                }
                             }
-                        }
 
-                        PlainTextTooltip(
-                            tooltip = {
-                                Text(stringResource(Res.string.delete))
-                            }
-                        ) {
-                            IconButton(
-                                onClick = { onDeleteRequest(federalEntity) }
+                            PlainTextTooltip(
+                                tooltip = {
+                                    Text(stringResource(Res.string.delete))
+                                }
                             ) {
-                                Icon(
-                                    imageVector = Icons.Default.Delete,
-                                    contentDescription = "Delete"
-                                )
+                                IconButton(
+                                    onClick = { onDeleteRequest(federalEntity) }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Delete,
+                                        contentDescription = "Delete"
+                                    )
+                                }
                             }
                         }
                     }

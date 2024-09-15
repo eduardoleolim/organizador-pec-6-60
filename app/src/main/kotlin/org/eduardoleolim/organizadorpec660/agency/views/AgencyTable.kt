@@ -1,6 +1,7 @@
 package org.eduardoleolim.organizadorpec660.agency.views
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -60,19 +61,19 @@ fun AgencyScreen.AgenciesTable(
             ),
             DataColumn(
                 onSort = ::onSort,
-                alignment = Alignment.CenterHorizontally,
+                alignment = Alignment.Center,
                 width = TableColumnWidth.MinIntrinsic,
                 header = { Text(consecutiveColumnName) }
             ),
             DataColumn(
                 onSort = ::onSort,
-                alignment = Alignment.Start,
+                alignment = Alignment.CenterStart,
                 width = TableColumnWidth.Fraction(0.18f),
                 header = { Text(municipalityColumnName) }
             ),
             DataColumn(
                 onSort = ::onSort,
-                alignment = Alignment.CenterHorizontally,
+                alignment = Alignment.Center,
                 width = TableColumnWidth.Fraction(0.16f),
                 header = {
                     Text(
@@ -83,7 +84,7 @@ fun AgencyScreen.AgenciesTable(
             ),
             DataColumn(
                 onSort = ::onSort,
-                alignment = Alignment.CenterHorizontally,
+                alignment = Alignment.Center,
                 width = TableColumnWidth.Fraction(0.16f),
                 header = {
                     Text(
@@ -93,7 +94,7 @@ fun AgencyScreen.AgenciesTable(
                 }
             ),
             DataColumn(
-                alignment = Alignment.CenterHorizontally,
+                alignment = Alignment.Center,
                 width = TableColumnWidth.Fraction(0.16f),
                 header = { Text(actionsColumnName) }
             )
@@ -149,33 +150,35 @@ fun AgencyScreen.AgenciesTable(
                     }
 
                     cell {
-                        PlainTextTooltip(
-                            tooltip = {
-                                Text(stringResource(Res.string.edit))
-                            }
-                        ) {
-                            IconButton(
-                                onClick = { onEditRequest(agency) }
+                        Row {
+                            PlainTextTooltip(
+                                tooltip = {
+                                    Text(stringResource(Res.string.edit))
+                                }
                             ) {
-                                Icon(
-                                    imageVector = Icons.Default.Edit,
-                                    contentDescription = "Edit"
-                                )
+                                IconButton(
+                                    onClick = { onEditRequest(agency) }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Edit,
+                                        contentDescription = "Edit"
+                                    )
+                                }
                             }
-                        }
 
-                        PlainTextTooltip(
-                            tooltip = {
-                                Text(stringResource(Res.string.delete))
-                            }
-                        ) {
-                            IconButton(
-                                onClick = { onDeleteRequest(agency) }
+                            PlainTextTooltip(
+                                tooltip = {
+                                    Text(stringResource(Res.string.delete))
+                                }
                             ) {
-                                Icon(
-                                    imageVector = Icons.Default.Delete,
-                                    contentDescription = "Delete"
-                                )
+                                IconButton(
+                                    onClick = { onDeleteRequest(agency) }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Delete,
+                                        contentDescription = "Delete"
+                                    )
+                                }
                             }
                         }
                     }

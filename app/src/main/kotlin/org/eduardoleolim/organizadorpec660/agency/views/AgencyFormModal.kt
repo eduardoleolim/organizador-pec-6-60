@@ -67,7 +67,7 @@ fun AgencyScreen.AgencyFormModal(
             ),
             DataColumn(
                 width = TableColumnWidth.Fraction(0.3f),
-                alignment = Alignment.CenterHorizontally,
+                alignment = Alignment.Center,
                 header = { }
             )
         )

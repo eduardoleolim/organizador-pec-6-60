@@ -56,8 +56,7 @@ fun PaginatedDataTable(
     header: @Composable RowScope.() -> Unit = {},
     headerHeight: Dp = 56.dp,
     rowHeight: Dp = 52.dp,
-    horizontalPadding: Dp = 16.dp,
-    verticalPadding: Dp = 16.dp,
+    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp),
     onSearch: (search: String, pageIndex: Int, pageSize: Int, sortBy: Int?, isAscending: Boolean) -> Unit,
     state: PaginatedDataTableState = rememberPaginatedDataTableState(pageSizes.first()),
     content: DataTableScope.() -> Unit
@@ -82,7 +81,7 @@ fun PaginatedDataTable(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
-                .padding(horizontal = horizontalPadding, vertical = verticalPadding),
+                .padding(16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             val horizontalScrollState = rememberScrollState(0)
@@ -161,7 +160,7 @@ fun PaginatedDataTable(
                 columns = columns,
                 separator = separator,
                 headerHeight = headerHeight,
-                horizontalPadding = horizontalPadding,
+                contentPadding = contentPadding,
                 cellContentProvider = Material3CellContentProvider,
                 sortColumnIndex = state.sortColumnIndex,
                 sortAscending = state.sortAscending,

@@ -3,6 +3,7 @@ package org.eduardoleolim.organizadorpec660.instrument.views
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -79,7 +80,7 @@ fun InstrumentScreen.InstrumentsTable(
 
         listOf(
             DataColumn(
-                alignment = Alignment.CenterHorizontally,
+                alignment = Alignment.Center,
                 width = TableColumnWidth.Fixed(140.dp),
                 header = {
                     Text(
@@ -90,7 +91,7 @@ fun InstrumentScreen.InstrumentsTable(
             ),
             DataColumn(
                 onSort = ::onSort,
-                alignment = Alignment.CenterHorizontally,
+                alignment = Alignment.Center,
                 width = TableColumnWidth.MinIntrinsic,
                 header = {
                     Text(
@@ -101,7 +102,7 @@ fun InstrumentScreen.InstrumentsTable(
             ),
             DataColumn(
                 onSort = ::onSort,
-                alignment = Alignment.Start,
+                alignment = Alignment.CenterStart,
                 width = TableColumnWidth.MinIntrinsic,
                 header = {
                     Text(
@@ -112,7 +113,7 @@ fun InstrumentScreen.InstrumentsTable(
             ),
             DataColumn(
                 onSort = ::onSort,
-                alignment = Alignment.Start,
+                alignment = Alignment.CenterStart,
                 width = TableColumnWidth.Fraction(0.18f),
                 header = {
                     Text(
@@ -123,18 +124,18 @@ fun InstrumentScreen.InstrumentsTable(
             ),
             DataColumn(
                 onSort = ::onSort,
-                alignment = Alignment.Start,
+                alignment = Alignment.CenterStart,
                 width = TableColumnWidth.Fixed(180.dp),
                 header = { Text(federalEntityColumnName) }
             ),
             DataColumn(
                 onSort = ::onSort,
-                alignment = Alignment.Start,
+                alignment = Alignment.CenterStart,
                 width = TableColumnWidth.Fixed(180.dp),
                 header = { Text(municipalityColumnName) }
             ),
             DataColumn(
-                alignment = Alignment.CenterHorizontally,
+                alignment = Alignment.Center,
                 width = TableColumnWidth.MinIntrinsic,
                 header = { Text(actionsColumnName) }
             )
@@ -307,63 +308,65 @@ fun InstrumentScreen.InstrumentsTable(
                     }
 
                     cell {
-                        PlainTextTooltip(
-                            tooltip = {
-                                Text(stringResource(Res.string.inst_show_details))
-                            }
-                        ) {
-                            IconButton(
-                                onClick = { onShowDetailsRequest(instrument) }
+                        Row {
+                            PlainTextTooltip(
+                                tooltip = {
+                                    Text(stringResource(Res.string.inst_show_details))
+                                }
                             ) {
-                                Icon(
-                                    imageVector = Icons.Default.Visibility,
-                                    contentDescription = "Show details"
-                                )
+                                IconButton(
+                                    onClick = { onShowDetailsRequest(instrument) }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Visibility,
+                                        contentDescription = "Show details"
+                                    )
+                                }
                             }
-                        }
 
-                        PlainTextTooltip(
-                            tooltip = {
-                                Text(stringResource(Res.string.inst_copy_document))
-                            }
-                        ) {
-                            IconButton(
-                                onClick = { onCopyRequest(instrument) }
+                            PlainTextTooltip(
+                                tooltip = {
+                                    Text(stringResource(Res.string.inst_copy_document))
+                                }
                             ) {
-                                Icon(
-                                    imageVector = Icons.Default.FileCopy,
-                                    contentDescription = "Copy instrument file"
-                                )
+                                IconButton(
+                                    onClick = { onCopyRequest(instrument) }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.FileCopy,
+                                        contentDescription = "Copy instrument file"
+                                    )
+                                }
                             }
-                        }
 
-                        PlainTextTooltip(
-                            tooltip = {
-                                Text(stringResource(Res.string.edit))
-                            }
-                        ) {
-                            IconButton(
-                                onClick = { onEditRequest(instrument) }
+                            PlainTextTooltip(
+                                tooltip = {
+                                    Text(stringResource(Res.string.edit))
+                                }
                             ) {
-                                Icon(
-                                    imageVector = Icons.Default.Edit,
-                                    contentDescription = "Edit"
-                                )
+                                IconButton(
+                                    onClick = { onEditRequest(instrument) }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Edit,
+                                        contentDescription = "Edit"
+                                    )
+                                }
                             }
-                        }
 
-                        PlainTextTooltip(
-                            tooltip = {
-                                Text(stringResource(Res.string.delete))
-                            }
-                        ) {
-                            IconButton(
-                                onClick = { onDeleteRequest(instrument) }
+                            PlainTextTooltip(
+                                tooltip = {
+                                    Text(stringResource(Res.string.delete))
+                                }
                             ) {
-                                Icon(
-                                    imageVector = Icons.Default.Delete,
-                                    contentDescription = "Delete"
-                                )
+                                IconButton(
+                                    onClick = { onDeleteRequest(instrument) }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Delete,
+                                        contentDescription = "Delete"
+                                    )
+                                }
                             }
                         }
                     }

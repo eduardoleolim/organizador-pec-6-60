@@ -3,6 +3,7 @@ package org.eduardoleolim.organizadorpec660.municipality.views
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -64,7 +65,7 @@ fun MunicipalityScreen.MunicipalitiesTable(
         listOf(
             DataColumn(
                 onSort = ::onSort,
-                alignment = Alignment.CenterHorizontally,
+                alignment = Alignment.Center,
                 width = TableColumnWidth.MinIntrinsic,
                 header = { Text(keyCodeColumnName) }
             ),
@@ -83,7 +84,7 @@ fun MunicipalityScreen.MunicipalitiesTable(
             ),
             DataColumn(
                 onSort = ::onSort,
-                alignment = Alignment.CenterHorizontally,
+                alignment = Alignment.Center,
                 width = TableColumnWidth.Fraction(0.18f),
                 header = {
                     Text(
@@ -94,7 +95,7 @@ fun MunicipalityScreen.MunicipalitiesTable(
             ),
             DataColumn(
                 onSort = ::onSort,
-                alignment = Alignment.CenterHorizontally,
+                alignment = Alignment.Center,
                 width = TableColumnWidth.Fraction(0.18f),
                 header = {
                     Text(
@@ -104,7 +105,7 @@ fun MunicipalityScreen.MunicipalitiesTable(
                 }
             ),
             DataColumn(
-                alignment = Alignment.CenterHorizontally,
+                alignment = Alignment.Center,
                 width = TableColumnWidth.Fraction(0.2f),
                 header = {
                     Text(actionsColumnName)
@@ -163,33 +164,35 @@ fun MunicipalityScreen.MunicipalitiesTable(
                     }
 
                     cell {
-                        PlainTextTooltip(
-                            tooltip = {
-                                Text(stringResource(Res.string.edit))
-                            }
-                        ) {
-                            IconButton(
-                                onClick = { onEditRequest(municipality) }
+                        Row {
+                            PlainTextTooltip(
+                                tooltip = {
+                                    Text(stringResource(Res.string.edit))
+                                }
                             ) {
-                                Icon(
-                                    imageVector = Icons.Default.Edit,
-                                    contentDescription = "Edit"
-                                )
+                                IconButton(
+                                    onClick = { onEditRequest(municipality) }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Edit,
+                                        contentDescription = "Edit"
+                                    )
+                                }
                             }
-                        }
 
-                        PlainTextTooltip(
-                            tooltip = {
-                                Text(stringResource(Res.string.delete))
-                            }
-                        ) {
-                            IconButton(
-                                onClick = { onDeleteRequest(municipality) }
+                            PlainTextTooltip(
+                                tooltip = {
+                                    Text(stringResource(Res.string.delete))
+                                }
                             ) {
-                                Icon(
-                                    imageVector = Icons.Default.Delete,
-                                    contentDescription = "Delete"
-                                )
+                                IconButton(
+                                    onClick = { onDeleteRequest(municipality) }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Delete,
+                                        contentDescription = "Delete"
+                                    )
+                                }
                             }
                         }
                     }
