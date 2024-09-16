@@ -1,4 +1,4 @@
-package org.eduardoleolim.organizadorpec660.shared.window
+package org.eduardoleolim.window
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.MaterialTheme
@@ -13,7 +13,7 @@ import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.jetbrains.JBR
-import org.eduardoleolim.organizadorpec660.shared.window.utils.macos.MacUtil
+import org.eduardoleolim.window.utils.macos.MacUtil
 
 fun Modifier.newFullscreenControls(newControls: Boolean = true): Modifier =
     this then

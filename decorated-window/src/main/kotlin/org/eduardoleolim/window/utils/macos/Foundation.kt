@@ -1,10 +1,10 @@
-package org.eduardoleolim.organizadorpec660.shared.window.utils.macos
+package org.eduardoleolim.window.utils.macos
 
 import com.sun.jna.Function
 import com.sun.jna.Library
 import com.sun.jna.Native
 import com.sun.jna.Pointer
-import org.eduardoleolim.organizadorpec660.shared.window.utils.JnaLoader
+import org.eduardoleolim.window.utils.JnaLoader
 import java.lang.reflect.Proxy
 import java.util.*
 import java.util.logging.Level

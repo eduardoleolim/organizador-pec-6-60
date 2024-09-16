@@ -1,4 +1,4 @@
-package org.eduardoleolim.organizadorpec660.shared.window.utils.macos
+package org.eduardoleolim.window.utils.macos
 
 import com.sun.jna.NativeLong
 

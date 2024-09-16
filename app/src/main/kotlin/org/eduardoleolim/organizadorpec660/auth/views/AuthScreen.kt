@@ -29,7 +29,7 @@ import org.eduardoleolim.organizadorpec660.auth.model.AuthState
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
 import org.eduardoleolim.organizadorpec660.shared.resources.*
 import org.eduardoleolim.organizadorpec660.shared.utils.AppConfig
-import org.eduardoleolim.organizadorpec660.shared.window.LocalWindow
+import org.eduardoleolim.window.LocalWindow
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import java.awt.Dimension

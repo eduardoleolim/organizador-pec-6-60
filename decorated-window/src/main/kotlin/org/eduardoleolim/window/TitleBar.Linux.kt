@@ -1,4 +1,4 @@
-package org.eduardoleolim.organizadorpec660.shared.window
+package org.eduardoleolim.window
 
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -16,7 +16,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.jetbrains.JBR
-import org.eduardoleolim.organizadorpec660.shared.window.icons.*
+import org.eduardoleolim.window.icons.*
 import java.awt.Frame
 import java.awt.event.MouseEvent
 

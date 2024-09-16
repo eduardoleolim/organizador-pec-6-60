@@ -29,7 +29,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import org.eduardoleolim.organizadorpec660.auth.application.AuthUserResponse
 import org.eduardoleolim.organizadorpec660.home.model.HomeScreenModel
 import org.eduardoleolim.organizadorpec660.shared.resources.*
-import org.eduardoleolim.organizadorpec660.shared.window.LocalWindow
+import org.eduardoleolim.window.LocalWindow
 import org.jetbrains.compose.resources.stringResource
 import java.awt.Dimension
 

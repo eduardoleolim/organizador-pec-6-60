@@ -1,5 +1,4 @@
-package org.eduardoleolim.organizadorpec660.shared.window.modifier
-
+package org.eduardoleolim.window.modifier
 
 import androidx.compose.foundation.focusGroup
 import androidx.compose.runtime.*

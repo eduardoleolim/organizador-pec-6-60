@@ -1,4 +1,4 @@
-package org.eduardoleolim.organizadorpec660.shared.window.utils
+package org.eduardoleolim.window.utils
 
 import java.awt.Shape
 import java.awt.Window

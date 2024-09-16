@@ -1,4 +1,4 @@
-package org.eduardoleolim.organizadorpec660.shared.window
+package org.eduardoleolim.window
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.LocalContentColor
@@ -17,7 +17,6 @@ import com.jetbrains.JBR
 import com.jetbrains.WindowDecorations.CustomTitleBar
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.isActive
-import org.eduardoleolim.organizadorpec660.shared.utils.toAwt
 
 @Composable
 internal fun DecoratedWindowScope.TitleBarOnWindows(
@@ -109,3 +108,12 @@ internal fun Modifier.customTitleBarMouseEventHandler(titleBar: CustomTitleBar):
             }
         }
     }
+
+internal fun Color.toAwt(
+    red: Float = this.red,
+    green: Float = this.green,
+    blue: Float = this.blue,
+    alpha: Float = this.alpha
+): java.awt.Color {
+    return java.awt.Color(red, green, blue, alpha)
+}

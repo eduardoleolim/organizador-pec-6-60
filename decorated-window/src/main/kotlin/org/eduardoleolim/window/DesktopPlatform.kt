@@ -1,4 +1,4 @@
-package org.eduardoleolim.organizadorpec660.shared.utils
+package org.eduardoleolim.window
 
 enum class DesktopPlatform {
     Linux,

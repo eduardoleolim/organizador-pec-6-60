@@ -1,19 +1,19 @@
-package org.eduardoleolim.organizadorpec660.shared.window.icons
+package org.eduardoleolim.window.icons
 
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-private var _minimize: ImageVector? = null
+private var _maximize: ImageVector? = null
 
-val CustomIcons.Minimize: ImageVector
+val CustomIcons.Maximize: ImageVector
     get() {
-        if (_minimize != null) {
-            return _minimize!!
+        if (_maximize != null) {
+            return _maximize!!
         }
-        _minimize = ImageVector.Builder(
-            name = "CustomIcons.Minimize",
+        _maximize = ImageVector.Builder(
+            name = "CustomIcons.Maximize",
             defaultWidth = 24.dp,
             defaultHeight = 24.dp,
             viewportWidth = 24f,
@@ -28,15 +28,21 @@ val CustomIcons.Minimize: ImageVector
                 strokeLineCap = StrokeCap.Butt,
                 strokeLineJoin = StrokeJoin.Miter,
                 strokeLineMiter = 1.0f,
-                pathFillType = PathFillType.NonZero
+                pathFillType = PathFillType.EvenOdd
             ) {
-                moveTo(0f, 10.9091f)
+                moveTo(21.8182f, 2.18182f)
+                horizontalLineTo(2.18182f)
+                verticalLineTo(21.8182f)
+                horizontalLineTo(21.8182f)
+                verticalLineTo(2.18182f)
+                close()
+                moveTo(0f, 0f)
+                verticalLineTo(24f)
                 horizontalLineTo(24f)
-                verticalLineTo(13.0909f)
+                verticalLineTo(0f)
                 horizontalLineTo(0f)
-                verticalLineTo(10.9091f)
                 close()
             }
         }.build()
-        return _minimize!!
+        return _maximize!!
     }

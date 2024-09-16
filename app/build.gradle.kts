@@ -12,14 +12,19 @@ plugins {
 
 dependencies {
     implementation(project(":core"))
+    implementation(project(":decorated-window"))
     implementation(compose.desktop.currentOs) {
         exclude("org.jetbrains.compose.material")
     }
     implementation(compose.components.resources)
     implementation(compose.materialIconsExtended)
     implementation(compose.material3)
-    implementation(libs.jna.core)
-    implementation(libs.jna.platform)
+    // implementation("org.jetbrains.compose.material3:material3-window-size-class:1.7.0-beta02")
+    implementation("org.jetbrains.androidx.navigation:navigation-compose:2.8.0-alpha10")
+    implementation("org.jetbrains.compose.material3.adaptive:adaptive:1.0.0-alpha03")
+    implementation("org.jetbrains.compose.material3.adaptive:adaptive-layout:1.0.0-alpha03")
+    implementation("org.jetbrains.compose.material3.adaptive:adaptive-navigation:1.0.0-alpha03")
+    implementation("org.jetbrains.compose.material3:material3-adaptive-navigation-suite:1.7.0-beta02")
     implementation(libs.kotlinx.coroutines.swing)
     implementation(libs.voyager.navigator)
     implementation(libs.voyager.screenmodel)
@@ -27,10 +32,6 @@ dependencies {
     implementation(libs.material3.datatable)
     implementation(libs.pdfbox) {
         exclude("org.junit.jupiter")
-    }
-    implementation(libs.jSystemThemeDetector) {
-        exclude("org.slf4j")
-        exclude("net.java.dev.jna")
     }
     implementation(libs.properlty)
     implementation(libs.appdirs)

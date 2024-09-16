@@ -1,4 +1,4 @@
-package org.eduardoleolim.organizadorpec660.shared.window
+package org.eduardoleolim.window
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -21,8 +21,7 @@ import androidx.compose.ui.node.ModifierNodeElement
 import androidx.compose.ui.node.ParentDataModifierNode
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.unit.*
-import org.eduardoleolim.organizadorpec660.shared.utils.DesktopPlatform
-import org.eduardoleolim.organizadorpec660.shared.window.utils.macos.MacUtil
+import org.eduardoleolim.window.utils.macos.MacUtil
 import java.awt.Window
 import kotlin.math.max
 

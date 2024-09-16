@@ -1,7 +1,7 @@
-package org.eduardoleolim.organizadorpec660.shared.window.utils.macos
+package org.eduardoleolim.window.utils.macos
 
-import org.eduardoleolim.organizadorpec660.shared.window.utils.UnsafeAccessing
-import org.eduardoleolim.organizadorpec660.shared.window.utils.accessible
+import org.eduardoleolim.window.utils.UnsafeAccessing
+import org.eduardoleolim.window.utils.accessible
 import java.awt.Component
 import java.awt.Window
 import java.lang.reflect.InvocationTargetException

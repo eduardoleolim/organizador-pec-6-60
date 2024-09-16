@@ -1,4 +1,4 @@
-package org.eduardoleolim.organizadorpec660.shared.window.utils
+package org.eduardoleolim.window.utils
 
 import com.sun.jna.Native
 import java.util.logging.Level

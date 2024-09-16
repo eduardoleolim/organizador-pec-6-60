@@ -1,4 +1,4 @@
-package org.eduardoleolim.organizadorpec660.shared.window
+package org.eduardoleolim.window
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.padding
@@ -15,8 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.offset
 import androidx.compose.ui.window.*
 import com.jetbrains.JBR
-import org.eduardoleolim.organizadorpec660.shared.utils.DesktopPlatform
-import org.eduardoleolim.organizadorpec660.shared.window.modifier.trackWindowActivation
+import org.eduardoleolim.window.modifier.trackWindowActivation
 import java.awt.event.ComponentEvent
 import java.awt.event.ComponentListener
 import java.awt.event.WindowAdapter
@@ -251,10 +250,10 @@ value class DecoratedWindowState(val state: ULong) {
     }
 }
 
-internal data class TitleBarInfo(val title: String, val icon: Painter?)
+data class TitleBarInfo(val title: String, val icon: Painter?)
 
-internal val LocalTitleBarInfo = compositionLocalOf<TitleBarInfo> {
+val LocalTitleBarInfo = compositionLocalOf<TitleBarInfo> {
     error("LocalTitleBarInfo not provided, TitleBar must be used in DecoratedWindow")
 }
 
-internal val LocalWindow = compositionLocalOf<ComposeWindow> { error("window not provided") }
+val LocalWindow = compositionLocalOf<ComposeWindow> { error("window not provided") }

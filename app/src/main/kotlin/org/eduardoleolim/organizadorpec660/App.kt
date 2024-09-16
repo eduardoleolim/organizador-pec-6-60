@@ -33,10 +33,10 @@ import org.eduardoleolim.organizadorpec660.shared.router.Router
 import org.eduardoleolim.organizadorpec660.shared.theme.AppTheme
 import org.eduardoleolim.organizadorpec660.shared.theme.Contrast
 import org.eduardoleolim.organizadorpec660.shared.utils.AppConfig
-import org.eduardoleolim.organizadorpec660.shared.utils.DesktopPlatform
-import org.eduardoleolim.organizadorpec660.shared.utils.isSystemInDarkTheme
-import org.eduardoleolim.organizadorpec660.shared.window.DecoratedWindow
-import org.eduardoleolim.organizadorpec660.shared.window.TitleBar
+import org.eduardoleolim.window.DecoratedWindow
+import org.eduardoleolim.window.DesktopPlatform
+import org.eduardoleolim.window.TitleBar
+import org.eduardoleolim.window.isSystemInDarkTheme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import java.awt.Dimension

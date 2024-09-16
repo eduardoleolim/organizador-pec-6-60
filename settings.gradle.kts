@@ -1,5 +1,5 @@
 rootProject.name = "organizador-pec-6-60"
-include("app", "core")
+include(":core", ":decorated-window", ":app")
 
 pluginManagement {
     repositories {
