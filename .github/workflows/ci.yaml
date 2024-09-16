@@ -6,6 +6,9 @@ jobs:
   test:
     name: 🧪 Test
     runs-on: ${{ matrix.os }}
+    outputs:
+      project-version: ${{ steps.get-version.outputs.result }}
+      release-exists: ${{ steps.check-release.outputs.result }}
     strategy:
       matrix:
         os: [ windows-latest, ubuntu-latest, macos-latest ]
@@ -34,18 +37,55 @@ jobs:
       - name: 🧪 Test
         run: ./gradlew test
 
-      - name: 📝 Publish Test Report
+      - name: 📊 Upload Test Report
         uses: mikepenz/action-junit-report@v4
         if: always()
         with:
           report_paths: '**/build/test-results/test/TEST-*.xml'
           include_passed: true
 
+      - name: 📝 Get project version
+        id: get-version
+        uses: actions/github-script@v6
+        with:
+          result-encoding: string
+          script: |
+            const fs = require('fs');
+            const path = './gradle.properties';
+            const content = fs.readFileSync(path, 'utf8');
+            const versionMatch = content.match(/version\s*=\s*([^\n\r]+)/);
+            if (versionMatch) {
+              const version = versionMatch[1].trim();
+              console.log(`Version: ${version}`);
+              return version.toString()
+            } else {
+              throw new Error('Version not found in gradle.properties');
+            }
+
+      # Check if exists a release with prefix 'v'
+      - name: 🔍 Check if release exists
+        id: check-release
+        uses: actions/github-script@v6
+        with:
+          result-encoding: string
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const version = '${{ steps.get-version.outputs.result }}';
+            const { data: releases } = await github.rest.repos.listReleases({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            });
+            const exists = releases.some(release => release.name === `v${version}`);
+            console.log(`Release v${version} exists: ${exists}`);
+            return exists.toString()
+
   package:
     name: 📦 Package
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: ${{ needs.test.outputs.release-exists == 'false' }}
     needs: test
     runs-on: ${{ matrix.os }}
+    outputs:
+      project-version: ${{ needs.test.outputs.project-version }}
     strategy:
       matrix:
         os: [ windows-latest, ubuntu-latest, macos-latest ]
@@ -78,12 +118,12 @@ jobs:
         run: chmod +x gradlew
 
       - name: 📦 Package
-        run: ./gradlew packageReleaseDistributionForCurrentOS
+        run: ./gradlew packageDistributionForCurrentOS
 
       - name: 📁 Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
-          name: installers
+          name: installer-${{ matrix.os }}
           path: ${{ matrix.installer }}
           retention-days: 1
 
@@ -93,21 +133,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: 👍 Checkout
+        uses: actions/checkout@v4
+
       - name: 📦 Download artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
-          name: installers
+          merge-multiple: true
 
       - name: 📝 Generate changelog
-        id: release_changelog
-        uses: requarks/changelog-action@v1
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@v5
         with:
-          token: ${{ secrets.GITHUB_TOKEN}}
-          tag: ${{ github.ref_name }}
+          fallback-version: ${{ needs.package.outputs.project-version }}
+          skip-commit: 'true'
+          skip-bump: 'true'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          output-file: 'false'
 
       - name: 🚀 Release
         uses: softprops/action-gh-release@v2
         with:
-          body: ${{ steps.release_changelog.outputs.changes }}
+          name: ${{ steps.changelog.outputs.tag }}
+          tag_name: ${{ steps.changelog.outputs.tag }}
+          body: ${{ steps.changelog.outputs.clean_changelog }}
           files: ./build/**/*
           token: ${{ secrets.GITHUB_TOKEN }}
