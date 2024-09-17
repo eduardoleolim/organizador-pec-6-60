@@ -185,6 +185,7 @@ class App(
                         OutlinedTextField(
                             value = password,
                             onValueChange = { password = it },
+                            singleLine = true,
                             label = {
                                 Text(stringResource(Res.string.password))
                             }
