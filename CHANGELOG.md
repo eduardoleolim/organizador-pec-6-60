@@ -1,87 +1,11 @@
-# [](https://github.com/eduardoleolim/organizador-pec-6-60/compare/v2.0.0...v) (2024-09-16)
-
-# [2.0.0](https://github.com/eduardoleolim/organizador-pec-6-60/compare/d673f1deff2cb8b1e979b1aa9de61e5de1bf1bd6...v2.0.0) (2024-09-16)
+## [2.1.0](https://github.com/eduardoleolim/organizador-pec-6-60/compare/v2.0.0...v2.1.0) (2024-09-17)
 
 ### Bug Fixes
 
-* add import of
-  QueryBus ([7ac8393](https://github.com/eduardoleolim/organizador-pec-6-60/commit/7ac83935f8123e629bd5bb979c3fd18940b1f5a7))
-* **agency:** clear caches before return
-  response ([8a3baba](https://github.com/eduardoleolim/organizador-pec-6-60/commit/8a3baba8bccf9b178e942bf3744d19ade2edfab2))
-* **agency:** set column value of statistic
-  type ([2aa9280](https://github.com/eduardoleolim/organizador-pec-6-60/commit/2aa9280852beb84f232bd4a6f75f0982166b0a1c))
-* **agency:** use Agency field for default order of
-  searching ([8406e8f](https://github.com/eduardoleolim/organizador-pec-6-60/commit/8406e8f0d005d47a2d4cad2fc4ea130a930aa8a8))
-* **agency:** use repository for
-  validation ([92eb79a](https://github.com/eduardoleolim/organizador-pec-6-60/commit/92eb79af84dee7fc5dd1c450b270abc175fcdf81))
-* **app:** downgrade voyager to switch material theme
-  correctly ([328e263](https://github.com/eduardoleolim/organizador-pec-6-60/commit/328e263c462276c3ca30332212567da0c85cb597))
-* **app:** set value
-  skiko.renderApi ([7694ab0](https://github.com/eduardoleolim/organizador-pec-6-60/commit/7694ab054f8ed027b6be8526e80f124b26be5e2f))
-* **auth:** restore window size when
-  logout ([461aee8](https://github.com/eduardoleolim/organizador-pec-6-60/commit/461aee854bc4c8a4a38addc32936211cea6b7665))
-* **command-handler:** rollback transaction if either is
-  left ([ef146c7](https://github.com/eduardoleolim/organizador-pec-6-60/commit/ef146c7cfcdf9ccc0adc701d71edb9c3c3b9a4a3))
-* **composable:** disable trailingIcon of
-  select ([7a930e9](https://github.com/eduardoleolim/organizador-pec-6-60/commit/7a930e923692a64e0fce586b0a8fc7beb9c1ecd8))
-* **composable:** focus next element to
-  select ([6cf1de8](https://github.com/eduardoleolim/organizador-pec-6-60/commit/6cf1de81f44d2424ae11c93e28d77e83f5133801))
-* **criteria:** fix initialization of
-  OrderType ([03b6239](https://github.com/eduardoleolim/organizador-pec-6-60/commit/03b6239724a3632f79890eb3df6a0eb7d3150725))
-* **federal-entity:** add or conditions to
-  query ([5bd851b](https://github.com/eduardoleolim/organizador-pec-6-60/commit/5bd851b426fc36d82e2dcf9cfe1ec88f9d24bbaf))
-* **federal-entity:** update form state on update or create
-  failure ([ad1c825](https://github.com/eduardoleolim/organizador-pec-6-60/commit/ad1c82545f8dcdbaf1059641cc86666d6fc91af6))
-* **home:** assing property of HomeConfig
-  correctly ([1143111](https://github.com/eduardoleolim/organizador-pec-6-60/commit/11431116e96d0a7b34da3f7edbbb6195ba94b896))
-* initialize agency searcher in app
-  module ([56ba5d3](https://github.com/eduardoleolim/organizador-pec-6-60/commit/56ba5d3d81507f4b70dc0f58d58c2a17f928951a))
-* **instrument-type:** show correct title of
-  form ([88ea56d](https://github.com/eduardoleolim/organizador-pec-6-60/commit/88ea56dc15949147b7aa2c67ef864440795abc19))
-* **instrument-type:** use count() in criteria
-  parser ([2d26ff8](https://github.com/eduardoleolim/organizador-pec-6-60/commit/2d26ff8fa957734409480846a0410d146ddc8c08))
-* **instrument:** assign commands handler
-  correctly ([e948f9b](https://github.com/eduardoleolim/organizador-pec-6-60/commit/e948f9b92962dcadc023472c4217c2203a1433a9))
-* **instrument:** delete instrument before instrument
-  file ([ff955ea](https://github.com/eduardoleolim/organizador-pec-6-60/commit/ff955ea10f55a801d1f70de9c49e864eeb59244d))
-* **instrument:** set correctly federal entity id filter in
-  criteria ([dedb01c](https://github.com/eduardoleolim/organizador-pec-6-60/commit/dedb01c49ddb827a36f09ee8f9472190d6998c25))
-* **instrument:** set month
-  parameter ([d952fd0](https://github.com/eduardoleolim/organizador-pec-6-60/commit/d952fd06ad9215815ed77b77831f5a206ddabe6b))
-* **instrument:** validate month between 1 and
-  12 ([1fe4714](https://github.com/eduardoleolim/organizador-pec-6-60/commit/1fe4714349cae67d0227269df165b2d5b114316e))
-* **instrument:** validate month between 1 and 12
-  correctly ([6a44eca](https://github.com/eduardoleolim/organizador-pec-6-60/commit/6a44eca2de8ddca53abc23cd1f57e1d10c489b06))
-* **municipality:** avoid loop in federal entities
-  searching ([a9502ac](https://github.com/eduardoleolim/organizador-pec-6-60/commit/a9502aca01e1773ed775af9ef3f8bc24eb06369f))
-* **municipality:** check if municipality exists by keyCode and federal
-  entity ([ca17cbb](https://github.com/eduardoleolim/organizador-pec-6-60/commit/ca17cbb0e893b4eafa26a5d4d05d825f365defd9))
-* **municipality:** select from municipality table in
-  count ([95b1eab](https://github.com/eduardoleolim/organizador-pec-6-60/commit/95b1eab100916d98778a5dae6043aab0d18b160a))
-* **municipality:** set keyCode when save
-  record ([c5a0b0a](https://github.com/eduardoleolim/organizador-pec-6-60/commit/c5a0b0aac96074d559fb88808b352a3f7597d241))
-* **municipality:** set parameters correctly in
-  updater ([6c6330a](https://github.com/eduardoleolim/organizador-pec-6-60/commit/6c6330abd026a37e2cdd8512cb24f9f02c2e74c0))
-* **municipality:** validate
-  correctly ([4ae150d](https://github.com/eduardoleolim/organizador-pec-6-60/commit/4ae150dce95ad81f855a6079110db5f3629e3ff7))
-* **municipality:** validate duplicates correctly by federal entity
-  id ([efb36cb](https://github.com/eduardoleolim/organizador-pec-6-60/commit/efb36cb431dc51bc05a71594f37624b510bd5cdd))
-* **pdf-viewer:** scroll page vertically on one page
-  mode ([35e0fce](https://github.com/eduardoleolim/organizador-pec-6-60/commit/35e0fcec5cf9529ec90ae3abd312a3c03b3f36a5))
-* **role:** make private constructor's
-  parameters ([554a0a8](https://github.com/eduardoleolim/organizador-pec-6-60/commit/554a0a82c46f03dfa94815a681c46947da276e29))
-* round clickable titlebar
-  item ([8e541d8](https://github.com/eduardoleolim/organizador-pec-6-60/commit/8e541d84e50de6006a007010e5817352472d0be0))
-* save database password
-  correctly ([6b59c75](https://github.com/eduardoleolim/organizador-pec-6-60/commit/6b59c758bd74f90a5a6f9eef8cd6fa35921848c0))
-* **statistic-type:** inject instrument-type
-  repository ([0b85a1f](https://github.com/eduardoleolim/organizador-pec-6-60/commit/0b85a1f5348ed511bb1a28249c34234fa1f0a2b0))
-* **statistic-type:** set limit and offset
-  correctly ([213ba5d](https://github.com/eduardoleolim/organizador-pec-6-60/commit/213ba5d5b77671604ff37a34c416db5f0b483f90))
-* **temp:** delete temp directory before app
-  closes ([eaf9e4c](https://github.com/eduardoleolim/organizador-pec-6-60/commit/eaf9e4cfa8c96d32e19eb08a55514535d60fd3b1))
-* **titlebar:** set close button's color as
-  red ([0facbca](https://github.com/eduardoleolim/organizador-pec-6-60/commit/0facbca0d8800b5478a4b732885155913c34bfdc))
+* don't allow multiline
+  password ([c8e8a55](https://github.com/eduardoleolim/organizador-pec-6-60/commit/c8e8a552bd284602c7ea3202041399ff1387d246))
+
+## [2.0.0](https://github.com/eduardoleolim/organizador-pec-6-60/compare/d673f1deff2cb8b1e979b1aa9de61e5de1bf1bd6...v2.0.0) (2024-09-16)
 
 ### Features
 
@@ -612,10 +536,88 @@
 * **window:** switch theme among light, dark and default
   theme ([91e1985](https://github.com/eduardoleolim/organizador-pec-6-60/commit/91e1985ed1446ee6081936631dd61cf0d0656f06))
 
+### Bug Fixes
+
+* add import of
+  QueryBus ([7ac8393](https://github.com/eduardoleolim/organizador-pec-6-60/commit/7ac83935f8123e629bd5bb979c3fd18940b1f5a7))
+* **agency:** clear caches before return
+  response ([8a3baba](https://github.com/eduardoleolim/organizador-pec-6-60/commit/8a3baba8bccf9b178e942bf3744d19ade2edfab2))
+* **agency:** set column value of statistic
+  type ([2aa9280](https://github.com/eduardoleolim/organizador-pec-6-60/commit/2aa9280852beb84f232bd4a6f75f0982166b0a1c))
+* **agency:** use Agency field for default order of
+  searching ([8406e8f](https://github.com/eduardoleolim/organizador-pec-6-60/commit/8406e8f0d005d47a2d4cad2fc4ea130a930aa8a8))
+* **agency:** use repository for
+  validation ([92eb79a](https://github.com/eduardoleolim/organizador-pec-6-60/commit/92eb79af84dee7fc5dd1c450b270abc175fcdf81))
+* **app:** downgrade voyager to switch material theme
+  correctly ([328e263](https://github.com/eduardoleolim/organizador-pec-6-60/commit/328e263c462276c3ca30332212567da0c85cb597))
+* **app:** set value
+  skiko.renderApi ([7694ab0](https://github.com/eduardoleolim/organizador-pec-6-60/commit/7694ab054f8ed027b6be8526e80f124b26be5e2f))
+* **auth:** restore window size when
+  logout ([461aee8](https://github.com/eduardoleolim/organizador-pec-6-60/commit/461aee854bc4c8a4a38addc32936211cea6b7665))
+* **command-handler:** rollback transaction if either is
+  left ([ef146c7](https://github.com/eduardoleolim/organizador-pec-6-60/commit/ef146c7cfcdf9ccc0adc701d71edb9c3c3b9a4a3))
+* **composable:** disable trailingIcon of
+  select ([7a930e9](https://github.com/eduardoleolim/organizador-pec-6-60/commit/7a930e923692a64e0fce586b0a8fc7beb9c1ecd8))
+* **composable:** focus next element to
+  select ([6cf1de8](https://github.com/eduardoleolim/organizador-pec-6-60/commit/6cf1de81f44d2424ae11c93e28d77e83f5133801))
+* **criteria:** fix initialization of
+  OrderType ([03b6239](https://github.com/eduardoleolim/organizador-pec-6-60/commit/03b6239724a3632f79890eb3df6a0eb7d3150725))
+* **federal-entity:** add or conditions to
+  query ([5bd851b](https://github.com/eduardoleolim/organizador-pec-6-60/commit/5bd851b426fc36d82e2dcf9cfe1ec88f9d24bbaf))
+* **federal-entity:** update form state on update or create
+  failure ([ad1c825](https://github.com/eduardoleolim/organizador-pec-6-60/commit/ad1c82545f8dcdbaf1059641cc86666d6fc91af6))
+* **home:** assing property of HomeConfig
+  correctly ([1143111](https://github.com/eduardoleolim/organizador-pec-6-60/commit/11431116e96d0a7b34da3f7edbbb6195ba94b896))
+* initialize agency searcher in app
+  module ([56ba5d3](https://github.com/eduardoleolim/organizador-pec-6-60/commit/56ba5d3d81507f4b70dc0f58d58c2a17f928951a))
+* **instrument-type:** show correct title of
+  form ([88ea56d](https://github.com/eduardoleolim/organizador-pec-6-60/commit/88ea56dc15949147b7aa2c67ef864440795abc19))
+* **instrument-type:** use count() in criteria
+  parser ([2d26ff8](https://github.com/eduardoleolim/organizador-pec-6-60/commit/2d26ff8fa957734409480846a0410d146ddc8c08))
+* **instrument:** assign commands handler
+  correctly ([e948f9b](https://github.com/eduardoleolim/organizador-pec-6-60/commit/e948f9b92962dcadc023472c4217c2203a1433a9))
+* **instrument:** delete instrument before instrument
+  file ([ff955ea](https://github.com/eduardoleolim/organizador-pec-6-60/commit/ff955ea10f55a801d1f70de9c49e864eeb59244d))
+* **instrument:** set correctly federal entity id filter in
+  criteria ([dedb01c](https://github.com/eduardoleolim/organizador-pec-6-60/commit/dedb01c49ddb827a36f09ee8f9472190d6998c25))
+* **instrument:** set month
+  parameter ([d952fd0](https://github.com/eduardoleolim/organizador-pec-6-60/commit/d952fd06ad9215815ed77b77831f5a206ddabe6b))
+* **instrument:** validate month between 1 and
+  12 ([1fe4714](https://github.com/eduardoleolim/organizador-pec-6-60/commit/1fe4714349cae67d0227269df165b2d5b114316e))
+* **instrument:** validate month between 1 and 12
+  correctly ([6a44eca](https://github.com/eduardoleolim/organizador-pec-6-60/commit/6a44eca2de8ddca53abc23cd1f57e1d10c489b06))
+* **municipality:** avoid loop in federal entities
+  searching ([a9502ac](https://github.com/eduardoleolim/organizador-pec-6-60/commit/a9502aca01e1773ed775af9ef3f8bc24eb06369f))
+* **municipality:** check if municipality exists by keyCode and federal
+  entity ([ca17cbb](https://github.com/eduardoleolim/organizador-pec-6-60/commit/ca17cbb0e893b4eafa26a5d4d05d825f365defd9))
+* **municipality:** select from municipality table in
+  count ([95b1eab](https://github.com/eduardoleolim/organizador-pec-6-60/commit/95b1eab100916d98778a5dae6043aab0d18b160a))
+* **municipality:** set keyCode when save
+  record ([c5a0b0a](https://github.com/eduardoleolim/organizador-pec-6-60/commit/c5a0b0aac96074d559fb88808b352a3f7597d241))
+* **municipality:** set parameters correctly in
+  updater ([6c6330a](https://github.com/eduardoleolim/organizador-pec-6-60/commit/6c6330abd026a37e2cdd8512cb24f9f02c2e74c0))
+* **municipality:** validate
+  correctly ([4ae150d](https://github.com/eduardoleolim/organizador-pec-6-60/commit/4ae150dce95ad81f855a6079110db5f3629e3ff7))
+* **municipality:** validate duplicates correctly by federal entity
+  id ([efb36cb](https://github.com/eduardoleolim/organizador-pec-6-60/commit/efb36cb431dc51bc05a71594f37624b510bd5cdd))
+* **pdf-viewer:** scroll page vertically on one page
+  mode ([35e0fce](https://github.com/eduardoleolim/organizador-pec-6-60/commit/35e0fcec5cf9529ec90ae3abd312a3c03b3f36a5))
+* **role:** make private constructor's
+  parameters ([554a0a8](https://github.com/eduardoleolim/organizador-pec-6-60/commit/554a0a82c46f03dfa94815a681c46947da276e29))
+* round clickable titlebar
+  item ([8e541d8](https://github.com/eduardoleolim/organizador-pec-6-60/commit/8e541d84e50de6006a007010e5817352472d0be0))
+* save database password
+  correctly ([6b59c75](https://github.com/eduardoleolim/organizador-pec-6-60/commit/6b59c758bd74f90a5a6f9eef8cd6fa35921848c0))
+* **statistic-type:** inject instrument-type
+  repository ([0b85a1f](https://github.com/eduardoleolim/organizador-pec-6-60/commit/0b85a1f5348ed511bb1a28249c34234fa1f0a2b0))
+* **statistic-type:** set limit and offset
+  correctly ([213ba5d](https://github.com/eduardoleolim/organizador-pec-6-60/commit/213ba5d5b77671604ff37a34c416db5f0b483f90))
+* **temp:** delete temp directory before app
+  closes ([eaf9e4c](https://github.com/eduardoleolim/organizador-pec-6-60/commit/eaf9e4cfa8c96d32e19eb08a55514535d60fd3b1))
+* **titlebar:** set close button's color as
+  red ([0facbca](https://github.com/eduardoleolim/organizador-pec-6-60/commit/0facbca0d8800b5478a4b732885155913c34bfdc))
+
 ### Reverts
 
 * re-set JAVA_HOME to
   PATH ([0e24432](https://github.com/eduardoleolim/organizador-pec-6-60/commit/0e2443240df7de9d007331d24e8e749be5c957a2))
-
-
-
