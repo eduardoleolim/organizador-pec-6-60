@@ -93,73 +93,93 @@ compose.desktop {
 }
 
 afterEvaluate {
+    fun updateDebPackage(
+        packageName: String,
+        targetFormat: TargetFormat,
+        tempDir: File,
+        helpersDir: File,
+        installerDir: File
+    ) {
+        val policy = helpersDir.resolve("./org.eduardoleolim.organizador-pec-6-60.policy").normalize()
+        val postInstScript = helpersDir.resolve("./DEBIAN/postinst").normalize()
+        val preRmScript = helpersDir.resolve("./DEBIAN/prerm").normalize()
+        val newPolicy = tempDir.resolve("./usr/local/share/${packageName}/${policy.name}").normalize()
+        val newPostInstScript = tempDir.resolve("./DEBIAN/postinst").normalize()
+        val newPreRmScript = tempDir.resolve("./DEBIAN/prerm").normalize()
+        val desktopDir = tempDir.resolve("./opt/${packageName}/lib").normalize()
+        val modifiedInstaller = tempDir.resolve("./${packageName}_modified${targetFormat.fileExt}").normalize()
+
+        tempDir.mkdirs()
+        val debInstaller: File = installerDir.walk().first { it.isFile && it.name.endsWith(targetFormat.fileExt) }
+
+        val unpackProcess = ProcessBuilder("dpkg-deb", "-R", debInstaller.absolutePath, tempDir.absolutePath)
+            .inheritIO()
+            .start()
+        unpackProcess.waitFor()
+
+        val desktopFile = desktopDir.walk().first { it.isFile && it.name.endsWith(".desktop") }
+
+        desktopFile.apply {
+            val desktopContent = readLines().joinToString("\n") {
+                when {
+                    it.startsWith("Exec=") -> "Exec=pkexec /opt/${packageName}/bin/${packageName}"
+                    it.startsWith("Name=") -> "Name=Organizador PEC-6-60"
+                    else -> it
+                }
+            }
+            writeText(desktopContent)
+            renameTo(desktopFile.parentFile.resolve("org.eduardoleolim.${packageName}.desktop"))
+        }
+
+        newPolicy.parentFile.mkdirs()
+        Files.copy(
+            policy.toPath(),
+            newPolicy.toPath(),
+            StandardCopyOption.COPY_ATTRIBUTES,
+            StandardCopyOption.REPLACE_EXISTING
+        )
+        Files.copy(
+            postInstScript.toPath(),
+            newPostInstScript.toPath(),
+            StandardCopyOption.COPY_ATTRIBUTES,
+            StandardCopyOption.REPLACE_EXISTING
+        )
+        Files.copy(
+            preRmScript.toPath(),
+            newPreRmScript.toPath(),
+            StandardCopyOption.COPY_ATTRIBUTES,
+            StandardCopyOption.REPLACE_EXISTING
+        )
+
+        val repackProcess =
+            ProcessBuilder("dpkg-deb", "--build", tempDir.absolutePath, modifiedInstaller.absolutePath)
+                .inheritIO()
+                .start()
+        repackProcess.waitFor()
+
+        modifiedInstaller.copyTo(debInstaller, true)
+
+        tempDir.deleteRecursively()
+    }
+
     tasks.named<AbstractJPackageTask>("packageDeb") {
         val tempDir = project.layout.buildDirectory.dir("./compose/tmp/$name/deb-mod").get().asFile
         val helpersDir = project.layout.projectDirectory.dir("helpers/linux").asFile
         val installerDir = destinationDir.get().asFile
 
-        val policy = helpersDir.resolve("./org.eduardoleolim.organizador-pec-6-60.policy").normalize()
-        val postInstScript = helpersDir.resolve("./DEBIAN/postinst").normalize()
-        val preRmScript = helpersDir.resolve("./DEBIAN/prerm").normalize()
-        val newPolicy = tempDir.resolve("./usr/local/share/${packageName.get()}/${policy.name}").normalize()
-        val newPostInstScript = tempDir.resolve("./DEBIAN/postinst").normalize()
-        val newPreRmScript = tempDir.resolve("./DEBIAN/prerm").normalize()
-        val desktopDir = tempDir.resolve("./opt/${packageName.get()}/lib").normalize()
-        val modifiedInstaller = tempDir.resolve("./${packageName.get()}_modified${targetFormat.fileExt}").normalize()
+        doLast {
+            updateDebPackage(packageName.get(), targetFormat, tempDir, helpersDir, installerDir)
+            logger.lifecycle("The distribution was modified with a custom launcher script")
+        }
+    }
+
+    tasks.named<AbstractJPackageTask>("packageReleaseDeb") {
+        val tempDir = project.layout.buildDirectory.dir("./compose/tmp/$name/deb-mod").get().asFile
+        val helpersDir = project.layout.projectDirectory.dir("helpers/linux").asFile
+        val installerDir = destinationDir.get().asFile
 
         doLast {
-            tempDir.mkdirs()
-            val debInstaller: File = installerDir.walk().first { it.isFile && it.name.endsWith(targetFormat.fileExt) }
-
-            val unpackProcess = ProcessBuilder("dpkg-deb", "-R", debInstaller.absolutePath, tempDir.absolutePath)
-                .inheritIO()
-                .start()
-            unpackProcess.waitFor()
-
-            val desktopFile = desktopDir.walk().first { it.isFile && it.name.endsWith(".desktop") }
-
-            desktopFile.apply {
-                val desktopContent = readLines().joinToString("\n") {
-                    when {
-                        it.startsWith("Exec=") -> "Exec=pkexec /opt/${packageName.get()}/bin/${packageName.get()}"
-                        it.startsWith("Name=") -> "Name=Organizador PEC-6-60"
-                        else -> it
-                    }
-                }
-                writeText(desktopContent)
-                renameTo(desktopFile.parentFile.resolve("org.eduardoleolim.${packageName.get()}.desktop"))
-            }
-
-            newPolicy.parentFile.mkdirs()
-            Files.copy(
-                policy.toPath(),
-                newPolicy.toPath(),
-                StandardCopyOption.COPY_ATTRIBUTES,
-                StandardCopyOption.REPLACE_EXISTING
-            )
-            Files.copy(
-                postInstScript.toPath(),
-                newPostInstScript.toPath(),
-                StandardCopyOption.COPY_ATTRIBUTES,
-                StandardCopyOption.REPLACE_EXISTING
-            )
-            Files.copy(
-                preRmScript.toPath(),
-                newPreRmScript.toPath(),
-                StandardCopyOption.COPY_ATTRIBUTES,
-                StandardCopyOption.REPLACE_EXISTING
-            )
-
-            val repackProcess =
-                ProcessBuilder("dpkg-deb", "--build", tempDir.absolutePath, modifiedInstaller.absolutePath)
-                    .inheritIO()
-                    .start()
-            repackProcess.waitFor()
-
-            modifiedInstaller.copyTo(debInstaller, true)
-
-            tempDir.deleteRecursively()
-
+            updateDebPackage(packageName.get(), targetFormat, tempDir, helpersDir, installerDir)
             logger.lifecycle("The distribution was modified with a custom launcher script")
         }
     }
