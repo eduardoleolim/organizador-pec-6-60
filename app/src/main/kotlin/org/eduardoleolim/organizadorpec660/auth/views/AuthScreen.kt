@@ -35,7 +35,7 @@ import org.jetbrains.compose.resources.stringResource
 import java.awt.Dimension
 
 class AuthScreen(private val queryBus: QueryBus) : Screen {
-    private val appVersion = AppConfig["app.version"]!!
+    private val appVersion = AppConfig.version
 
     @Composable
     override fun Content() {
