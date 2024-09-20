@@ -2,6 +2,7 @@
     <string name="app_name">Organizador PEC-6-60</string>
 
     <!-- Common -->
+    <string name="default_error_message">Ocurrió un error, Por favor inténtalo más tarde</string>
     <string name="table_col_actions">Acciones</string>
     <string name="table_show_items">Mostrar %1$s registros</string>
     <string name="table_search">Buscar</string>

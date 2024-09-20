@@ -34,6 +34,7 @@ import org.eduardoleolim.organizadorpec660.auth.model.AuthState
 import org.eduardoleolim.organizadorpec660.auth.model.InvalidCredentialsException
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
 import org.eduardoleolim.organizadorpec660.shared.resources.*
+import org.eduardoleolim.organizadorpec660.shared.utils.generateErrorsLog
 import org.eduardoleolim.window.LocalWindow
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -99,8 +100,9 @@ class AuthScreen(private val queryBus: QueryBus) : Screen {
         var isUsernameError by remember { mutableStateOf(false) }
         var isPasswordError by remember { mutableStateOf(false) }
         var isCredentialsError by remember { mutableStateOf(false) }
-        var usernameSupportingText by remember { mutableStateOf(null as String?) }
-        var passwordSupportingText by remember { mutableStateOf(null as String?) }
+        var usernameSupportingText by remember { mutableStateOf<String?>(null) }
+        var passwordSupportingText by remember { mutableStateOf<String?>(null) }
+        var loginErrorText by remember { mutableStateOf<String?>(null) }
 
         when (val authState = screenModel.authState) {
             AuthState.Idle -> {
@@ -110,6 +112,7 @@ class AuthScreen(private val queryBus: QueryBus) : Screen {
                 isCredentialsError = false
                 usernameSupportingText = null
                 passwordSupportingText = null
+                loginErrorText = null
             }
 
             AuthState.InProgress -> {
@@ -119,6 +122,7 @@ class AuthScreen(private val queryBus: QueryBus) : Screen {
                 isCredentialsError = false
                 usernameSupportingText = null
                 passwordSupportingText = null
+                loginErrorText = null
             }
 
             is AuthState.Success -> {
@@ -133,6 +137,7 @@ class AuthScreen(private val queryBus: QueryBus) : Screen {
                         isCredentialsError = true
                         isPasswordError = true
                         isUsernameError = true
+                        loginErrorText = stringResource(Res.string.auth_invalid_credentials)
                     }
 
                     is InvalidCredentialsException -> {
@@ -148,7 +153,9 @@ class AuthScreen(private val queryBus: QueryBus) : Screen {
                     }
 
                     else -> {
-                        println("Error: ${error.message}")
+                        isCredentialsError = true
+                        loginErrorText = stringResource(Res.string.default_error_message)
+                        generateErrorsLog("auth", error)
                     }
                 }
             }
@@ -184,9 +191,9 @@ class AuthScreen(private val queryBus: QueryBus) : Screen {
 
             Spacer(Modifier.height(24.dp))
 
-            AnimatedVisibility(isCredentialsError) {
+            AnimatedVisibility(isCredentialsError && loginErrorText != null) {
                 Text(
-                    text = stringResource(Res.string.auth_invalid_credentials),
+                    text = loginErrorText ?: "",
                     color = MaterialTheme.colorScheme.error
                 )
 
