@@ -44,7 +44,9 @@ class SaveInstrumentScreen(
         }
         var instrumentSelected by remember { mutableStateOf<String?>(null) }
 
-        Column(modifier = Modifier.padding(24.dp)) {
+        Column(
+            modifier = Modifier.padding(24.dp)
+        ) {
             SaveInstrumentScreenHeader(
                 onCancelRequest = { screenModel.goBackToInstrumentView() }
             )
@@ -64,7 +66,8 @@ class SaveInstrumentScreen(
                     PdfViewer(
                         pdfPath = instrumentSelected,
                         isReaderMode = true,
-                        modifier = Modifier.fillMaxHeight()
+                        modifier = Modifier
+                            .fillMaxHeight()
                             .padding(top = 16.dp, bottom = 16.dp, end = 16.dp),
                         containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                         topBarColor = MaterialTheme.colorScheme.surfaceContainerHighest,
@@ -236,13 +239,15 @@ class SaveInstrumentScreen(
         }
 
         Surface(
-            modifier = Modifier.width(300.dp)
+            modifier = Modifier
+                .width(300.dp)
                 .padding(start = 16.dp, top = 16.dp, bottom = 16.dp),
             color = MaterialTheme.colorScheme.surfaceContainerHigh,
             shape = MaterialTheme.shapes.large,
         ) {
             Column(
-                modifier = Modifier.fillMaxHeight()
+                modifier = Modifier
+                    .fillMaxHeight()
                     .padding(16.dp)
                     .verticalScroll(scrollState)
             ) {
@@ -356,6 +361,7 @@ class SaveInstrumentScreen(
 
                 Button(
                     enabled = enabled,
+                    modifier = Modifier.fillMaxWidth(),
                     onClick = {
                         if (instrumentId == null) {
                             screenModel.saveInstrument(
@@ -377,8 +383,7 @@ class SaveInstrumentScreen(
                                 documentPath
                             )
                         }
-                    },
-                    modifier = Modifier.fillMaxWidth()
+                    }
                 ) {
                     Text(stringResource(Res.string.save))
                 }

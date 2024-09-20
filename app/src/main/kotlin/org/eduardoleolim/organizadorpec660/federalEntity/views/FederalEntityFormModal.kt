@@ -129,7 +129,8 @@ fun FederalEntityScreen.FederalEntityFormModal(
                     supportingText = keyCodeSupportingText?.let { message ->
                         { Text(text = message, color = MaterialTheme.colorScheme.error) }
                     },
-                    modifier = Modifier.width(300.dp)
+                    modifier = Modifier
+                        .width(300.dp)
                         .onFocusChanged {
                             if (!it.isFocused && keyCode.isNotEmpty()) {
                                 keyCode = keyCode.padStart(2, '0')

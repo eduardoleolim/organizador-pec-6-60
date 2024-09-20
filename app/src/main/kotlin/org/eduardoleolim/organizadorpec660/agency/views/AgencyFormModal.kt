@@ -227,7 +227,8 @@ fun AgencyScreen.AgencyFormModal(
                         supportingText = consecutiveSupportingText?.let { message ->
                             { Text(text = message, color = MaterialTheme.colorScheme.error) }
                         },
-                        modifier = Modifier.width(240.dp)
+                        modifier = Modifier
+                            .width(240.dp)
                             .onFocusChanged {
                                 if (!it.isFocused && consecutive.isNotEmpty()) {
                                     consecutive = consecutive.padStart(4, '0')

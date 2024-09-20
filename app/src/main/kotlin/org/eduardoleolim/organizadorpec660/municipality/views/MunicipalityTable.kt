@@ -233,7 +233,8 @@ private fun SelectFederalEntity(
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            modifier = Modifier.heightIn(0.dp, 300.dp)
+            modifier = Modifier
+                .heightIn(0.dp, 300.dp)
                 .background(MaterialTheme.colorScheme.surface)
         ) {
             DropdownMenuItem(

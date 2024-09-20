@@ -100,6 +100,7 @@ fun FederalEntityScreen.FederalEntitiesTable(
         color = MaterialTheme.colorScheme.surfaceContainerHighest
     ) {
         PaginatedDataTable(
+            modifier = Modifier.fillMaxWidth(),
             total = data.total,
             value = value,
             onValueChange = onValueChange,
@@ -108,8 +109,7 @@ fun FederalEntityScreen.FederalEntitiesTable(
             pageSizes = pageSizes,
             onSearch = { search, pageIndex, pageSize, sortBy, isAscending ->
                 onSearch(search, pageIndex, pageSize, sortBy?.let { orders[it] }, isAscending)
-            },
-            modifier = Modifier.fillMaxWidth()
+            }
         ) {
             val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
             data.federalEntities.forEach { federalEntity ->

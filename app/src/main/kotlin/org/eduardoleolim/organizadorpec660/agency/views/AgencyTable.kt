@@ -107,6 +107,7 @@ fun AgencyScreen.AgenciesTable(
         color = MaterialTheme.colorScheme.surfaceContainerHighest
     ) {
         PaginatedDataTable(
+            modifier = Modifier.fillMaxWidth(),
             total = data.total,
             value = value,
             onValueChange = onValueChange,
@@ -124,8 +125,7 @@ fun AgencyScreen.AgenciesTable(
                 }
 
                 onSearch(search, pageIndex, pageSize, orderBy, isAscending)
-            },
-            modifier = Modifier.fillMaxWidth()
+            }
         ) {
             val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
             data.agencies.forEach { agency ->

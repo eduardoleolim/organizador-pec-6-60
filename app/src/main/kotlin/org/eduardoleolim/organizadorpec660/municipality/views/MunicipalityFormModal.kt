@@ -153,7 +153,7 @@ fun MunicipalityScreen.MunicipalityFormModal(
                     modifier = Modifier.width(300.dp)
                 )
 
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(Modifier.height(32.dp))
 
                 OutlinedTextField(
                     enabled = true,
@@ -171,7 +171,8 @@ fun MunicipalityScreen.MunicipalityFormModal(
                     supportingText = keyCodeSupportingText?.let { message ->
                         { Text(text = message, color = MaterialTheme.colorScheme.error) }
                     },
-                    modifier = Modifier.width(300.dp)
+                    modifier = Modifier
+                        .width(300.dp)
                         .onFocusChanged {
                             if (!it.isFocused && keyCode.isNotEmpty()) {
                                 keyCode = keyCode.padStart(3, '0')
@@ -179,7 +180,7 @@ fun MunicipalityScreen.MunicipalityFormModal(
                         }
                 )
 
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(Modifier.height(32.dp))
 
                 OutlinedTextField(
                     enabled = true,

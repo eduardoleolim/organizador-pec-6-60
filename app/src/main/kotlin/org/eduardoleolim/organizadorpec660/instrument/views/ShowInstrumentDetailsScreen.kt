@@ -43,7 +43,9 @@ class ShowInstrumentDetailsScreen(
             screenModel.searchInstrument(instrumentId)
         }
 
-        Column(modifier = Modifier.padding(24.dp)) {
+        Column(
+            modifier = Modifier.padding(24.dp)
+        ) {
             ShowInstrumentDetailsScreenHeader(
                 onCancelRequest = { screenModel.goBackToInstrumentView() }
             )
@@ -60,7 +62,8 @@ class ShowInstrumentDetailsScreen(
                     PdfViewer(
                         pdfPath = tempInstrumentFile?.absolutePath,
                         isReaderMode = true,
-                        modifier = Modifier.fillMaxHeight()
+                        modifier = Modifier
+                            .fillMaxHeight()
                             .padding(top = 16.dp, bottom = 16.dp, end = 16.dp),
                         containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                         topBarColor = MaterialTheme.colorScheme.surfaceContainerHighest,
@@ -108,13 +111,15 @@ class ShowInstrumentDetailsScreen(
             remember(instrument) { instrument?.let { if (instrument.saved) Res.string.inst_in_sireso_yes else Res.string.inst_in_sireso_no } }
 
         Surface(
-            modifier = Modifier.width(300.dp)
+            modifier = Modifier
+                .width(300.dp)
                 .padding(start = 16.dp, top = 16.dp, bottom = 16.dp),
             color = MaterialTheme.colorScheme.surfaceContainerHigh,
             shape = MaterialTheme.shapes.large,
         ) {
             Column(
-                modifier = Modifier.fillMaxHeight()
+                modifier = Modifier
+                    .fillMaxHeight()
                     .padding(16.dp)
                     .verticalScroll(verticalScrollState)
             ) {

@@ -403,7 +403,8 @@ private fun SelectStatisticYear(statisticYear: Int?, years: List<Int>, onYearSel
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            modifier = Modifier.heightIn(0.dp, 300.dp)
+            modifier = Modifier
+                .heightIn(0.dp, 300.dp)
                 .background(MaterialTheme.colorScheme.surface)
         ) {
             DropdownMenuItem(
@@ -468,7 +469,8 @@ private fun SelectStatisticMonth(
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            modifier = Modifier.heightIn(0.dp, 300.dp)
+            modifier = Modifier
+                .heightIn(0.dp, 300.dp)
                 .background(MaterialTheme.colorScheme.surface)
         ) {
             DropdownMenuItem(
@@ -536,7 +538,8 @@ private fun SelectFederalEntity(
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            modifier = Modifier.heightIn(0.dp, 300.dp)
+            modifier = Modifier
+                .heightIn(0.dp, 300.dp)
                 .background(MaterialTheme.colorScheme.surface)
         ) {
             DropdownMenuItem(
@@ -604,7 +607,8 @@ private fun SelectMunicipality(
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            modifier = Modifier.heightIn(0.dp, 300.dp)
+            modifier = Modifier
+                .heightIn(0.dp, 300.dp)
                 .background(MaterialTheme.colorScheme.surface)
         ) {
             DropdownMenuItem(
@@ -672,7 +676,8 @@ private fun SelectAgency(
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            modifier = Modifier.heightIn(0.dp, 300.dp)
+            modifier = Modifier
+                .heightIn(0.dp, 300.dp)
                 .background(MaterialTheme.colorScheme.surface)
         ) {
             DropdownMenuItem(

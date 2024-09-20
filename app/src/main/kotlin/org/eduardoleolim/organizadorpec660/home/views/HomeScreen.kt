@@ -80,7 +80,8 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
     ) {
         ModalDrawerSheet {
             Row(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -221,7 +222,8 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
         ) {
             Row {
                 NavigationRail(
-                    modifier = Modifier.width(116.dp)
+                    modifier = Modifier
+                        .width(116.dp)
                         .padding(horizontal = 16.dp),
                     containerColor = MaterialTheme.colorScheme.surfaceContainer,
                     header = {
@@ -248,7 +250,8 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
                 }
 
                 Surface(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
                         .padding(start = 8.dp, end = 24.dp, top = 24.dp, bottom = 24.dp),
                     color = MaterialTheme.colorScheme.surfaceContainerHigh,
                     shape = MaterialTheme.shapes.large,
