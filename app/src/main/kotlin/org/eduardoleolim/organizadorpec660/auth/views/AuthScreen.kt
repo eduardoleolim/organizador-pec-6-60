@@ -1,17 +1,23 @@
 package org.eduardoleolim.organizadorpec660.auth.views
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -37,14 +43,17 @@ import java.awt.Dimension
 class AuthScreen(private val queryBus: QueryBus) : Screen {
     private val appVersion = AppConfig.version
 
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     @Composable
     override fun Content() {
-        val navigator = LocalNavigator.currentOrThrow
         val window = LocalWindow.current
+        val windowSize = calculateWindowSizeClass()
+        val density = LocalDensity.current
+        val navigator = LocalNavigator.currentOrThrow
         val screenModel = rememberScreenModel { AuthScreenModel(navigator, queryBus, Dispatchers.IO) }
 
         LaunchedEffect(Unit) {
-            val dimension = Dimension(800, 600)
+            val dimension = with(density) { Dimension(800.dp.roundToPx(), 600.dp.roundToPx()) }
             window.apply {
                 minimumSize = dimension
                 size = dimension
@@ -53,21 +62,35 @@ class AuthScreen(private val queryBus: QueryBus) : Screen {
             }
         }
 
-        Row {
-            Image(
-                painter = painterResource(Res.drawable.login_background),
-                contentDescription = "Fountain of the Four Rivers",
-                modifier = Modifier.fillMaxWidth(0.5f)
-                    .fillMaxHeight(),
-                contentScale = ContentScale.Crop
-            )
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .animateContentSize()
+        ) {
+            AnimatedVisibility(
+                visible = windowSize.widthSizeClass != WindowWidthSizeClass.Compact,
+                modifier = Modifier.weight(1f)
+            ) {
+                Image(
+                    painter = painterResource(Res.drawable.login_background),
+                    contentDescription = "Fountain of the Four Rivers",
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
+            }
 
-            AuthForm(screenModel)
+            AuthForm(
+                modifier = Modifier.weight(1f),
+                screenModel = screenModel
+            )
         }
     }
 
     @Composable
-    private fun AuthForm(screenModel: AuthScreenModel) {
+    private fun AuthForm(
+        modifier: Modifier = Modifier,
+        screenModel: AuthScreenModel
+    ) {
         var username by remember { mutableStateOf("") }
         var password by remember { mutableStateOf("") }
 
@@ -135,7 +158,10 @@ class AuthScreen(private val queryBus: QueryBus) : Screen {
         }
 
         Column(
-            modifier = Modifier.padding(horizontal = 32.dp, vertical = 24.dp),
+            modifier = Modifier
+                .fillMaxHeight()
+                .padding(horizontal = 32.dp, vertical = 24.dp)
+                .then(modifier),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -161,7 +187,7 @@ class AuthScreen(private val queryBus: QueryBus) : Screen {
 
             Spacer(Modifier.height(24.dp))
 
-            if (isCredentialsError) {
+            AnimatedVisibility(isCredentialsError) {
                 Text(
                     text = stringResource(Res.string.auth_invalid_credentials),
                     color = MaterialTheme.colorScheme.error
@@ -175,7 +201,7 @@ class AuthScreen(private val queryBus: QueryBus) : Screen {
                 label = { Text(stringResource(Res.string.auth_username)) },
                 value = username,
                 onValueChange = { username = it },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.width(320.dp),
                 singleLine = true,
                 isError = isUsernameError || isCredentialsError,
                 supportingText = usernameSupportingText?.let { message ->
@@ -190,7 +216,7 @@ class AuthScreen(private val queryBus: QueryBus) : Screen {
                 label = { Text(stringResource(Res.string.auth_password)) },
                 value = password,
                 onValueChange = { password = it },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.width(320.dp),
                 singleLine = true,
                 isError = isPasswordError || isCredentialsError,
                 supportingText = passwordSupportingText?.let { message ->
@@ -212,7 +238,7 @@ class AuthScreen(private val queryBus: QueryBus) : Screen {
             Button(
                 enabled = enabled,
                 onClick = { screenModel.login(username, password) },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.width(320.dp),
             ) {
                 if (screenModel.authState != AuthState.InProgress && enabled) {
                     Text(stringResource(Res.string.auth_login))
