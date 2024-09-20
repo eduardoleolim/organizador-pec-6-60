@@ -13,17 +13,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.eduardoleolim.organizadorpec660.auth.application.AuthUserResponse
 import org.eduardoleolim.organizadorpec660.auth.application.authenticate.AuthenticateUserQuery
-import org.eduardoleolim.organizadorpec660.auth.data.InvalidCredentialsException
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryHandlerExecutionError
 import org.eduardoleolim.organizadorpec660.shared.router.MainProvider
-
-sealed class AuthState {
-    data object Idle : AuthState()
-    data object InProgress : AuthState()
-    data class Success(val user: AuthUserResponse) : AuthState()
-    data class Error(val error: Throwable) : AuthState()
-}
+import org.eduardoleolim.organizadorpec660.shared.utils.AppConfig
 
 class AuthScreenModel(
     private val navigator: Navigator,
@@ -33,7 +26,21 @@ class AuthScreenModel(
     var authState by mutableStateOf<AuthState>(AuthState.Idle)
         private set
 
-    fun login(username: String, password: String) {
+    val appVersion = AppConfig.version
+
+    var credentials by mutableStateOf(Credentials())
+        private set
+
+    fun updateUsername(newUsername: String) {
+        credentials = credentials.copy(username = newUsername)
+    }
+
+    fun updatePassword(newPassword: String) {
+        credentials = credentials.copy(password = newPassword)
+    }
+
+    fun login() {
+        val (username, password) = credentials
         screenModelScope.launch(dispatcher) {
             authState = AuthState.InProgress
             delay(500)
@@ -55,7 +62,7 @@ class AuthScreenModel(
         }
     }
 
-    fun navigateToHomeView(user: AuthUserResponse) {
+    fun navigateToHomeScreen(user: AuthUserResponse) {
         authState = AuthState.Idle
         navigator.push(ScreenRegistry.get(MainProvider.HomeScreen(user)))
     }

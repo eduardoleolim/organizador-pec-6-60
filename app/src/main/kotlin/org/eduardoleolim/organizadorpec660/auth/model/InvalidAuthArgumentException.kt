@@ -1,4 +1,4 @@
-package org.eduardoleolim.organizadorpec660.auth.data
+package org.eduardoleolim.organizadorpec660.auth.model
 
 sealed class InvalidAuthArgumentException(message: String?) : IllegalArgumentException(message)
 

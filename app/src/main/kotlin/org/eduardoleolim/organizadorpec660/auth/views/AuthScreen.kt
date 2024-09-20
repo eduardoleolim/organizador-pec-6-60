@@ -28,21 +28,18 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import kotlinx.coroutines.Dispatchers
-import org.eduardoleolim.organizadorpec660.auth.data.InvalidCredentialsException
 import org.eduardoleolim.organizadorpec660.auth.domain.InvalidAuthCredentialsError
 import org.eduardoleolim.organizadorpec660.auth.model.AuthScreenModel
 import org.eduardoleolim.organizadorpec660.auth.model.AuthState
+import org.eduardoleolim.organizadorpec660.auth.model.InvalidCredentialsException
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
 import org.eduardoleolim.organizadorpec660.shared.resources.*
-import org.eduardoleolim.organizadorpec660.shared.utils.AppConfig
 import org.eduardoleolim.window.LocalWindow
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import java.awt.Dimension
 
 class AuthScreen(private val queryBus: QueryBus) : Screen {
-    private val appVersion = AppConfig.version
-
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     @Composable
     override fun Content() {
@@ -91,8 +88,8 @@ class AuthScreen(private val queryBus: QueryBus) : Screen {
         modifier: Modifier = Modifier,
         screenModel: AuthScreenModel
     ) {
-        var username by remember { mutableStateOf("") }
-        var password by remember { mutableStateOf("") }
+        val credentials = screenModel.credentials
+        val appVersion = screenModel.appVersion
 
         var isPasswordVisible by remember { mutableStateOf(false) }
         val visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation()
@@ -125,7 +122,7 @@ class AuthScreen(private val queryBus: QueryBus) : Screen {
             }
 
             is AuthState.Success -> {
-                screenModel.navigateToHomeView(authState.user)
+                screenModel.navigateToHomeScreen(authState.user)
             }
 
             is AuthState.Error -> {
@@ -199,8 +196,8 @@ class AuthScreen(private val queryBus: QueryBus) : Screen {
             OutlinedTextField(
                 enabled = enabled,
                 label = { Text(stringResource(Res.string.auth_username)) },
-                value = username,
-                onValueChange = { username = it },
+                value = credentials.username,
+                onValueChange = { screenModel.updateUsername(it) },
                 modifier = Modifier.width(320.dp),
                 singleLine = true,
                 isError = isUsernameError || isCredentialsError,
@@ -214,8 +211,8 @@ class AuthScreen(private val queryBus: QueryBus) : Screen {
             OutlinedTextField(
                 enabled = enabled,
                 label = { Text(stringResource(Res.string.auth_password)) },
-                value = password,
-                onValueChange = { password = it },
+                value = credentials.password,
+                onValueChange = { screenModel.updatePassword(it) },
                 modifier = Modifier.width(320.dp),
                 singleLine = true,
                 isError = isPasswordError || isCredentialsError,
@@ -237,7 +234,7 @@ class AuthScreen(private val queryBus: QueryBus) : Screen {
 
             Button(
                 enabled = enabled,
-                onClick = { screenModel.login(username, password) },
+                onClick = { screenModel.login() },
                 modifier = Modifier.width(320.dp),
             ) {
                 if (screenModel.authState != AuthState.InProgress && enabled) {
