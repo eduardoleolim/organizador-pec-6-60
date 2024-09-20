@@ -21,6 +21,6 @@ fun main() {
     } catch (e: Exception) {
         println(e.localizedMessage)
 
-        generateErrorsLog(e)
+        generateErrorsLog("main", e)
     }
 }
