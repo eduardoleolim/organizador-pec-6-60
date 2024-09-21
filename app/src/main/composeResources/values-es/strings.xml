@@ -49,7 +49,7 @@
     <string name="inst_in_sireso_no">No</string>
     <string name="inst_federal_entity">Entidad federativa</string>
     <string name="inst_municipality">Municipio</string>
-    <string name="inst_agency">Fuente</string>
+    <string name="inst_agency">Establecimiento</string>
     <string name="inst_statistic_type">Tipo de estadística</string>
     <string name="inst_year">Año</string>
     <string name="inst_month">Mes</string>
@@ -57,9 +57,9 @@
     <string name="inst_select_all_years">Todos los años</string>
     <string name="inst_select_all_months">Todos los meses</string>
     <string name="inst_select_all_statistic_types">Todos los tipos de estadística</string>
-    <string name="inst_select_all_federal_entities">Todas la entidades federativas</string>
+    <string name="inst_select_all_federal_entities">Todas las entidades federativas</string>
     <string name="inst_select_all_municipalities">Todos los municipios</string>
-    <string name="inst_select_all_agencies">Todas las fuentes</string>
+    <string name="inst_select_all_agencies">Todos los establecimientos</string>
     <string name="inst_copy_document">Copiar documento</string>
     <string name="inst_show_details">Mostrar detalles</string>
     <string name="inst_copy_notification_title">Instrumento copiado a portapapeles</string>
@@ -135,19 +135,19 @@
     <string name="st_form_already_exists">Ya existe un tipo de estadística con esa clave</string>
 
     <!-- Agency -->
-    <string name="agencies">Fuentes</string>
+    <string name="agencies">Establecimientos</string>
     <string name="ag_name">Nombre</string>
     <string name="ag_consecutive">Consecutivo</string>
     <string name="ag_municipality">Municipio</string>
     <string name="ag_created_at">Fecha de registro</string>
     <string name="ag_updated_at">Última actualización</string>
-    <string name="ag_delete_title">¿Eliminar la fuente?</string>
-    <string name="ag_delete_error_default">Ocurrió un error mientras se trataba de eliminar la fuente</string>
+    <string name="ag_delete_title">¿Eliminar el establecimiento?</string>
+    <string name="ag_delete_error_default">Ocurrió un error mientras se trataba de eliminar el establecimiento</string>
     <string name="ag_delete_error_not_found">No se encontró la agencia</string>
-    <string name="ag_delete_error_has_instruments">La fuente no puede ser eliminada porque tiene instrumentos asociados</string>
-    <string name="ag_delete_text">La fuente %1$s será eliminada permanentemente de la aplicación</string>
-    <string name="ag_form_add_title">Agregar fuente</string>
-    <string name="ag_form_edit_title">Editar fuente</string>
+    <string name="ag_delete_error_has_instruments">El establecimiento no puede ser eliminada porque tiene instrumentos asociados</string>
+    <string name="ag_delete_text">El establecimiento %1$s será eliminada permanentemente de la aplicación</string>
+    <string name="ag_form_add_title">Agregar establecimiento</string>
+    <string name="ag_form_edit_title">Editar establecimiento</string>
     <string name="ag_form_general">Datos generales</string>
     <string name="ag_form_federal_entity">Entidad federativa</string>
     <string name="ag_form_municipality">Municipio</string>
