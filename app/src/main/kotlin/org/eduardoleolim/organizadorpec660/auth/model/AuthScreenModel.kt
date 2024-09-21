@@ -64,6 +64,7 @@ class AuthScreenModel(
 
     fun navigateToHomeScreen(user: AuthUserResponse) {
         authState = AuthState.Idle
+        credentials = Credentials()
         navigator.push(ScreenRegistry.get(MainProvider.HomeScreen(user)))
     }
 }
