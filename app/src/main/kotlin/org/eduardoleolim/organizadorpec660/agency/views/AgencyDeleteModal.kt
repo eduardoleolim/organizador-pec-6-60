@@ -30,6 +30,12 @@ fun AgencyScreen.AgencyDeleteModal(
     var errorOccurred by remember { mutableStateOf(false) }
     var errorMessage: String? by remember { mutableStateOf(null) }
 
+    DisposableEffect(Unit) {
+        onDispose {
+            screenModel.resetDeleteModal()
+        }
+    }
+
     when (val deleteState = screenModel.deleteState) {
         AgencyDeleteState.Idle -> {
             errorOccurred = false
