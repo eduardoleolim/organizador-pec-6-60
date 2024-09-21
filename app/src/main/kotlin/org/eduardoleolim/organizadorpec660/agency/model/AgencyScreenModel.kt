@@ -46,13 +46,6 @@ data class SearchAgencyParameters(
     val offset: Int?
 )
 
-sealed class AgencyDeleteState {
-    data object Idle : AgencyDeleteState()
-    data object InProgress : AgencyDeleteState()
-    data object Success : AgencyDeleteState()
-    data class Error(val message: String) : AgencyDeleteState()
-}
-
 class AgencyScreenModel(
     private val queryBus: QueryBus,
     private val commandBus: CommandBus,
