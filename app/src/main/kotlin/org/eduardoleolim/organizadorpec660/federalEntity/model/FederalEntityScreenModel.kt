@@ -11,9 +11,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntitiesResponse
+import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorpec660.federalEntity.application.create.CreateFederalEntityCommand
 import org.eduardoleolim.organizadorpec660.federalEntity.application.delete.DeleteFederalEntityCommand
 import org.eduardoleolim.organizadorpec660.federalEntity.application.importer.CsvImportFederalEntitiesCommand
+import org.eduardoleolim.organizadorpec660.federalEntity.application.searchById.SearchFederalEntityByIdQuery
 import org.eduardoleolim.organizadorpec660.federalEntity.application.searchByTerm.SearchFederalEntitiesByTermQuery
 import org.eduardoleolim.organizadorpec660.federalEntity.application.update.UpdateFederalEntityCommand
 import org.eduardoleolim.organizadorpec660.federalEntity.data.EmptyFederalEntityDataException
@@ -26,28 +28,6 @@ import org.eduardoleolim.organizadorpec660.shared.resources.fe_name
 import org.jetbrains.compose.resources.getString
 import java.io.File
 import java.io.IOException
-
-sealed class FederalEntityFormState {
-    data object Idle : FederalEntityFormState()
-    data object InProgress : FederalEntityFormState()
-    data object SuccessCreate : FederalEntityFormState()
-    data object SuccessEdit : FederalEntityFormState()
-    data class Error(val error: Throwable) : FederalEntityFormState()
-}
-
-sealed class FederalEntityDeleteState {
-    data object Idle : FederalEntityDeleteState()
-    data object InProgress : FederalEntityDeleteState()
-    data object Success : FederalEntityDeleteState()
-    data class Error(val error: Throwable) : FederalEntityDeleteState()
-}
-
-sealed class FederalEntityImportState {
-    data object Idle : FederalEntityImportState()
-    data object InProgress : FederalEntityImportState()
-    data class Success(val warnings: List<Throwable> = emptyList()) : FederalEntityImportState()
-    data class Error(val error: Throwable) : FederalEntityImportState()
-}
 
 class FederalEntityScreenModel(
     private val queryBus: QueryBus,
@@ -68,8 +48,31 @@ class FederalEntityScreenModel(
     var importState by mutableStateOf<FederalEntityImportState>(FederalEntityImportState.Idle)
         private set
 
+    var federalEntity by mutableStateOf(FederalEntityFormData())
+        private set
+
+    fun searchFederalEntity(federalEntityId: String?) {
+        screenModelScope.launch(dispatcher) {
+            federalEntity = if (federalEntityId == null) {
+                FederalEntityFormData()
+            } else {
+                val federalEntity = queryBus.ask<FederalEntityResponse>(SearchFederalEntityByIdQuery(federalEntityId))
+                FederalEntityFormData(federalEntity.id, federalEntity.name, federalEntity.keyCode)
+            }
+        }
+    }
+
+    fun updateName(name: String) {
+        federalEntity = federalEntity.copy(name = name)
+    }
+
+    fun updateKeyCode(keyCode: String) {
+        federalEntity = federalEntity.copy(keyCode = keyCode)
+    }
+
     fun resetFormModal() {
         formState = FederalEntityFormState.Idle
+        federalEntity = FederalEntityFormData()
     }
 
     fun resetDeleteModal() {
@@ -96,59 +99,55 @@ class FederalEntityScreenModel(
         }
     }
 
-    fun createFederalEntity(keyCode: String, name: String) {
+    fun saveFederalEntity() {
         screenModelScope.launch(dispatcher) {
-            formState = FederalEntityFormState.InProgress
-            delay(500)
-
+            val (id, name, keyCode) = federalEntity
             val isKeyCodeEmpty = keyCode.isEmpty()
             val isNameEmpty = name.isEmpty()
+
+            formState = FederalEntityFormState.InProgress
+            delay(500)
 
             if (isKeyCodeEmpty || isNameEmpty) {
                 formState = FederalEntityFormState.Error(EmptyFederalEntityDataException(isKeyCodeEmpty, isNameEmpty))
                 return@launch
             }
 
-            try {
-                commandBus.dispatch(CreateFederalEntityCommand(keyCode, name)).fold(
-                    ifRight = {
-                        formState = FederalEntityFormState.SuccessCreate
-                    },
-                    ifLeft = {
-                        formState = FederalEntityFormState.Error(it)
-                    }
-                )
-            } catch (e: Exception) {
-                formState = FederalEntityFormState.Error(e.cause!!)
+            if (id == null) {
+                createFederalEntity(keyCode, name)
+            } else {
+                updateFederalEntity(id, keyCode, name)
             }
         }
     }
 
-    fun editFederalEntity(federalEntityId: String, keyCode: String, name: String) {
-        screenModelScope.launch(dispatcher) {
-            formState = FederalEntityFormState.InProgress
-            delay(500)
+    private fun createFederalEntity(keyCode: String, name: String) {
+        try {
+            commandBus.dispatch(CreateFederalEntityCommand(keyCode, name)).fold(
+                ifRight = {
+                    formState = FederalEntityFormState.SuccessCreate
+                },
+                ifLeft = {
+                    formState = FederalEntityFormState.Error(it)
+                }
+            )
+        } catch (e: Exception) {
+            formState = FederalEntityFormState.Error(e.cause!!)
+        }
+    }
 
-            val isKeyCodeEmpty = keyCode.isEmpty()
-            val isNameEmpty = name.isEmpty()
-
-            if (isKeyCodeEmpty || isNameEmpty) {
-                formState = FederalEntityFormState.Error(EmptyFederalEntityDataException(isKeyCodeEmpty, isNameEmpty))
-                return@launch
-            }
-
-            try {
-                commandBus.dispatch(UpdateFederalEntityCommand(federalEntityId, keyCode, name)).fold(
-                    ifRight = {
-                        formState = FederalEntityFormState.SuccessEdit
-                    },
-                    ifLeft = {
-                        formState = FederalEntityFormState.Error(it)
-                    }
-                )
-            } catch (e: Exception) {
-                formState = FederalEntityFormState.Error(e.cause!!)
-            }
+    private fun updateFederalEntity(id: String, keyCode: String, name: String) {
+        try {
+            commandBus.dispatch(UpdateFederalEntityCommand(id, keyCode, name)).fold(
+                ifRight = {
+                    formState = FederalEntityFormState.SuccessEdit
+                },
+                ifLeft = {
+                    formState = FederalEntityFormState.Error(it)
+                }
+            )
+        } catch (e: Exception) {
+            formState = FederalEntityFormState.Error(e.cause!!)
         }
     }
 

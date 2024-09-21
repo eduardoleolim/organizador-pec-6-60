@@ -91,10 +91,9 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
 
             when {
                 showFormModal -> {
-                    screenModel.resetFormModal()
                     FederalEntityFormModal(
                         screenModel = screenModel,
-                        federalEntity = selectedFederalEntity,
+                        federalEntityId = selectedFederalEntity?.id,
                         onDismissRequest = { resetScreen() },
                         onSuccess = { resetScreen() }
                     )

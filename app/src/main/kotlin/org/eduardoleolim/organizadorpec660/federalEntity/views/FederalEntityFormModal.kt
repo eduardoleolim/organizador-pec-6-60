@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorpec660.federalEntity.data.EmptyFederalEntityDataException
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityAlreadyExistsError
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.InvalidFederalEntityKeyCodeError
@@ -23,22 +22,27 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun FederalEntityScreen.FederalEntityFormModal(
     screenModel: FederalEntityScreenModel,
-    federalEntity: FederalEntityResponse?,
+    federalEntityId: String?,
     onSuccess: () -> Unit,
     onDismissRequest: () -> Unit
 ) {
-    val federalEntityId = remember { federalEntity?.id }
-    var keyCode by remember { mutableStateOf(federalEntity?.keyCode ?: "") }
-    var name by remember { mutableStateOf(federalEntity?.name ?: "") }
-
-    val titleResource = remember {
-        if (federalEntity == null) Res.string.fe_form_add_title else Res.string.fe_form_edit_title
-    }
+    val title =
+        remember { if (federalEntityId == null) Res.string.fe_form_add_title else Res.string.fe_form_edit_title }
     var enabled by remember { mutableStateOf(true) }
     var isKeyCodeError by remember { mutableStateOf(false) }
     var isNameError by remember { mutableStateOf(false) }
     var keyCodeSupportingText: String? by remember { mutableStateOf(null) }
     var nameSupportingText: String? by remember { mutableStateOf(null) }
+
+    val federalEntity = screenModel.federalEntity
+
+    DisposableEffect(Unit) {
+        screenModel.searchFederalEntity(federalEntityId)
+
+        onDispose {
+            screenModel.resetFormModal()
+        }
+    }
 
     when (val formState = screenModel.formState) {
         FederalEntityFormState.Idle -> {
@@ -110,7 +114,7 @@ fun FederalEntityScreen.FederalEntityFormModal(
         ),
         onDismissRequest = onDismissRequest,
         title = {
-            Text(stringResource(titleResource))
+            Text(stringResource(title))
         },
         text = {
             Column {
@@ -118,10 +122,10 @@ fun FederalEntityScreen.FederalEntityFormModal(
                     label = {
                         Text(stringResource(Res.string.fe_keycode))
                     },
-                    value = keyCode,
+                    value = federalEntity.keyCode,
                     onValueChange = {
                         if (Regex("[0-9]{0,2}").matches(it)) {
-                            keyCode = it
+                            screenModel.updateKeyCode(it)
                         }
                     },
                     singleLine = true,
@@ -132,8 +136,8 @@ fun FederalEntityScreen.FederalEntityFormModal(
                     modifier = Modifier
                         .width(300.dp)
                         .onFocusChanged {
-                            if (!it.isFocused && keyCode.isNotEmpty()) {
-                                keyCode = keyCode.padStart(2, '0')
+                            if (!it.isFocused && federalEntity.keyCode.isNotEmpty()) {
+                                screenModel.updateKeyCode(federalEntity.keyCode.padStart(2, '0'))
                             }
                         }
                 )
@@ -144,8 +148,8 @@ fun FederalEntityScreen.FederalEntityFormModal(
                     label = {
                         Text(stringResource(Res.string.fe_name))
                     },
-                    value = name,
-                    onValueChange = { name = it.uppercase() },
+                    value = federalEntity.name,
+                    onValueChange = { screenModel.updateName(it.uppercase()) },
                     singleLine = true,
                     isError = isNameError,
                     supportingText = nameSupportingText?.let { message ->
@@ -158,13 +162,7 @@ fun FederalEntityScreen.FederalEntityFormModal(
         confirmButton = {
             TextButton(
                 enabled = enabled,
-                onClick = {
-                    if (federalEntity != null) {
-                        screenModel.editFederalEntity(federalEntityId!!, keyCode, name)
-                    } else {
-                        screenModel.createFederalEntity(keyCode, name)
-                    }
-                }
+                onClick = { screenModel.saveFederalEntity() }
             ) {
                 Text(stringResource(Res.string.save))
             }
