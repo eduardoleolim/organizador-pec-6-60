@@ -26,14 +26,7 @@ fun AgencyScreen.AgencyFormModal(
     onSuccess: () -> Unit,
     onDismissRequest: () -> Unit
 ) {
-    val agency = screenModel.agency
-    val federalEntities = screenModel.federalEntities
-    val municipalities = screenModel.municipalities
-    val federalEntityIndex = federalEntities.indexOfFirst { it.id == agency.federalEntity?.id }.takeIf { it != -1 }
-    val municipalityIndex = municipalities.indexOfFirst { it.id == agency.municipality?.id }.takeIf { it != -1 }
-
-    val titleResource =
-        remember { if (agencyId == null) Res.string.ag_form_add_title else Res.string.ag_form_edit_title }
+    val title = remember { if (agencyId == null) Res.string.ag_form_add_title else Res.string.ag_form_edit_title }
     var enabled by remember { mutableStateOf(true) }
     var isNameError by remember { mutableStateOf(false) }
     var isConsecutiveError by remember { mutableStateOf(false) }
@@ -45,8 +38,15 @@ fun AgencyScreen.AgencyFormModal(
     var federalEntitySupportingText by remember { mutableStateOf<String?>(null) }
     var municipalitySupportingText by remember { mutableStateOf<String?>(null) }
     var statisticTypeSupportingText by remember { mutableStateOf<String?>(null) }
-
     val formScrollState = rememberScrollState()
+
+    val federalEntities = screenModel.federalEntities
+    val municipalities = screenModel.municipalities
+    val agency = screenModel.agency
+    val federalEntity = agency.federalEntity
+    val municipality = agency.municipality
+    val federalEntityIndex = federalEntities.indexOfFirst { it.id == federalEntity?.id }.takeIf { it != -1 }
+    val municipalityIndex = municipalities.indexOfFirst { it.id == municipality?.id }.takeIf { it != -1 }
 
     DisposableEffect(Unit) {
         screenModel.searchAllFederalEntities()
@@ -58,8 +58,8 @@ fun AgencyScreen.AgencyFormModal(
         }
     }
 
-    LaunchedEffect(agency.federalEntity) {
-        screenModel.searchMunicipalities(agency.federalEntity?.id)
+    LaunchedEffect(federalEntity) {
+        screenModel.searchMunicipalities(federalEntity?.id)
     }
 
     when (val formState = screenModel.formState) {
@@ -142,7 +142,7 @@ fun AgencyScreen.AgencyFormModal(
         ),
         onDismissRequest = onDismissRequest,
         title = {
-            Text(stringResource(titleResource))
+            Text(stringResource(title))
         },
         text = {
             Column(
@@ -163,7 +163,9 @@ fun AgencyScreen.AgencyFormModal(
                             Text(stringResource(Res.string.ag_name))
                         },
                         value = agency.name,
-                        onValueChange = { screenModel.updateName(it.uppercase()) },
+                        onValueChange = {
+                            screenModel.updateName(it.uppercase())
+                        },
                         singleLine = true,
                         isError = isNameError,
                         supportingText = nameSupportingText?.let { message ->
@@ -231,7 +233,7 @@ fun AgencyScreen.AgencyFormModal(
                     Spacer(Modifier.width(32.dp))
 
                     OutlinedSelect(
-                        enabled = agency.federalEntity?.id != null,
+                        enabled = federalEntity != null,
                         items = municipalities,
                         index = municipalityIndex,
                         onValueSelected = { _, item ->
@@ -251,16 +253,38 @@ fun AgencyScreen.AgencyFormModal(
 
                 Spacer(Modifier.height(32.dp))
 
-                Text(
-                    text = stringResource(Res.string.ag_form_statistic_types),
-                    style = MaterialTheme.typography.titleMedium
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(Res.string.ag_form_statistic_types),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+
+                    Spacer(Modifier.width(16.dp))
+
+                    statisticTypeSupportingText?.let { message ->
+                        Text(
+                            text = message,
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                }
 
                 Spacer(Modifier.height(8.dp))
 
                 Column {
                     screenModel.statisticTypes.forEach { statisticType ->
                         val isChecked = agency.statisticTypes.firstOrNull { it.id == statisticType.id } != null
+                        val checkboxColors = if (isStatisticTypeError) {
+                            CheckboxDefaults.colors(
+                                checkedColor = MaterialTheme.colorScheme.error,
+                                uncheckedColor = MaterialTheme.colorScheme.error
+                            )
+                        } else {
+                            CheckboxDefaults.colors()
+                        }
 
                         Row(
                             modifier = Modifier
@@ -282,7 +306,8 @@ fun AgencyScreen.AgencyFormModal(
                         ) {
                             Checkbox(
                                 checked = isChecked,
-                                onCheckedChange = null
+                                onCheckedChange = null,
+                                colors = checkboxColors
                             )
                             Text(
                                 text = "${statisticType.keyCode} - ${statisticType.name}",
