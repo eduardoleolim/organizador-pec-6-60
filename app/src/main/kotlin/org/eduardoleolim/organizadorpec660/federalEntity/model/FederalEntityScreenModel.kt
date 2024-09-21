@@ -122,32 +122,34 @@ class FederalEntityScreenModel(
     }
 
     private fun createFederalEntity(keyCode: String, name: String) {
-        try {
-            commandBus.dispatch(CreateFederalEntityCommand(keyCode, name)).fold(
+        formState = try {
+            val command = CreateFederalEntityCommand(keyCode, name)
+            commandBus.dispatch(command).fold(
                 ifRight = {
-                    formState = FederalEntityFormState.SuccessCreate
+                    FederalEntityFormState.SuccessCreate
                 },
                 ifLeft = {
-                    formState = FederalEntityFormState.Error(it)
+                    FederalEntityFormState.Error(it)
                 }
             )
         } catch (e: Exception) {
-            formState = FederalEntityFormState.Error(e.cause!!)
+            FederalEntityFormState.Error(e.cause!!)
         }
     }
 
     private fun updateFederalEntity(id: String, keyCode: String, name: String) {
-        try {
-            commandBus.dispatch(UpdateFederalEntityCommand(id, keyCode, name)).fold(
+        formState = try {
+            val command = UpdateFederalEntityCommand(id, keyCode, name)
+            commandBus.dispatch(command).fold(
                 ifRight = {
-                    formState = FederalEntityFormState.SuccessEdit
+                    FederalEntityFormState.SuccessEdit
                 },
                 ifLeft = {
-                    formState = FederalEntityFormState.Error(it)
+                    FederalEntityFormState.Error(it)
                 }
             )
         } catch (e: Exception) {
-            formState = FederalEntityFormState.Error(e.cause!!)
+            FederalEntityFormState.Error(e.cause!!)
         }
     }
 
@@ -156,18 +158,18 @@ class FederalEntityScreenModel(
             deleteState = FederalEntityDeleteState.InProgress
             delay(500)
 
-            try {
-                commandBus.dispatch(DeleteFederalEntityCommand(federalEntityId)).fold(
+            deleteState = try {
+                val command = DeleteFederalEntityCommand(federalEntityId)
+                commandBus.dispatch(command).fold(
                     ifRight = {
-                        deleteState = FederalEntityDeleteState.Success
+                        FederalEntityDeleteState.Success
                     },
                     ifLeft = {
-                        deleteState = FederalEntityDeleteState.Error(it)
+                        FederalEntityDeleteState.Error(it)
                     }
                 )
-
             } catch (e: Exception) {
-                deleteState = FederalEntityDeleteState.Error(e.cause!!)
+                FederalEntityDeleteState.Error(e.cause!!)
             }
         }
     }
@@ -195,7 +197,8 @@ class FederalEntityScreenModel(
             delay(500)
 
             val input = KotlinCsvFederalEntityImportInput(file, keyCodeHeader, nameHeader)
-            importState = commandBus.dispatch(CsvImportFederalEntitiesCommand(input, true))
+            val command = CsvImportFederalEntitiesCommand(input, true)
+            importState = commandBus.dispatch(command)
                 .fold(
                     ifRight = { warnings ->
                         FederalEntityImportState.Success(warnings.map { it.error })
