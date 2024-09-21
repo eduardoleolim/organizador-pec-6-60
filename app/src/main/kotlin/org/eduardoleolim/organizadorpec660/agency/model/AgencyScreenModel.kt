@@ -69,19 +69,19 @@ class AgencyScreenModel(
     var deleteState by mutableStateOf<AgencyDeleteState>(AgencyDeleteState.Idle)
         private set
 
-    var agency by mutableStateOf(Agency())
+    var agency by mutableStateOf(AgencyFormData())
         private set
 
     fun searchAgency(agencyId: String?) {
         screenModelScope.launch(dispatcher) {
             agency = if (agencyId == null) {
-                Agency()
+                AgencyFormData()
             } else {
                 val agencyResponse = queryBus.ask<AgencyResponse>(SearchAgencyByIdQuery(agencyId))
                 val federalEntityResponse =
                     queryBus.ask<FederalEntityResponse>(SearchFederalEntityByIdQuery(agencyResponse.municipality.federalEntityId))
 
-                Agency(
+                AgencyFormData(
                     agencyResponse.id,
                     agencyResponse.name,
                     agencyResponse.consecutive,
@@ -135,7 +135,7 @@ class AgencyScreenModel(
 
     fun resetForm() {
         formState = AgencyFormState.Idle
-        agency = Agency()
+        agency = AgencyFormData()
     }
 
     fun resetDeleteModal() {

@@ -4,7 +4,7 @@ import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEnti
 import org.eduardoleolim.organizadorpec660.municipality.application.SimpleMunicipalityResponse
 import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypeResponse
 
-data class Agency(
+data class AgencyFormData(
     val id: String? = null,
     val name: String = "",
     val consecutive: String = "",
