@@ -86,10 +86,9 @@ class AgencyScreen(private val queryBus: QueryBus, private val commandBus: Comma
 
             when {
                 showFormModal -> {
-                    screenModel.resetForm()
                     AgencyFormModal(
                         screenModel = screenModel,
-                        agency = selectedAgency,
+                        agencyId = selectedAgency?.id,
                         onDismissRequest = { resetScreen() },
                         onSuccess = { resetScreen() }
                     )

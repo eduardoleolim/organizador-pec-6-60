@@ -2,48 +2,38 @@ package org.eduardoleolim.organizadorpec660.agency.views
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import com.seanproctor.datatable.DataColumn
-import com.seanproctor.datatable.TableColumnWidth
-import com.seanproctor.datatable.material3.DataTable
-import kotlinx.coroutines.delay
-import org.eduardoleolim.organizadorpec660.agency.application.AgencyResponse
 import org.eduardoleolim.organizadorpec660.agency.data.EmptyAgencyDataException
 import org.eduardoleolim.organizadorpec660.agency.model.AgencyFormState
 import org.eduardoleolim.organizadorpec660.agency.model.AgencyScreenModel
 import org.eduardoleolim.organizadorpec660.shared.composables.OutlinedSelect
 import org.eduardoleolim.organizadorpec660.shared.resources.*
-import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypeResponse
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun AgencyScreen.AgencyFormModal(
     screenModel: AgencyScreenModel,
-    agency: AgencyResponse?,
+    agencyId: String?,
     onSuccess: () -> Unit,
     onDismissRequest: () -> Unit
 ) {
-    val agencyId = remember { agency?.id }
-    var name by remember { mutableStateOf(agency?.name ?: "") }
-    var consecutive by remember { mutableStateOf(agency?.consecutive ?: "") }
-    var federalEntityIndex by remember { mutableStateOf<Int?>(null) }
-    var federalEntityId by remember { mutableStateOf(agency?.municipality?.federalEntityId) }
-    var municipalityIndex by remember { mutableStateOf<Int?>(null) }
-    var municipalityId by remember { mutableStateOf(agency?.municipality?.id) }
-    var statisticType by remember { mutableStateOf<StatisticTypeResponse?>(null) }
-    var statisticTypes by remember { mutableStateOf(agency?.statisticTypes ?: emptyList()) }
+    val agency = screenModel.agency
+    val federalEntities = screenModel.federalEntities
+    val municipalities = screenModel.municipalities
+    val federalEntityIndex = federalEntities.indexOfFirst { it.id == agency.federalEntity?.id }.takeIf { it != -1 }
+    val municipalityIndex = municipalities.indexOfFirst { it.id == agency.municipality?.id }.takeIf { it != -1 }
 
-    val titleResource = remember { if (agency == null) Res.string.ag_form_add_title else Res.string.ag_form_edit_title }
+    val titleResource =
+        remember { if (agencyId == null) Res.string.ag_form_add_title else Res.string.ag_form_edit_title }
     var enabled by remember { mutableStateOf(true) }
     var isNameError by remember { mutableStateOf(false) }
     var isConsecutiveError by remember { mutableStateOf(false) }
@@ -58,46 +48,18 @@ fun AgencyScreen.AgencyFormModal(
 
     val formScrollState = rememberScrollState()
 
-    val statisticTypesColumns = remember {
-        listOf(
-            DataColumn(
-                header = {
-                    Text(stringResource(Res.string.ag_form_statistic_type))
-                }
-            ),
-            DataColumn(
-                width = TableColumnWidth.Fraction(0.3f),
-                alignment = Alignment.Center,
-                header = { }
-            )
-        )
-    }
-
-    LaunchedEffect(Unit) {
-        val agencyFederalEntityId = agency?.municipality?.federalEntityId
-        val agencyMunicipalityId = agency?.municipality?.id
-
+    DisposableEffect(Unit) {
         screenModel.searchAllFederalEntities()
         screenModel.searchAllStatisticTypes()
+        screenModel.searchAgency(agencyId)
 
-        delay(200)
-
-        agencyFederalEntityId?.let { id ->
-            federalEntityIndex = screenModel.federalEntities.indexOfFirst { it.id == id }
-
-            screenModel.searchMunicipalities(id)
-            delay(200)
-        }
-
-        agencyMunicipalityId?.let { id ->
-            municipalityIndex = screenModel.municipalities.indexOfFirst { it.id == id }
+        onDispose {
+            screenModel.resetForm()
         }
     }
 
-    LaunchedEffect(federalEntityId) {
-        screenModel.searchMunicipalities(federalEntityId)
-        municipalityIndex = null
-        municipalityId = null
+    LaunchedEffect(agency.federalEntity) {
+        screenModel.searchMunicipalities(agency.federalEntity?.id)
     }
 
     when (val formState = screenModel.formState) {
@@ -174,7 +136,7 @@ fun AgencyScreen.AgencyFormModal(
     }
 
     AlertDialog(
-        modifier = Modifier.heightIn(max = 500.dp),
+        modifier = Modifier.fillMaxHeight(0.8f),
         properties = DialogProperties(
             dismissOnClickOutside = false
         ),
@@ -184,7 +146,9 @@ fun AgencyScreen.AgencyFormModal(
         },
         text = {
             Column(
-                modifier = Modifier.verticalScroll(formScrollState)
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .verticalScroll(formScrollState)
             ) {
                 Text(
                     text = stringResource(Res.string.ag_form_general),
@@ -198,8 +162,8 @@ fun AgencyScreen.AgencyFormModal(
                         label = {
                             Text(stringResource(Res.string.ag_name))
                         },
-                        value = name,
-                        onValueChange = { name = it.uppercase() },
+                        value = agency.name,
+                        onValueChange = { screenModel.updateName(it.uppercase()) },
                         singleLine = true,
                         isError = isNameError,
                         supportingText = nameSupportingText?.let { message ->
@@ -214,12 +178,12 @@ fun AgencyScreen.AgencyFormModal(
                         label = {
                             Text(stringResource(Res.string.ag_consecutive))
                         },
-                        value = consecutive,
+                        value = agency.consecutive,
                         onValueChange = {
                             if (it.isBlank()) {
-                                consecutive = ""
+                                screenModel.updateConsecutive("")
                             } else if (Regex("^\\d{0,4}$").matches(it)) {
-                                consecutive = it
+                                screenModel.updateConsecutive(it)
                             }
                         },
                         singleLine = true,
@@ -230,8 +194,8 @@ fun AgencyScreen.AgencyFormModal(
                         modifier = Modifier
                             .width(240.dp)
                             .onFocusChanged {
-                                if (!it.isFocused && consecutive.isNotEmpty()) {
-                                    consecutive = consecutive.padStart(4, '0')
+                                if (!it.isFocused && agency.consecutive.isNotEmpty()) {
+                                    screenModel.updateConsecutive(agency.consecutive.padStart(4, '0'))
                                 }
                             }
                     )
@@ -248,11 +212,10 @@ fun AgencyScreen.AgencyFormModal(
 
                 Row {
                     OutlinedSelect(
-                        items = screenModel.federalEntities,
+                        items = federalEntities,
                         index = federalEntityIndex,
-                        onValueSelected = { index, item ->
-                            federalEntityIndex = index
-                            federalEntityId = item.id
+                        onValueSelected = { _, item ->
+                            screenModel.updateFederalEntity(item)
                         },
                         visualTransformation = { "${it.keyCode} - ${it.name}" },
                         label = {
@@ -268,12 +231,11 @@ fun AgencyScreen.AgencyFormModal(
                     Spacer(Modifier.width(32.dp))
 
                     OutlinedSelect(
-                        enabled = federalEntityId != null,
-                        items = screenModel.municipalities,
+                        enabled = agency.federalEntity?.id != null,
+                        items = municipalities,
                         index = municipalityIndex,
-                        onValueSelected = { index, item ->
-                            municipalityIndex = index
-                            municipalityId = item.id
+                        onValueSelected = { _, item ->
+                            screenModel.updateMunicipality(item)
                         },
                         visualTransformation = { "${it.keyCode} - ${it.name}" },
                         label = {
@@ -297,64 +259,36 @@ fun AgencyScreen.AgencyFormModal(
                 Spacer(Modifier.height(8.dp))
 
                 Column {
-                    Row {
-                        OutlinedSelect(
-                            items = screenModel.statisticTypes,
-                            onValueSelected = { _, item -> statisticType = item },
-                            visualTransformation = { "${it.keyCode} - ${it.name}" },
-                            label = {
-                                Text(stringResource(Res.string.ag_form_statistic_type))
-                            },
-                            isError = isStatisticTypeError,
-                            supportingText = statisticTypeSupportingText?.let { message ->
-                                { Text(text = message, color = MaterialTheme.colorScheme.error) }
-                            },
-                            modifier = Modifier.width(240.dp)
-                        )
+                    screenModel.statisticTypes.forEach { statisticType ->
+                        val isChecked = agency.statisticTypes.firstOrNull { it.id == statisticType.id } != null
 
-                        Spacer(Modifier.width(32.dp))
-
-                        IconButton(
-                            enabled = statisticType != null,
-                            onClick = {
-                                statisticType?.let {
-                                    if (statisticTypes.contains(statisticType).not()) {
-                                        statisticTypes = statisticTypes.toMutableList().apply { add(it) }
-                                    }
-                                }
-                            },
-                            modifier = Modifier.align(Alignment.CenterVertically)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Add,
-                                contentDescription = "Add statistic type"
-                            )
-                        }
-                    }
-
-                    DataTable(
-                        modifier = Modifier.fillMaxWidth(),
-                        columns = statisticTypesColumns
-                    ) {
-                        statisticTypes.forEach { item ->
-                            row {
-                                cell {
-                                    Text("${item.keyCode} - ${item.name}")
-                                }
-
-                                cell {
-                                    IconButton(
-                                        onClick = {
-                                            statisticTypes = statisticTypes.toMutableList().apply { remove(item) }
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(56.dp)
+                                .toggleable(
+                                    value = isChecked,
+                                    onValueChange = { isSelected ->
+                                        if (isSelected) {
+                                            screenModel.addStatisticType(statisticType)
+                                        } else {
+                                            screenModel.removeStatisticType(statisticType)
                                         }
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Default.Close,
-                                            contentDescription = "Remove statistic type"
-                                        )
-                                    }
-                                }
-                            }
+                                    },
+                                    role = Role.Checkbox
+                                )
+                                .padding(horizontal = 16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Checkbox(
+                                checked = isChecked,
+                                onCheckedChange = null
+                            )
+                            Text(
+                                text = "${statisticType.keyCode} - ${statisticType.name}",
+                                style = MaterialTheme.typography.bodyLarge,
+                                modifier = Modifier.padding(start = 16.dp)
+                            )
                         }
                     }
                 }
@@ -363,19 +297,7 @@ fun AgencyScreen.AgencyFormModal(
         confirmButton = {
             TextButton(
                 enabled = enabled,
-                onClick = {
-                    if (agencyId == null) {
-                        screenModel.createAgency(name, consecutive, municipalityId, statisticTypes.map { it.id })
-                    } else {
-                        screenModel.updateAgency(
-                            agencyId,
-                            name,
-                            consecutive,
-                            municipalityId,
-                            statisticTypes.map { it.id }
-                        )
-                    }
-                }
+                onClick = { screenModel.saveAgency() }
             ) {
                 Text(stringResource(Res.string.save))
             }
