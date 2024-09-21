@@ -194,30 +194,22 @@ class AgencyScreenModel(
     }
 
     fun saveAgency() {
-        if (agency.id == null) {
-            createAgency()
-        } else {
-            updateAgency()
-        }
-    }
-
-    private fun createAgency() {
-        val (_, name, consecutive, _, municipality, statisticTypes) = agency
         screenModelScope.launch(dispatcher) {
+            val (id, name, consecutive, _, municipality, statisticTypes) = agency
+            val isNameEmpty = name.isEmpty()
+            val isConsecutiveEmpty = name.isEmpty()
+            val isMunicipalityUnselected = municipality == null
+            val isStatisticTypesEmpty = statisticTypes.isEmpty()
+
             formState = AgencyFormState.InProgress
             delay(500)
 
-            val isNameEmpty = name.isEmpty()
-            val isConsecutiveEmpty = name.isEmpty()
-            val isNotMunicipalitySelected = municipality == null
-            val isStatisticTypesEmpty = statisticTypes.isEmpty()
-
-            if (isNameEmpty || isConsecutiveEmpty || isNotMunicipalitySelected || isStatisticTypesEmpty) {
+            if (isNameEmpty || isConsecutiveEmpty || isMunicipalityUnselected || isStatisticTypesEmpty) {
                 formState = AgencyFormState.Error(
                     EmptyAgencyDataException(
                         isNameEmpty,
                         isConsecutiveEmpty,
-                        isNotMunicipalitySelected,
+                        isMunicipalityUnselected,
                         isStatisticTypesEmpty
                     )
                 )
@@ -225,62 +217,56 @@ class AgencyScreenModel(
                 return@launch
             }
 
-            try {
-                val statisticTypeIds = statisticTypes.map { it.id }
-                val command = CreateAgencyCommand(name, consecutive, municipality?.id!!, statisticTypeIds)
-                commandBus.dispatch(command).fold(
-                    ifRight = {
-                        formState = AgencyFormState.SuccessCreate
-                    },
-                    ifLeft = {
-                        formState = AgencyFormState.Error(it)
-                    }
-                )
-            } catch (e: Exception) {
-                formState = AgencyFormState.Error(e.cause!!)
+            if (agency.id == null) {
+                createAgency(name, consecutive, municipality!!, statisticTypes)
+            } else {
+                updateAgency(id!!, name, consecutive, municipality!!, statisticTypes)
             }
         }
     }
 
-    private fun updateAgency() {
-        val (id, name, consecutive, _, municipality, statisticTypes) = agency
+    private fun createAgency(
+        name: String,
+        consecutive: String,
+        municipality: SimpleMunicipalityResponse,
+        statisticTypes: List<StatisticTypeResponse>
+    ) {
+        formState = try {
+            val statisticTypeIds = statisticTypes.map { it.id }
+            val command = CreateAgencyCommand(name, consecutive, municipality.id, statisticTypeIds)
+            commandBus.dispatch(command).fold(
+                ifRight = {
+                    AgencyFormState.SuccessCreate
+                },
+                ifLeft = {
+                    AgencyFormState.Error(it)
+                }
+            )
+        } catch (e: Exception) {
+            AgencyFormState.Error(e.cause!!)
+        }
+    }
 
-        screenModelScope.launch(dispatcher) {
-            formState = AgencyFormState.InProgress
-            delay(500)
-
-            val isNameEmpty = name.isEmpty()
-            val isConsecutiveEmpty = name.isEmpty()
-            val isNotMunicipalitySelected = municipality == null
-            val isStatisticTypesEmpty = statisticTypes.isEmpty()
-
-            if (isNameEmpty || isConsecutiveEmpty || isNotMunicipalitySelected || isStatisticTypesEmpty) {
-                formState = AgencyFormState.Error(
-                    EmptyAgencyDataException(
-                        isNameEmpty,
-                        isConsecutiveEmpty,
-                        isNotMunicipalitySelected,
-                        isStatisticTypesEmpty
-                    )
-                )
-
-                return@launch
-            }
-
-            try {
-                val statisticTypeIds = statisticTypes.map { it.id }
-                val command = UpdateAgencyCommand(id!!, name, consecutive, municipality?.id!!, statisticTypeIds)
-                commandBus.dispatch(command).fold(
-                    ifRight = {
-                        formState = AgencyFormState.SuccessEdit
-                    },
-                    ifLeft = {
-                        formState = AgencyFormState.Error(it)
-                    }
-                )
-            } catch (e: Exception) {
-                formState = AgencyFormState.Error(e.cause!!)
-            }
+    private fun updateAgency(
+        id: String,
+        name: String,
+        consecutive: String,
+        municipality: SimpleMunicipalityResponse,
+        statisticTypes: List<StatisticTypeResponse>
+    ) {
+        formState = try {
+            val statisticTypeIds = statisticTypes.map { it.id }
+            val command = UpdateAgencyCommand(id, name, consecutive, municipality.id, statisticTypeIds)
+            commandBus.dispatch(command).fold(
+                ifRight = {
+                    AgencyFormState.SuccessEdit
+                },
+                ifLeft = {
+                    AgencyFormState.Error(it)
+                }
+            )
+        } catch (e: Exception) {
+            AgencyFormState.Error(e.cause!!)
         }
     }
 
@@ -289,27 +275,25 @@ class AgencyScreenModel(
             deleteState = AgencyDeleteState.InProgress
             delay(500)
 
-            try {
-                commandBus.dispatch(DeleteAgencyCommand(agencyId)).foldAsync(
+            deleteState = try {
+                val command = DeleteAgencyCommand(agencyId)
+                commandBus.dispatch(command).foldAsync(
                     ifRight = {
-                        deleteState = AgencyDeleteState.Success
+                        AgencyDeleteState.Success
                     },
                     ifLeft = { error ->
                         val message = when (error) {
                             is AgencyNotFoundError -> getString(Res.string.ag_delete_error_not_found)
-
                             is AgencyHasInstrumentsError -> getString(Res.string.ag_delete_error_has_instruments)
-
                             is CanNotDeleteAgencyError -> getString(Res.string.ag_delete_error_default)
-
                             else -> getString(Res.string.ag_delete_error_default)
                         }
 
-                        deleteState = AgencyDeleteState.Error(message)
+                        AgencyDeleteState.Error(message)
                     }
                 )
             } catch (e: Exception) {
-                deleteState = AgencyDeleteState.Error(getString(Res.string.ag_delete_error_default))
+                AgencyDeleteState.Error(getString(Res.string.ag_delete_error_default))
             }
         }
     }
