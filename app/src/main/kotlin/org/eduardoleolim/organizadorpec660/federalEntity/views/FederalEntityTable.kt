@@ -17,6 +17,7 @@ import com.seanproctor.datatable.TableColumnWidth
 import com.seanproctor.datatable.paging.PaginatedDataTableState
 import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntitiesResponse
 import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntityResponse
+import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityFields
 import org.eduardoleolim.organizadorpec660.shared.composables.PaginatedDataTable
 import org.eduardoleolim.organizadorpec660.shared.composables.PlainTextTooltip
 import org.eduardoleolim.organizadorpec660.shared.composables.sortAscending
@@ -30,7 +31,6 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun FederalEntityScreen.FederalEntitiesTable(
     value: String,
-    onValueChange: (String) -> Unit,
     pageSizes: List<Int>,
     data: FederalEntitiesResponse,
     state: PaginatedDataTableState,
@@ -39,12 +39,19 @@ fun FederalEntityScreen.FederalEntitiesTable(
     onEditRequest: (FederalEntityResponse) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val orders = remember { listOf("keyCode", "name", "createdAt", "updatedAt") }
     val keyCodeColumnName = stringResource(Res.string.fe_keycode)
     val nameColumnName = stringResource(Res.string.fe_name)
     val createdAtColumnName = stringResource(Res.string.fe_created_at)
     val updatedAtColumnName = stringResource(Res.string.fe_updated_at)
     val actionsColumnName = stringResource(Res.string.table_col_actions)
+
+    fun getOrderBy(columnIndex: Int?) = when (columnIndex) {
+        0 -> FederalEntityFields.KeyCode.value
+        1 -> FederalEntityFields.Name.value
+        2 -> FederalEntityFields.CreatedAt.value
+        3 -> FederalEntityFields.UpdatedAt.value
+        else -> null
+    }
 
     val columns = remember {
         fun onSort(index: Int, ascending: Boolean) {
@@ -103,12 +110,16 @@ fun FederalEntityScreen.FederalEntitiesTable(
             modifier = Modifier.fillMaxWidth(),
             total = data.total,
             value = value,
-            onValueChange = onValueChange,
+            onValueChange = { search ->
+                val orderBy = getOrderBy(state.sortColumnIndex)
+                onSearch(search, state.pageIndex, state.pageSize, orderBy, state.sortAscending)
+            },
             columns = columns,
             state = state,
             pageSizes = pageSizes,
             onSearch = { search, pageIndex, pageSize, sortBy, isAscending ->
-                onSearch(search, pageIndex, pageSize, sortBy?.let { orders[it] }, isAscending)
+                val orderBy = getOrderBy(sortBy)
+                onSearch(search, pageIndex, pageSize, orderBy, isAscending)
             }
         ) {
             val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")

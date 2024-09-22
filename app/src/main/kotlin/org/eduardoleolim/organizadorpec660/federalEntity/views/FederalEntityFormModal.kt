@@ -125,7 +125,7 @@ fun FederalEntityScreen.FederalEntityFormModal(
                     value = federalEntity.keyCode,
                     onValueChange = {
                         if (Regex("[0-9]{0,2}").matches(it)) {
-                            screenModel.updateKeyCode(it)
+                            screenModel.updateFederalEntityKeyCode(it)
                         }
                     },
                     singleLine = true,
@@ -137,7 +137,7 @@ fun FederalEntityScreen.FederalEntityFormModal(
                         .width(300.dp)
                         .onFocusChanged {
                             if (!it.isFocused && federalEntity.keyCode.isNotEmpty()) {
-                                screenModel.updateKeyCode(federalEntity.keyCode.padStart(2, '0'))
+                                screenModel.updateFederalEntityKeyCode(federalEntity.keyCode.padStart(2, '0'))
                             }
                         }
                 )
@@ -149,7 +149,7 @@ fun FederalEntityScreen.FederalEntityFormModal(
                         Text(stringResource(Res.string.fe_name))
                     },
                     value = federalEntity.name,
-                    onValueChange = { screenModel.updateName(it.uppercase()) },
+                    onValueChange = { screenModel.updateFederalEntityName(it.uppercase()) },
                     singleLine = true,
                     isError = isNameError,
                     supportingText = nameSupportingText?.let { message ->

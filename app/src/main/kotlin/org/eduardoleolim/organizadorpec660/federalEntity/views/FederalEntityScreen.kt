@@ -8,17 +8,16 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
-import com.seanproctor.datatable.paging.rememberPaginatedDataTableState
 import kotlinx.coroutines.Dispatchers
-import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorpec660.federalEntity.model.FederalEntityScreenModel
-import org.eduardoleolim.organizadorpec660.shared.composables.reset
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
 import org.eduardoleolim.organizadorpec660.shared.resources.Res
@@ -29,63 +28,45 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
     @Composable
     override fun Content() {
         val screenModel = rememberScreenModel { FederalEntityScreenModel(queryBus, commandBus, Dispatchers.IO) }
-        var showDeleteModal by remember { mutableStateOf(false) }
-        var showFormModal by remember { mutableStateOf(false) }
-        var showImportExportModal by remember { mutableStateOf(false) }
-        var showImportModal by remember { mutableStateOf(false) }
-        var showExportModal by remember { mutableStateOf(false) }
-        var selectedFederalEntity by remember { mutableStateOf<FederalEntityResponse?>(null) }
-        val pageSizes = remember { listOf(10, 25, 50, 100) }
-        val state = rememberPaginatedDataTableState(pageSizes.first())
-        var searchValue by remember { mutableStateOf("") }
-        val resetScreen = remember {
-            fun() {
-                val offset = state.pageIndex * state.pageSize
-                searchValue = ""
-                state.reset(pageSizes.first())
-                screenModel.searchFederalEntities(searchValue, null, state.pageSize, offset)
-                showDeleteModal = false
-                showFormModal = false
-                showImportExportModal = false
-                showImportModal = false
-                showExportModal = false
-                selectedFederalEntity = null
-            }
-        }
+        val searchParameters by screenModel.searchParameters.collectAsState()
+        val search = searchParameters.search
+        val screenState = screenModel.screenState
+        val selectedFederalEntity = screenState.selectedFederalEntity
+        val showFormModal = screenState.showFormModal
+        val showDeleteModal = screenState.showDeleteModal
+        val showImportExportModal = screenState.showImportExportModal
+        val showImportModal = screenState.showImportModal
+        val showExportModal = screenState.showExportModal
+        val pageSizes = screenState.pageSizes
+        val tableState = screenState.tableState
 
         Column(
             modifier = Modifier.padding(24.dp)
         ) {
             FederalEntityScreenHeader(
-                onSaveRequest = {
-                    selectedFederalEntity = null
-                    showFormModal = true
-                },
-                onImportExportRequest = { showImportExportModal = true }
+                onSaveRequest = { screenModel.showFormModal(null) },
+                onImportExportRequest = { screenModel.showImportExportModal() }
             )
 
             FederalEntitiesTable(
                 modifier = Modifier.fillMaxSize(),
-                value = searchValue,
-                onValueChange = { searchValue = it },
+                value = search,
                 pageSizes = pageSizes,
-                state = state,
+                state = tableState,
                 data = screenModel.federalEntities,
                 onSearch = { search, pageIndex, pageSize, orderBy, isAscending ->
-                    val orders = orderBy?.let {
-                        val orderType = if (isAscending) "ASC" else "DESC"
-                        listOf(hashMapOf("orderBy" to orderBy, "orderType" to orderType))
-                    }
+                    val offset = pageIndex * pageSize
+                    val orders = orderBy?.takeIf { it.isNotEmpty() }?.let {
+                        listOf(hashMapOf("orderBy" to it, "orderType" to if (isAscending) "ASC" else "DESC"))
+                    }.orEmpty()
 
-                    screenModel.searchFederalEntities(search, orders, pageSize, pageIndex * pageSize)
+                    screenModel.searchFederalEntities(search, orders, pageSize, offset)
                 },
                 onDeleteRequest = { federalEntity ->
-                    selectedFederalEntity = federalEntity
-                    showDeleteModal = true
+                    screenModel.showDeleteModal(federalEntity)
                 },
                 onEditRequest = { federalEntity ->
-                    selectedFederalEntity = federalEntity
-                    showFormModal = true
+                    screenModel.showFormModal(federalEntity)
                 }
             )
 
@@ -94,41 +75,37 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
                     FederalEntityFormModal(
                         screenModel = screenModel,
                         federalEntityId = selectedFederalEntity?.id,
-                        onDismissRequest = { resetScreen() },
-                        onSuccess = { resetScreen() }
+                        onDismissRequest = { screenModel.resetScreen() },
+                        onSuccess = { screenModel.resetScreen() }
                     )
                 }
 
                 showDeleteModal && selectedFederalEntity != null -> {
                     FederalEntityDeleteModal(
                         screenModel = screenModel,
-                        federalEntity = selectedFederalEntity!!,
-                        onSuccess = { resetScreen() },
-                        onDismissRequest = { resetScreen() }
+                        federalEntity = selectedFederalEntity,
+                        onSuccess = { screenModel.resetScreen() },
+                        onDismissRequest = { screenModel.resetScreen() }
                     )
                 }
 
                 showImportExportModal -> {
                     FederalEntityImportExportModal(
-                        onImportClick = {
-                            showImportExportModal = false
-                            showImportModal = true
-                        },
-                        onExportClick = {
-                            showImportExportModal = false
-                            showExportModal = true
-                        },
-                        onDismissRequest = { resetScreen() }
+                        onImportClick = { screenModel.showImportModal() },
+                        onExportClick = { screenModel.showExportModal() },
+                        onDismissRequest = { screenModel.resetScreen() }
                     )
                 }
 
                 showImportModal -> {
                     FederalEntityImportModal(
                         screenModel = screenModel,
-                        onSuccessImport = { resetScreen() },
-                        onDismissRequest = { resetScreen() }
+                        onSuccessImport = { screenModel.resetScreen() },
+                        onDismissRequest = { screenModel.resetScreen() }
                     )
                 }
+
+                showExportModal -> {}
             }
         }
     }

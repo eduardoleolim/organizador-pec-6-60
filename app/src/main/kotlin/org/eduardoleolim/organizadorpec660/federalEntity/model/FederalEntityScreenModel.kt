@@ -6,10 +6,10 @@ import androidx.compose.runtime.setValue
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
 import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntitiesResponse
 import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorpec660.federalEntity.application.create.CreateFederalEntityCommand
@@ -29,12 +29,18 @@ import org.jetbrains.compose.resources.getString
 import java.io.File
 import java.io.IOException
 
+@OptIn(FlowPreview::class)
 class FederalEntityScreenModel(
     private val queryBus: QueryBus,
     private val commandBus: CommandBus,
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default
 ) : ScreenModel {
     private val csvWriter = csvWriter()
+
+    var screenState by mutableStateOf(FederalEntityScreenState())
+
+    var searchParameters = MutableStateFlow(FederalEntitySearchParameters())
+        private set
 
     var federalEntities by mutableStateOf(FederalEntitiesResponse(emptyList(), 0, null, null))
         private set
@@ -51,6 +57,71 @@ class FederalEntityScreenModel(
     var federalEntity by mutableStateOf(FederalEntityFormData())
         private set
 
+    init {
+        screenModelScope.launch {
+            searchParameters
+                .debounce(500)
+                .collectLatest {
+                    searchFederalEntities(it)
+                }
+        }
+    }
+
+    fun showFormModal(agency: FederalEntityResponse?) {
+        screenState = screenState.copy(
+            selectedFederalEntity = agency,
+            showFormModal = true,
+            showDeleteModal = false,
+            showImportExportModal = false,
+            showImportModal = false,
+            showExportModal = false
+        )
+    }
+
+    fun showDeleteModal(agency: FederalEntityResponse) {
+        screenState = screenState.copy(
+            selectedFederalEntity = agency,
+            showFormModal = false,
+            showDeleteModal = true,
+            showImportExportModal = false,
+            showImportModal = false,
+            showExportModal = false
+        )
+    }
+
+    fun showImportExportModal() {
+        screenState = screenState.copy(
+            selectedFederalEntity = null,
+            showFormModal = false,
+            showDeleteModal = false,
+            showImportExportModal = true,
+            showImportModal = false,
+            showExportModal = false
+        )
+    }
+
+    fun showImportModal() {
+        screenState = screenState.copy(
+            selectedFederalEntity = null,
+            showFormModal = false,
+            showDeleteModal = false,
+            showImportExportModal = false,
+            showImportModal = true,
+            showExportModal = false
+        )
+    }
+
+    fun showExportModal() {
+        screenState = screenState.copy(
+            selectedFederalEntity = null,
+            showFormModal = false,
+            showDeleteModal = false,
+            showImportExportModal = false,
+            showImportModal = false,
+            showExportModal = true
+        )
+    }
+
     fun searchFederalEntity(federalEntityId: String?) {
         screenModelScope.launch(dispatcher) {
             federalEntity = if (federalEntityId == null) {
@@ -62,12 +133,19 @@ class FederalEntityScreenModel(
         }
     }
 
-    fun updateName(name: String) {
+    fun updateFederalEntityName(name: String) {
         federalEntity = federalEntity.copy(name = name)
     }
 
-    fun updateKeyCode(keyCode: String) {
+    fun updateFederalEntityKeyCode(keyCode: String) {
         federalEntity = federalEntity.copy(keyCode = keyCode)
+    }
+
+    fun resetScreen() {
+        screenState = FederalEntityScreenState()
+        searchParameters.value = FederalEntitySearchParameters().also {
+            searchFederalEntities(it)
+        }
     }
 
     fun resetFormModal() {
@@ -84,14 +162,19 @@ class FederalEntityScreenModel(
     }
 
     fun searchFederalEntities(
-        search: String? = null,
-        orders: List<HashMap<String, String>>? = null,
-        limit: Int? = null,
-        offset: Int? = null,
+        search: String = searchParameters.value.search,
+        orders: List<HashMap<String, String>> = searchParameters.value.orders,
+        limit: Int? = searchParameters.value.limit,
+        offset: Int? = searchParameters.value.offset,
     ) {
+        searchParameters.value = FederalEntitySearchParameters(search, orders, limit, offset)
+    }
+
+    private fun searchFederalEntities(parameters: FederalEntitySearchParameters) {
+        val (search, orders, limit, offset) = parameters
         screenModelScope.launch(dispatcher) {
             try {
-                val query = SearchFederalEntitiesByTermQuery(search, orders?.toTypedArray(), limit, offset)
+                val query = SearchFederalEntitiesByTermQuery(search, orders.toTypedArray(), limit, offset)
                 federalEntities = queryBus.ask(query)
             } catch (e: Exception) {
                 federalEntities = FederalEntitiesResponse(emptyList(), 0, null, null)
