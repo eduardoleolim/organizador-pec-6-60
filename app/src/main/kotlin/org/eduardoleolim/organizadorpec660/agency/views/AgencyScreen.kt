@@ -9,6 +9,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -26,8 +28,9 @@ class AgencyScreen(private val queryBus: QueryBus, private val commandBus: Comma
     @Composable
     override fun Content() {
         val screenModel = rememberScreenModel { AgencyScreenModel(queryBus, commandBus, Dispatchers.IO) }
+        val searchParameters by screenModel.searchParameters.collectAsState()
+        val search = searchParameters.search
         val screenState = screenModel.screenState
-        val search = screenState.search
         val selectedAgency = screenState.selectedAgency
         val showFormModal = screenState.showFormModal
         val showDeleteModal = screenState.showDeleteModal
@@ -45,16 +48,14 @@ class AgencyScreen(private val queryBus: QueryBus, private val commandBus: Comma
             AgenciesTable(
                 modifier = Modifier.fillMaxSize(),
                 value = search,
-                onValueChange = { screenModel.updateSearch(it) },
                 pageSizes = pageSizes,
                 state = tableState,
                 data = screenModel.agencies,
                 onSearch = { search, pageIndex, pageSize, orderBy, isAscending ->
                     val offset = pageIndex * pageSize
-                    val orders = orderBy?.let {
-                        val orderType = if (isAscending) "ASC" else "DESC"
-                        listOf(hashMapOf("orderBy" to orderBy, "orderType" to orderType))
-                    }
+                    val orders = orderBy?.takeIf { it.isNotEmpty() }?.let {
+                        listOf(hashMapOf("orderBy" to it, "orderType" to if (isAscending) "ASC" else "DESC"))
+                    }.orEmpty()
 
                     screenModel.searchAgencies(search, orders, pageSize, offset)
                 },

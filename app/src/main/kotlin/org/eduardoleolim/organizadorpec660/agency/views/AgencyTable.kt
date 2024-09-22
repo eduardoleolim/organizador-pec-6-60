@@ -31,7 +31,6 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun AgencyScreen.AgenciesTable(
     value: String,
-    onValueChange: (String) -> Unit,
     pageSizes: List<Int>,
     data: AgenciesResponse,
     state: PaginatedDataTableState,
@@ -46,6 +45,15 @@ fun AgencyScreen.AgenciesTable(
     val createdAtColumnName = stringResource(Res.string.ag_created_at)
     val updatedAtColumnName = stringResource(Res.string.ag_updated_at)
     val actionsColumnName = stringResource(Res.string.table_col_actions)
+
+    fun getOrderBy(columnIndex: Int?) = when (columnIndex) {
+        0 -> AgencyFields.Name.value
+        1 -> AgencyFields.Consecutive.value
+        2 -> AgencyFields.MunicipalityKeyCode.value
+        3 -> AgencyFields.CreatedAt.value
+        4 -> AgencyFields.UpdatedAt.value
+        else -> null
+    }
 
     val columns = remember {
         fun onSort(index: Int, ascending: Boolean) {
@@ -110,20 +118,15 @@ fun AgencyScreen.AgenciesTable(
             modifier = Modifier.fillMaxWidth(),
             total = data.total,
             value = value,
-            onValueChange = onValueChange,
+            onValueChange = { search ->
+                val orderBy = getOrderBy(state.sortColumnIndex)
+                onSearch(search, state.pageIndex, state.pageSize, orderBy, state.sortAscending)
+            },
             columns = columns,
             state = state,
             pageSizes = pageSizes,
             onSearch = { search, pageIndex, pageSize, sortBy, isAscending ->
-                val orderBy = when (sortBy) {
-                    0 -> AgencyFields.Name.value
-                    1 -> AgencyFields.Consecutive.value
-                    2 -> AgencyFields.MunicipalityKeyCode.value
-                    3 -> AgencyFields.CreatedAt.value
-                    4 -> AgencyFields.UpdatedAt.value
-                    else -> null
-                }
-
+                val orderBy = getOrderBy(sortBy)
                 onSearch(search, pageIndex, pageSize, orderBy, isAscending)
             }
         ) {

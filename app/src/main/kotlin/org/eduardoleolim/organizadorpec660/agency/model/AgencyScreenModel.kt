@@ -5,10 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
 import org.eduardoleolim.organizadorpec660.agency.application.AgenciesResponse
 import org.eduardoleolim.organizadorpec660.agency.application.AgencyResponse
 import org.eduardoleolim.organizadorpec660.agency.application.create.CreateAgencyCommand
@@ -39,19 +39,16 @@ import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTy
 import org.eduardoleolim.organizadorpec660.statisticType.application.searchByTerm.SearchStatisticTypesByTermQuery
 import org.jetbrains.compose.resources.getString
 
-data class SearchAgencyParameters(
-    val search: String?,
-    val orders: List<HashMap<String, String>>?,
-    val limit: Int?,
-    val offset: Int?
-)
-
+@OptIn(FlowPreview::class)
 class AgencyScreenModel(
     private val queryBus: QueryBus,
     private val commandBus: CommandBus,
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default
 ) : ScreenModel {
     var screenState by mutableStateOf(AgencyScreenState())
+        private set
+
+    var searchParameters = MutableStateFlow(AgencySearchParameters())
         private set
 
     var agencies by mutableStateOf(AgenciesResponse(emptyList(), 0, null, null))
@@ -75,8 +72,14 @@ class AgencyScreenModel(
     var agency by mutableStateOf(AgencyFormData())
         private set
 
-    fun updateSearch(search: String) {
-        screenState = screenState.copy(search = search)
+    init {
+        screenModelScope.launch {
+            searchParameters
+                .debounce(500)
+                .collectLatest {
+                    searchAgencies(it)
+                }
+        }
     }
 
     fun showFormModal(agency: AgencyResponse?) {
@@ -158,9 +161,8 @@ class AgencyScreenModel(
 
     fun resetScreen() {
         screenState = AgencyScreenState()
-        screenState.tableState.also {
-            val offset = it.pageIndex * it.pageSize
-            searchAgencies(screenState.search, null, it.pageSize, offset)
+        searchParameters.value = AgencySearchParameters().also {
+            searchAgencies(it)
         }
     }
 
@@ -174,14 +176,19 @@ class AgencyScreenModel(
     }
 
     fun searchAgencies(
-        search: String? = null,
-        orders: List<HashMap<String, String>>? = null,
-        limit: Int? = null,
-        offset: Int? = null,
+        search: String = searchParameters.value.search,
+        orders: List<HashMap<String, String>> = searchParameters.value.orders,
+        limit: Int? = searchParameters.value.limit,
+        offset: Int? = searchParameters.value.offset,
     ) {
+        searchParameters.value = AgencySearchParameters(search, orders, limit, offset)
+    }
+
+    private fun searchAgencies(parameters: AgencySearchParameters) {
+        val (search, orders, limit, offset) = parameters
         screenModelScope.launch(dispatcher) {
             try {
-                val query = SearchAgenciesByTermQuery(search, orders?.toTypedArray(), limit, offset)
+                val query = SearchAgenciesByTermQuery(search, orders.toTypedArray(), limit, offset)
                 agencies = queryBus.ask(query)
             } catch (e: Exception) {
                 agencies = AgenciesResponse(emptyList(), 0, null, null)
