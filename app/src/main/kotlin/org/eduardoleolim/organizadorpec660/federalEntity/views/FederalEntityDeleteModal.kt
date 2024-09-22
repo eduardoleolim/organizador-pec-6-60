@@ -29,6 +29,12 @@ fun FederalEntityScreen.FederalEntityDeleteModal(
     var errorOccurred by remember { mutableStateOf(false) }
     var errorText: String? by remember { mutableStateOf(null) }
 
+    DisposableEffect(Unit) {
+        onDispose {
+            screenModel.resetDeleteModal()
+        }
+    }
+
     when (val deleteState = screenModel.deleteState) {
         FederalEntityDeleteState.Idle -> {
             errorOccurred = false
