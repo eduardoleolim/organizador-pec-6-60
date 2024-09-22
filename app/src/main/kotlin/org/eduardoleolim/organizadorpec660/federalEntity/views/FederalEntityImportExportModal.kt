@@ -35,6 +35,12 @@ fun FederalEntityScreen.FederalEntityImportExportModal(
     AlertDialog(
         properties = DialogProperties(usePlatformDefaultWidth = false),
         onDismissRequest = onDismissRequest,
+        title = {
+            Text(stringResource(Res.string.fe_catalog_title))
+        },
+        text = {
+            Text(stringResource(Res.string.fe_catalog_content))
+        },
         confirmButton = {
             TextButton(onClick = onExportClick) {
                 Text(stringResource(Res.string.fe_catalog_export))
@@ -44,12 +50,6 @@ fun FederalEntityScreen.FederalEntityImportExportModal(
             TextButton(onClick = onImportClick) {
                 Text(stringResource(Res.string.fe_catalog_import))
             }
-        },
-        title = {
-            Text(stringResource(Res.string.fe_catalog_title))
-        },
-        text = {
-            Text(stringResource(Res.string.fe_catalog_content))
         }
     )
 }
@@ -75,6 +75,12 @@ fun FederalEntityScreen.FederalEntityImportModal(
     var showWarningDialog by remember { mutableStateOf(false) }
     var showReplaceDialog by remember { mutableStateOf(false) }
     var warnings by remember { mutableStateOf(emptyList<String>()) }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            screenModel.resetImportModal()
+        }
+    }
 
     when (val importState = screenModel.importState) {
         FederalEntityImportState.Idle -> {

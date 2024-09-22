@@ -123,7 +123,6 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
                 }
 
                 showImportModal -> {
-                    screenModel.resetImportModal()
                     FederalEntityImportModal(
                         screenModel = screenModel,
                         onSuccessImport = { resetScreen() },
