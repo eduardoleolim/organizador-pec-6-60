@@ -164,7 +164,7 @@ fun AgencyScreen.AgencyFormModal(
                         },
                         value = agency.name,
                         onValueChange = {
-                            screenModel.updateName(it.uppercase())
+                            screenModel.updateAgencyName(it.uppercase())
                         },
                         singleLine = true,
                         isError = isNameError,
@@ -183,9 +183,9 @@ fun AgencyScreen.AgencyFormModal(
                         value = agency.consecutive,
                         onValueChange = {
                             if (it.isBlank()) {
-                                screenModel.updateConsecutive("")
+                                screenModel.updateAgencyConsecutive("")
                             } else if (Regex("^\\d{0,4}$").matches(it)) {
-                                screenModel.updateConsecutive(it)
+                                screenModel.updateAgencyConsecutive(it)
                             }
                         },
                         singleLine = true,
@@ -197,7 +197,7 @@ fun AgencyScreen.AgencyFormModal(
                             .width(240.dp)
                             .onFocusChanged {
                                 if (!it.isFocused && agency.consecutive.isNotEmpty()) {
-                                    screenModel.updateConsecutive(agency.consecutive.padStart(4, '0'))
+                                    screenModel.updateAgencyConsecutive(agency.consecutive.padStart(4, '0'))
                                 }
                             }
                     )
@@ -217,7 +217,7 @@ fun AgencyScreen.AgencyFormModal(
                         items = federalEntities,
                         index = federalEntityIndex,
                         onValueSelected = { _, item ->
-                            screenModel.updateFederalEntity(item)
+                            screenModel.updateAgencyFederalEntity(item)
                         },
                         visualTransformation = { "${it.keyCode} - ${it.name}" },
                         label = {
@@ -237,7 +237,7 @@ fun AgencyScreen.AgencyFormModal(
                         items = municipalities,
                         index = municipalityIndex,
                         onValueSelected = { _, item ->
-                            screenModel.updateMunicipality(item)
+                            screenModel.updateAgencyMunicipality(item)
                         },
                         visualTransformation = { "${it.keyCode} - ${it.name}" },
                         label = {
@@ -294,9 +294,9 @@ fun AgencyScreen.AgencyFormModal(
                                     value = isChecked,
                                     onValueChange = { isSelected ->
                                         if (isSelected) {
-                                            screenModel.addStatisticType(statisticType)
+                                            screenModel.addAgencyStatisticType(statisticType)
                                         } else {
-                                            screenModel.removeStatisticType(statisticType)
+                                            screenModel.removeAgencyStatisticType(statisticType)
                                         }
                                     },
                                     role = Role.Checkbox

@@ -51,6 +51,9 @@ class AgencyScreenModel(
     private val commandBus: CommandBus,
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default
 ) : ScreenModel {
+    var screenState by mutableStateOf(AgencyScreenState())
+        private set
+
     var agencies by mutableStateOf(AgenciesResponse(emptyList(), 0, null, null))
         private set
 
@@ -71,6 +74,26 @@ class AgencyScreenModel(
 
     var agency by mutableStateOf(AgencyFormData())
         private set
+
+    fun updateSearch(search: String) {
+        screenState = screenState.copy(search = search)
+    }
+
+    fun showFormModal(agency: AgencyResponse?) {
+        screenState = screenState.copy(
+            selectedAgency = agency,
+            showFormModal = true,
+            showDeleteModal = false
+        )
+    }
+
+    fun showDeleteModal(agency: AgencyResponse) {
+        screenState = screenState.copy(
+            selectedAgency = agency,
+            showFormModal = false,
+            showDeleteModal = true
+        )
+    }
 
     fun searchAgency(agencyId: String?) {
         screenModelScope.launch(dispatcher) {
@@ -93,21 +116,21 @@ class AgencyScreenModel(
         }
     }
 
-    fun updateName(name: String) {
+    fun updateAgencyName(name: String) {
         agency = agency.copy(name = name)
     }
 
-    fun updateConsecutive(consecutive: String) {
+    fun updateAgencyConsecutive(consecutive: String) {
         agency = agency.copy(consecutive = consecutive)
     }
 
-    fun updateFederalEntity(federalEntity: FederalEntityResponse) {
+    fun updateAgencyFederalEntity(federalEntity: FederalEntityResponse) {
         if (agency.federalEntity?.id != federalEntity.id) {
             agency = agency.copy(federalEntity = federalEntity, municipality = null)
         }
     }
 
-    fun updateMunicipality(municipality: MunicipalityResponse) {
+    fun updateAgencyMunicipality(municipality: MunicipalityResponse) {
         val simpleMunicipality = SimpleMunicipalityResponse(
             municipality.id,
             municipality.name,
@@ -119,7 +142,7 @@ class AgencyScreenModel(
         agency = agency.copy(municipality = simpleMunicipality)
     }
 
-    fun addStatisticType(statisticType: StatisticTypeResponse) {
+    fun addAgencyStatisticType(statisticType: StatisticTypeResponse) {
         val statisticTypes = agency.statisticTypes.toMutableList().apply {
             if (none { it.id == statisticType.id }) {
                 add(statisticType)
@@ -128,9 +151,17 @@ class AgencyScreenModel(
         agency = agency.copy(statisticTypes = statisticTypes)
     }
 
-    fun removeStatisticType(statisticType: StatisticTypeResponse) {
+    fun removeAgencyStatisticType(statisticType: StatisticTypeResponse) {
         val statisticTypes = agency.statisticTypes.toMutableList().apply { removeIf { it.id == statisticType.id } }
         agency = agency.copy(statisticTypes = statisticTypes)
+    }
+
+    fun resetScreen() {
+        screenState = AgencyScreenState()
+        screenState.tableState.also {
+            val offset = it.pageIndex * it.pageSize
+            searchAgencies(screenState.search, null, it.pageSize, offset)
+        }
     }
 
     fun resetForm() {

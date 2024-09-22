@@ -8,17 +8,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
-import com.seanproctor.datatable.paging.rememberPaginatedDataTableState
 import kotlinx.coroutines.Dispatchers
-import org.eduardoleolim.organizadorpec660.agency.application.AgencyResponse
 import org.eduardoleolim.organizadorpec660.agency.model.AgencyScreenModel
-import org.eduardoleolim.organizadorpec660.shared.composables.reset
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
 import org.eduardoleolim.organizadorpec660.shared.resources.Res
@@ -29,41 +26,28 @@ class AgencyScreen(private val queryBus: QueryBus, private val commandBus: Comma
     @Composable
     override fun Content() {
         val screenModel = rememberScreenModel { AgencyScreenModel(queryBus, commandBus, Dispatchers.IO) }
-        var showDeleteModal by remember { mutableStateOf(false) }
-        var showFormModal by remember { mutableStateOf(false) }
-        var selectedAgency by remember { mutableStateOf<AgencyResponse?>(null) }
-        val pageSizes = remember { listOf(10, 25, 50, 100) }
-        val state = rememberPaginatedDataTableState(pageSizes.first())
-        var searchValue by remember { mutableStateOf("") }
-        val resetScreen = remember {
-            fun() {
-                val offset = state.pageIndex * state.pageSize
-                searchValue = ""
-                state.reset(pageSizes.first())
-                screenModel.searchAgencies(searchValue, null, state.pageSize, offset)
-                showDeleteModal = false
-                showFormModal = false
-                selectedAgency = null
-            }
-        }
+        val screenState = screenModel.screenState
+        val search = screenState.search
+        val selectedAgency = screenState.selectedAgency
+        val showFormModal = screenState.showFormModal
+        val showDeleteModal = screenState.showDeleteModal
+        val pageSizes = screenState.pageSizes
+        val tableState = screenState.tableState
 
         Column(
             modifier = Modifier.padding(24.dp)
         ) {
             AgencyScreenHeader(
-                onSaveRequest = {
-                    selectedAgency = null
-                    showFormModal = true
-                },
+                onSaveRequest = { screenModel.showFormModal(null) },
                 onImportExportRequest = {}
             )
 
             AgenciesTable(
                 modifier = Modifier.fillMaxSize(),
-                value = searchValue,
-                onValueChange = { searchValue = it },
+                value = search,
+                onValueChange = { screenModel.updateSearch(it) },
                 pageSizes = pageSizes,
-                state = state,
+                state = tableState,
                 data = screenModel.agencies,
                 onSearch = { search, pageIndex, pageSize, orderBy, isAscending ->
                     val offset = pageIndex * pageSize
@@ -75,12 +59,10 @@ class AgencyScreen(private val queryBus: QueryBus, private val commandBus: Comma
                     screenModel.searchAgencies(search, orders, pageSize, offset)
                 },
                 onDeleteRequest = { agency ->
-                    selectedAgency = agency
-                    showDeleteModal = true
+                    screenModel.showDeleteModal(agency)
                 },
                 onEditRequest = { agency ->
-                    selectedAgency = agency
-                    showFormModal = true
+                    screenModel.showFormModal(agency)
                 }
             )
 
@@ -89,17 +71,17 @@ class AgencyScreen(private val queryBus: QueryBus, private val commandBus: Comma
                     AgencyFormModal(
                         screenModel = screenModel,
                         agencyId = selectedAgency?.id,
-                        onDismissRequest = { resetScreen() },
-                        onSuccess = { resetScreen() }
+                        onDismissRequest = { screenModel.resetScreen() },
+                        onSuccess = { screenModel.resetScreen() }
                     )
                 }
 
                 showDeleteModal && selectedAgency != null -> {
                     AgencyDeleteModal(
                         screenModel = screenModel,
-                        agency = selectedAgency!!,
-                        onSuccess = { resetScreen() },
-                        onDismissRequest = { resetScreen() }
+                        agency = selectedAgency,
+                        onSuccess = { screenModel.resetScreen() },
+                        onDismissRequest = { screenModel.resetScreen() }
                     )
                 }
             }
