@@ -129,6 +129,9 @@
     <string name="st_updated_at">Updated at</string>
     <string name="st_delete_title">Delete statistic type?</string>
     <string name="st_delete_text">The statistic type %1$s will be permanently removed from application</string>
+    <string name="st_delete_error_default">A error occurred when trying to delete the statistic type</string>
+    <string name="st_delete_error_not_found">Statistic type not found</string>
+    <string name="st_delete_error_used_in_agency">The statistic type can't be deleted because it has instruments associated</string>
     <string name="st_form_add_title">Add statistic type</string>
     <string name="st_form_edit_title">Edit statistic type</string>
     <string name="st_form_keycode_required">KeyCode required</string>
@@ -145,10 +148,10 @@
     <string name="ag_created_at">Created at</string>
     <string name="ag_updated_at">Updated at</string>
     <string name="ag_delete_title">Delete agency?</string>
+    <string name="ag_delete_text">The agency %1$s will be permanently removed from application</string>
     <string name="ag_delete_error_default">A error occurred when trying to delete the agency</string>
     <string name="ag_delete_error_not_found">Agency not found</string>
-    <string name="ag_delete_error_has_instruments">The agency can't be delete because it has instruments associated</string>
-    <string name="ag_delete_text">The agency %1$s will be permanently removed from application</string>
+    <string name="ag_delete_error_has_instruments">The agency can't be deleted because it has instruments associated</string>
     <string name="ag_form_add_title">Add agency</string>
     <string name="ag_form_edit_title">Edit agency</string>
     <string name="ag_form_general">General data</string>

@@ -11,12 +11,20 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.shared.resources.Res
+import org.eduardoleolim.organizadorpec660.shared.resources.st_delete_error_default
+import org.eduardoleolim.organizadorpec660.shared.resources.st_delete_error_not_found
+import org.eduardoleolim.organizadorpec660.shared.resources.st_delete_error_used_in_agency
 import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypesResponse
 import org.eduardoleolim.organizadorpec660.statisticType.application.create.CreateStatisticTypeCommand
 import org.eduardoleolim.organizadorpec660.statisticType.application.delete.DeleteStatisticTypeCommand
 import org.eduardoleolim.organizadorpec660.statisticType.application.searchByTerm.SearchStatisticTypesByTermQuery
 import org.eduardoleolim.organizadorpec660.statisticType.application.update.UpdateStatisticTypeCommand
 import org.eduardoleolim.organizadorpec660.statisticType.data.EmptyStatisticTypeDataException
+import org.eduardoleolim.organizadorpec660.statisticType.domain.CanNotDeleteStatisticTypeError
+import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeNotFoundError
+import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeUsedInAgency
+import org.jetbrains.compose.resources.getString
 
 sealed class StatisticTypeFormState {
     data object Idle : StatisticTypeFormState()
@@ -30,7 +38,7 @@ sealed class StatisticTypeDeleteState {
     data object Idle : StatisticTypeDeleteState()
     data object InProgress : StatisticTypeDeleteState()
     data object Success : StatisticTypeDeleteState()
-    data class Error(val error: Throwable) : StatisticTypeDeleteState()
+    data class Error(val message: String) : StatisticTypeDeleteState()
 }
 
 class StatisticTypeScreenModel(
@@ -132,17 +140,24 @@ class StatisticTypeScreenModel(
             deleteState = StatisticTypeDeleteState.InProgress
             delay(500)
 
-            try {
-                commandBus.dispatch(DeleteStatisticTypeCommand(statisticTypeId)).fold(
+            deleteState = try {
+                commandBus.dispatch(DeleteStatisticTypeCommand(statisticTypeId)).foldAsync(
                     ifRight = {
-                        deleteState = StatisticTypeDeleteState.Success
+                        StatisticTypeDeleteState.Success
                     },
-                    ifLeft = {
-                        deleteState = StatisticTypeDeleteState.Error(it)
+                    ifLeft = { error ->
+                        val message = when (error) {
+                            is StatisticTypeNotFoundError -> getString(Res.string.st_delete_error_not_found)
+                            is StatisticTypeUsedInAgency -> getString(Res.string.st_delete_error_used_in_agency)
+                            is CanNotDeleteStatisticTypeError -> getString(Res.string.st_delete_error_default)
+                            else -> getString(Res.string.st_delete_error_default)
+                        }
+
+                        StatisticTypeDeleteState.Error(message)
                     }
                 )
             } catch (e: Exception) {
-                deleteState = StatisticTypeDeleteState.Error(e.cause!!)
+                StatisticTypeDeleteState.Error(getString(Res.string.st_delete_error_default))
             }
         }
     }

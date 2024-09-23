@@ -94,12 +94,10 @@ class StatisticTypeScreen(private val queryBus: QueryBus, private val commandBus
                 }
 
                 showDeleteModal && selectedStatisticType != null -> {
-                    screenModel.resetDeleteModal()
                     StatisticTypeDeleteModal(
                         screenModel = screenModel,
                         statisticType = selectedStatisticType!!,
                         onSuccess = { resetScreen() },
-                        onFail = { resetScreen() },
                         onDismissRequest = { resetScreen() }
                     )
                 }

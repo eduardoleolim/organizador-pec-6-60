@@ -1,13 +1,16 @@
 package org.eduardoleolim.organizadorpec660.statisticType.views
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import org.eduardoleolim.organizadorpec660.shared.composables.ErrorDialog
 import org.eduardoleolim.organizadorpec660.shared.composables.QuestionDialog
 import org.eduardoleolim.organizadorpec660.shared.resources.Res
 import org.eduardoleolim.organizadorpec660.shared.resources.st_delete_text
@@ -22,16 +25,26 @@ fun StatisticTypeScreen.StatisticTypeDeleteModal(
     screenModel: StatisticTypeScreenModel,
     statisticType: StatisticTypeResponse,
     onSuccess: () -> Unit,
-    onFail: () -> Unit,
     onDismissRequest: () -> Unit
 ) {
+    var errorOccurred by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            screenModel.resetDeleteModal()
+        }
+    }
+
     when (val deleteState = screenModel.deleteState) {
         StatisticTypeDeleteState.Idle -> {
-
+            errorOccurred = false
+            errorMessage = null
         }
 
         StatisticTypeDeleteState.InProgress -> {
-
+            errorOccurred = false
+            errorMessage = null
         }
 
         StatisticTypeDeleteState.Success -> {
@@ -39,8 +52,8 @@ fun StatisticTypeScreen.StatisticTypeDeleteModal(
         }
 
         is StatisticTypeDeleteState.Error -> {
-            onFail()
-            println(deleteState.error.message)
+            errorOccurred = true
+            errorMessage = deleteState.message
         }
     }
 
@@ -65,4 +78,20 @@ fun StatisticTypeScreen.StatisticTypeDeleteModal(
             onDismissRequest()
         }
     )
+
+    if (errorOccurred) {
+        ErrorDialog(
+            text = {
+                errorMessage?.let {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(it)
+                    }
+                }
+            },
+            onDismissRequest = { screenModel.resetDeleteModal() },
+            onConfirmRequest = onDismissRequest
+        )
+    }
 }

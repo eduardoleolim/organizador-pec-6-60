@@ -130,6 +130,9 @@
     <string name="st_updated_at">Última actualización</string>
     <string name="st_delete_title">¿Eliminar el tipo de estadística?</string>
     <string name="st_delete_text">El tipo de estadística %1$s será eliminado permanentemente de la aplicación</string>
+    <string name="st_delete_error_default">Ocurrió un error mientras se trataba de eliminar el tipo de estadística</string>
+    <string name="st_delete_error_not_found">No se encontró la agencia</string>
+    <string name="st_delete_error_used_in_agency">El tipo de estadística no puede ser eliminado porque esta asociado con establecimientos</string>
     <string name="st_form_add_title">Agregar tipo de estadística</string>
     <string name="st_form_edit_title">Editar tipo de estadística</string>
     <string name="st_form_keycode_required">Clave requerida</string>
@@ -147,8 +150,8 @@
     <string name="ag_updated_at">Última actualización</string>
     <string name="ag_delete_title">¿Eliminar el establecimiento?</string>
     <string name="ag_delete_error_default">Ocurrió un error mientras se trataba de eliminar el establecimiento</string>
-    <string name="ag_delete_error_not_found">No se encontró la agencia</string>
-    <string name="ag_delete_error_has_instruments">El establecimiento no puede ser eliminada porque tiene instrumentos asociados</string>
+    <string name="ag_delete_error_not_found">No se encontró el establecimiento</string>
+    <string name="ag_delete_error_has_instruments">El establecimiento no puede ser eliminado porque tiene instrumentos asociados</string>
     <string name="ag_delete_text">El establecimiento %1$s será eliminada permanentemente de la aplicación</string>
     <string name="ag_form_add_title">Agregar establecimiento</string>
     <string name="ag_form_edit_title">Editar establecimiento</string>
