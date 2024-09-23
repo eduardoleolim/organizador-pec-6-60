@@ -33,6 +33,7 @@ class MunicipalityScreen(private val queryBus: QueryBus, private val commandBus:
         val federalEntities = screenModel.federalEntities
         val searchParameters by screenModel.searchParameters.collectAsState()
         val search = searchParameters.search
+        val selectedFederalEntity = searchParameters.federalEntity
         val screenState = screenModel.screenState
         val selectedMunicipality = screenState.selectedMunicipality
         val showFormModal = screenState.showFormModal
@@ -54,11 +55,13 @@ class MunicipalityScreen(private val queryBus: QueryBus, private val commandBus:
 
             MunicipalitiesTable(
                 modifier = Modifier.fillMaxSize(),
+                data = municipalities,
                 federalEntities = federalEntities,
+                federalEntity = selectedFederalEntity,
+                onFederalEntitySelected = { screenModel.searchMunicipalities(federalEntity = it) },
                 value = search,
                 onValueChange = { screenModel.searchMunicipalities(it) },
                 pageSizes = pageSizes,
-                data = municipalities,
                 state = tableState,
                 onSearch = { search, federalEntity, pageIndex, pageSize, orderBy, isAscending ->
                     val offset = pageIndex * pageSize
@@ -74,17 +77,15 @@ class MunicipalityScreen(private val queryBus: QueryBus, private val commandBus:
 
             when {
                 showFormModal -> {
-                    screenModel.resetForm()
                     MunicipalityFormModal(
                         screenModel = screenModel,
-                        municipality = selectedMunicipality,
+                        municipalityId = selectedMunicipality?.id,
                         onDismissRequest = { screenModel.resetScreen() },
                         onSuccess = { screenModel.resetScreen() }
                     )
                 }
 
                 showDeleteModal && selectedMunicipality != null -> {
-                    screenModel.resetDeleteModal()
                     MunicipalityDeleteModal(
                         screenModel = screenModel,
                         municipality = selectedMunicipality,

@@ -6,6 +6,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalityResponse
@@ -25,6 +26,12 @@ fun MunicipalityScreen.MunicipalityDeleteModal(
     onFail: () -> Unit,
     onDismissRequest: () -> Unit
 ) {
+    DisposableEffect(Unit) {
+        onDispose {
+            screenModel.resetDeleteModal()
+        }
+    }
+
     when (val deleteState = screenModel.deleteState) {
         MunicipalityDeleteState.Idle -> {
 

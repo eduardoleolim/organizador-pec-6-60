@@ -16,12 +16,12 @@ import org.eduardoleolim.organizadorpec660.municipality.application.Municipaliti
 import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorpec660.municipality.application.create.CreateMunicipalityCommand
 import org.eduardoleolim.organizadorpec660.municipality.application.delete.DeleteMunicipalityCommand
+import org.eduardoleolim.organizadorpec660.municipality.application.searchById.SearchMunicipalityByIdQuery
 import org.eduardoleolim.organizadorpec660.municipality.application.searchByTerm.SearchMunicipalitiesByTermQuery
 import org.eduardoleolim.organizadorpec660.municipality.application.update.UpdateMunicipalityCommand
 import org.eduardoleolim.organizadorpec660.municipality.data.EmptyMunicipalityDataException
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
-
 
 @OptIn(FlowPreview::class)
 class MunicipalityScreenModel(
@@ -47,8 +47,10 @@ class MunicipalityScreenModel(
     var deleteState by mutableStateOf<MunicipalityDeleteState>(MunicipalityDeleteState.Idle)
         private set
 
+    var municipality by mutableStateOf(MunicipalityFormData())
+
     init {
-        screenModelScope.launch {
+        screenModelScope.launch(dispatcher) {
             searchParameters
                 .debounce(500)
                 .collectLatest {
@@ -73,15 +75,47 @@ class MunicipalityScreenModel(
         )
     }
 
-    fun resetScreen() {
-        screenState = MunicipalityScreenState()
-        searchParameters.value = MunicipalitySearchParameters().also {
-            searchMunicipalities(it)
+    fun searchMunicipality(municipalityId: String?) {
+        screenModelScope.launch(dispatcher) {
+            municipality = if (municipalityId == null) {
+                MunicipalityFormData()
+            } else {
+                val municipality = queryBus.ask<MunicipalityResponse>(SearchMunicipalityByIdQuery(municipalityId))
+
+                MunicipalityFormData(
+                    municipality.id,
+                    municipality.name,
+                    municipality.keyCode,
+                    municipality.federalEntity
+                )
+            }
         }
-        searchAllFederalEntities()
     }
 
-    fun resetForm() {
+    fun updateMunicipalityName(name: String) {
+        municipality = municipality.copy(name = name)
+    }
+
+    fun updateMunicipalityKeyCode(keyCode: String) {
+        municipality = municipality.copy(keyCode = keyCode)
+    }
+
+    fun updateMunicipalityFederalEntity(federalEntity: FederalEntityResponse) {
+        municipality = municipality.copy(federalEntity = federalEntity)
+    }
+
+    fun resetScreen() {
+        screenModelScope.launch(dispatcher) {
+            screenState = MunicipalityScreenState()
+            val limit = screenState.tableState.pageSize
+            val offset = screenState.tableState.pageIndex * limit
+            searchParameters.value = MunicipalitySearchParameters(limit = limit, offset = offset)
+            fetchAllFederalEntities()
+            fetchMunicipalities(searchParameters.value)
+        }
+    }
+
+    fun resetFormModal() {
         formState = MunicipalityFormState.Idle
     }
 
@@ -100,20 +134,34 @@ class MunicipalityScreenModel(
     }
 
     private fun searchMunicipalities(parameters: MunicipalitySearchParameters) {
-        val (search, federalEntity, orders, limit, offset) = parameters
         screenModelScope.launch(dispatcher) {
-            try {
-                val query =
-                    SearchMunicipalitiesByTermQuery(federalEntity?.id, search, orders.toTypedArray(), limit, offset)
-                municipalities = queryBus.ask(query)
-            } catch (e: Exception) {
-                municipalities = MunicipalitiesResponse(emptyList(), 0, null, null)
+            fetchMunicipalities(parameters)
+        }
+    }
+
+    private suspend fun fetchMunicipalities(parameters: MunicipalitySearchParameters) {
+        withContext(dispatcher) {
+            val (search, federalEntity, orders, limit, offset) = parameters
+            screenModelScope.launch(dispatcher) {
+                try {
+                    val query =
+                        SearchMunicipalitiesByTermQuery(federalEntity?.id, search, orders.toTypedArray(), limit, offset)
+                    municipalities = queryBus.ask(query)
+                } catch (e: Exception) {
+                    municipalities = MunicipalitiesResponse(emptyList(), 0, null, null)
+                }
             }
         }
     }
 
     fun searchAllFederalEntities() {
         screenModelScope.launch(dispatcher) {
+            fetchAllFederalEntities()
+        }
+    }
+
+    private suspend fun fetchAllFederalEntities() {
+        withContext(dispatcher) {
             try {
                 val query = SearchFederalEntitiesByTermQuery()
                 federalEntities = queryBus.ask<FederalEntitiesResponse>(query).federalEntities
@@ -123,74 +171,71 @@ class MunicipalityScreenModel(
         }
     }
 
-    fun createMunicipality(keyCode: String, name: String, federalEntityId: String?) {
+    fun saveMunicipality() {
         screenModelScope.launch(dispatcher) {
-            formState = MunicipalityFormState.InProgress
-            delay(500)
-
-            val isFederalEntityEmpty = federalEntityId.isNullOrBlank()
+            val (id, name, keyCode, federalEntity) = municipality
+            val isFederalEntityUnselected = federalEntity == null
             val isKeyCodeEmpty = keyCode.isEmpty()
             val isNameEmpty = name.isEmpty()
 
-            if (isFederalEntityEmpty || isKeyCodeEmpty || isNameEmpty) {
-                formState =
-                    MunicipalityFormState.Error(
-                        EmptyMunicipalityDataException(
-                            isFederalEntityEmpty,
-                            isKeyCodeEmpty,
-                            isNameEmpty
-                        )
+            formState = MunicipalityFormState.InProgress
+            delay(500)
+
+            if (isFederalEntityUnselected || isKeyCodeEmpty || isNameEmpty) {
+                formState = MunicipalityFormState.Error(
+                    EmptyMunicipalityDataException(
+                        isFederalEntityUnselected,
+                        isKeyCodeEmpty,
+                        isNameEmpty
                     )
+                )
                 return@launch
             }
 
-            try {
-                commandBus.dispatch(CreateMunicipalityCommand(keyCode, name, federalEntityId!!)).fold(
-                    ifRight = {
-                        formState = MunicipalityFormState.SuccessCreate
-                    },
-                    ifLeft = {
-                        formState = MunicipalityFormState.Error(it)
-                    }
-                )
-            } catch (e: Exception) {
-                formState = MunicipalityFormState.Error(e.cause!!)
+            if (id == null) {
+                createMunicipality(keyCode, name, federalEntity!!.id)
+            } else {
+                updateMunicipality(id, keyCode, name, federalEntity!!.id)
             }
         }
     }
 
-    fun editMunicipality(municipalityId: String, keyCode: String, name: String, federalEntityId: String?) {
-        screenModelScope.launch(dispatcher) {
-            formState = MunicipalityFormState.InProgress
-            delay(500)
-
-            val isFederalEntityEmpty = federalEntityId.isNullOrBlank()
-            val isKeyCodeEmpty = keyCode.isEmpty()
-            val isNameEmpty = name.isEmpty()
-
-            if (isFederalEntityEmpty || isKeyCodeEmpty || isNameEmpty) {
-                formState =
-                    MunicipalityFormState.Error(
-                        EmptyMunicipalityDataException(
-                            isFederalEntityEmpty,
-                            isKeyCodeEmpty,
-                            isNameEmpty
-                        )
-                    )
-                return@launch
-            }
-
-            try {
-                commandBus.dispatch(UpdateMunicipalityCommand(municipalityId, keyCode, name, federalEntityId!!)).fold(
+    private suspend fun createMunicipality(keyCode: String, name: String, federalEntityId: String) {
+        withContext(dispatcher) {
+            formState = try {
+                commandBus.dispatch(CreateMunicipalityCommand(keyCode, name, federalEntityId)).fold(
                     ifRight = {
-                        formState = MunicipalityFormState.SuccessEdit
+                        MunicipalityFormState.SuccessCreate
                     },
                     ifLeft = {
-                        formState = MunicipalityFormState.Error(it)
+                        MunicipalityFormState.Error(it)
                     }
                 )
             } catch (e: Exception) {
-                formState = MunicipalityFormState.Error(e.cause!!)
+                MunicipalityFormState.Error(e.cause!!)
+            }
+        }
+    }
+
+    private suspend fun updateMunicipality(
+        municipalityId: String,
+        keyCode: String,
+        name: String,
+        federalEntityId: String
+    ) {
+        withContext(dispatcher) {
+            formState = try {
+                commandBus.dispatch(UpdateMunicipalityCommand(municipalityId, keyCode, name, federalEntityId))
+                    .fold(
+                        ifRight = {
+                            MunicipalityFormState.SuccessEdit
+                        },
+                        ifLeft = {
+                            MunicipalityFormState.Error(it)
+                        }
+                    )
+            } catch (e: Exception) {
+                MunicipalityFormState.Error(e.cause!!)
             }
         }
     }
@@ -201,14 +246,15 @@ class MunicipalityScreenModel(
             delay(500)
 
             try {
-                commandBus.dispatch(DeleteMunicipalityCommand(municipalityId)).fold(
-                    ifRight = {
-                        deleteState = MunicipalityDeleteState.Success
-                    },
-                    ifLeft = {
-                        deleteState = MunicipalityDeleteState.Error(it)
-                    }
-                )
+                commandBus.dispatch(DeleteMunicipalityCommand(municipalityId))
+                    .fold(
+                        ifRight = {
+                            deleteState = MunicipalityDeleteState.Success
+                        },
+                        ifLeft = {
+                            deleteState = MunicipalityDeleteState.Error(it)
+                        }
+                    )
 
             } catch (e: Exception) {
                 deleteState = MunicipalityDeleteState.Error(e.cause!!)

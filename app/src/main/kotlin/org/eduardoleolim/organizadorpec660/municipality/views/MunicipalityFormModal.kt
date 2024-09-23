@@ -11,7 +11,6 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityNotFoundError
-import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorpec660.municipality.data.EmptyMunicipalityDataException
 import org.eduardoleolim.organizadorpec660.municipality.domain.InvalidMunicipalityKeyCodeError
 import org.eduardoleolim.organizadorpec660.municipality.domain.InvalidMunicipalityNameError
@@ -25,18 +24,12 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun MunicipalityScreen.MunicipalityFormModal(
     screenModel: MunicipalityScreenModel,
-    municipality: MunicipalityResponse?,
+    municipalityId: String?,
     onDismissRequest: () -> Unit,
     onSuccess: () -> Unit
 ) {
-    val municipalityId by remember { mutableStateOf(municipality?.id) }
-    var federalEntity by remember { mutableStateOf(municipality?.federalEntity) }
-    var keyCode by remember { mutableStateOf(municipality?.keyCode ?: "") }
-    var name by remember { mutableStateOf(municipality?.name ?: "") }
-
-    val titleResource = remember {
-        if (municipality == null) Res.string.mun_form_add_title else Res.string.mun_form_edit_title
-    }
+    val title =
+        remember { if (municipalityId == null) Res.string.mun_form_add_title else Res.string.mun_form_edit_title }
     var enabled by remember { mutableStateOf(true) }
     var isFederalEntityError by remember { mutableStateOf(false) }
     var isKeyCodeError by remember { mutableStateOf(false) }
@@ -45,8 +38,20 @@ fun MunicipalityScreen.MunicipalityFormModal(
     var keyCodeSupportingText: String? by remember { mutableStateOf(null) }
     var nameSupportingText: String? by remember { mutableStateOf(null) }
 
-    LaunchedEffect(Unit) {
+    val federalEntities = screenModel.federalEntities
+    val municipality = screenModel.municipality
+    val federalEntity = municipality.federalEntity
+    val keyCode = municipality.keyCode
+    val name = municipality.name
+    val federalEntityIndex = federalEntities.indexOfFirst { it.id == federalEntity?.id }.takeIf { it != -1 }
+
+    DisposableEffect(Unit) {
         screenModel.searchAllFederalEntities()
+        screenModel.searchMunicipality(municipalityId)
+
+        onDispose {
+            screenModel.resetFormModal()
+        }
     }
 
     when (val formState = screenModel.formState) {
@@ -135,13 +140,16 @@ fun MunicipalityScreen.MunicipalityFormModal(
         ),
         onDismissRequest = onDismissRequest,
         title = {
-            Text(stringResource(titleResource))
+            Text(stringResource(title))
         },
         text = {
             Column {
                 OutlinedSelect(
-                    items = screenModel.federalEntities,
-                    onValueSelected = { _, item -> federalEntity = item },
+                    items = federalEntities,
+                    index = federalEntityIndex,
+                    onValueSelected = { _, federalEntity ->
+                        screenModel.updateMunicipalityFederalEntity(federalEntity)
+                    },
                     visualTransformation = { "${it.keyCode} - ${it.name}" },
                     label = {
                         Text(stringResource(Res.string.mun_federal_entity))
@@ -163,7 +171,7 @@ fun MunicipalityScreen.MunicipalityFormModal(
                     value = keyCode,
                     onValueChange = {
                         if (Regex("[0-9]{0,3}").matches(it)) {
-                            keyCode = it
+                            screenModel.updateMunicipalityKeyCode(it)
                         }
                     },
                     singleLine = true,
@@ -175,7 +183,7 @@ fun MunicipalityScreen.MunicipalityFormModal(
                         .width(300.dp)
                         .onFocusChanged {
                             if (!it.isFocused && keyCode.isNotEmpty()) {
-                                keyCode = keyCode.padStart(3, '0')
+                                screenModel.updateMunicipalityKeyCode(keyCode)
                             }
                         }
                 )
@@ -188,7 +196,7 @@ fun MunicipalityScreen.MunicipalityFormModal(
                         Text(stringResource(Res.string.mun_name))
                     },
                     value = name,
-                    onValueChange = { name = it.uppercase() },
+                    onValueChange = { screenModel.updateMunicipalityName(it.uppercase()) },
                     singleLine = true,
                     isError = isNameError,
                     supportingText = nameSupportingText?.let { message ->
@@ -201,13 +209,7 @@ fun MunicipalityScreen.MunicipalityFormModal(
         confirmButton = {
             TextButton(
                 enabled = enabled,
-                onClick = {
-                    if (municipalityId == null) {
-                        screenModel.createMunicipality(keyCode, name, federalEntity?.id)
-                    } else {
-                        screenModel.editMunicipality(municipalityId!!, keyCode, name, federalEntity?.id)
-                    }
-                }
+                onClick = { screenModel.saveMunicipality() }
             ) {
                 Text(stringResource(Res.string.save))
             }

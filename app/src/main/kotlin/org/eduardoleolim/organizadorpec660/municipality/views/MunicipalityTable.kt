@@ -39,6 +39,8 @@ fun MunicipalityScreen.MunicipalitiesTable(
     value: String,
     onValueChange: (String) -> Unit,
     federalEntities: List<FederalEntityResponse>,
+    federalEntity: FederalEntityResponse?,
+    onFederalEntitySelected: (FederalEntityResponse?) -> Unit,
     pageSizes: List<Int>,
     data: MunicipalitiesResponse,
     state: PaginatedDataTableState,
@@ -53,7 +55,6 @@ fun MunicipalityScreen.MunicipalitiesTable(
     val createdAtColumnName = stringResource(Res.string.mun_created_at)
     val updatedAtColumnName = stringResource(Res.string.mun_updated_at)
     val actionsColumnName = stringResource(Res.string.table_col_actions)
-    var federalEntity by remember { mutableStateOf<FederalEntityResponse?>(null) }
 
     val columns = remember {
         fun onSort(index: Int, ascending: Boolean) {
@@ -113,20 +114,6 @@ fun MunicipalityScreen.MunicipalitiesTable(
         )
     }
 
-    fun getOrderBy(sortColumnIndex: Int?) = when (sortColumnIndex) {
-        0 -> MunicipalityFields.KeyCode.value
-        1 -> MunicipalityFields.Name.value
-        2 -> MunicipalityFields.FederalEntityKeyCode.value
-        3 -> MunicipalityFields.CreatedAt.value
-        4 -> MunicipalityFields.UpdatedAt.value
-        else -> null
-    }
-
-    LaunchedEffect(federalEntity) {
-        val orderBy = getOrderBy(state.sortColumnIndex)
-        onSearch(value, federalEntity, state.pageIndex, state.pageSize, orderBy, state.sortAscending)
-    }
-
     Surface(
         modifier = Modifier.then(modifier),
         shape = MaterialTheme.shapes.small,
@@ -140,13 +127,24 @@ fun MunicipalityScreen.MunicipalitiesTable(
             state = state,
             pageSizes = pageSizes,
             onSearch = { search, pageIndex, pageSize, sortBy, isAscending ->
-                val orderBy = getOrderBy(sortBy)
+                val orderBy = when (sortBy) {
+                    0 -> MunicipalityFields.KeyCode.value
+                    1 -> MunicipalityFields.Name.value
+                    2 -> MunicipalityFields.FederalEntityKeyCode.value
+                    3 -> MunicipalityFields.CreatedAt.value
+                    4 -> MunicipalityFields.UpdatedAt.value
+                    else -> null
+                }
                 onSearch(search, federalEntity, pageIndex, pageSize, orderBy, isAscending)
             },
             header = {
                 SelectFederalEntity(
                     federalEntities = federalEntities,
-                    onFederalEntitySelected = { federalEntity = it }
+                    federalEntity = federalEntity,
+                    onFederalEntitySelected = { federalEntity ->
+                        state.pageIndex = 0
+                        onFederalEntitySelected(federalEntity)
+                    }
                 )
             }
         ) {
@@ -212,21 +210,17 @@ fun MunicipalityScreen.MunicipalitiesTable(
 @Composable
 private fun SelectFederalEntity(
     federalEntities: List<FederalEntityResponse>,
+    federalEntity: FederalEntityResponse?,
     onFederalEntitySelected: (FederalEntityResponse?) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedFederalEntity by remember { mutableStateOf<FederalEntityResponse?>(null) }
-
-    LaunchedEffect(selectedFederalEntity) {
-        onFederalEntitySelected(selectedFederalEntity)
-    }
 
     Box {
         TextButton(
             onClick = { expanded = true },
         ) {
             Text(
-                text = selectedFederalEntity?.let { "${it.keyCode} - ${it.name}" }
+                text = federalEntity?.let { "${it.keyCode} - ${it.name}" }
                     ?: stringResource(Res.string.mun_form_select_all),
                 fontWeight = FontWeight.Normal,
                 color = MaterialTheme.colorScheme.onSurface,
@@ -253,7 +247,7 @@ private fun SelectFederalEntity(
                 },
                 onClick = {
                     expanded = false
-                    selectedFederalEntity = null
+                    onFederalEntitySelected(null)
                 }
             )
 
@@ -267,7 +261,7 @@ private fun SelectFederalEntity(
                     },
                     onClick = {
                         expanded = false
-                        selectedFederalEntity = federalEntity
+                        onFederalEntitySelected(federalEntity)
                     }
                 )
             }
