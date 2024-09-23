@@ -58,7 +58,7 @@ class FederalEntityScreenModel(
         private set
 
     init {
-        screenModelScope.launch {
+        screenModelScope.launch(dispatcher) {
             searchParameters
                 .debounce(500)
                 .collectLatest {
@@ -143,7 +143,9 @@ class FederalEntityScreenModel(
 
     fun resetScreen() {
         screenState = FederalEntityScreenState()
-        searchParameters.value = FederalEntitySearchParameters()
+        val limit = screenState.tableState.pageSize
+        val offset = screenState.tableState.pageIndex * limit
+        searchParameters.value = FederalEntitySearchParameters(limit = limit, offset = offset)
         searchFederalEntities(searchParameters.value)
     }
 
