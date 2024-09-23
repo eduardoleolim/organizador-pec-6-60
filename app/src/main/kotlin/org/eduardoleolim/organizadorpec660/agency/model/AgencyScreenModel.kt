@@ -73,7 +73,7 @@ class AgencyScreenModel(
         private set
 
     init {
-        screenModelScope.launch {
+        screenModelScope.launch(dispatcher) {
             searchParameters
                 .debounce(500)
                 .collectLatest {
@@ -161,7 +161,9 @@ class AgencyScreenModel(
 
     fun resetScreen() {
         screenState = AgencyScreenState()
-        searchParameters.value = AgencySearchParameters()
+        val limit = screenState.tableState.pageSize
+        val offset = screenState.tableState.pageIndex * limit
+        searchParameters.value = AgencySearchParameters(limit = limit, offset = offset)
         searchAgencies(searchParameters.value)
     }
 
