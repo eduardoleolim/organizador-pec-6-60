@@ -5,14 +5,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
 import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntitiesResponse
 import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorpec660.federalEntity.application.searchByTerm.SearchFederalEntitiesByTermQuery
 import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalitiesResponse
+import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorpec660.municipality.application.create.CreateMunicipalityCommand
 import org.eduardoleolim.organizadorpec660.municipality.application.delete.DeleteMunicipalityCommand
 import org.eduardoleolim.organizadorpec660.municipality.application.searchByTerm.SearchMunicipalitiesByTermQuery
@@ -21,26 +22,19 @@ import org.eduardoleolim.organizadorpec660.municipality.data.EmptyMunicipalityDa
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
 
-sealed class MunicipalityFormState {
-    data object Idle : MunicipalityFormState()
-    data object InProgress : MunicipalityFormState()
-    data object SuccessCreate : MunicipalityFormState()
-    data object SuccessEdit : MunicipalityFormState()
-    data class Error(val error: Throwable) : MunicipalityFormState()
-}
 
-sealed class MunicipalityDeleteState {
-    data object Idle : MunicipalityDeleteState()
-    data object InProgress : MunicipalityDeleteState()
-    data object Success : MunicipalityDeleteState()
-    data class Error(val error: Throwable) : MunicipalityDeleteState()
-}
-
+@OptIn(FlowPreview::class)
 class MunicipalityScreenModel(
     private val queryBus: QueryBus,
     private val commandBus: CommandBus,
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default
 ) : ScreenModel {
+    var screenState by mutableStateOf(MunicipalityScreenState())
+        private set
+
+    var searchParameters = MutableStateFlow(MunicipalitySearchParameters())
+        private set
+
     var municipalities by mutableStateOf(MunicipalitiesResponse(emptyList(), 0, null, null))
         private set
 
@@ -53,6 +47,40 @@ class MunicipalityScreenModel(
     var deleteState by mutableStateOf<MunicipalityDeleteState>(MunicipalityDeleteState.Idle)
         private set
 
+    init {
+        screenModelScope.launch {
+            searchParameters
+                .debounce(500)
+                .collectLatest {
+                    searchMunicipalities(it)
+                }
+        }
+    }
+
+    fun showFormModal(municipality: MunicipalityResponse?) {
+        screenState = screenState.copy(
+            selectedMunicipality = municipality,
+            showFormModal = true,
+            showDeleteModal = false
+        )
+    }
+
+    fun showDeleteModal(municipality: MunicipalityResponse) {
+        screenState = screenState.copy(
+            selectedMunicipality = municipality,
+            showFormModal = false,
+            showDeleteModal = true
+        )
+    }
+
+    fun resetScreen() {
+        screenState = MunicipalityScreenState()
+        searchParameters.value = MunicipalitySearchParameters().also {
+            searchMunicipalities(it)
+        }
+        searchAllFederalEntities()
+    }
+
     fun resetForm() {
         formState = MunicipalityFormState.Idle
     }
@@ -62,16 +90,21 @@ class MunicipalityScreenModel(
     }
 
     fun searchMunicipalities(
-        search: String? = null,
-        federalEntityId: String? = null,
-        orders: List<HashMap<String, String>>? = null,
-        limit: Int? = null,
-        offset: Int? = null
+        search: String = searchParameters.value.search,
+        federalEntity: FederalEntityResponse? = searchParameters.value.federalEntity,
+        orders: List<HashMap<String, String>> = searchParameters.value.orders,
+        limit: Int? = searchParameters.value.limit,
+        offset: Int? = searchParameters.value.offset
     ) {
+        searchParameters.value = MunicipalitySearchParameters(search, federalEntity, orders, limit, offset)
+    }
+
+    private fun searchMunicipalities(parameters: MunicipalitySearchParameters) {
+        val (search, federalEntity, orders, limit, offset) = parameters
         screenModelScope.launch(dispatcher) {
             try {
                 val query =
-                    SearchMunicipalitiesByTermQuery(federalEntityId, search, orders?.toTypedArray(), limit, offset)
+                    SearchMunicipalitiesByTermQuery(federalEntity?.id, search, orders.toTypedArray(), limit, offset)
                 municipalities = queryBus.ask(query)
             } catch (e: Exception) {
                 municipalities = MunicipalitiesResponse(emptyList(), 0, null, null)

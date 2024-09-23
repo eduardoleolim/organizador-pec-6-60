@@ -23,7 +23,7 @@ import com.seanproctor.datatable.paging.PaginatedDataTableState
 import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalitiesResponse
 import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalityResponse
-import org.eduardoleolim.organizadorpec660.municipality.model.MunicipalityScreenModel
+import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityFields
 import org.eduardoleolim.organizadorpec660.shared.composables.PaginatedDataTable
 import org.eduardoleolim.organizadorpec660.shared.composables.PlainTextTooltip
 import org.eduardoleolim.organizadorpec660.shared.composables.sortAscending
@@ -36,25 +36,24 @@ import java.time.format.DateTimeFormatter
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MunicipalityScreen.MunicipalitiesTable(
-    screenModel: MunicipalityScreenModel,
     value: String,
     onValueChange: (String) -> Unit,
+    federalEntities: List<FederalEntityResponse>,
     pageSizes: List<Int>,
     data: MunicipalitiesResponse,
     state: PaginatedDataTableState,
-    onSearch: (search: String, federalEntityId: String?, pageIndex: Int, pageSize: Int, orderBy: String?, isAscending: Boolean) -> Unit,
+    onSearch: (search: String, federalEntity: FederalEntityResponse?, pageIndex: Int, pageSize: Int, orderBy: String?, isAscending: Boolean) -> Unit,
     onDeleteRequest: (MunicipalityResponse) -> Unit,
     onEditRequest: (MunicipalityResponse) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val orders = remember { listOf("keyCode", "name", "federalEntity.name", "createdAt", "updatedAt") }
     val keyCodeColumnName = stringResource(Res.string.mun_keycode)
     val nameColumnName = stringResource(Res.string.mun_name)
     val federalEntityColumnName = stringResource(Res.string.mun_federal_entity)
     val createdAtColumnName = stringResource(Res.string.mun_created_at)
     val updatedAtColumnName = stringResource(Res.string.mun_updated_at)
     val actionsColumnName = stringResource(Res.string.table_col_actions)
-    var federalEntityId by remember { mutableStateOf<String?>(null) }
+    var federalEntity by remember { mutableStateOf<FederalEntityResponse?>(null) }
 
     val columns = remember {
         fun onSort(index: Int, ascending: Boolean) {
@@ -114,8 +113,18 @@ fun MunicipalityScreen.MunicipalitiesTable(
         )
     }
 
-    LaunchedEffect(Unit) {
-        screenModel.searchAllFederalEntities()
+    fun getOrderBy(sortColumnIndex: Int?) = when (sortColumnIndex) {
+        0 -> MunicipalityFields.KeyCode.value
+        1 -> MunicipalityFields.Name.value
+        2 -> MunicipalityFields.FederalEntityKeyCode.value
+        3 -> MunicipalityFields.CreatedAt.value
+        4 -> MunicipalityFields.UpdatedAt.value
+        else -> null
+    }
+
+    LaunchedEffect(federalEntity) {
+        val orderBy = getOrderBy(state.sortColumnIndex)
+        onSearch(value, federalEntity, state.pageIndex, state.pageSize, orderBy, state.sortAscending)
     }
 
     Surface(
@@ -131,15 +140,13 @@ fun MunicipalityScreen.MunicipalitiesTable(
             state = state,
             pageSizes = pageSizes,
             onSearch = { search, pageIndex, pageSize, sortBy, isAscending ->
-                onSearch(search, federalEntityId, pageIndex, pageSize, sortBy?.let { orders[it] }, isAscending)
+                val orderBy = getOrderBy(sortBy)
+                onSearch(search, federalEntity, pageIndex, pageSize, orderBy, isAscending)
             },
             header = {
                 SelectFederalEntity(
-                    federalEntities = screenModel.federalEntities,
-                    onFederalEntitySelected = { federalEntity ->
-                        federalEntityId = federalEntity?.id
-                        state.pageIndex = -1
-                    }
+                    federalEntities = federalEntities,
+                    onFederalEntitySelected = { federalEntity = it }
                 )
             }
         ) {

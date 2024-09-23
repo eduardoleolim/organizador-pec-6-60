@@ -8,17 +8,17 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
-import com.seanproctor.datatable.paging.rememberPaginatedDataTableState
 import kotlinx.coroutines.Dispatchers
-import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorpec660.municipality.model.MunicipalityScreenModel
-import org.eduardoleolim.organizadorpec660.shared.composables.reset
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
 import org.eduardoleolim.organizadorpec660.shared.resources.Res
@@ -29,62 +29,47 @@ class MunicipalityScreen(private val queryBus: QueryBus, private val commandBus:
     @Composable
     override fun Content() {
         val screenModel = rememberScreenModel { MunicipalityScreenModel(queryBus, commandBus, Dispatchers.IO) }
-        var showDeleteModal by remember { mutableStateOf(false) }
-        var showFormModal by remember { mutableStateOf(false) }
-        var selectedFederalEntityId by remember { mutableStateOf<String?>(null) }
-        var selectedMunicipality by remember { mutableStateOf<MunicipalityResponse?>(null) }
-        var searchValue by remember { mutableStateOf("") }
-        val pageSizes = remember { listOf(10, 25, 50, 100) }
-        val state = rememberPaginatedDataTableState(pageSizes.first())
-        val resetScreen = remember {
-            fun() {
-                val offset = state.pageIndex * state.pageSize
-                searchValue = ""
-                state.reset(pageSizes.first())
-                screenModel.searchMunicipalities(searchValue, selectedFederalEntityId, null, state.pageSize, offset)
-                screenModel.searchAllFederalEntities()
-                showDeleteModal = false
-                showFormModal = false
-                selectedMunicipality = null
-            }
+        val municipalities = screenModel.municipalities
+        val federalEntities = screenModel.federalEntities
+        val searchParameters by screenModel.searchParameters.collectAsState()
+        val search = searchParameters.search
+        val screenState = screenModel.screenState
+        val selectedMunicipality = screenState.selectedMunicipality
+        val showFormModal = screenState.showFormModal
+        val showDeleteModal = screenState.showDeleteModal
+        val pageSizes = screenState.pageSizes
+        val tableState = screenState.tableState
+
+        LaunchedEffect(Unit) {
+            screenModel.searchAllFederalEntities()
         }
 
         Column(
             modifier = Modifier.padding(24.dp)
         ) {
             MunicipalityScreenHeader(
-                onSaveRequest = {
-                    selectedMunicipality = null
-                    showFormModal = true
-                },
+                onSaveRequest = { screenModel.showFormModal(null) },
                 onImportExportRequest = { }
             )
 
             MunicipalitiesTable(
                 modifier = Modifier.fillMaxSize(),
-                screenModel = screenModel,
-                value = searchValue,
-                onValueChange = { searchValue = it },
+                federalEntities = federalEntities,
+                value = search,
+                onValueChange = { screenModel.searchMunicipalities(it) },
                 pageSizes = pageSizes,
-                data = screenModel.municipalities,
-                state = state,
-                onSearch = { search, federalEntityId, pageIndex, pageSize, orderBy, isAscending ->
-                    selectedFederalEntityId = federalEntityId
-                    val orders = orderBy?.let {
-                        val orderType = if (isAscending) "ASC" else "DESC"
-                        listOf(hashMapOf("orderBy" to orderBy, "orderType" to orderType))
-                    }
+                data = municipalities,
+                state = tableState,
+                onSearch = { search, federalEntity, pageIndex, pageSize, orderBy, isAscending ->
+                    val offset = pageIndex * pageSize
+                    val orders = orderBy?.takeIf { it.isNotEmpty() }?.let {
+                        listOf(hashMapOf("orderBy" to it, "orderType" to if (isAscending) "ASC" else "DESC"))
+                    }.orEmpty()
 
-                    screenModel.searchMunicipalities(search, federalEntityId, orders, pageSize, pageIndex * pageSize)
+                    screenModel.searchMunicipalities(search, federalEntity, orders, pageSize, offset)
                 },
-                onDeleteRequest = { federalEntity ->
-                    selectedMunicipality = federalEntity
-                    showDeleteModal = true
-                },
-                onEditRequest = { federalEntity ->
-                    selectedMunicipality = federalEntity
-                    showFormModal = true
-                }
+                onDeleteRequest = { screenModel.showDeleteModal(it) },
+                onEditRequest = { screenModel.showFormModal(it) }
             )
 
             when {
@@ -93,8 +78,8 @@ class MunicipalityScreen(private val queryBus: QueryBus, private val commandBus:
                     MunicipalityFormModal(
                         screenModel = screenModel,
                         municipality = selectedMunicipality,
-                        onDismissRequest = { resetScreen() },
-                        onSuccess = { resetScreen() }
+                        onDismissRequest = { screenModel.resetScreen() },
+                        onSuccess = { screenModel.resetScreen() }
                     )
                 }
 
@@ -102,10 +87,10 @@ class MunicipalityScreen(private val queryBus: QueryBus, private val commandBus:
                     screenModel.resetDeleteModal()
                     MunicipalityDeleteModal(
                         screenModel = screenModel,
-                        municipality = selectedMunicipality!!,
-                        onSuccess = { resetScreen() },
-                        onFail = { resetScreen() },
-                        onDismissRequest = { resetScreen() }
+                        municipality = selectedMunicipality,
+                        onSuccess = { screenModel.resetScreen() },
+                        onFail = { screenModel.resetScreen() },
+                        onDismissRequest = { screenModel.resetScreen() }
                     )
                 }
             }
