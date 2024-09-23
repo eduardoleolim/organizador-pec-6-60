@@ -13,4 +13,7 @@ class FederalEntityNotFoundError(val id: String) : MunicipalityError("The federa
 
 class CanNotSaveMunicipalityError(cause: Throwable?) : MunicipalityError("The municipality could not be saved", cause)
 
-class CanNotDeleteMunicipalityError(cause: Throwable?) : MunicipalityError("The municipality could not be saved", cause)
+class MunicipalityHasAgenciesError : MunicipalityError("There are agencies associated with the agency")
+
+class CanNotDeleteMunicipalityError(cause: Throwable?) :
+    MunicipalityError("The municipality could not be deleted", cause)

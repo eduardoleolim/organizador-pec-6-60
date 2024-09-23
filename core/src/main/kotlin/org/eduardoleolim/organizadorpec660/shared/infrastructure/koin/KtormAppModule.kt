@@ -84,7 +84,7 @@ object KtormAppModule {
 
         // Municipality services
         single { MunicipalityCreator(get(), get()) }
-        single { MunicipalityDeleter(get()) }
+        single { MunicipalityDeleter(get(), get()) }
         single { MunicipalitySearcher(get()) }
         single { MunicipalityUpdater(get(), get()) }
 
