@@ -11,12 +11,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntityResponse
-import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityHasMunicipalitiesError
 import org.eduardoleolim.organizadorpec660.federalEntity.model.FederalEntityDeleteState
 import org.eduardoleolim.organizadorpec660.federalEntity.model.FederalEntityScreenModel
 import org.eduardoleolim.organizadorpec660.shared.composables.ErrorDialog
 import org.eduardoleolim.organizadorpec660.shared.composables.QuestionDialog
-import org.eduardoleolim.organizadorpec660.shared.resources.*
+import org.eduardoleolim.organizadorpec660.shared.resources.Res
+import org.eduardoleolim.organizadorpec660.shared.resources.fe_delete_text
+import org.eduardoleolim.organizadorpec660.shared.resources.fe_delete_title
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -52,16 +53,7 @@ fun FederalEntityScreen.FederalEntityDeleteModal(
 
         is FederalEntityDeleteState.Error -> {
             errorOccurred = true
-            errorText = when (val error = deleteState.error) {
-                is FederalEntityHasMunicipalitiesError -> {
-                    stringResource(Res.string.fe_delete_error_has_municipalities)
-                }
-
-                else -> {
-                    println(error)
-                    stringResource(Res.string.fe_delete_error_default)
-                }
-            }
+            errorText = deleteState.message
         }
     }
 

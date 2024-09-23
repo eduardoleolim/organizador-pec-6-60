@@ -19,12 +19,12 @@ import org.eduardoleolim.organizadorpec660.federalEntity.application.searchById.
 import org.eduardoleolim.organizadorpec660.federalEntity.application.searchByTerm.SearchFederalEntitiesByTermQuery
 import org.eduardoleolim.organizadorpec660.federalEntity.application.update.UpdateFederalEntityCommand
 import org.eduardoleolim.organizadorpec660.federalEntity.data.EmptyFederalEntityDataException
+import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityHasMunicipalitiesError
+import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityNotFoundError
 import org.eduardoleolim.organizadorpec660.federalEntity.infrastructure.services.KotlinCsvFederalEntityImportInput
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
-import org.eduardoleolim.organizadorpec660.shared.resources.Res
-import org.eduardoleolim.organizadorpec660.shared.resources.fe_keycode
-import org.eduardoleolim.organizadorpec660.shared.resources.fe_name
+import org.eduardoleolim.organizadorpec660.shared.resources.*
 import org.jetbrains.compose.resources.getString
 import java.io.File
 import java.io.IOException
@@ -250,16 +250,23 @@ class FederalEntityScreenModel(
 
             deleteState = try {
                 val command = DeleteFederalEntityCommand(federalEntityId)
-                commandBus.dispatch(command).fold(
-                    ifRight = {
-                        FederalEntityDeleteState.Success
-                    },
-                    ifLeft = {
-                        FederalEntityDeleteState.Error(it)
-                    }
-                )
+                commandBus.dispatch(command)
+                    .foldAsync(
+                        ifRight = {
+                            FederalEntityDeleteState.Success
+                        },
+                        ifLeft = { error ->
+                            val message = when (error) {
+                                is FederalEntityHasMunicipalitiesError -> getString(Res.string.fe_delete_error_has_municipalities)
+                                is FederalEntityNotFoundError -> getString(Res.string.fe_delete_error_not_found)
+                                else -> getString(Res.string.fe_delete_error_default)
+                            }
+
+                            FederalEntityDeleteState.Error(message)
+                        }
+                    )
             } catch (e: Exception) {
-                FederalEntityDeleteState.Error(e.cause!!)
+                FederalEntityDeleteState.Error(getString(Res.string.fe_delete_error_default))
             }
         }
     }

@@ -4,5 +4,5 @@ sealed class FederalEntityDeleteState {
     data object Idle : FederalEntityDeleteState()
     data object InProgress : FederalEntityDeleteState()
     data object Success : FederalEntityDeleteState()
-    data class Error(val error: Throwable) : FederalEntityDeleteState()
+    data class Error(val message: String) : FederalEntityDeleteState()
 }

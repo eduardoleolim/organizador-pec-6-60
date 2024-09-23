@@ -77,6 +77,7 @@
     <string name="fe_delete_title">¿Eliminar la entidad federativa?</string>
     <string name="fe_delete_text">La entidad federativa %1$s será eliminada permanentemente de la aplicación</string>
     <string name="fe_delete_error_default">Ocurrió un error mientras se trataba de eliminar la entidad federativa</string>
+    <string name="fe_delete_error_not_found">No se encontró la entidad federativa</string>
     <string name="fe_delete_error_has_municipalities">La entidad federativa no puede ser eliminada porque tiene municipio asociados</string>
     <string name="fe_form_add_title">Agregar entidad federativa</string>
     <string name="fe_form_edit_title">Editar federal entity</string>
