@@ -76,7 +76,7 @@
     <string name="fe_updated_at">Updated at</string>
     <string name="fe_delete_title">Delete federal entity?</string>
     <string name="fe_delete_text">The federal entity %1$s will be permanently removed from application</string>
-    <string name="fe_delete_error_default">A error occurred when trying to delete the federal entity</string>
+    <string name="fe_delete_error_default">A error occurred when trying to delete the federal entity. Please try again later</string>
     <string name="fe_delete_error_has_municipalities">The federal entity can't be delete because it has municipalities associated</string>
     <string name="fe_form_add_title">Add federal entity</string>
     <string name="fe_form_edit_title">Edit federal entity</string>
@@ -106,6 +106,9 @@
     <string name="mun_updated_at">Updated at</string>
     <string name="mun_delete_title">Delete municipality?</string>
     <string name="mun_delete_text">The municipality %1$s will be permanently removed from application</string>
+    <string name="mun_delete_error_default">A error occurred when trying to delete the municipality. Please try again later</string>
+    <string name="mun_delete_error_has_agencies">The municipality can't be delete because it has agencies associated</string>
+    <string name="mun_delete_error_not_found">Municipality not found</string>
     <string name="mun_form_add_title">Add municipality</string>
     <string name="mun_form_edit_title">Edit municipality</string>
     <string name="mun_form_federal_entity_required">Federal entity required</string>

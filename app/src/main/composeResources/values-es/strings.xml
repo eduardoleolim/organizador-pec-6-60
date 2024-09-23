@@ -7,7 +7,7 @@
     <string name="table_show_items">Mostrar %1$s registros</string>
     <string name="table_search">Buscar</string>
     <string name="table_pagination">%1$s-%2$s de %3$s</string>
-    <string name="dialog_error_title">Un error ha ocurrido</string>
+    <string name="dialog_error_title">Ocurrió un error</string>
 
     <string name="accept">Aceptar</string>
     <string name="confirm">Confirmar</string>
@@ -106,6 +106,9 @@
     <string name="mun_updated_at">Última actualización</string>
     <string name="mun_delete_title">¿Eliminar el municipio?</string>
     <string name="mun_delete_text">El municipio %1$s será eliminada permanentemente de la aplicación</string>
+    <string name="mun_delete_error_default">Ocurrió un error mientras se trataba de eliminar el municipio. Por favor inténtalo más tarde</string>
+    <string name="mun_delete_error_has_agencies">El municipio no puede ser eliminado porque tiene establecimientos asociados</string>
+    <string name="mun_delete_error_not_found">No se encontró el municipio</string>
     <string name="mun_form_add_title">Agregar municipio</string>
     <string name="mun_form_edit_title">Editar municipio</string>
     <string name="mun_form_federal_entity_required">Entidad federativa requerida</string>
@@ -117,6 +120,7 @@
     <string name="mun_form_federal_entity_does_not_exist">La entidad federativa no existe</string>
     <string name="mun_form_select_federal_entity">Selecciona una entidad federativa</string>
     <string name="mun_form_select_all">Todas las entidades federativas</string>
+
 
     <!-- Statistic type -->
     <string name="statistic_types">Tipos de estadística</string>

@@ -90,7 +90,6 @@ class MunicipalityScreen(private val queryBus: QueryBus, private val commandBus:
                         screenModel = screenModel,
                         municipality = selectedMunicipality,
                         onSuccess = { screenModel.resetScreen() },
-                        onFail = { screenModel.resetScreen() },
                         onDismissRequest = { screenModel.resetScreen() }
                     )
                 }

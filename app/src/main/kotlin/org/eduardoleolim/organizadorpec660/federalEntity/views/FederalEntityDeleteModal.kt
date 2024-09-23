@@ -27,7 +27,7 @@ fun FederalEntityScreen.FederalEntityDeleteModal(
     onDismissRequest: () -> Unit
 ) {
     var errorOccurred by remember { mutableStateOf(false) }
-    var errorText: String? by remember { mutableStateOf(null) }
+    var errorText by remember { mutableStateOf<String?>(null) }
 
     DisposableEffect(Unit) {
         onDispose {
@@ -52,15 +52,14 @@ fun FederalEntityScreen.FederalEntityDeleteModal(
 
         is FederalEntityDeleteState.Error -> {
             errorOccurred = true
-
-            when (val error = deleteState.error) {
+            errorText = when (val error = deleteState.error) {
                 is FederalEntityHasMunicipalitiesError -> {
-                    errorText = stringResource(Res.string.fe_delete_error_has_municipalities)
+                    stringResource(Res.string.fe_delete_error_has_municipalities)
                 }
 
                 else -> {
-                    errorText = stringResource(Res.string.fe_delete_error_default)
                     println(error)
+                    stringResource(Res.string.fe_delete_error_default)
                 }
             }
         }
