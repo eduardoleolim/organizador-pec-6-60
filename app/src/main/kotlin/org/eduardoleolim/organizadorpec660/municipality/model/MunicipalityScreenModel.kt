@@ -54,7 +54,7 @@ class MunicipalityScreenModel(
             searchParameters
                 .debounce(500)
                 .collectLatest {
-                    searchMunicipalities(it)
+                    fetchMunicipalities(it)
                 }
         }
     }
@@ -131,12 +131,6 @@ class MunicipalityScreenModel(
         offset: Int? = searchParameters.value.offset
     ) {
         searchParameters.value = MunicipalitySearchParameters(search, federalEntity, orders, limit, offset)
-    }
-
-    private fun searchMunicipalities(parameters: MunicipalitySearchParameters) {
-        screenModelScope.launch(dispatcher) {
-            fetchMunicipalities(parameters)
-        }
     }
 
     private suspend fun fetchMunicipalities(parameters: MunicipalitySearchParameters) {
