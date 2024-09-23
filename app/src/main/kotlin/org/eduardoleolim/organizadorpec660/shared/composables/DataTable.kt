@@ -35,20 +35,11 @@ var PaginatedDataTableState.sortColumnIndex by mutableStateOf<Int?>(null)
 
 var PaginatedDataTableState.sortAscending by mutableStateOf(true)
 
-fun PaginatedDataTableState.reset(pageSize: Int = 10) {
-    this.sortColumnIndex = null
-    this.sortAscending = true
-    this.pageIndex = 0
-    this.pageSize = pageSize
-    this.count = 0
-}
-
 @Composable
 fun PaginatedDataTable(
     total: Int,
     value: String,
     onValueChange: (String) -> Unit,
-    delayMillis: Long = 500L,
     pageSizes: List<Int> = listOf(10, 25, 50, 100),
     columns: List<DataColumn>,
     modifier: Modifier = Modifier,
@@ -63,11 +54,6 @@ fun PaginatedDataTable(
 ) {
     var size by remember { mutableStateOf(Size.Zero) }
 
-    value.useDebounce(delayMillis) {
-        state.pageIndex = 0
-        onSearch(value, state.pageIndex, state.pageSize, state.sortColumnIndex, state.sortAscending)
-    }
-
     LaunchedEffect(state.pageIndex, state.pageSize, state.sortColumnIndex, state.sortAscending) {
         if (state.pageIndex < 0) state.pageIndex = 0
 
@@ -75,83 +61,27 @@ fun PaginatedDataTable(
     }
 
     Column(
-        modifier = Modifier.onGloballyPositioned { size = it.size.toSize() }
+        modifier = Modifier
+            .onGloballyPositioned { size = it.size.toSize() }
             .then(modifier)
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
+        PaginatedDataTableHeader(
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            val horizontalScrollState = rememberScrollState(0)
-            val horizontalScrollbarAdapter = rememberScrollbarAdapter(horizontalScrollState)
-
-            Box(
-                modifier = Modifier.weight(1f)
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.horizontalScroll(horizontalScrollState)
-                        .conditional(
-                            condition = horizontalScrollbarAdapter.contentSize > horizontalScrollbarAdapter.viewportSize,
-                            ifTrue = { padding(bottom = 6.dp) }
-                        )
-                ) {
-                    SelectPageSize(
-                        state = state,
-                        pageSizes = pageSizes
-                    )
-
-                    header()
-                }
-
-                HorizontalScrollbar(
-                    adapter = horizontalScrollbarAdapter,
-                    modifier = Modifier.align(Alignment.BottomStart)
-                        .fillMaxWidth()
-                )
-            }
-
-            OutlinedTextField(
-                value = value,
-                onValueChange = onValueChange,
-                label = {
-                    Text(
-                        text = stringResource(Res.string.table_search),
-                        minLines = 1
-                    )
-                },
-                textStyle = MaterialTheme.typography.bodyMedium,
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = stringResource(Res.string.table_search)
-                    )
-                },
-                singleLine = true,
-                modifier = Modifier.widthIn(min = 250.dp),
-                shape = MaterialTheme.shapes.extraLarge,
-                trailingIcon = {
-                    if (value.isNotEmpty()) {
-                        IconButton(
-                            onClick = { onValueChange("") },
-                            enabled = value.isNotEmpty(),
-                            modifier = Modifier.pointerHoverIcon(PointerIcon.Default)
-                        ) {
-                            Icon(Icons.Default.Clear, "Clear")
-                        }
-                    }
-                }
-            )
-        }
+            value = value,
+            onValueChange = onValueChange,
+            state = state,
+            pageSizes = pageSizes,
+            content = header
+        )
 
         val stateVertical = rememberScrollState(0)
-        // val stateHorizontal = rememberScrollState(0)
+        val stateHorizontal = rememberScrollState(0)
 
-        Column(
-            modifier = Modifier.weight(1.0f)
+        Box(
+            modifier = Modifier
+                .weight(1.0f)
                 .padding(8.dp)
                 .verticalScroll(stateVertical)
         ) {
@@ -172,15 +102,16 @@ fun PaginatedDataTable(
         }
 
         Row(
-            modifier = Modifier.height(rowHeight)
+            modifier = Modifier
+                .height(rowHeight)
                 .padding(horizontal = 16.dp)
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.End),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            val start = min(state.pageIndex * state.pageSize + 1, state.count)
-            val end = min(start + state.pageSize - 1, state.count)
-            val pageCount = (state.count + state.pageSize - 1) / state.pageSize
+            val start = with(state) { min(pageIndex * pageSize + 1, count) }
+            val end = with(state) { min(start + pageSize - 1, count) }
+            val pageCount = with(state) { (count + pageSize - 1) / pageSize }
 
             Text(stringResource(Res.string.table_pagination, start, end, state.count))
             IconButton(
@@ -208,6 +139,86 @@ fun PaginatedDataTable(
                 Icon(Icons.AutoMirrored.Filled.LastPage, "Last")
             }
         }
+    }
+}
+
+@Composable
+private fun PaginatedDataTableHeader(
+    modifier: Modifier = Modifier,
+    value: String,
+    onValueChange: (String) -> Unit,
+    state: PaginatedDataTableState,
+    pageSizes: List<Int>,
+    content: @Composable RowScope.() -> Unit
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        val horizontalScrollState = rememberScrollState(0)
+        val horizontalScrollbarAdapter = rememberScrollbarAdapter(horizontalScrollState)
+
+        Box(
+            modifier = Modifier.weight(1f)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier
+                    .horizontalScroll(horizontalScrollState)
+                    .conditional(
+                        condition = horizontalScrollbarAdapter.contentSize > horizontalScrollbarAdapter.viewportSize,
+                        ifTrue = { padding(bottom = 6.dp) }
+                    )
+            ) {
+                SelectPageSize(
+                    state = state,
+                    pageSizes = pageSizes
+                )
+
+                content()
+            }
+
+            HorizontalScrollbar(
+                adapter = horizontalScrollbarAdapter,
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .fillMaxWidth()
+            )
+        }
+
+        OutlinedTextField(
+            value = value,
+            onValueChange = onValueChange,
+            label = {
+                Text(
+                    text = stringResource(Res.string.table_search),
+                    minLines = 1
+                )
+            },
+            textStyle = MaterialTheme.typography.bodyMedium,
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = stringResource(Res.string.table_search)
+                )
+            },
+            singleLine = true,
+            modifier = Modifier.widthIn(min = 250.dp),
+            shape = MaterialTheme.shapes.extraLarge,
+            trailingIcon = {
+                if (value.isNotEmpty()) {
+                    IconButton(
+                        onClick = { onValueChange("") },
+                        enabled = value.isNotEmpty(),
+                        modifier = Modifier.pointerHoverIcon(PointerIcon.Default)
+                    ) {
+                        Icon(Icons.Default.Clear, "Clear")
+                    }
+                }
+            }
+        )
     }
 }
 
