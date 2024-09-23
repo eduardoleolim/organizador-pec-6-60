@@ -28,6 +28,7 @@ class AgencyScreen(private val queryBus: QueryBus, private val commandBus: Comma
     @Composable
     override fun Content() {
         val screenModel = rememberScreenModel { AgencyScreenModel(queryBus, commandBus, Dispatchers.IO) }
+        val agencies = screenModel.agencies
         val searchParameters by screenModel.searchParameters.collectAsState()
         val search = searchParameters.search
         val screenState = screenModel.screenState
@@ -47,10 +48,11 @@ class AgencyScreen(private val queryBus: QueryBus, private val commandBus: Comma
 
             AgenciesTable(
                 modifier = Modifier.fillMaxSize(),
+                data = agencies,
                 value = search,
+                onValueChange = { screenModel.searchAgencies(it) },
                 pageSizes = pageSizes,
                 state = tableState,
-                data = screenModel.agencies,
                 onSearch = { search, pageIndex, pageSize, orderBy, isAscending ->
                     val offset = pageIndex * pageSize
                     val orders = orderBy?.takeIf { it.isNotEmpty() }?.let {

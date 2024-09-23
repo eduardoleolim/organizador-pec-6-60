@@ -28,6 +28,7 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
     @Composable
     override fun Content() {
         val screenModel = rememberScreenModel { FederalEntityScreenModel(queryBus, commandBus, Dispatchers.IO) }
+        val federalEntities = screenModel.federalEntities
         val searchParameters by screenModel.searchParameters.collectAsState()
         val search = searchParameters.search
         val screenState = screenModel.screenState
@@ -50,10 +51,11 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
 
             FederalEntitiesTable(
                 modifier = Modifier.fillMaxSize(),
+                data = federalEntities,
                 value = search,
+                onValueChange = { screenModel.searchFederalEntities(it) },
                 pageSizes = pageSizes,
                 state = tableState,
-                data = screenModel.federalEntities,
                 onSearch = { search, pageIndex, pageSize, orderBy, isAscending ->
                     val offset = pageIndex * pageSize
                     val orders = orderBy?.takeIf { it.isNotEmpty() }?.let {

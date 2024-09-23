@@ -31,6 +31,7 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun FederalEntityScreen.FederalEntitiesTable(
     value: String,
+    onValueChange: (String) -> Unit,
     pageSizes: List<Int>,
     data: FederalEntitiesResponse,
     state: PaginatedDataTableState,
@@ -44,14 +45,6 @@ fun FederalEntityScreen.FederalEntitiesTable(
     val createdAtColumnName = stringResource(Res.string.fe_created_at)
     val updatedAtColumnName = stringResource(Res.string.fe_updated_at)
     val actionsColumnName = stringResource(Res.string.table_col_actions)
-
-    fun getOrderBy(columnIndex: Int?) = when (columnIndex) {
-        0 -> FederalEntityFields.KeyCode.value
-        1 -> FederalEntityFields.Name.value
-        2 -> FederalEntityFields.CreatedAt.value
-        3 -> FederalEntityFields.UpdatedAt.value
-        else -> null
-    }
 
     val columns = remember {
         fun onSort(index: Int, ascending: Boolean) {
@@ -110,15 +103,18 @@ fun FederalEntityScreen.FederalEntitiesTable(
             modifier = Modifier.fillMaxWidth(),
             total = data.total,
             value = value,
-            onValueChange = { search ->
-                val orderBy = getOrderBy(state.sortColumnIndex)
-                onSearch(search, state.pageIndex, state.pageSize, orderBy, state.sortAscending)
-            },
+            onValueChange = onValueChange,
             columns = columns,
             state = state,
             pageSizes = pageSizes,
             onSearch = { search, pageIndex, pageSize, sortBy, isAscending ->
-                val orderBy = getOrderBy(sortBy)
+                val orderBy = when (sortBy) {
+                    0 -> FederalEntityFields.KeyCode.value
+                    1 -> FederalEntityFields.Name.value
+                    2 -> FederalEntityFields.CreatedAt.value
+                    3 -> FederalEntityFields.UpdatedAt.value
+                    else -> null
+                }
                 onSearch(search, pageIndex, pageSize, orderBy, isAscending)
             }
         ) {
