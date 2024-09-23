@@ -62,7 +62,7 @@ class FederalEntityScreenModel(
             searchParameters
                 .debounce(500)
                 .collectLatest {
-                    searchFederalEntities(it)
+                    fetchFederalEntities(it)
                 }
         }
     }
@@ -142,11 +142,13 @@ class FederalEntityScreenModel(
     }
 
     fun resetScreen() {
-        screenState = FederalEntityScreenState()
-        val limit = screenState.tableState.pageSize
-        val offset = screenState.tableState.pageIndex * limit
-        searchParameters.value = FederalEntitySearchParameters(limit = limit, offset = offset)
-        searchFederalEntities(searchParameters.value)
+        screenModelScope.launch(dispatcher) {
+            screenState = FederalEntityScreenState()
+            val limit = screenState.tableState.pageSize
+            val offset = screenState.tableState.pageIndex * limit
+            searchParameters.value = FederalEntitySearchParameters(limit = limit, offset = offset)
+            fetchFederalEntities(searchParameters.value)
+        }
     }
 
     fun resetFormModal() {
@@ -171,9 +173,9 @@ class FederalEntityScreenModel(
         searchParameters.value = FederalEntitySearchParameters(search, orders, limit, offset)
     }
 
-    private fun searchFederalEntities(parameters: FederalEntitySearchParameters) {
-        val (search, orders, limit, offset) = parameters
-        screenModelScope.launch(dispatcher) {
+    private suspend fun fetchFederalEntities(parameters: FederalEntitySearchParameters) {
+        withContext(dispatcher) {
+            val (search, orders, limit, offset) = parameters
             try {
                 val query = SearchFederalEntitiesByTermQuery(search, orders.toTypedArray(), limit, offset)
                 federalEntities = queryBus.ask(query)
@@ -205,35 +207,39 @@ class FederalEntityScreenModel(
         }
     }
 
-    private fun createFederalEntity(keyCode: String, name: String) {
-        formState = try {
-            val command = CreateFederalEntityCommand(keyCode, name)
-            commandBus.dispatch(command).fold(
-                ifRight = {
-                    FederalEntityFormState.SuccessCreate
-                },
-                ifLeft = {
-                    FederalEntityFormState.Error(it)
-                }
-            )
-        } catch (e: Exception) {
-            FederalEntityFormState.Error(e.cause!!)
+    private suspend fun createFederalEntity(keyCode: String, name: String) {
+        withContext(dispatcher) {
+            formState = try {
+                val command = CreateFederalEntityCommand(keyCode, name)
+                commandBus.dispatch(command).fold(
+                    ifRight = {
+                        FederalEntityFormState.SuccessCreate
+                    },
+                    ifLeft = {
+                        FederalEntityFormState.Error(it)
+                    }
+                )
+            } catch (e: Exception) {
+                FederalEntityFormState.Error(e.cause!!)
+            }
         }
     }
 
-    private fun updateFederalEntity(id: String, keyCode: String, name: String) {
-        formState = try {
-            val command = UpdateFederalEntityCommand(id, keyCode, name)
-            commandBus.dispatch(command).fold(
-                ifRight = {
-                    FederalEntityFormState.SuccessEdit
-                },
-                ifLeft = {
-                    FederalEntityFormState.Error(it)
-                }
-            )
-        } catch (e: Exception) {
-            FederalEntityFormState.Error(e.cause!!)
+    private suspend fun updateFederalEntity(id: String, keyCode: String, name: String) {
+        withContext(dispatcher) {
+            formState = try {
+                val command = UpdateFederalEntityCommand(id, keyCode, name)
+                commandBus.dispatch(command).fold(
+                    ifRight = {
+                        FederalEntityFormState.SuccessEdit
+                    },
+                    ifLeft = {
+                        FederalEntityFormState.Error(it)
+                    }
+                )
+            } catch (e: Exception) {
+                FederalEntityFormState.Error(e.cause!!)
+            }
         }
     }
 
