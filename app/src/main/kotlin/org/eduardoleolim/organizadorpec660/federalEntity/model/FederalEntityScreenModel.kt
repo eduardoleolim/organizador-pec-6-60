@@ -67,9 +67,9 @@ class FederalEntityScreenModel(
         }
     }
 
-    fun showFormModal(agency: FederalEntityResponse?) {
+    fun showFormModal(federalEntity: FederalEntityResponse?) {
         screenState = screenState.copy(
-            selectedFederalEntity = agency,
+            selectedFederalEntity = federalEntity,
             showFormModal = true,
             showDeleteModal = false,
             showImportExportModal = false,
@@ -78,9 +78,9 @@ class FederalEntityScreenModel(
         )
     }
 
-    fun showDeleteModal(agency: FederalEntityResponse) {
+    fun showDeleteModal(federalEntity: FederalEntityResponse) {
         screenState = screenState.copy(
-            selectedFederalEntity = agency,
+            selectedFederalEntity = federalEntity,
             showFormModal = false,
             showDeleteModal = true,
             showImportExportModal = false,
@@ -143,9 +143,8 @@ class FederalEntityScreenModel(
 
     fun resetScreen() {
         screenState = FederalEntityScreenState()
-        searchParameters.value = FederalEntitySearchParameters().also {
-            searchFederalEntities(it)
-        }
+        searchParameters.value = FederalEntitySearchParameters()
+        searchFederalEntities(searchParameters.value)
     }
 
     fun resetFormModal() {

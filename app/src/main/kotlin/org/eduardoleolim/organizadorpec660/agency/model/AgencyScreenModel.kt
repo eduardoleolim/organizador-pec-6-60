@@ -161,9 +161,8 @@ class AgencyScreenModel(
 
     fun resetScreen() {
         screenState = AgencyScreenState()
-        searchParameters.value = AgencySearchParameters().also {
-            searchAgencies(it)
-        }
+        searchParameters.value = AgencySearchParameters()
+        searchAgencies(searchParameters.value)
     }
 
     fun resetForm() {
