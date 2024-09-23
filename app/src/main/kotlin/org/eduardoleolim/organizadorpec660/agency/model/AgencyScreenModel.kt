@@ -7,6 +7,7 @@ import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import org.eduardoleolim.organizadorpec660.agency.application.AgenciesResponse
@@ -48,8 +49,9 @@ class AgencyScreenModel(
     var screenState by mutableStateOf(AgencyScreenState())
         private set
 
-    var searchParameters = MutableStateFlow(AgencySearchParameters())
-        private set
+    private val _searchParameters = MutableStateFlow(AgencySearchParameters())
+
+    val searchParameters: StateFlow<AgencySearchParameters> = _searchParameters
 
     var agencies by mutableStateOf(AgenciesResponse(emptyList(), 0, null, null))
         private set
@@ -74,10 +76,10 @@ class AgencyScreenModel(
 
     init {
         screenModelScope.launch(dispatcher) {
-            searchParameters
+            _searchParameters
                 .debounce(500)
                 .collectLatest {
-                    searchAgencies(it)
+                    fetchAgencies(it)
                 }
         }
     }
@@ -160,14 +162,16 @@ class AgencyScreenModel(
     }
 
     fun resetScreen() {
-        screenState = AgencyScreenState()
-        val limit = screenState.tableState.pageSize
-        val offset = screenState.tableState.pageIndex * limit
-        searchParameters.value = AgencySearchParameters(limit = limit, offset = offset)
-        searchAgencies(searchParameters.value)
+        screenModelScope.launch(dispatcher) {
+            screenState = AgencyScreenState()
+            val limit = screenState.tableState.pageSize
+            val offset = screenState.tableState.pageIndex * limit
+            _searchParameters.value = AgencySearchParameters(limit = limit, offset = offset)
+            fetchAgencies(searchParameters.value)
+        }
     }
 
-    fun resetForm() {
+    fun resetFormModal() {
         formState = AgencyFormState.Idle
         agency = AgencyFormData()
     }
@@ -182,12 +186,12 @@ class AgencyScreenModel(
         limit: Int? = searchParameters.value.limit,
         offset: Int? = searchParameters.value.offset,
     ) {
-        searchParameters.value = AgencySearchParameters(search, orders, limit, offset)
+        _searchParameters.value = AgencySearchParameters(search, orders, limit, offset)
     }
 
-    private fun searchAgencies(parameters: AgencySearchParameters) {
-        val (search, orders, limit, offset) = parameters
-        screenModelScope.launch(dispatcher) {
+    private suspend fun fetchAgencies(parameters: AgencySearchParameters) {
+        withContext(dispatcher) {
+            val (search, orders, limit, offset) = parameters
             try {
                 val query = SearchAgenciesByTermQuery(search, orders.toTypedArray(), limit, offset)
                 agencies = queryBus.ask(query)

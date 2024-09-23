@@ -54,7 +54,7 @@ fun AgencyScreen.AgencyFormModal(
         screenModel.searchAgency(agencyId)
 
         onDispose {
-            screenModel.resetForm()
+            screenModel.resetFormModal()
         }
     }
 
