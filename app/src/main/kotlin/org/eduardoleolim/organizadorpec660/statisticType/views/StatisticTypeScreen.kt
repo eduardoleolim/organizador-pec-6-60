@@ -8,20 +8,19 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
-import com.seanproctor.datatable.paging.rememberPaginatedDataTableState
 import kotlinx.coroutines.Dispatchers
-import org.eduardoleolim.organizadorpec660.shared.composables.reset
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
 import org.eduardoleolim.organizadorpec660.shared.resources.Res
 import org.eduardoleolim.organizadorpec660.shared.resources.statistic_types
-import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypeResponse
 import org.eduardoleolim.organizadorpec660.statisticType.model.StatisticTypeScreenModel
 import org.jetbrains.compose.resources.stringResource
 
@@ -29,76 +28,64 @@ class StatisticTypeScreen(private val queryBus: QueryBus, private val commandBus
     @Composable
     override fun Content() {
         val screenModel = rememberScreenModel { StatisticTypeScreenModel(queryBus, commandBus, Dispatchers.IO) }
-        var showDeleteModal by remember { mutableStateOf(false) }
-        var showFormModal by remember { mutableStateOf(false) }
-        var selectedStatisticType by remember { mutableStateOf<StatisticTypeResponse?>(null) }
-        val pageSizes = remember { listOf(10, 25, 50, 100) }
-        val state = rememberPaginatedDataTableState(pageSizes.first())
-        var searchValue by remember { mutableStateOf("") }
-        val resetScreen = remember {
-            fun() {
-                searchValue = ""
-                state.reset(pageSizes.first())
-                screenModel.searchStatisticTypes(searchValue, null, state.pageSize, state.pageIndex * state.pageSize)
-                showDeleteModal = false
-                showFormModal = false
-                selectedStatisticType = null
-            }
-        }
+        val statisticTypes = screenModel.statisticTypes
+        val searchParameters by screenModel.searchParameters.collectAsState()
+        val search = searchParameters.search
+        val screenState = screenModel.screenState
+        val selectedStatisticType = screenState.selectedStatisticType
+        val showFormModal = screenState.showFormModal
+        val showDeleteModal = screenState.showDeleteModal
+        val pageSizes = screenState.pageSizes
+        val tableState = screenState.tableState
 
         Column(
             modifier = Modifier.padding(24.dp)
         ) {
             StatisticTypeScreenHeader(
-                onSaveRequest = {
-                    selectedStatisticType = null
-                    showFormModal = true
-                },
+                onSaveRequest = { screenModel.showFormModal(null) },
                 onImportExportRequest = { }
             )
 
             StatisticTypeTable(
                 modifier = Modifier.fillMaxSize(),
-                value = searchValue,
-                onValueChange = { searchValue = it },
+                data = statisticTypes,
+                value = search,
+                onValueChange = { screenModel.searchStatisticTypes(it) },
                 pageSizes = pageSizes,
-                state = state,
-                data = screenModel.statisticTypes,
+                state = tableState,
                 onSearch = { search, pageIndex, pageSize, orderBy, isAscending ->
-                    val orders = orderBy?.let {
-                        val orderType = if (isAscending) "ASC" else "DESC"
-                        arrayOf(hashMapOf("orderBy" to orderBy, "orderType" to orderType))
-                    }
+                    val offset = pageIndex * pageSize
+                    val orders = orderBy?.takeIf { it.isNotEmpty() }?.let {
+                        listOf(hashMapOf("orderBy" to it, "orderType" to if (isAscending) "ASC" else "DESC"))
+                    }.orEmpty()
 
-                    screenModel.searchStatisticTypes(search, orders, pageSize, pageIndex * pageSize)
+                    screenModel.searchStatisticTypes(search, orders, pageSize, offset)
                 },
                 onDeleteRequest = { statisticType ->
-                    selectedStatisticType = statisticType
-                    showDeleteModal = true
+                    screenModel.showDeleteModal(statisticType)
                 },
                 onEditRequest = { statisticType ->
-                    selectedStatisticType = statisticType
-                    showFormModal = true
+                    screenModel.showFormModal(statisticType)
                 }
             )
 
             when {
                 showFormModal -> {
-                    screenModel.resetForm()
+                    screenModel.resetFormModal()
                     StatisticTypeFormModal(
                         screenModel = screenModel,
                         statisticType = selectedStatisticType,
-                        onDismissRequest = { resetScreen() },
-                        onSuccess = { resetScreen() }
+                        onDismissRequest = { screenModel.resetScreen() },
+                        onSuccess = { screenModel.resetScreen() }
                     )
                 }
 
                 showDeleteModal && selectedStatisticType != null -> {
                     StatisticTypeDeleteModal(
                         screenModel = screenModel,
-                        statisticType = selectedStatisticType!!,
-                        onSuccess = { resetScreen() },
-                        onDismissRequest = { resetScreen() }
+                        statisticType = selectedStatisticType,
+                        onSuccess = { screenModel.resetScreen() },
+                        onDismissRequest = { screenModel.resetScreen() }
                     )
                 }
             }
