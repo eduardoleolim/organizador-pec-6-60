@@ -7,6 +7,7 @@ import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntitiesResponse
@@ -32,8 +33,9 @@ class MunicipalityScreenModel(
     var screenState by mutableStateOf(MunicipalityScreenState())
         private set
 
-    var searchParameters = MutableStateFlow(MunicipalitySearchParameters())
-        private set
+    private val _searchParameters = MutableStateFlow(MunicipalitySearchParameters())
+
+    val searchParameters: StateFlow<MunicipalitySearchParameters> = _searchParameters
 
     var municipalities by mutableStateOf(MunicipalitiesResponse(emptyList(), 0, null, null))
         private set
@@ -109,7 +111,7 @@ class MunicipalityScreenModel(
             screenState = MunicipalityScreenState()
             val limit = screenState.tableState.pageSize
             val offset = screenState.tableState.pageIndex * limit
-            searchParameters.value = MunicipalitySearchParameters(limit = limit, offset = offset)
+            _searchParameters.value = MunicipalitySearchParameters(limit = limit, offset = offset)
             fetchAllFederalEntities()
             fetchMunicipalities(searchParameters.value)
         }
@@ -130,7 +132,7 @@ class MunicipalityScreenModel(
         limit: Int? = searchParameters.value.limit,
         offset: Int? = searchParameters.value.offset
     ) {
-        searchParameters.value = MunicipalitySearchParameters(search, federalEntity, orders, limit, offset)
+        _searchParameters.value = MunicipalitySearchParameters(search, federalEntity, orders, limit, offset)
     }
 
     private suspend fun fetchMunicipalities(parameters: MunicipalitySearchParameters) {

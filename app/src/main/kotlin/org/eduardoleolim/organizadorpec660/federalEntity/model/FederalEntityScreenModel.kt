@@ -8,6 +8,7 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntitiesResponse
@@ -39,8 +40,9 @@ class FederalEntityScreenModel(
 
     var screenState by mutableStateOf(FederalEntityScreenState())
 
-    var searchParameters = MutableStateFlow(FederalEntitySearchParameters())
-        private set
+    private val _searchParameters = MutableStateFlow(FederalEntitySearchParameters())
+
+    val searchParameters: StateFlow<FederalEntitySearchParameters> = _searchParameters
 
     var federalEntities by mutableStateOf(FederalEntitiesResponse(emptyList(), 0, null, null))
         private set
@@ -146,7 +148,7 @@ class FederalEntityScreenModel(
             screenState = FederalEntityScreenState()
             val limit = screenState.tableState.pageSize
             val offset = screenState.tableState.pageIndex * limit
-            searchParameters.value = FederalEntitySearchParameters(limit = limit, offset = offset)
+            _searchParameters.value = FederalEntitySearchParameters(limit = limit, offset = offset)
             fetchFederalEntities(searchParameters.value)
         }
     }
@@ -170,7 +172,7 @@ class FederalEntityScreenModel(
         limit: Int? = searchParameters.value.limit,
         offset: Int? = searchParameters.value.offset,
     ) {
-        searchParameters.value = FederalEntitySearchParameters(search, orders, limit, offset)
+        _searchParameters.value = FederalEntitySearchParameters(search, orders, limit, offset)
     }
 
     private suspend fun fetchFederalEntities(parameters: FederalEntitySearchParameters) {
