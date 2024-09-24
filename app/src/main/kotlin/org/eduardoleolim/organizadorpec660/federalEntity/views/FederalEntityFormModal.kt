@@ -35,6 +35,8 @@ fun FederalEntityScreen.FederalEntityFormModal(
     var nameSupportingText: String? by remember { mutableStateOf(null) }
 
     val federalEntity = screenModel.federalEntity
+    val keyCode = federalEntity.keyCode
+    val name = federalEntity.name
 
     DisposableEffect(Unit) {
         screenModel.searchFederalEntity(federalEntityId)
@@ -122,7 +124,7 @@ fun FederalEntityScreen.FederalEntityFormModal(
                     label = {
                         Text(stringResource(Res.string.fe_keycode))
                     },
-                    value = federalEntity.keyCode,
+                    value = keyCode,
                     onValueChange = {
                         if (Regex("[0-9]{0,2}").matches(it)) {
                             screenModel.updateFederalEntityKeyCode(it)
@@ -136,8 +138,8 @@ fun FederalEntityScreen.FederalEntityFormModal(
                     modifier = Modifier
                         .width(300.dp)
                         .onFocusChanged {
-                            if (!it.isFocused && federalEntity.keyCode.isNotEmpty()) {
-                                screenModel.updateFederalEntityKeyCode(federalEntity.keyCode.padStart(2, '0'))
+                            if (!it.isFocused && keyCode.isNotEmpty()) {
+                                screenModel.updateFederalEntityKeyCode(keyCode.padStart(2, '0'))
                             }
                         }
                 )
@@ -148,7 +150,7 @@ fun FederalEntityScreen.FederalEntityFormModal(
                     label = {
                         Text(stringResource(Res.string.fe_name))
                     },
-                    value = federalEntity.name,
+                    value = name,
                     onValueChange = { screenModel.updateFederalEntityName(it.uppercase()) },
                     singleLine = true,
                     isError = isNameError,

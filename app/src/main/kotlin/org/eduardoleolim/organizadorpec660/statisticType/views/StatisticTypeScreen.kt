@@ -71,10 +71,9 @@ class StatisticTypeScreen(private val queryBus: QueryBus, private val commandBus
 
             when {
                 showFormModal -> {
-                    screenModel.resetFormModal()
                     StatisticTypeFormModal(
                         screenModel = screenModel,
-                        statisticType = selectedStatisticType,
+                        statisticTypeId = selectedStatisticType?.id,
                         onDismissRequest = { screenModel.resetScreen() },
                         onSuccess = { screenModel.resetScreen() }
                     )

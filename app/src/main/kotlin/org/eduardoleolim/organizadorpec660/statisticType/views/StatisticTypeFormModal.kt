@@ -11,7 +11,6 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import org.eduardoleolim.organizadorpec660.shared.resources.*
-import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypeResponse
 import org.eduardoleolim.organizadorpec660.statisticType.data.EmptyStatisticTypeDataException
 import org.eduardoleolim.organizadorpec660.statisticType.domain.InvalidStatisticTypeKeyCodeError
 import org.eduardoleolim.organizadorpec660.statisticType.domain.InvalidStatisticTypeNameError
@@ -23,22 +22,29 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun StatisticTypeScreen.StatisticTypeFormModal(
     screenModel: StatisticTypeScreenModel,
-    statisticType: StatisticTypeResponse?,
+    statisticTypeId: String?,
     onSuccess: () -> Unit,
     onDismissRequest: () -> Unit
 ) {
-    val statisticTypeId = remember { statisticType?.id }
-    var keyCode by remember { mutableStateOf(statisticType?.keyCode ?: "") }
-    var name by remember { mutableStateOf(statisticType?.name ?: "") }
-
-    val titleResource = remember {
-        if (statisticType == null) Res.string.st_form_add_title else Res.string.st_form_edit_title
-    }
+    val title =
+        remember { if (statisticTypeId == null) Res.string.st_form_add_title else Res.string.st_form_edit_title }
     var enabled by remember { mutableStateOf(true) }
     var isKeyCodeError by remember { mutableStateOf(false) }
     var isNameError by remember { mutableStateOf(false) }
     var keyCodeSupportingText: String? by remember { mutableStateOf(null) }
     var nameSupportingText: String? by remember { mutableStateOf(null) }
+
+    val statisticType = screenModel.statisticType
+    val keyCode = statisticType.keyCode
+    val name = statisticType.name
+
+    DisposableEffect(Unit) {
+        screenModel.searchStatisticType(statisticTypeId)
+
+        onDispose {
+            screenModel.resetFormModal()
+        }
+    }
 
     when (val formState = screenModel.formState) {
         StatisticTypeFormState.Idle -> {
@@ -111,7 +117,7 @@ fun StatisticTypeScreen.StatisticTypeFormModal(
         ),
         onDismissRequest = onDismissRequest,
         title = {
-            Text(stringResource(titleResource))
+            Text(stringResource(title))
         },
         text = {
             Column {
@@ -122,7 +128,7 @@ fun StatisticTypeScreen.StatisticTypeFormModal(
                     value = keyCode,
                     onValueChange = {
                         if (Regex("[0-9]{0,3}").matches(it)) {
-                            keyCode = it
+                            screenModel.updateStatisticTypeKeyCode(it)
                         }
                     },
                     singleLine = true,
@@ -133,7 +139,7 @@ fun StatisticTypeScreen.StatisticTypeFormModal(
                     modifier = Modifier.width(300.dp)
                         .onFocusChanged {
                             if (!it.isFocused && keyCode.isNotEmpty()) {
-                                keyCode = keyCode.padStart(3, '0')
+                                screenModel.updateStatisticTypeKeyCode(keyCode)
                             }
                         }
                 )
@@ -145,7 +151,7 @@ fun StatisticTypeScreen.StatisticTypeFormModal(
                         Text(stringResource(Res.string.st_name))
                     },
                     value = name,
-                    onValueChange = { name = it.uppercase() },
+                    onValueChange = { screenModel.updateStatisticTypeName(it) },
                     singleLine = true,
                     isError = isNameError,
                     supportingText = nameSupportingText?.let { message ->
@@ -158,13 +164,7 @@ fun StatisticTypeScreen.StatisticTypeFormModal(
         confirmButton = {
             TextButton(
                 enabled = enabled,
-                onClick = {
-                    if (statisticType != null) {
-                        screenModel.editStatisticType(statisticTypeId!!, keyCode, name)
-                    } else {
-                        screenModel.createStatisticType(keyCode, name)
-                    }
-                }
+                onClick = { screenModel.saveStatisticType() }
             ) {
                 Text(stringResource(Res.string.save))
             }

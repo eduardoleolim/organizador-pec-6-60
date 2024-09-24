@@ -20,6 +20,7 @@ import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTy
 import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypesResponse
 import org.eduardoleolim.organizadorpec660.statisticType.application.create.CreateStatisticTypeCommand
 import org.eduardoleolim.organizadorpec660.statisticType.application.delete.DeleteStatisticTypeCommand
+import org.eduardoleolim.organizadorpec660.statisticType.application.searchById.SearchStatisticTypeByIdQuery
 import org.eduardoleolim.organizadorpec660.statisticType.application.searchByTerm.SearchStatisticTypesByTermQuery
 import org.eduardoleolim.organizadorpec660.statisticType.application.update.UpdateStatisticTypeCommand
 import org.eduardoleolim.organizadorpec660.statisticType.data.EmptyStatisticTypeDataException
@@ -27,21 +28,6 @@ import org.eduardoleolim.organizadorpec660.statisticType.domain.CanNotDeleteStat
 import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeNotFoundError
 import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeUsedInAgency
 import org.jetbrains.compose.resources.getString
-
-sealed class StatisticTypeFormState {
-    data object Idle : StatisticTypeFormState()
-    data object InProgress : StatisticTypeFormState()
-    data object SuccessCreate : StatisticTypeFormState()
-    data object SuccessEdit : StatisticTypeFormState()
-    data class Error(val error: Throwable) : StatisticTypeFormState()
-}
-
-sealed class StatisticTypeDeleteState {
-    data object Idle : StatisticTypeDeleteState()
-    data object InProgress : StatisticTypeDeleteState()
-    data object Success : StatisticTypeDeleteState()
-    data class Error(val message: String) : StatisticTypeDeleteState()
-}
 
 @OptIn(FlowPreview::class)
 class StatisticTypeScreenModel(
@@ -63,6 +49,9 @@ class StatisticTypeScreenModel(
         private set
 
     var deleteState by mutableStateOf<StatisticTypeDeleteState>(StatisticTypeDeleteState.Idle)
+        private set
+
+    var statisticType by mutableStateOf(StatisticTypeFormData())
         private set
 
     init {
@@ -89,6 +78,25 @@ class StatisticTypeScreenModel(
             showFormModal = false,
             showDeleteModal = true
         )
+    }
+
+    fun searchStatisticType(statisticTypeId: String?) {
+        screenModelScope.launch(dispatcher) {
+            statisticType = if (statisticTypeId == null) {
+                StatisticTypeFormData()
+            } else {
+                val statisticType = queryBus.ask<StatisticTypeResponse>(SearchStatisticTypeByIdQuery(statisticTypeId))
+                StatisticTypeFormData(statisticType.id, statisticType.name, statisticType.keyCode)
+            }
+        }
+    }
+
+    fun updateStatisticTypeName(name: String) {
+        statisticType = statisticType.copy(name = name)
+    }
+
+    fun updateStatisticTypeKeyCode(keyCode: String) {
+        statisticType = statisticType.copy(keyCode = keyCode)
     }
 
     fun resetScreen() {
@@ -130,8 +138,10 @@ class StatisticTypeScreenModel(
         }
     }
 
-    fun createStatisticType(keyCode: String, name: String) {
+    fun saveStatisticType() {
         screenModelScope.launch(dispatcher) {
+            val (id, name, keyCode) = statisticType
+
             formState = StatisticTypeFormState.InProgress
             delay(500)
 
@@ -143,6 +153,16 @@ class StatisticTypeScreenModel(
                 return@launch
             }
 
+            if (id == null) {
+                createStatisticType(keyCode, name)
+            } else {
+                updateStatisticType(id, keyCode, name)
+            }
+        }
+    }
+
+    private suspend fun createStatisticType(keyCode: String, name: String) {
+        withContext(dispatcher) {
             try {
                 commandBus.dispatch(CreateStatisticTypeCommand(keyCode, name)).fold(
                     ifRight = {
@@ -158,19 +178,8 @@ class StatisticTypeScreenModel(
         }
     }
 
-    fun editStatisticType(statisticTypeId: String, keyCode: String, name: String) {
-        screenModelScope.launch(dispatcher) {
-            formState = StatisticTypeFormState.InProgress
-            delay(500)
-
-            val isKeyCodeEmpty = keyCode.isEmpty()
-            val isNameEmpty = name.isEmpty()
-
-            if (isKeyCodeEmpty || isNameEmpty) {
-                formState = StatisticTypeFormState.Error(EmptyStatisticTypeDataException(isKeyCodeEmpty, isNameEmpty))
-                return@launch
-            }
-
+    private suspend fun updateStatisticType(statisticTypeId: String, keyCode: String, name: String) {
+        withContext(dispatcher) {
             try {
                 commandBus.dispatch(UpdateStatisticTypeCommand(statisticTypeId, keyCode, name)).fold(
                     ifRight = {
