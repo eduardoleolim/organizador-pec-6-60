@@ -11,7 +11,12 @@
 -dontwarn org.ktorm.database.**
 -dontwarn org.slf4j.**
 
--keep class org.eduardoleolim.organizadorpec660.** { *; }
+-keep class org.eduardoleolim.** { *; }
+-keep class androidx.compose.runtime.** { *; }
+-keep class androidx.collection.** { *; }
+-keep class androidx.lifecycle.** { *; }
+-keep class kotlinx.coroutines.** { *; }
+-keep class com.github.doyaaaaaken.kotlincsv.** { *; }
 -keep class org.apache.** { *; }
 -keep class org.sqlite.** { *; }
 -keep class org.ktorm.** { *; }
