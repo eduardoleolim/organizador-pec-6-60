@@ -33,7 +33,7 @@ class MunicipalityScreen(private val queryBus: QueryBus, private val commandBus:
         val federalEntities = screenModel.federalEntities
         val searchParameters by screenModel.searchParameters.collectAsState()
         val search = searchParameters.search
-        val selectedFederalEntity = searchParameters.federalEntity
+        val federalEntityFilter = searchParameters.federalEntity
         val screenState = screenModel.screenState
         val selectedMunicipality = screenState.selectedMunicipality
         val showFormModal = screenState.showFormModal
@@ -57,19 +57,24 @@ class MunicipalityScreen(private val queryBus: QueryBus, private val commandBus:
                 modifier = Modifier.fillMaxSize(),
                 data = municipalities,
                 federalEntities = federalEntities,
-                federalEntity = selectedFederalEntity,
+                federalEntity = federalEntityFilter,
                 onFederalEntitySelected = { screenModel.searchMunicipalities(federalEntity = it) },
                 value = search,
                 onValueChange = { screenModel.searchMunicipalities(it) },
                 pageSizes = pageSizes,
                 state = tableState,
-                onSearch = { search, federalEntity, pageIndex, pageSize, orderBy, isAscending ->
+                onSearch = { search, pageIndex, pageSize, orderBy, isAscending ->
                     val offset = pageIndex * pageSize
                     val orders = orderBy?.takeIf { it.isNotEmpty() }?.let {
                         listOf(hashMapOf("orderBy" to it, "orderType" to if (isAscending) "ASC" else "DESC"))
                     }.orEmpty()
 
-                    screenModel.searchMunicipalities(search, federalEntity, orders, pageSize, offset)
+                    screenModel.searchMunicipalities(
+                        search = search,
+                        orders = orders,
+                        limit = pageSize,
+                        offset = offset
+                    )
                 },
                 onDeleteRequest = { screenModel.showDeleteModal(it) },
                 onEditRequest = { screenModel.showFormModal(it) }

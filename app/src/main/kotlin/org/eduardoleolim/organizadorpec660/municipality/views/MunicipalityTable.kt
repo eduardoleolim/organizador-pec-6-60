@@ -44,7 +44,7 @@ fun MunicipalityScreen.MunicipalitiesTable(
     pageSizes: List<Int>,
     data: MunicipalitiesResponse,
     state: PaginatedDataTableState,
-    onSearch: (search: String, federalEntity: FederalEntityResponse?, pageIndex: Int, pageSize: Int, orderBy: String?, isAscending: Boolean) -> Unit,
+    onSearch: (search: String, pageIndex: Int, pageSize: Int, orderBy: String?, isAscending: Boolean) -> Unit,
     onDeleteRequest: (MunicipalityResponse) -> Unit,
     onEditRequest: (MunicipalityResponse) -> Unit,
     modifier: Modifier = Modifier
@@ -135,7 +135,7 @@ fun MunicipalityScreen.MunicipalitiesTable(
                     4 -> MunicipalityFields.UpdatedAt.value
                     else -> null
                 }
-                onSearch(search, federalEntity, pageIndex, pageSize, orderBy, isAscending)
+                onSearch(search, pageIndex, pageSize, orderBy, isAscending)
             },
             header = {
                 SelectFederalEntity(
