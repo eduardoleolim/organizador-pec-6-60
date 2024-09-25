@@ -154,6 +154,11 @@ class KtormInstrumentRepository(
         database.useTransaction {
             val instrument = matching(InstrumentCriteria.idCriteria(instrumentId)).firstOrNull()
                 ?: throw InstrumentNotFoundError(instrumentId)
+            val instrumentFilePath = database.from(instrumentFiles)
+                .select()
+                .where { instrumentFiles.id eq instrument.instrumentFileId().toString() }
+                .map { it[instrumentFiles.path] }
+                .first()
 
             database.delete(instruments) {
                 it.id eq instrument.id().toString()
@@ -161,6 +166,10 @@ class KtormInstrumentRepository(
 
             database.delete(instrumentFiles) {
                 it.id eq instrument.instrumentFileId().toString()
+            }
+
+            instrumentFilePath?.let { path ->
+                File(path).delete()
             }
         }
     }
