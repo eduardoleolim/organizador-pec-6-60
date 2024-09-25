@@ -16,9 +16,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.eduardoleolim.organizadorpec660.instrument.model.InstrumentFormState
 import org.eduardoleolim.organizadorpec660.instrument.model.SaveInstrumentScreenModel
 import org.eduardoleolim.organizadorpec660.shared.composables.*
@@ -26,9 +24,6 @@ import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
 import org.eduardoleolim.organizadorpec660.shared.resources.*
 import org.jetbrains.compose.resources.stringResource
-import java.io.File
-import java.text.DateFormatSymbols
-import java.time.LocalDate
 
 class SaveInstrumentScreen(
     private val instrumentId: String?,
@@ -40,9 +35,9 @@ class SaveInstrumentScreen(
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
         val screenModel = rememberScreenModel {
-            SaveInstrumentScreenModel(navigator, queryBus, commandBus, Dispatchers.IO)
+            SaveInstrumentScreenModel(navigator, queryBus, commandBus, tempDirectory, Dispatchers.IO)
         }
-        var instrumentSelected by remember { mutableStateOf<String?>(null) }
+        var instrumentFilePath by remember { mutableStateOf<String?>(null) }
 
         Column(
             modifier = Modifier.padding(24.dp)
@@ -60,11 +55,11 @@ class SaveInstrumentScreen(
                 ) {
                     SaveInstrumentForm(
                         screenModel = screenModel,
-                        onInstrumentSelected = { instrumentSelected = it }
+                        onInstrumentFilePathSelected = { instrumentFilePath = it }
                     )
 
                     PdfViewer(
-                        pdfPath = instrumentSelected,
+                        pdfPath = instrumentFilePath,
                         isReaderMode = true,
                         modifier = Modifier
                             .fillMaxHeight()
@@ -108,107 +103,60 @@ class SaveInstrumentScreen(
     @Composable
     private fun SaveInstrumentForm(
         screenModel: SaveInstrumentScreenModel,
-        onInstrumentSelected: (String?) -> Unit
+        onInstrumentFilePathSelected: (String?) -> Unit
     ) {
         val coroutineScope = rememberCoroutineScope()
         var enabled by remember { mutableStateOf(true) }
-        val scrollState = rememberScrollState()
+        val verticalScrollState = rememberScrollState()
         val filePickerInteractionSource = remember { MutableInteractionSource() }
-        val years = remember { (LocalDate.now().year downTo 1983).toList() }
-        val months = remember {
-            DateFormatSymbols().months.take(12).mapIndexed { index, month ->
-                Pair(index + 1, month.uppercase())
-            }
-        }
 
-        var year by remember { mutableStateOf<Int?>(null) }
-        var yearIndex by remember { mutableStateOf<Int?>(null) }
-        var month by remember { mutableStateOf<Int?>(null) }
-        var monthIndex by remember { mutableStateOf<Int?>(null) }
-        var federalEntityId by remember { mutableStateOf<String?>(null) }
-        var federalEntityIndex by remember { mutableStateOf<Int?>(null) }
-        var municipalityId by remember { mutableStateOf<String?>(null) }
-        var municipalityIndex by remember { mutableStateOf<Int?>(null) }
-        var agencyId by remember { mutableStateOf<String?>(null) }
-        var agencyIndex by remember { mutableStateOf<Int?>(null) }
-        var statisticTypeId by remember { mutableStateOf<String?>(null) }
-        var statisticTypeIndex by remember { mutableStateOf<Int?>(null) }
-        var documentPath by remember { mutableStateOf<String?>(null) }
+        val statisticYears = screenModel.statisticYears
+        val statisticMonths = screenModel.statisticMonths
+        val federalEntities = screenModel.federalEntities
+        val municipalities = screenModel.municipalities
+        val agencies = screenModel.agencies
+        val statisticTypes = screenModel.statisticTypes
+        val instrument = screenModel.instrument
+        val statisticYear = instrument.statisticYear
+        val statisticYearIndex = statisticYears.indexOfFirst { it == statisticYear }.takeIf { it != -1 }
+        val statisticMonth = instrument.statisticMonth
+        val statisticMonthIndex = statisticMonths.indexOfFirst { it.first == statisticMonth?.first }.takeIf { it != -1 }
+        val federalEntity = instrument.federalEntity
+        val federalEntityIndex = federalEntities.indexOfFirst { it.id == federalEntity?.id }.takeIf { it != -1 }
+        val municipality = instrument.municipality
+        val municipalityIndex = municipalities.indexOfFirst { it.id == municipality?.id }.takeIf { it != -1 }
+        val agency = instrument.agency
+        val agencyIndex = agencies.indexOfFirst { it.id == agency?.id }.takeIf { it != -1 }
+        val statisticType = instrument.statisticType
+        val statisticTypeIndex = statisticTypes.indexOfFirst { it.id == statisticType?.id }.takeIf { it != -1 }
+        val instrumentFilePath = instrument.instrumentFilePath
 
         LaunchedEffect(Unit) {
             screenModel.searchAllFederalEntities()
-            delay(500)
-
-            instrumentId?.let {
-                withContext(Dispatchers.IO) {
-                    val instrument = screenModel.searchInstrument(instrumentId)
-
-                    yearIndex = years
-                        .indexOf(instrument.statisticYear)
-                        .takeIf { it >= 0 }
-
-                    monthIndex = months
-                        .indexOfFirst { it.first == instrument.statisticMonth }
-                        .takeIf { it >= 0 }
-
-                    federalEntityIndex = screenModel.federalEntities
-                        .indexOfFirst { it.id == instrument.federalEntity.id }
-                        .takeIf { it >= 0 }
-
-                    delay(500)
-
-                    municipalityIndex = screenModel.municipalities
-                        .indexOfFirst { it.id == instrument.municipality.id }
-                        .takeIf { it >= 0 }
-
-                    delay(500)
-
-                    agencyIndex = screenModel.agencies
-                        .indexOfFirst { it.id == instrument.agency.id }
-                        .takeIf { it >= 0 }
-
-                    delay(500)
-
-                    statisticTypeIndex = screenModel.statisticTypes
-                        .indexOfFirst { it.id == instrument.statisticType.id }
-                        .takeIf { it >= 0 }
-
-                    val file = File(tempDirectory).resolve("edit/${instrument.filename}.pdf").apply {
-                        parentFile.mkdirs()
-                        writeBytes(instrument.instrumentFile.content)
-                    }
-                    documentPath = file.absolutePath
-                }
-            }
+            screenModel.searchInstrument(instrumentId)
         }
 
-        LaunchedEffect(federalEntityId) {
-            screenModel.searchMunicipalities(federalEntityId)
-            municipalityIndex = null
-            municipalityId = null
+        LaunchedEffect(federalEntity) {
+            screenModel.searchMunicipalities(federalEntity?.id)
         }
 
-        LaunchedEffect(municipalityId) {
-            screenModel.searchAgencies(municipalityId)
-            agencyIndex = null
-            agencyId = null
+        LaunchedEffect(municipality) {
+            screenModel.searchAgencies(municipality?.id)
         }
 
-        LaunchedEffect(agencyId) {
-            screenModel.searchStatisticTypes(agencyId)
-            statisticTypeIndex = null
-            statisticTypeId = null
+        LaunchedEffect(agency) {
+            screenModel.searchStatisticTypes(agency?.id)
         }
 
-        LaunchedEffect(documentPath) {
-            onInstrumentSelected(documentPath)
+        LaunchedEffect(instrumentFilePath) {
+            onInstrumentFilePathSelected(instrumentFilePath)
         }
 
         LaunchedEffect(screenModel.formState) {
             coroutineScope.launch {
                 if (screenModel.formState is InstrumentFormState.SuccessCreate) {
                     filePickerInteractionSource.emit(ResetFilePickerInteraction)
-                    documentPath = null
+                    screenModel.updateInstrumentInstrumentFilePath(null)
                 }
             }
         }
@@ -249,18 +197,17 @@ class SaveInstrumentScreen(
                 modifier = Modifier
                     .fillMaxHeight()
                     .padding(16.dp)
-                    .verticalScroll(scrollState)
+                    .verticalScroll(verticalScrollState)
             ) {
                 OutlinedSelect(
                     enabled = enabled,
                     label = {
                         Text(stringResource(Res.string.inst_year))
                     },
-                    items = years,
-                    index = yearIndex,
-                    onValueSelected = { index, selectedYear ->
-                        yearIndex = index
-                        year = selectedYear
+                    items = statisticYears,
+                    index = statisticYearIndex,
+                    onValueSelected = { _, statisticYear ->
+                        screenModel.updateInstrumentStatisticYear(statisticYear)
                     }
                 )
 
@@ -271,11 +218,10 @@ class SaveInstrumentScreen(
                     label = {
                         Text(stringResource(Res.string.inst_month))
                     },
-                    items = months,
-                    index = monthIndex,
-                    onValueSelected = { index, it ->
-                        monthIndex = index
-                        month = it.first
+                    items = statisticMonths,
+                    index = statisticMonthIndex,
+                    onValueSelected = { _, statisticMonth ->
+                        screenModel.updateInstrumentStatisticMonth(statisticMonth)
                     },
                     visualTransformation = { it.second }
                 )
@@ -287,11 +233,10 @@ class SaveInstrumentScreen(
                     label = {
                         Text(stringResource(Res.string.inst_federal_entity))
                     },
-                    items = screenModel.federalEntities,
+                    items = federalEntities,
                     index = federalEntityIndex,
-                    onValueSelected = { index, federalEntity ->
-                        federalEntityIndex = index
-                        federalEntityId = federalEntity.id
+                    onValueSelected = { _, federalEntity ->
+                        screenModel.updateInstrumentFederalEntity(federalEntity)
                     },
                     visualTransformation = { "${it.keyCode} - ${it.name}" }
                 )
@@ -303,11 +248,10 @@ class SaveInstrumentScreen(
                     label = {
                         Text(stringResource(Res.string.inst_municipality))
                     },
-                    items = screenModel.municipalities,
+                    items = municipalities,
                     index = municipalityIndex,
-                    onValueSelected = { index, municipality ->
-                        municipalityIndex = index
-                        municipalityId = municipality.id
+                    onValueSelected = { _, municipality ->
+                        screenModel.updateInstrumentMunicipality(municipality)
                     },
                     visualTransformation = { "${it.keyCode} - ${it.name}" }
                 )
@@ -321,9 +265,8 @@ class SaveInstrumentScreen(
                     },
                     items = screenModel.agencies,
                     index = agencyIndex,
-                    onValueSelected = { index, agency ->
-                        agencyIndex = index
-                        agencyId = agency.id
+                    onValueSelected = { _, agency ->
+                        screenModel.updateInstrumentAgency(agency)
                     },
                     visualTransformation = { "${it.consecutive} - ${it.name}" }
                 )
@@ -335,11 +278,10 @@ class SaveInstrumentScreen(
                     label = {
                         Text(stringResource(Res.string.inst_statistic_type))
                     },
-                    items = screenModel.statisticTypes,
+                    items = statisticTypes,
                     index = statisticTypeIndex,
-                    onValueSelected = { index, statisticType ->
-                        statisticTypeIndex = index
-                        statisticTypeId = statisticType.id
+                    onValueSelected = { _, statisticType ->
+                        screenModel.updateInstrumentStatisticType(statisticType)
                     },
                     visualTransformation = { "${it.keyCode} - ${it.name}" }
                 )
@@ -348,11 +290,13 @@ class SaveInstrumentScreen(
 
                 OutlinedFilePicker(
                     enabled = enabled,
-                    value = documentPath,
+                    value = instrumentFilePath,
                     label = {
                         Text(stringResource(Res.string.inst_document))
                     },
-                    onFileSelected = { documentPath = it },
+                    onFileSelected = { instrumentFilePath ->
+                        screenModel.updateInstrumentInstrumentFilePath(instrumentFilePath)
+                    },
                     interactionSource = filePickerInteractionSource,
                     extensions = listOf(NameExtension("Documentos PDF (*.pdf)", "pdf", true))
                 )
@@ -362,28 +306,7 @@ class SaveInstrumentScreen(
                 Button(
                     enabled = enabled,
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = {
-                        if (instrumentId == null) {
-                            screenModel.saveInstrument(
-                                year,
-                                month,
-                                municipalityId,
-                                agencyId,
-                                statisticTypeId,
-                                documentPath
-                            )
-                        } else {
-                            screenModel.editInstrument(
-                                instrumentId,
-                                year,
-                                month,
-                                municipalityId,
-                                agencyId,
-                                statisticTypeId,
-                                documentPath
-                            )
-                        }
-                    }
+                    onClick = { screenModel.saveInstrument() }
                 ) {
                     Text(stringResource(Res.string.save))
                 }
