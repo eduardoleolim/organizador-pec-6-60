@@ -9,9 +9,11 @@ import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import cafe.adriel.voyager.core.registry.ScreenRegistry
 import cafe.adriel.voyager.navigator.Navigator
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
 import org.eduardoleolim.organizadorpec660.agency.application.AgencyResponse
 import org.eduardoleolim.organizadorpec660.agency.application.MunicipalityAgenciesResponse
 import org.eduardoleolim.organizadorpec660.agency.application.searchByMunicipalityId.SearchAgenciesByMunicipalityIdQuery
@@ -50,6 +52,7 @@ sealed class InstrumentDeleteState {
     data class Error(val error: Throwable) : InstrumentDeleteState()
 }
 
+@OptIn(FlowPreview::class)
 class InstrumentScreenModel(
     private val navigator: Navigator,
     private val trayState: TrayState,
@@ -59,6 +62,13 @@ class InstrumentScreenModel(
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default
 ) : ScreenModel {
     private val clipboard: Clipboard = Toolkit.getDefaultToolkit().systemClipboard
+
+    var screenState by mutableStateOf(InstrumentScreenState())
+        private set
+
+    private val _searchParameters = MutableStateFlow(InstrumentSearchParameters())
+
+    val searchParameters: StateFlow<InstrumentSearchParameters> = _searchParameters
 
     var instruments by mutableStateOf(InstrumentsResponse(emptyList(), 0, null, null))
         private set
@@ -75,8 +85,38 @@ class InstrumentScreenModel(
     var statisticTypes by mutableStateOf(emptyList<StatisticTypeResponse>())
         private set
 
+    init {
+        screenModelScope.launch(dispatcher) {
+            _searchParameters
+                .debounce(500)
+                .collectLatest {
+                    fetchInstruments(it)
+                }
+        }
+    }
+
+    fun initializeScreen() {
+        screenModelScope.launch(dispatcher) {
+            screenState = InstrumentScreenState()
+            val limit = screenState.tableState.pageSize
+            val offset = screenState.tableState.pageIndex * limit
+            _searchParameters.value = InstrumentSearchParameters(limit = limit, offset = offset)
+            fetchInstruments(_searchParameters.value)
+            fetchAllFederalEntities()
+            fetchAllStatisticTypes()
+            municipalities = emptyList()
+            agencies = emptyList()
+        }
+    }
+
     fun searchAllFederalEntities() {
         screenModelScope.launch(dispatcher) {
+            fetchAllFederalEntities()
+        }
+    }
+
+    private suspend fun fetchAllFederalEntities() {
+        withContext(dispatcher) {
             try {
                 val query = SearchFederalEntitiesByTermQuery()
                 federalEntities = queryBus.ask<FederalEntitiesResponse>(query).federalEntities
@@ -113,10 +153,18 @@ class InstrumentScreenModel(
     }
 
     fun searchAllStatisticTypes() {
-        statisticTypes = try {
-            queryBus.ask<StatisticTypesResponse>(SearchStatisticTypesByTermQuery()).statisticTypes
-        } catch (e: Exception) {
-            emptyList()
+        screenModelScope.launch(dispatcher) {
+            fetchAllStatisticTypes()
+        }
+    }
+
+    private suspend fun fetchAllStatisticTypes() {
+        withContext(dispatcher) {
+            statisticTypes = try {
+                queryBus.ask<StatisticTypesResponse>(SearchStatisticTypesByTermQuery()).statisticTypes
+            } catch (e: Exception) {
+                emptyList()
+            }
         }
     }
 
@@ -129,44 +177,62 @@ class InstrumentScreenModel(
     }
 
     fun searchInstruments(
-        search: String? = null,
-        federalEntityId: String? = null,
-        municipalityId: String? = null,
-        agencyId: String? = null,
-        statisticTypeId: String? = null,
-        statisticYear: Int? = null,
-        statisticMonth: Int? = null,
-        orders: List<HashMap<String, String>>? = null,
-        limit: Int? = null,
-        offset: Int? = null,
+        search: String = searchParameters.value.search,
+        federalEntity: FederalEntityResponse? = searchParameters.value.federalEntity,
+        municipality: MunicipalityResponse? = searchParameters.value.municipality,
+        agency: AgencyResponse? = searchParameters.value.agency,
+        statisticType: StatisticTypeResponse? = searchParameters.value.statisticType,
+        statisticYear: Int? = searchParameters.value.statisticYear,
+        statisticMonth: Pair<Int, String>? = searchParameters.value.statisticMonth,
+        orders: List<HashMap<String, String>> = searchParameters.value.orders,
+        limit: Int? = searchParameters.value.limit,
+        offset: Int? = searchParameters.value.offset,
     ) {
-        screenModelScope.launch(dispatcher) {
-            try {
+        _searchParameters.value = InstrumentSearchParameters(
+            search,
+            statisticYear,
+            statisticMonth,
+            statisticType,
+            federalEntity,
+            municipality,
+            agency,
+            orders,
+            limit,
+            offset
+        )
+    }
+
+    private suspend fun fetchInstruments(parameters: InstrumentSearchParameters) {
+        withContext(dispatcher) {
+            val (search, statisticYear, statisticMonth, statisticType, federalEntity, municipality, agency, orders, limit, offset) = parameters
+            instruments = try {
                 val query = SearchInstrumentsByTermQuery(
-                    federalEntityId,
-                    municipalityId,
-                    agencyId,
-                    statisticTypeId,
+                    federalEntity?.id,
+                    municipality?.id,
+                    agency?.id,
+                    statisticType?.id,
                     statisticYear,
-                    statisticMonth,
+                    statisticMonth?.first,
                     search,
-                    orders?.toTypedArray(),
+                    orders.toTypedArray(),
                     limit,
                     offset
                 )
-                instruments = queryBus.ask(query)
+                queryBus.ask(query)
             } catch (e: Exception) {
-                instruments = InstrumentsResponse(emptyList(), 0, null, null)
+                InstrumentsResponse(emptyList(), 0, null, null)
             }
         }
     }
 
     fun updateInstrumentAsSavedInSIRESO(instrumentId: String) {
         commandBus.dispatch(UpdateInstrumentAsSavedCommand(instrumentId))
+        initializeScreen()
     }
 
     fun updateInstrumentAsNotSavedInSIRESO(instrumentId: String) {
         commandBus.dispatch(UpdateInstrumentAsNotSavedCommand(instrumentId))
+        initializeScreen()
     }
 
     fun copyInstrumentToClipboard(instrumentId: String) {
