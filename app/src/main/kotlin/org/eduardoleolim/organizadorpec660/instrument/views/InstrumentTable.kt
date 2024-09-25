@@ -324,6 +324,7 @@ fun InstrumentScreen.InstrumentsTable(
                                 }
                             ) {
                                 IconButton(
+                                    enabled = !instrument.savedInSIRESO,
                                     onClick = { onDeleteRequest(instrument) }
                                 ) {
                                     Icon(
