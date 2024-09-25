@@ -245,8 +245,10 @@ class SaveInstrumentScreenModel(
             formState = try {
                 val document = File(documentPath).readBytes()
                 val command = CreateInstrumentCommand(year, month, agencyId, statisticTypeId, municipalityId, document)
-                commandBus.dispatch(command).fold(
+                commandBus.dispatch(command).foldAsync(
                     ifRight = {
+                        filePickerInteractionSource.emit(ResetFilePickerInteraction)
+                        instrument = instrument.copy(instrumentFilePath = null)
                         InstrumentFormState.SuccessCreate
                     },
                     ifLeft = {
@@ -280,10 +282,8 @@ class SaveInstrumentScreenModel(
                     municipalityId,
                     document
                 )
-                commandBus.dispatch(command).foldAsync(
+                commandBus.dispatch(command).fold(
                     ifRight = {
-                        filePickerInteractionSource.emit(ResetFilePickerInteraction)
-                        instrument = instrument.copy(instrumentFilePath = null)
                         InstrumentFormState.SuccessEdit
                     },
                     ifLeft = {
