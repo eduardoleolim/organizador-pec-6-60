@@ -67,6 +67,13 @@
     <string name="inst_show_details_title">Datos del instrumento</string>
     <string name="inst_form_add_title">Agregar instrumento</string>
     <string name="inst_form_edit_title">Editar instrumento</string>
+    <string name="inst_form_error_default">Ocurrió un error mientras se trataba de guardar el instrumento. Inténtalo de nuevo más tarde</string>
+    <string name="inst_form_error_statistic_type_not_found">El tipo de estadística ya no se encuentra registrado</string>
+    <string name="inst_form_error_municipality_not_found">El municipio ya no se encuentra registrado</string>
+    <string name="inst_form_error_agency_not_found">La agencia ya no se encuentra registrada</string>
+    <string name="inst_form_error_instrument_already_exists">Ya se encuentra registrado un instrumento con los datos seleccionados</string>
+    <string name="inst_form_error_instrument_file_required">Los nuevos registros requieren incluir el instrumento PDF</string>
+    <string name="inst_form_error_instrument_file_save_error">Ocurrió un error al intentar guardar el instrumento PDF</string>
 
     <!-- Federal entity -->
     <string name="federal_entities">Entidades federativas</string>
@@ -133,7 +140,7 @@
     <string name="st_delete_text">El tipo de estadística %1$s será eliminado permanentemente de la aplicación</string>
     <string name="st_delete_error_default">Ocurrió un error mientras se trataba de eliminar el tipo de estadística</string>
     <string name="st_delete_error_not_found">No se encontró la agencia</string>
-    <string name="st_delete_error_used_in_agency">El tipo de estadística no puede ser eliminado porque esta asociado con establecimientos</string>
+    <string name="st_delete_error_used_in_agency">El tipo de estadística no puede ser eliminado porque está asociado con establecimientos</string>
     <string name="st_form_add_title">Agregar tipo de estadística</string>
     <string name="st_form_edit_title">Editar tipo de estadística</string>
     <string name="st_form_keycode_required">Clave requerida</string>

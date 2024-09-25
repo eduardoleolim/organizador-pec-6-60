@@ -1,5 +1,6 @@
 package org.eduardoleolim.organizadorpec660.instrument.model
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -25,6 +26,7 @@ import org.eduardoleolim.organizadorpec660.municipality.application.Municipaliti
 import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorpec660.municipality.application.SimpleMunicipalityResponse
 import org.eduardoleolim.organizadorpec660.municipality.application.searchByTerm.SearchMunicipalitiesByTermQuery
+import org.eduardoleolim.organizadorpec660.shared.composables.ResetFilePickerInteraction
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
 import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypeResponse
@@ -39,6 +41,8 @@ class SaveInstrumentScreenModel(
     private val tempDirectory: String,
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default
 ) : ScreenModel {
+    val filePickerInteractionSource = MutableInteractionSource()
+
     val statisticYears: List<Int> get() = (LocalDate.now().year downTo 1983).toList()
 
     val statisticMonths: List<Pair<Int, String>>
@@ -64,6 +68,10 @@ class SaveInstrumentScreenModel(
 
     fun goBackToInstrumentView() {
         navigator.popUntil<InstrumentScreen, Screen>()
+    }
+
+    fun resetState() {
+        formState = InstrumentFormState.Idle
     }
 
     fun searchInstrument(instrumentId: String?) {
@@ -272,8 +280,10 @@ class SaveInstrumentScreenModel(
                     municipalityId,
                     document
                 )
-                commandBus.dispatch(command).fold(
+                commandBus.dispatch(command).foldAsync(
                     ifRight = {
+                        filePickerInteractionSource.emit(ResetFilePickerInteraction)
+                        instrument = instrument.copy(instrumentFilePath = null)
                         InstrumentFormState.SuccessEdit
                     },
                     ifLeft = {

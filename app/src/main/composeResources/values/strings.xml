@@ -67,6 +67,13 @@
     <string name="inst_show_details_title">Instrument's info</string>
     <string name="inst_form_add_title">Add instrument</string>
     <string name="inst_form_edit_title">Edit instrument</string>
+    <string name="inst_form_error_default">An error occurred while trying to save the instrument. Please try again later</string>
+    <string name="inst_form_error_statistic_type_not_found">The statistic type is no longer registered</string>
+    <string name="inst_form_error_municipality_not_found">The municipality is no longer registered</string>
+    <string name="inst_form_error_agency_not_found">The agency is no longer registered</string>
+    <string name="inst_form_error_instrument_already_exists">An instrument with the selected data is already registered</string>
+    <string name="inst_form_error_instrument_file_required">New records require the inclusion of the PDF instrument</string>
+    <string name="inst_form_error_instrument_file_save_error">An error occurred while trying to save the PDF instrument</string>
 
     <!-- Federal entity -->
     <string name="federal_entities">Federal Entities</string>
@@ -78,7 +85,7 @@
     <string name="fe_delete_text">The federal entity %1$s will be permanently removed from application</string>
     <string name="fe_delete_error_default">A error occurred when trying to delete the federal entity. Please try again later</string>
     <string name="fe_delete_error_not_found">Federal Entity not found</string>
-    <string name="fe_delete_error_has_municipalities">The federal entity can't be delete because it has municipalities associated</string>
+    <string name="fe_delete_error_has_municipalities">The federal entity can't be deleting because it has municipalities associated</string>
     <string name="fe_form_add_title">Add federal entity</string>
     <string name="fe_form_edit_title">Edit federal entity</string>
     <string name="fe_form_keycode_required">KeyCode required</string>
@@ -108,7 +115,7 @@
     <string name="mun_delete_title">Delete municipality?</string>
     <string name="mun_delete_text">The municipality %1$s will be permanently removed from application</string>
     <string name="mun_delete_error_default">A error occurred when trying to delete the municipality. Please try again later</string>
-    <string name="mun_delete_error_has_agencies">The municipality can't be delete because it has agencies associated</string>
+    <string name="mun_delete_error_has_agencies">The municipality can't be deleting because it has agencies associated</string>
     <string name="mun_delete_error_not_found">Municipality not found</string>
     <string name="mun_form_add_title">Add municipality</string>
     <string name="mun_form_edit_title">Edit municipality</string>

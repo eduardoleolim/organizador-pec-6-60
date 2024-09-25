@@ -1,6 +1,5 @@
 package org.eduardoleolim.organizadorpec660.instrument.views
 
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -16,7 +15,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import org.eduardoleolim.organizadorpec660.instrument.domain.*
 import org.eduardoleolim.organizadorpec660.instrument.model.InstrumentFormState
 import org.eduardoleolim.organizadorpec660.instrument.model.SaveInstrumentScreenModel
 import org.eduardoleolim.organizadorpec660.shared.composables.*
@@ -105,10 +104,11 @@ class SaveInstrumentScreen(
         screenModel: SaveInstrumentScreenModel,
         onInstrumentFilePathSelected: (String?) -> Unit
     ) {
-        val coroutineScope = rememberCoroutineScope()
         var enabled by remember { mutableStateOf(true) }
+        var showErrorDialog by remember { mutableStateOf(false) }
+        var errorMessage by remember { mutableStateOf<String?>(null) }
         val verticalScrollState = rememberScrollState()
-        val filePickerInteractionSource = remember { MutableInteractionSource() }
+        val filePickerInteractionSource = screenModel.filePickerInteractionSource
 
         val statisticYears = screenModel.statisticYears
         val statisticMonths = screenModel.statisticMonths
@@ -152,26 +152,23 @@ class SaveInstrumentScreen(
             onInstrumentFilePathSelected(instrumentFilePath)
         }
 
-        LaunchedEffect(screenModel.formState) {
-            coroutineScope.launch {
-                if (screenModel.formState is InstrumentFormState.SuccessCreate) {
-                    filePickerInteractionSource.emit(ResetFilePickerInteraction)
-                    screenModel.updateInstrumentInstrumentFilePath(null)
-                }
-            }
-        }
-
         when (val formState = screenModel.formState) {
             InstrumentFormState.Idle -> {
                 enabled = true
+                showErrorDialog = false
+                errorMessage = null
             }
 
             InstrumentFormState.InProgress -> {
                 enabled = false
+                showErrorDialog = false
+                errorMessage = null
             }
 
             InstrumentFormState.SuccessCreate -> {
                 enabled = true
+                showErrorDialog = false
+                errorMessage = null
             }
 
             InstrumentFormState.SuccessEdit -> {
@@ -181,6 +178,41 @@ class SaveInstrumentScreen(
 
             is InstrumentFormState.Error -> {
                 enabled = true
+                val error = formState.error
+
+                if (error is InstrumentError) {
+                    showErrorDialog = true
+                    errorMessage = when (error) {
+                        is AgencyNotFoundError -> {
+                            stringResource(Res.string.inst_form_error_agency_not_found)
+                        }
+
+                        is StatisticTypeNotFoundError -> {
+                            stringResource(Res.string.inst_form_error_statistic_type_not_found)
+                        }
+
+                        is MunicipalityNotFoundError -> {
+                            stringResource(Res.string.inst_form_error_municipality_not_found)
+                        }
+
+                        is InstrumentAlreadyExistsError -> {
+                            stringResource(Res.string.inst_form_error_instrument_already_exists)
+                        }
+
+                        is InstrumentFileRequiredError -> {
+                            stringResource(Res.string.inst_form_error_instrument_file_required)
+                        }
+
+                        is InstrumentFileFailSaveError -> {
+                            stringResource(Res.string.inst_form_error_instrument_file_save_error)
+                        }
+
+                        else -> {
+                            stringResource(Res.string.inst_form_error_default)
+                        }
+                    }
+                }
+
                 println(formState.error.message)
                 println(formState.error.cause)
             }
@@ -311,6 +343,22 @@ class SaveInstrumentScreen(
                     Text(stringResource(Res.string.save))
                 }
             }
+        }
+
+        if (showErrorDialog) {
+            ErrorDialog(
+                text = {
+                    errorMessage?.let {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(it)
+                        }
+                    }
+                },
+                onDismissRequest = { screenModel.resetState() },
+                onConfirmRequest = { screenModel.resetState() }
+            )
         }
     }
 }
