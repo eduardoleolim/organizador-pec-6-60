@@ -8,7 +8,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -16,7 +19,6 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.seanproctor.datatable.paging.rememberPaginatedDataTableState
 import kotlinx.coroutines.Dispatchers
 import org.eduardoleolim.organizadorpec660.instrument.model.InstrumentScreenModel
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
@@ -38,9 +40,36 @@ class InstrumentScreen(
         val screenModel = rememberScreenModel {
             InstrumentScreenModel(navigator, trayState, queryBus, commandBus, tempDirectory, Dispatchers.IO)
         }
-        val pageSizes = remember { listOf(10, 25, 50, 100) }
-        val state = rememberPaginatedDataTableState(pageSizes.first())
-        var searchValue by remember { mutableStateOf("") }
+        val instruments = screenModel.instruments
+        val statisticTypes = screenModel.statisticTypes
+        val federalEntities = screenModel.federalEntities
+        val municipalities = screenModel.municipalities
+        val agencies = screenModel.agencies
+        val searchParameters by screenModel.searchParameters.collectAsState()
+        val search = searchParameters.search
+        val statisticYearFilter = searchParameters.statisticYear
+        val statisticMonthFilter = searchParameters.statisticMonth
+        val statisticTypeFilter = searchParameters.statisticType
+        val federalEntityFilter = searchParameters.federalEntity
+        val municipalityFilter = searchParameters.municipality
+        val agencyFilter = searchParameters.agency
+        val screenState = screenModel.screenState
+        val statisticYears = screenState.statisticYears
+        val statisticMonths = screenState.statisticMonths
+        val pageSizes = screenState.pageSizes
+        val tableState = screenState.tableState
+
+        LaunchedEffect(Unit) {
+            screenModel.initializeScreen()
+        }
+
+        LaunchedEffect(federalEntityFilter) {
+            screenModel.searchMunicipalities(federalEntityFilter?.id)
+        }
+
+        LaunchedEffect(municipalityFilter) {
+            screenModel.searchAgencies(municipalityFilter?.id)
+        }
 
         Column(
             modifier = Modifier.padding(24.dp)
@@ -52,36 +81,55 @@ class InstrumentScreen(
 
             InstrumentsTable(
                 modifier = Modifier.fillMaxSize(),
-                value = searchValue,
-                screenModel = screenModel,
-                onValueChange = { searchValue = it },
-                pageSizes = pageSizes,
-                state = state,
-                data = screenModel.instruments,
-                onSearch = { search, federalEntityId, municipalityId, agencyId, statisticTypeId, statisticYear, statisticMonth, pageIndex, pageSize, orderBy, isAscending ->
-                    val orders = orderBy?.let {
-                        val orderType = if (isAscending) "ASC" else "DESC"
-                        listOf(hashMapOf("orderBy" to orderBy, "orderType" to orderType))
-                    }
-
+                data = instruments,
+                value = search,
+                onValueChange = { screenModel.searchInstruments(search = it) },
+                statisticYears = statisticYears,
+                statisticYear = statisticYearFilter,
+                onStatisticYearSelected = { screenModel.searchInstruments(statisticYear = it) },
+                statisticMonths = statisticMonths,
+                statisticMonth = statisticMonthFilter,
+                onStatisticMonthSelected = { screenModel.searchInstruments(statisticMonth = it) },
+                statisticTypes = statisticTypes,
+                statisticType = statisticTypeFilter,
+                onStatisticTypeSelected = { screenModel.searchInstruments(statisticType = it) },
+                federalEntities = federalEntities,
+                federalEntity = federalEntityFilter,
+                onFederalEntitySelected = { federalEntity ->
+                    val isDifferentFederalEntity = federalEntity?.id != federalEntityFilter?.id
                     screenModel.searchInstruments(
-                        search,
-                        federalEntityId,
-                        municipalityId,
-                        agencyId,
-                        statisticTypeId,
-                        statisticYear,
-                        statisticMonth,
-                        orders,
-                        pageSize,
-                        pageIndex * pageSize
+                        federalEntity = federalEntity,
+                        municipality = if (isDifferentFederalEntity) null else municipalityFilter,
+                        agency = if (isDifferentFederalEntity) null else agencyFilter
                     )
+                },
+                municipalities = municipalities,
+                municipality = municipalityFilter,
+                onMunicipalitySelected = { municipality ->
+                    val isDifferentMunicipality = municipality?.id != municipalityFilter?.id
+                    screenModel.searchInstruments(
+                        municipality = municipality,
+                        agency = if (isDifferentMunicipality) null else agencyFilter
+                    )
+                },
+                agencies = agencies,
+                agency = agencyFilter,
+                onAgencySelected = { screenModel.searchInstruments(agency = it) },
+                pageSizes = pageSizes,
+                state = tableState,
+                onSearch = { search, pageIndex, pageSize, orderBy, isAscending ->
+                    val offset = pageIndex * pageSize
+                    val orders = orderBy?.takeIf { it.isNotEmpty() }?.let {
+                        listOf(hashMapOf("orderBy" to it, "orderType" to if (isAscending) "ASC" else "DESC"))
+                    }.orEmpty()
+
+                    screenModel.searchInstruments(search = search, orders = orders, limit = pageSize, offset = offset)
                 },
                 onDeleteRequest = { screenModel.deleteInstrument(it.id) },
                 onEditRequest = { screenModel.navigateToSaveInstrumentView(it.id) },
                 onCopyRequest = { screenModel.copyInstrumentToClipboard(it.id) },
                 onShowDetailsRequest = { screenModel.navigateToShowInstrumentDetailsView(it.id) },
-                onChangeStateRequest = { instrument, save ->
+                onChangeSiresoStatusRequest = { instrument, save ->
                     if (save) {
                         screenModel.updateInstrumentAsSavedInSIRESO(instrument.id)
                     } else {

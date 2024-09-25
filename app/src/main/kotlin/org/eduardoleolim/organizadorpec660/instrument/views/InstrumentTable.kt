@@ -22,7 +22,6 @@ import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEnti
 import org.eduardoleolim.organizadorpec660.instrument.application.InstrumentResponse
 import org.eduardoleolim.organizadorpec660.instrument.application.InstrumentsResponse
 import org.eduardoleolim.organizadorpec660.instrument.domain.InstrumentFields
-import org.eduardoleolim.organizadorpec660.instrument.model.InstrumentScreenModel
 import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorpec660.shared.composables.PaginatedDataTable
 import org.eduardoleolim.organizadorpec660.shared.composables.PlainTextTooltip
@@ -31,32 +30,41 @@ import org.eduardoleolim.organizadorpec660.shared.composables.sortColumnIndex
 import org.eduardoleolim.organizadorpec660.shared.resources.*
 import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypeResponse
 import org.jetbrains.compose.resources.stringResource
-import java.text.DateFormatSymbols
-import java.time.LocalDate
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun InstrumentScreen.InstrumentsTable(
     value: String,
     onValueChange: (String) -> Unit,
-    screenModel: InstrumentScreenModel,
+    statisticYears: List<Int>,
+    statisticYear: Int?,
+    onStatisticYearSelected: (Int?) -> Unit,
+    statisticMonths: List<Pair<Int, String>>,
+    statisticMonth: Pair<Int, String>?,
+    onStatisticMonthSelected: (Pair<Int, String>?) -> Unit,
+    statisticTypes: List<StatisticTypeResponse>,
+    statisticType: StatisticTypeResponse?,
+    onStatisticTypeSelected: (StatisticTypeResponse?) -> Unit,
+    federalEntities: List<FederalEntityResponse>,
+    federalEntity: FederalEntityResponse?,
+    onFederalEntitySelected: (FederalEntityResponse?) -> Unit,
+    municipalities: List<MunicipalityResponse>,
+    municipality: MunicipalityResponse?,
+    onMunicipalitySelected: (MunicipalityResponse?) -> Unit,
+    agencies: List<AgencyResponse>,
+    agency: AgencyResponse?,
+    onAgencySelected: (AgencyResponse?) -> Unit,
     pageSizes: List<Int>,
     data: InstrumentsResponse,
     state: PaginatedDataTableState,
-    onSearch: (search: String, federalEntityId: String?, municipalityId: String?, agencyId: String?, statisticTypeId: String?, statisticYear: Int?, statisticMonth: Int?, pageIndex: Int, pageSize: Int, orderBy: String?, isAscending: Boolean) -> Unit,
+    onSearch: (search: String, pageIndex: Int, pageSize: Int, orderBy: String?, isAscending: Boolean) -> Unit,
     onDeleteRequest: (InstrumentResponse) -> Unit,
     onEditRequest: (InstrumentResponse) -> Unit,
     onCopyRequest: (InstrumentResponse) -> Unit,
     onShowDetailsRequest: (InstrumentResponse) -> Unit,
-    onChangeStateRequest: (InstrumentResponse, Boolean) -> Unit,
+    onChangeSiresoStatusRequest: (InstrumentResponse, Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val years = remember { (LocalDate.now().year downTo 1983).toList() }
-    val months = remember {
-        DateFormatSymbols().months.take(12).mapIndexed { index, month ->
-            index + 1 to month.uppercase()
-        }.toMap()
-    }
     val siresoColumnName = stringResource(Res.string.inst_in_sireso)
     val yearColumnName = stringResource(Res.string.inst_year)
     val monthColumnName = stringResource(Res.string.inst_month)
@@ -64,13 +72,6 @@ fun InstrumentScreen.InstrumentsTable(
     val federalEntityColumnName = stringResource(Res.string.inst_federal_entity)
     val municipalityColumnName = stringResource(Res.string.inst_municipality)
     val actionsColumnName = stringResource(Res.string.table_col_actions)
-
-    var statisticYear by remember { mutableStateOf<Int?>(null) }
-    var statisticMonth by remember { mutableStateOf<Int?>(null) }
-    var statisticTypeId by remember { mutableStateOf<String?>(null) }
-    var federalEntityId by remember { mutableStateOf<String?>(null) }
-    var municipalityId by remember { mutableStateOf<String?>(null) }
-    var agencyId by remember { mutableStateOf<String?>(null) }
 
     val columns = remember {
         fun onSort(index: Int, ascending: Boolean) {
@@ -142,21 +143,6 @@ fun InstrumentScreen.InstrumentsTable(
         )
     }
 
-    LaunchedEffect(Unit) {
-        screenModel.searchAllFederalEntities()
-        screenModel.searchAllStatisticTypes()
-    }
-
-    LaunchedEffect(federalEntityId) {
-        screenModel.searchMunicipalities(federalEntityId)
-        municipalityId = null
-    }
-
-    LaunchedEffect(municipalityId) {
-        screenModel.searchAgencies(municipalityId)
-        agencyId = null
-    }
-
     Surface(
         modifier = Modifier.then(modifier),
         shape = MaterialTheme.shapes.small,
@@ -179,87 +165,71 @@ fun InstrumentScreen.InstrumentsTable(
                     else -> null
                 }
 
-                onSearch(
-                    search,
-                    federalEntityId,
-                    municipalityId,
-                    agencyId,
-                    statisticTypeId,
-                    statisticYear,
-                    statisticMonth,
-                    pageIndex,
-                    pageSize,
-                    orderBy,
-                    isAscending
-                )
+                onSearch(search, pageIndex, pageSize, orderBy, isAscending)
             },
             header = {
                 SelectStatisticYear(
+                    statisticYears = statisticYears,
                     statisticYear = statisticYear,
-                    years = years,
-                    onYearSelected = {
-                        statisticYear = it
-                        state.pageIndex = -1
+                    onStatisticYearSelected = {
+                        state.pageIndex = 0
+                        onStatisticYearSelected(it)
                     }
                 )
 
                 SelectStatisticMonth(
                     statisticMonth = statisticMonth,
-                    months = months.toList(),
-                    onMonthSelected = {
-                        statisticMonth = it?.first
-                        state.pageIndex = -1
+                    statisticMonths = statisticMonths,
+                    onStatisticMonthSelected = {
+                        state.pageIndex = 0
+                        onStatisticMonthSelected(it)
                     }
                 )
 
                 SelectStatisticType(
-                    statisticTypeId = statisticTypeId,
-                    statisticTypes = screenModel.statisticTypes,
+                    statisticType = statisticType,
+                    statisticTypes = statisticTypes,
                     onStatisticTypeSelected = {
-                        statisticTypeId = it?.id
-                        state.pageIndex = -1
+                        state.pageIndex = 0
+                        onStatisticTypeSelected(it)
                     }
                 )
 
                 SelectFederalEntity(
-                    federalEntityId = federalEntityId,
-                    federalEntities = screenModel.federalEntities,
+                    federalEntities = federalEntities,
+                    federalEntity = federalEntity,
                     onFederalEntitySelected = {
-                        federalEntityId = it?.id
-                        state.pageIndex = -1
+                        state.pageIndex = 0
+                        onFederalEntitySelected(it)
                     }
                 )
 
                 SelectMunicipality(
-                    municipalityId = municipalityId,
-                    municipalities = screenModel.municipalities,
+                    municipalities = municipalities,
+                    municipality = municipality,
                     onMunicipalitySelected = {
-                        municipalityId = it?.id
-                        state.pageIndex = -1
+                        state.pageIndex = 0
+                        onMunicipalitySelected(it)
                     }
                 )
 
                 SelectAgency(
-                    agencyId = agencyId,
-                    agencies = screenModel.agencies,
+                    agencies = agencies,
+                    agency = agency,
                     onAgencySelected = {
-                        agencyId = it?.id
-                        state.pageIndex = -1
+                        state.pageIndex = 0
+                        onAgencySelected(it)
                     }
                 )
             }
         ) {
             data.instruments.forEach { instrument ->
-                val statisticType = instrument.statisticType
-                val federalEntity = instrument.federalEntity
-                val municipality = instrument.municipality
-
                 row {
                     cell {
                         Checkbox(
                             checked = instrument.savedInSIRESO,
                             onCheckedChange = {
-                                onChangeStateRequest(instrument, it)
+                                onChangeSiresoStatusRequest(instrument, it)
 
                                 val orderBy = when (state.sortColumnIndex) {
                                     1 -> InstrumentFields.StatisticYear.value
@@ -270,19 +240,7 @@ fun InstrumentScreen.InstrumentsTable(
                                     else -> null
                                 }
 
-                                onSearch(
-                                    value,
-                                    federalEntityId,
-                                    municipalityId,
-                                    agencyId,
-                                    statisticTypeId,
-                                    statisticYear,
-                                    statisticMonth,
-                                    state.pageIndex,
-                                    state.pageSize,
-                                    orderBy,
-                                    state.sortAscending
-                                )
+                                onSearch(value, state.pageIndex, state.pageSize, orderBy, state.sortAscending)
                             }
                         )
                     }
@@ -292,19 +250,25 @@ fun InstrumentScreen.InstrumentsTable(
                     }
 
                     cell {
-                        Text("${months[instrument.statisticMonth]}")
+                        Text("${statisticMonths.toMap()[instrument.statisticMonth]}")
                     }
 
                     cell {
-                        Text("${statisticType.keyCode} - ${statisticType.name}")
+                        with(instrument.statisticType) {
+                            Text("$keyCode - $name")
+                        }
                     }
 
                     cell {
-                        Text("${federalEntity.keyCode} - ${federalEntity.name}")
+                        with(instrument.federalEntity) {
+                            Text("$keyCode - $name")
+                        }
                     }
 
                     cell {
-                        Text("${municipality.keyCode} - ${municipality.name}")
+                        with(instrument.municipality) {
+                            Text("$keyCode - $name")
+                        }
                     }
 
                     cell {
@@ -377,20 +341,19 @@ fun InstrumentScreen.InstrumentsTable(
 }
 
 @Composable
-private fun SelectStatisticYear(statisticYear: Int?, years: List<Int>, onYearSelected: (Int?) -> Unit) {
+private fun SelectStatisticYear(
+    statisticYears: List<Int>,
+    statisticYear: Int?,
+    onStatisticYearSelected: (Int?) -> Unit
+) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedYear by remember(statisticYear) { mutableStateOf(statisticYear) }
-
-    LaunchedEffect(selectedYear) {
-        onYearSelected(selectedYear)
-    }
 
     Box {
         TextButton(
             onClick = { expanded = true },
         ) {
             Text(
-                text = selectedYear?.toString() ?: stringResource(Res.string.inst_select_all_years),
+                text = statisticYear?.toString() ?: stringResource(Res.string.inst_select_all_years),
                 fontWeight = FontWeight.Normal,
                 color = MaterialTheme.colorScheme.onSurface,
             )
@@ -416,11 +379,11 @@ private fun SelectStatisticYear(statisticYear: Int?, years: List<Int>, onYearSel
                 },
                 onClick = {
                     expanded = false
-                    selectedYear = null
+                    onStatisticYearSelected(null)
                 }
             )
 
-            years.forEach { year ->
+            statisticYears.forEach { year ->
                 DropdownMenuItem(
                     text = {
                         Text(
@@ -430,7 +393,7 @@ private fun SelectStatisticYear(statisticYear: Int?, years: List<Int>, onYearSel
                     },
                     onClick = {
                         expanded = false
-                        selectedYear = year
+                        onStatisticYearSelected(year)
                     }
                 )
             }
@@ -440,23 +403,18 @@ private fun SelectStatisticYear(statisticYear: Int?, years: List<Int>, onYearSel
 
 @Composable
 private fun SelectStatisticMonth(
-    statisticMonth: Int?,
-    months: List<Pair<Int, String>>,
-    onMonthSelected: (Pair<Int, String>?) -> Unit
+    statisticMonths: List<Pair<Int, String>>,
+    statisticMonth: Pair<Int, String>?,
+    onStatisticMonthSelected: (Pair<Int, String>?) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedMonth by remember(statisticMonth) { mutableStateOf(months.firstOrNull { it.first == statisticMonth }) }
-
-    LaunchedEffect(selectedMonth) {
-        onMonthSelected(selectedMonth)
-    }
 
     Box {
         TextButton(
             onClick = { expanded = true },
         ) {
             Text(
-                text = selectedMonth?.second ?: stringResource(Res.string.inst_select_all_months),
+                text = statisticMonth?.second ?: stringResource(Res.string.inst_select_all_months),
                 fontWeight = FontWeight.Normal,
                 color = MaterialTheme.colorScheme.onSurface,
             )
@@ -482,11 +440,11 @@ private fun SelectStatisticMonth(
                 },
                 onClick = {
                     expanded = false
-                    selectedMonth = null
+                    onStatisticMonthSelected(null)
                 }
             )
 
-            months.forEach { month ->
+            statisticMonths.forEach { month ->
                 DropdownMenuItem(
                     text = {
                         Text(
@@ -496,7 +454,7 @@ private fun SelectStatisticMonth(
                     },
                     onClick = {
                         expanded = false
-                        selectedMonth = month
+                        onStatisticMonthSelected(month)
                     }
                 )
             }
@@ -506,25 +464,18 @@ private fun SelectStatisticMonth(
 
 @Composable
 private fun SelectFederalEntity(
-    federalEntityId: String?,
     federalEntities: List<FederalEntityResponse>,
+    federalEntity: FederalEntityResponse?,
     onFederalEntitySelected: (FederalEntityResponse?) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedFederalEntity by remember(federalEntityId, federalEntities) {
-        mutableStateOf(federalEntities.firstOrNull { it.id == federalEntityId })
-    }
-
-    LaunchedEffect(selectedFederalEntity) {
-        onFederalEntitySelected(selectedFederalEntity)
-    }
 
     Box {
         TextButton(
             onClick = { expanded = true },
         ) {
             Text(
-                text = selectedFederalEntity?.let { "${it.keyCode} - ${it.name}" }
+                text = federalEntity?.let { "${it.keyCode} - ${it.name}" }
                     ?: stringResource(Res.string.inst_select_all_federal_entities),
                 fontWeight = FontWeight.Normal,
                 color = MaterialTheme.colorScheme.onSurface,
@@ -551,7 +502,7 @@ private fun SelectFederalEntity(
                 },
                 onClick = {
                     expanded = false
-                    selectedFederalEntity = null
+                    onFederalEntitySelected(null)
                 }
             )
 
@@ -565,7 +516,7 @@ private fun SelectFederalEntity(
                     },
                     onClick = {
                         expanded = false
-                        selectedFederalEntity = federalEntity
+                        onFederalEntitySelected(federalEntity)
                     }
                 )
             }
@@ -575,25 +526,18 @@ private fun SelectFederalEntity(
 
 @Composable
 private fun SelectMunicipality(
-    municipalityId: String?,
     municipalities: List<MunicipalityResponse>,
+    municipality: MunicipalityResponse?,
     onMunicipalitySelected: (MunicipalityResponse?) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedMunicipality by remember(municipalityId, municipalities) {
-        mutableStateOf(municipalities.firstOrNull { it.id == municipalityId })
-    }
-
-    LaunchedEffect(selectedMunicipality) {
-        onMunicipalitySelected(selectedMunicipality)
-    }
 
     Box {
         TextButton(
             onClick = { expanded = true },
         ) {
             Text(
-                text = selectedMunicipality?.let { "${it.keyCode} - ${it.name}" }
+                text = municipality?.let { "${it.keyCode} - ${it.name}" }
                     ?: stringResource(Res.string.inst_select_all_municipalities),
                 fontWeight = FontWeight.Normal,
                 color = MaterialTheme.colorScheme.onSurface,
@@ -620,7 +564,7 @@ private fun SelectMunicipality(
                 },
                 onClick = {
                     expanded = false
-                    selectedMunicipality = null
+                    onMunicipalitySelected(null)
                 }
             )
 
@@ -634,7 +578,7 @@ private fun SelectMunicipality(
                     },
                     onClick = {
                         expanded = false
-                        selectedMunicipality = municipality
+                        onMunicipalitySelected(municipality)
                     }
                 )
             }
@@ -644,25 +588,18 @@ private fun SelectMunicipality(
 
 @Composable
 private fun SelectAgency(
-    agencyId: String?,
     agencies: List<AgencyResponse>,
+    agency: AgencyResponse?,
     onAgencySelected: (AgencyResponse?) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedAgency by remember(agencyId, agencies) {
-        mutableStateOf(agencies.firstOrNull { it.id == agencyId })
-    }
-
-    LaunchedEffect(selectedAgency) {
-        onAgencySelected(selectedAgency)
-    }
 
     Box {
         TextButton(
             onClick = { expanded = true },
         ) {
             Text(
-                text = selectedAgency?.let { "${it.consecutive} - ${it.name}" }
+                text = agency?.let { "${it.consecutive} - ${it.name}" }
                     ?: stringResource(Res.string.inst_select_all_agencies),
                 fontWeight = FontWeight.Normal,
                 color = MaterialTheme.colorScheme.onSurface,
@@ -689,7 +626,7 @@ private fun SelectAgency(
                 },
                 onClick = {
                     expanded = false
-                    selectedAgency = null
+                    onAgencySelected(null)
                 }
             )
 
@@ -703,7 +640,7 @@ private fun SelectAgency(
                     },
                     onClick = {
                         expanded = false
-                        selectedAgency = agency
+                        onAgencySelected(agency)
                     }
                 )
             }
@@ -713,25 +650,18 @@ private fun SelectAgency(
 
 @Composable
 private fun SelectStatisticType(
-    statisticTypeId: String?,
+    statisticType: StatisticTypeResponse?,
     statisticTypes: List<StatisticTypeResponse>,
     onStatisticTypeSelected: (StatisticTypeResponse?) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedStatisticType by remember(statisticTypeId, statisticTypes) {
-        mutableStateOf(statisticTypes.firstOrNull { it.id == statisticTypeId })
-    }
-
-    LaunchedEffect(selectedStatisticType) {
-        onStatisticTypeSelected(selectedStatisticType)
-    }
 
     Box {
         TextButton(
             onClick = { expanded = true },
         ) {
             Text(
-                text = selectedStatisticType?.let { "${it.keyCode} - ${it.name}" }
+                text = statisticType?.let { "${it.keyCode} - ${it.name}" }
                     ?: stringResource(Res.string.inst_select_all_statistic_types),
                 fontWeight = FontWeight.Normal,
                 color = MaterialTheme.colorScheme.onSurface,
@@ -757,7 +687,7 @@ private fun SelectStatisticType(
                 },
                 onClick = {
                     expanded = false
-                    selectedStatisticType = null
+                    onStatisticTypeSelected(null)
                 }
             )
 
@@ -771,7 +701,7 @@ private fun SelectStatisticType(
                     },
                     onClick = {
                         expanded = false
-                        selectedStatisticType = statisticType
+                        onStatisticTypeSelected(statisticType)
                     }
                 )
             }
