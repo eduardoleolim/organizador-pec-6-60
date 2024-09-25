@@ -226,13 +226,17 @@ class InstrumentScreenModel(
     }
 
     fun updateInstrumentAsSavedInSIRESO(instrumentId: String) {
-        commandBus.dispatch(UpdateInstrumentAsSavedCommand(instrumentId))
-        initializeScreen()
+        screenModelScope.launch(dispatcher) {
+            commandBus.dispatch(UpdateInstrumentAsSavedCommand(instrumentId))
+            fetchInstruments(_searchParameters.value)
+        }
     }
 
     fun updateInstrumentAsNotSavedInSIRESO(instrumentId: String) {
-        commandBus.dispatch(UpdateInstrumentAsNotSavedCommand(instrumentId))
-        initializeScreen()
+        screenModelScope.launch(dispatcher) {
+            commandBus.dispatch(UpdateInstrumentAsNotSavedCommand(instrumentId))
+            fetchInstruments(_searchParameters.value)
+        }
     }
 
     fun copyInstrumentToClipboard(instrumentId: String) {
@@ -255,6 +259,7 @@ class InstrumentScreenModel(
     fun deleteInstrument(instrumentId: String) {
         screenModelScope.launch(dispatcher) {
             commandBus.dispatch(DeleteInstrumentCommand(instrumentId))
+            fetchInstruments(_searchParameters.value)
         }
     }
 }
