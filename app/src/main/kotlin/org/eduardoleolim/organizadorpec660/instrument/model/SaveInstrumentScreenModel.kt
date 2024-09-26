@@ -248,7 +248,12 @@ class SaveInstrumentScreenModel(
                 commandBus.dispatch(command).foldAsync(
                     ifRight = {
                         filePickerInteractionSource.emit(ResetFilePickerInteraction)
-                        instrument = instrument.copy(instrumentFilePath = null)
+                        instrument = instrument.copy(
+                            municipality = null,
+                            agency = null,
+                            statisticType = null,
+                            instrumentFilePath = null
+                        )
                         InstrumentFormState.SuccessCreate
                     },
                     ifLeft = {
