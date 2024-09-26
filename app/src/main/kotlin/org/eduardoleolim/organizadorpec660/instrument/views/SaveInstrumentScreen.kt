@@ -303,6 +303,28 @@ class SaveInstrumentScreen(
                     .padding(16.dp)
                     .verticalScroll(verticalScrollState)
             ) {
+                OutlinedFilePicker(
+                    enabled = enabled,
+                    value = instrumentFilePath,
+                    label = {
+                        Text(
+                            text = stringResource(Res.string.inst_document),
+                            maxLines = 1
+                        )
+                    },
+                    onFileSelected = { instrumentFilePath ->
+                        screenModel.updateInstrumentInstrumentFilePath(instrumentFilePath)
+                    },
+                    interactionSource = filePickerInteractionSource,
+                    extensions = listOf(NameExtension("Documentos PDF (*.pdf)", "pdf", true)),
+                    isError = isInstrumentFileError,
+                    supportingText = instrumentFileSupportingText?.let { message ->
+                        { Text(text = message, color = MaterialTheme.colorScheme.error) }
+                    }
+                )
+
+                Spacer(Modifier.height(24.dp))
+
                 OutlinedSelect(
                     enabled = enabled,
                     label = {
@@ -424,28 +446,6 @@ class SaveInstrumentScreen(
                     visualTransformation = { "${it.keyCode} - ${it.name}" },
                     isError = isStatisticTypeError,
                     supportingText = statisticTypeSupportingText?.let { message ->
-                        { Text(text = message, color = MaterialTheme.colorScheme.error) }
-                    }
-                )
-
-                Spacer(Modifier.height(24.dp))
-
-                OutlinedFilePicker(
-                    enabled = enabled,
-                    value = instrumentFilePath,
-                    label = {
-                        Text(
-                            text = stringResource(Res.string.inst_document),
-                            maxLines = 1
-                        )
-                    },
-                    onFileSelected = { instrumentFilePath ->
-                        screenModel.updateInstrumentInstrumentFilePath(instrumentFilePath)
-                    },
-                    interactionSource = filePickerInteractionSource,
-                    extensions = listOf(NameExtension("Documentos PDF (*.pdf)", "pdf", true)),
-                    isError = isInstrumentFileError,
-                    supportingText = instrumentFileSupportingText?.let { message ->
                         { Text(text = message, color = MaterialTheme.colorScheme.error) }
                     }
                 )
