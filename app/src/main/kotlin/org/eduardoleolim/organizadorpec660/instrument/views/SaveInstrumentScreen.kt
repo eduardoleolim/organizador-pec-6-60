@@ -15,6 +15,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import kotlinx.coroutines.Dispatchers
+import org.eduardoleolim.organizadorpec660.instrument.data.EmptyInstrumentDataException
 import org.eduardoleolim.organizadorpec660.instrument.domain.*
 import org.eduardoleolim.organizadorpec660.instrument.model.InstrumentFormState
 import org.eduardoleolim.organizadorpec660.instrument.model.SaveInstrumentScreenModel
@@ -110,6 +111,19 @@ class SaveInstrumentScreen(
         val verticalScrollState = rememberScrollState()
         val filePickerInteractionSource = screenModel.filePickerInteractionSource
 
+        var isStatisticYearError by remember { mutableStateOf(false) }
+        var isStatisticMonthError by remember { mutableStateOf(false) }
+        var isMunicipalityError by remember { mutableStateOf(false) }
+        var isAgencyError by remember { mutableStateOf(false) }
+        var isStatisticTypeError by remember { mutableStateOf(false) }
+        var isInstrumentFileError by remember { mutableStateOf(false) }
+        var statisticYearSupportingText: String? by remember { mutableStateOf(null) }
+        var statisticMonthSupportingText: String? by remember { mutableStateOf(null) }
+        var municipalityErrorSupportingText: String? by remember { mutableStateOf(null) }
+        var agencyErrorSupportingText: String? by remember { mutableStateOf(null) }
+        var statisticTypeSupportingText: String? by remember { mutableStateOf(null) }
+        var instrumentFileSupportingText: String? by remember { mutableStateOf(null) }
+
         val statisticYears = screenModel.statisticYears
         val statisticMonths = screenModel.statisticMonths
         val federalEntities = screenModel.federalEntities
@@ -157,12 +171,36 @@ class SaveInstrumentScreen(
                 enabled = true
                 showErrorDialog = false
                 errorMessage = null
+                isStatisticYearError = false
+                isStatisticMonthError = false
+                isMunicipalityError = false
+                isAgencyError = false
+                isStatisticTypeError = false
+                isInstrumentFileError = false
+                statisticYearSupportingText = null
+                statisticMonthSupportingText = null
+                municipalityErrorSupportingText = null
+                agencyErrorSupportingText = null
+                statisticTypeSupportingText = null
+                instrumentFileSupportingText = null
             }
 
             InstrumentFormState.InProgress -> {
                 enabled = false
                 showErrorDialog = false
                 errorMessage = null
+                isStatisticYearError = false
+                isStatisticMonthError = false
+                isMunicipalityError = false
+                isAgencyError = false
+                isStatisticTypeError = false
+                isInstrumentFileError = false
+                statisticYearSupportingText = null
+                statisticMonthSupportingText = null
+                municipalityErrorSupportingText = null
+                agencyErrorSupportingText = null
+                statisticTypeSupportingText = null
+                instrumentFileSupportingText = null
             }
 
             InstrumentFormState.SuccessCreate -> {
@@ -178,38 +216,72 @@ class SaveInstrumentScreen(
 
             is InstrumentFormState.Error -> {
                 enabled = true
-                val error = formState.error
+                when (val error = formState.error) {
+                    is AgencyNotFoundError -> {
+                        showErrorDialog = true
+                        errorMessage = stringResource(Res.string.inst_form_error_agency_not_found)
+                    }
 
-                if (error is InstrumentError) {
-                    showErrorDialog = true
-                    errorMessage = when (error) {
-                        is AgencyNotFoundError -> {
-                            stringResource(Res.string.inst_form_error_agency_not_found)
+                    is StatisticTypeNotFoundError -> {
+                        showErrorDialog = true
+                        errorMessage = stringResource(Res.string.inst_form_error_statistic_type_not_found)
+                    }
+
+                    is MunicipalityNotFoundError -> {
+                        showErrorDialog = true
+                        errorMessage = stringResource(Res.string.inst_form_error_municipality_not_found)
+                    }
+
+                    is InstrumentAlreadyExistsError -> {
+                        showErrorDialog = true
+                        errorMessage = stringResource(Res.string.inst_form_error_instrument_already_exists)
+                    }
+
+                    is InstrumentFileRequiredError -> {
+                        showErrorDialog = true
+                        errorMessage = stringResource(Res.string.inst_form_error_instrument_file_required)
+                    }
+
+                    is InstrumentFileFailSaveError -> {
+                        showErrorDialog = true
+                        errorMessage = stringResource(Res.string.inst_form_error_instrument_file_save_error)
+                    }
+
+                    is EmptyInstrumentDataException -> {
+                        if (error.isStatisticYearUnselected) {
+                            isStatisticYearError = true
+                            statisticYearSupportingText = stringResource(Res.string.inst_form_year_required)
                         }
 
-                        is StatisticTypeNotFoundError -> {
-                            stringResource(Res.string.inst_form_error_statistic_type_not_found)
+                        if (error.isStatisticMonthUnselected) {
+                            isStatisticMonthError = true
+                            statisticMonthSupportingText = stringResource(Res.string.inst_form_month_required)
                         }
 
-                        is MunicipalityNotFoundError -> {
-                            stringResource(Res.string.inst_form_error_municipality_not_found)
+                        if (error.isMunicipalityUnselected) {
+                            isMunicipalityError = true
+                            municipalityErrorSupportingText = stringResource(Res.string.inst_form_municipality_required)
                         }
 
-                        is InstrumentAlreadyExistsError -> {
-                            stringResource(Res.string.inst_form_error_instrument_already_exists)
+                        if (error.isAgencyUnselected) {
+                            isAgencyError = true
+                            agencyErrorSupportingText = stringResource(Res.string.inst_form_agency_required)
                         }
 
-                        is InstrumentFileRequiredError -> {
-                            stringResource(Res.string.inst_form_error_instrument_file_required)
+                        if (error.isStatisticTypeUnselected) {
+                            isStatisticTypeError = true
+                            statisticTypeSupportingText = stringResource(Res.string.inst_form_statistic_type_required)
                         }
 
-                        is InstrumentFileFailSaveError -> {
-                            stringResource(Res.string.inst_form_error_instrument_file_save_error)
+                        if (error.isInstrumentFileUnselected) {
+                            isInstrumentFileError = true
+                            instrumentFileSupportingText = stringResource(Res.string.inst_form_document_required)
                         }
+                    }
 
-                        else -> {
-                            stringResource(Res.string.inst_form_error_default)
-                        }
+                    else -> {
+                        showErrorDialog = true
+                        errorMessage = stringResource(Res.string.inst_form_error_default)
                     }
                 }
 
@@ -234,12 +306,19 @@ class SaveInstrumentScreen(
                 OutlinedSelect(
                     enabled = enabled,
                     label = {
-                        Text(stringResource(Res.string.inst_year))
+                        Text(
+                            text = stringResource(Res.string.inst_year),
+                            maxLines = 1
+                        )
                     },
                     items = statisticYears,
                     index = statisticYearIndex,
                     onValueSelected = { _, statisticYear ->
                         screenModel.updateInstrumentStatisticYear(statisticYear)
+                    },
+                    isError = isStatisticYearError,
+                    supportingText = statisticYearSupportingText?.let { message ->
+                        { Text(text = message, color = MaterialTheme.colorScheme.error) }
                     }
                 )
 
@@ -248,14 +327,21 @@ class SaveInstrumentScreen(
                 OutlinedSelect(
                     enabled = enabled,
                     label = {
-                        Text(stringResource(Res.string.inst_month))
+                        Text(
+                            text = stringResource(Res.string.inst_month),
+                            maxLines = 1
+                        )
                     },
                     items = statisticMonths,
                     index = statisticMonthIndex,
                     onValueSelected = { _, statisticMonth ->
                         screenModel.updateInstrumentStatisticMonth(statisticMonth)
                     },
-                    visualTransformation = { it.second }
+                    visualTransformation = { it.second },
+                    isError = isStatisticMonthError,
+                    supportingText = statisticMonthSupportingText?.let { message ->
+                        { Text(text = message, color = MaterialTheme.colorScheme.error) }
+                    }
                 )
 
                 Spacer(Modifier.height(24.dp))
@@ -263,7 +349,10 @@ class SaveInstrumentScreen(
                 OutlinedSelect(
                     enabled = enabled,
                     label = {
-                        Text(stringResource(Res.string.inst_federal_entity))
+                        Text(
+                            text = stringResource(Res.string.inst_federal_entity),
+                            maxLines = 1
+                        )
                     },
                     items = federalEntities,
                     index = federalEntityIndex,
@@ -278,14 +367,21 @@ class SaveInstrumentScreen(
                 OutlinedSelect(
                     enabled = enabled,
                     label = {
-                        Text(stringResource(Res.string.inst_municipality))
+                        Text(
+                            text = stringResource(Res.string.inst_municipality),
+                            maxLines = 1
+                        )
                     },
                     items = municipalities,
                     index = municipalityIndex,
                     onValueSelected = { _, municipality ->
                         screenModel.updateInstrumentMunicipality(municipality)
                     },
-                    visualTransformation = { "${it.keyCode} - ${it.name}" }
+                    visualTransformation = { "${it.keyCode} - ${it.name}" },
+                    isError = isMunicipalityError,
+                    supportingText = municipalityErrorSupportingText?.let { message ->
+                        { Text(text = message, color = MaterialTheme.colorScheme.error) }
+                    }
                 )
 
                 Spacer(Modifier.height(24.dp))
@@ -293,14 +389,21 @@ class SaveInstrumentScreen(
                 OutlinedSelect(
                     enabled = enabled,
                     label = {
-                        Text(stringResource(Res.string.inst_agency))
+                        Text(
+                            text = stringResource(Res.string.inst_agency),
+                            maxLines = 1
+                        )
                     },
                     items = screenModel.agencies,
                     index = agencyIndex,
                     onValueSelected = { _, agency ->
                         screenModel.updateInstrumentAgency(agency)
                     },
-                    visualTransformation = { "${it.consecutive} - ${it.name}" }
+                    visualTransformation = { "${it.consecutive} - ${it.name}" },
+                    isError = isAgencyError,
+                    supportingText = agencyErrorSupportingText?.let { message ->
+                        { Text(text = message, color = MaterialTheme.colorScheme.error) }
+                    }
                 )
 
                 Spacer(Modifier.height(24.dp))
@@ -308,14 +411,21 @@ class SaveInstrumentScreen(
                 OutlinedSelect(
                     enabled = enabled,
                     label = {
-                        Text(stringResource(Res.string.inst_statistic_type))
+                        Text(
+                            text = stringResource(Res.string.inst_statistic_type),
+                            maxLines = 1
+                        )
                     },
                     items = statisticTypes,
                     index = statisticTypeIndex,
                     onValueSelected = { _, statisticType ->
                         screenModel.updateInstrumentStatisticType(statisticType)
                     },
-                    visualTransformation = { "${it.keyCode} - ${it.name}" }
+                    visualTransformation = { "${it.keyCode} - ${it.name}" },
+                    isError = isStatisticTypeError,
+                    supportingText = statisticTypeSupportingText?.let { message ->
+                        { Text(text = message, color = MaterialTheme.colorScheme.error) }
+                    }
                 )
 
                 Spacer(Modifier.height(24.dp))
@@ -324,13 +434,20 @@ class SaveInstrumentScreen(
                     enabled = enabled,
                     value = instrumentFilePath,
                     label = {
-                        Text(stringResource(Res.string.inst_document))
+                        Text(
+                            text = stringResource(Res.string.inst_document),
+                            maxLines = 1
+                        )
                     },
                     onFileSelected = { instrumentFilePath ->
                         screenModel.updateInstrumentInstrumentFilePath(instrumentFilePath)
                     },
                     interactionSource = filePickerInteractionSource,
-                    extensions = listOf(NameExtension("Documentos PDF (*.pdf)", "pdf", true))
+                    extensions = listOf(NameExtension("Documentos PDF (*.pdf)", "pdf", true)),
+                    isError = isInstrumentFileError,
+                    supportingText = instrumentFileSupportingText?.let { message ->
+                        { Text(text = message, color = MaterialTheme.colorScheme.error) }
+                    }
                 )
 
                 Spacer(Modifier.height(24.dp))

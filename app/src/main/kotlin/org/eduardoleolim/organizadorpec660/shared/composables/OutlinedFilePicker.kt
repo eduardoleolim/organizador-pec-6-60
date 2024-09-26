@@ -26,7 +26,9 @@ fun OutlinedFilePicker(
     extensions: List<NameExtension> = emptyList(),
     modifier: Modifier = Modifier,
     interactionSource: MutableInteractionSource? = null,
-    onFileSelected: (String) -> Unit
+    onFileSelected: (String) -> Unit,
+    supportingText: @Composable (() -> Unit)? = null,
+    isError: Boolean = false,
 ) {
     var filePath by remember { mutableStateOf("") }
     val fileChooser = remember {
@@ -63,6 +65,8 @@ fun OutlinedFilePicker(
         label = label,
         readOnly = true,
         singleLine = true,
+        isError = isError,
+        supportingText = supportingText,
         trailingIcon = {
             IconButton(
                 enabled = enabled,

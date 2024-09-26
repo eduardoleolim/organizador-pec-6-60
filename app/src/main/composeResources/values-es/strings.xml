@@ -67,6 +67,12 @@
     <string name="inst_show_details_title">Datos del instrumento</string>
     <string name="inst_form_add_title">Agregar instrumento</string>
     <string name="inst_form_edit_title">Editar instrumento</string>
+    <string name="inst_form_year_required">Año requerido</string>
+    <string name="inst_form_month_required">Mes requerido</string>
+    <string name="inst_form_municipality_required">Municipio requerido</string>
+    <string name="inst_form_agency_required">Agencia requerida</string>
+    <string name="inst_form_statistic_type_required">Tipo de estadística requerido</string>
+    <string name="inst_form_document_required">Documento requerido</string>
     <string name="inst_form_error_default">Ocurrió un error mientras se trataba de guardar el instrumento. Inténtalo de nuevo más tarde</string>
     <string name="inst_form_error_statistic_type_not_found">El tipo de estadística ya no se encuentra registrado</string>
     <string name="inst_form_error_municipality_not_found">El municipio ya no se encuentra registrado</string>

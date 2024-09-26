@@ -67,6 +67,12 @@
     <string name="inst_show_details_title">Instrument's info</string>
     <string name="inst_form_add_title">Add instrument</string>
     <string name="inst_form_edit_title">Edit instrument</string>
+    <string name="inst_form_year_required">Year required</string>
+    <string name="inst_form_month_required">Month required</string>
+    <string name="inst_form_municipality_required">Municipality required</string>
+    <string name="inst_form_agency_required">Agency required</string>
+    <string name="inst_form_statistic_type_required">Statistic type required</string>
+    <string name="inst_form_document_required">Document required</string>
     <string name="inst_form_error_default">An error occurred while trying to save the instrument. Please try again later</string>
     <string name="inst_form_error_statistic_type_not_found">The statistic type is no longer registered</string>
     <string name="inst_form_error_municipality_not_found">The municipality is no longer registered</string>

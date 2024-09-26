@@ -21,6 +21,7 @@ import org.eduardoleolim.organizadorpec660.instrument.application.DetailedInstru
 import org.eduardoleolim.organizadorpec660.instrument.application.create.CreateInstrumentCommand
 import org.eduardoleolim.organizadorpec660.instrument.application.searchById.SearchInstrumentByIdQuery
 import org.eduardoleolim.organizadorpec660.instrument.application.update.UpdateInstrumentCommand
+import org.eduardoleolim.organizadorpec660.instrument.data.EmptyInstrumentDataException
 import org.eduardoleolim.organizadorpec660.instrument.views.InstrumentScreen
 import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalitiesResponse
 import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalityResponse
@@ -206,7 +207,16 @@ class SaveInstrumentScreenModel(
             delay(500)
 
             if (isYearUnselected || isMonthUnselected || isMunicipalityUnselected || isAgencyUnselected || isStatisticTypeUnselected || isInstrumentFileUnselected) {
-                formState = InstrumentFormState.Error(Exception("Campos Vacíos"))
+                formState = InstrumentFormState.Error(
+                    EmptyInstrumentDataException(
+                        isYearUnselected,
+                        isMonthUnselected,
+                        isMunicipalityUnselected,
+                        isAgencyUnselected,
+                        isStatisticTypeUnselected,
+                        isInstrumentFileUnselected
+                    )
+                )
                 return@launch
             }
 

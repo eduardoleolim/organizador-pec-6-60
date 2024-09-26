@@ -9,13 +9,13 @@ class EmptyMunicipalityDataException(
 ) :
     InvalidMunicipalityArgumentException(
         when {
-            isFederalEntityEmpty && isKeyCodeEmpty && isNameEmpty -> "La entidad federativa, la clave y el nombre son requeridos"
-            isFederalEntityEmpty && isKeyCodeEmpty -> "La entidad federativa y la clave son requeridas"
-            isFederalEntityEmpty && isNameEmpty -> "La entidad federativa y el nombre son requeridos"
-            isKeyCodeEmpty && isNameEmpty -> "La clave y el nombre son requeridos"
-            isFederalEntityEmpty -> "La entidad federativa es requiridad"
-            isKeyCodeEmpty -> "La clave es requerida"
-            isNameEmpty -> "El nombre es requerido"
-            else -> null
+            isFederalEntityEmpty && isKeyCodeEmpty && isNameEmpty -> "The federal entity, keyCode and name are required"
+            isFederalEntityEmpty && isKeyCodeEmpty -> "The federal entity and keyCode are required"
+            isFederalEntityEmpty && isNameEmpty -> "The federal entity and name are required"
+            isKeyCodeEmpty && isNameEmpty -> "The keyCode and name are required"
+            isFederalEntityEmpty -> "The federal entity is required"
+            isKeyCodeEmpty -> "The keyCode is required"
+            isNameEmpty -> "The name is required"
+            else -> "No data is missing"
         }
     )
