@@ -1,10 +1,79 @@
+## [2.2.0](https://github.com/eduardoleolim/organizador-pec-6-60/compare/v2.1.0...v2.2.0) (2024-09-26)
+
+### Features
+
+* add scope to error logger
+  generator ([98b615f](https://github.com/eduardoleolim/organizador-pec-6-60/commit/98b615f5c34bbdf13346ca576a6e5b4826ad00e9))
+* **agency:** implement mutable flow state for search
+  functionality ([4e465e6](https://github.com/eduardoleolim/organizador-pec-6-60/commit/4e465e65075c6a0a13cb9ce008df4ab305a5f167))
+* **agency:** manage behavior of screen implementing mutable state in screen
+  model ([1bdc82d](https://github.com/eduardoleolim/organizador-pec-6-60/commit/1bdc82d17dc46c93673c806875c5309f9d85162b))
+* **agency:** show statistic type error
+  message ([c47255c](https://github.com/eduardoleolim/organizador-pec-6-60/commit/c47255c2d7ffc8dd5e79fc923a6d8778b18f04f7))
+* **agency:** use agency state for
+  form ([20d95ca](https://github.com/eduardoleolim/organizador-pec-6-60/commit/20d95ca64fa5927971f246174ebca797cde952ca))
+* **auth:** hide login image if window size is
+  compact ([749a391](https://github.com/eduardoleolim/organizador-pec-6-60/commit/749a391199c6960edce2948a552a5e8762c27eb9))
+* **auth:** show default error message for unknown
+  errors ([84798e1](https://github.com/eduardoleolim/organizador-pec-6-60/commit/84798e19551177b94bf8d61af266c6fc857913e5))
+* **federal-entity:** implement mutable flow state for search functionality and screen
+  management ([b446ea0](https://github.com/eduardoleolim/organizador-pec-6-60/commit/b446ea09fadcdfba4be5a5898bf448dca7b1b2b4))
+* **federal-entity:** use federal entity state for
+  form ([53b9077](https://github.com/eduardoleolim/organizador-pec-6-60/commit/53b907727b83302043a89693c0c825edc91262b3))
+* **instrument:** add callbacks in table to change selected
+  filters ([0458c1f](https://github.com/eduardoleolim/organizador-pec-6-60/commit/0458c1f54360e705c0299f8b16945c8de42a0484))
+* **instrument:** delete file after delete record from
+  database ([21e446e](https://github.com/eduardoleolim/organizador-pec-6-60/commit/21e446e1b5d0399b089e37b83e8836744ab2114e))
+* **instrument:** delete instrument just if its status is not saved in
+  SIRESO ([4ad5a3a](https://github.com/eduardoleolim/organizador-pec-6-60/commit/4ad5a3a2b18492002c1b789951eecf85d85aaee6))
+* **instrument:** implement data mutable state for
+  form ([786ca53](https://github.com/eduardoleolim/organizador-pec-6-60/commit/786ca537a7b844d10495b9ec5b09600e7574299e))
+* **instrument:** implement state for management of main screen
+  operations ([1c001b6](https://github.com/eduardoleolim/organizador-pec-6-60/commit/1c001b6dd02c9ec617a9ba6dd557c4e6e37f2f57))
+* **instrument:** reset instrument file picker after save new
+  record ([d8350eb](https://github.com/eduardoleolim/organizador-pec-6-60/commit/d8350ebdb72c0fdd5ddefb46139d2a95f8a09d8b))
+* **instrument:** reset municipality, agency and statistic type after save new
+  record ([2df4cda](https://github.com/eduardoleolim/organizador-pec-6-60/commit/2df4cda13bafa1b7feda9c63c93fac9803c00cf3))
+* **instrument:** search instruments after update status in SISERO or delete
+  it ([6a135df](https://github.com/eduardoleolim/organizador-pec-6-60/commit/6a135dfa74abc57f24736c2f53b2846b2a28899f))
+* **instrument:** show error messages when saving operation
+  fails ([69d5d61](https://github.com/eduardoleolim/organizador-pec-6-60/commit/69d5d61524d86cf7c8dec2dd0cf4e67eacfadf1d))
+* **instrument:** show error messages when there are empty fileds in
+  form ([5d2fd48](https://github.com/eduardoleolim/organizador-pec-6-60/commit/5d2fd48c9aa7bf35f006a7f7514a34e56bc9240a))
+* **municipality:** manage crud operations with mutable
+  state ([568e26b](https://github.com/eduardoleolim/organizador-pec-6-60/commit/568e26b6e6aea3051a027ce4701f88e584f9bbac))
+* **municipality:** manage screen behavior with mutable
+  state ([59858ce](https://github.com/eduardoleolim/organizador-pec-6-60/commit/59858ced2dea3f034da764802dab099f28f138d1))
+* **municipality:** show error message when deleting request
+  fails ([d902927](https://github.com/eduardoleolim/organizador-pec-6-60/commit/d902927c6cd2b580a81bec5e061697aea9c19f61))
+* **municipality:** validate if exists agencies associated before delete
+  it ([2c0bc1a](https://github.com/eduardoleolim/organizador-pec-6-60/commit/2c0bc1a61efa01dee96433799858799623bf27cb))
+* **statistic-type:** implement state for
+  form ([b1b7779](https://github.com/eduardoleolim/organizador-pec-6-60/commit/b1b7779b23b954eb036e89876d72069889ef4e6b))
+* **statistic-type:** manage screen behavior with mutable
+  state ([d1cd969](https://github.com/eduardoleolim/organizador-pec-6-60/commit/d1cd9697b461144fe778ef95a724da0d33c42b2c))
+* **statistic-type:** show error message when deleting request
+  fails ([9d9b2ec](https://github.com/eduardoleolim/organizador-pec-6-60/commit/9d9b2ec48e1c04a34e801758ee27c1adeed089c9))
+
+### Bug Fixes
+
+* **agency:** keep pagination when reset
+  screen ([9b780b2](https://github.com/eduardoleolim/organizador-pec-6-60/commit/9b780b2971d5645d1168b3108b42832f1ae960bb))
+* **auth:** clear login
+  form ([f924bbb](https://github.com/eduardoleolim/organizador-pec-6-60/commit/f924bbb4e68a39eca0281c157c733216e1f0f3c0))
+* **federal-entity:** keep pagination when reset
+  screen ([82f6d53](https://github.com/eduardoleolim/organizador-pec-6-60/commit/82f6d534227d4a0db1e9b4199ed2e6c26d748e9d))
+
+### Reverts
+
+* add onSearch callback in federal entity
+  and ([d7fd471](https://github.com/eduardoleolim/organizador-pec-6-60/commit/d7fd4712271e504f96e4eff401029a46987e9a7f))
 ## [2.1.0](https://github.com/eduardoleolim/organizador-pec-6-60/compare/v2.0.0...v2.1.0) (2024-09-17)
 
 ### Bug Fixes
 
 * don't allow multiline
   password ([c8e8a55](https://github.com/eduardoleolim/organizador-pec-6-60/commit/c8e8a552bd284602c7ea3202041399ff1387d246))
-
 ## [2.0.0](https://github.com/eduardoleolim/organizador-pec-6-60/compare/d673f1deff2cb8b1e979b1aa9de61e5de1bf1bd6...v2.0.0) (2024-09-16)
 
 ### Features
