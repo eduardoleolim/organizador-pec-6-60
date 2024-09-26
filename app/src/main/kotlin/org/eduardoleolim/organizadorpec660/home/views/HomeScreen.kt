@@ -223,8 +223,8 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
             Row {
                 NavigationRail(
                     modifier = Modifier
-                        .width(116.dp)
-                        .padding(horizontal = 16.dp),
+                        .width(110.dp)
+                        .padding(horizontal = 12.dp),
                     containerColor = MaterialTheme.colorScheme.surfaceContainer,
                     header = {
                         Spacer(Modifier.height(24.dp))
@@ -252,7 +252,7 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
                 Surface(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(start = 8.dp, end = 24.dp, top = 24.dp, bottom = 24.dp),
+                        .padding(end = 24.dp, top = 24.dp, bottom = 24.dp),
                     color = MaterialTheme.colorScheme.surfaceContainerHigh,
                     shape = MaterialTheme.shapes.large,
                 ) {
