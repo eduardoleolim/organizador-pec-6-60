@@ -61,6 +61,7 @@ compose.desktop {
             appResourcesRootDir.set(project.layout.projectDirectory.dir("resources"))
 
             windows {
+                upgradeUuid = "e59c1d59-bf07-4a62-9a4e-646de0a1324e"
                 iconFile.set(file("icons/icon.ico"))
                 dirChooser = true
                 shortcut = true
