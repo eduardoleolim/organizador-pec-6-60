@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-    <configuration default="false" name="desktopDistributable" type="GradleRunConfiguration" factoryName="Gradle">
+    <configuration default="false" name="desktopRelease" type="GradleRunConfiguration" factoryName="Gradle">
         <ExternalSystemSettings>
             <option name="env">
                 <map>
@@ -16,7 +16,7 @@
             </option>
             <option name="taskNames">
                 <list>
-                    <option value="app:runDistributable"/>
+                    <option value="app:runRelease"/>
                 </list>
             </option>
             <option name="vmOptions"/>
