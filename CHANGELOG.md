@@ -1,3 +1,9 @@
+## [2.2.1](https://github.com/eduardoleolim/organizador-pec-6-60/compare/v2.2.0...v2.2.1) (2024-09-27)
+
+### Bug Fixes
+
+* specify UUID for Windows installer to ensure proper
+  updates ([7867037](https://github.com/eduardoleolim/organizador-pec-6-60/commit/78670377a6ad8d03b9b0f0a0dbf5dbe33f5c636e))
 ## [2.2.0](https://github.com/eduardoleolim/organizador-pec-6-60/compare/v2.1.0...v2.2.0) (2024-09-26)
 
 ### Features
