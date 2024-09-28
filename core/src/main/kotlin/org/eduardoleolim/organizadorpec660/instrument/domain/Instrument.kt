@@ -38,6 +38,28 @@ class Instrument private constructor(
             null
         )
 
+        fun createFromV1(
+            statisticYear: Int,
+            statisticMonth: Int,
+            instrumentFileId: String,
+            agencyId: String,
+            statisticTypeId: String,
+            municipalityId: String,
+            saved: Boolean,
+            createdAt: Date
+        ) = Instrument(
+            InstrumentId.random(),
+            InstrumentStatisticYear(statisticYear),
+            InstrumentStatisticMonth(statisticMonth),
+            InstrumentSaved(saved),
+            InstrumentFileId.fromString(instrumentFileId),
+            AgencyId.fromString(agencyId),
+            StatisticTypeId.fromString(statisticTypeId),
+            MunicipalityId.fromString(municipalityId),
+            InstrumentCreateDate(createdAt),
+            null
+        )
+
         fun from(
             id: String,
             statisticYear: Int,
@@ -103,7 +125,7 @@ class Instrument private constructor(
         this.updatedAt = InstrumentUpdateDate.now()
     }
 
-    fun unsaveInSIRESO() {
+    fun unSaveInSIRESO() {
         this.saved = InstrumentSaved(false)
         this.updatedAt = InstrumentUpdateDate.now()
     }

@@ -24,7 +24,7 @@ class InstrumentSiresoSaver(private val instrumentRepository: InstrumentReposito
         val instrument = searchInstrument(instrumentId) ?: return Left(InstrumentNotFoundError(instrumentId))
 
         if (instrument.savedInSIRESO()) {
-            instrument.unsaveInSIRESO()
+            instrument.unSaveInSIRESO()
             instrumentRepository.save(instrument)
         }
 
