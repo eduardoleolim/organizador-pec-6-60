@@ -4,7 +4,7 @@ import org.eduardoleolim.organizadorpec660.federalEntity.domain.CsvFederalEntity
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityError
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.Command
 
-open class CsvImportFederalEntitiesCommand<I : CsvFederalEntityImportInput>(
+class CsvImportFederalEntitiesCommand<I : CsvFederalEntityImportInput>(
     private val input: I,
     private val overrideIfExists: Boolean
 ) : Command<FederalEntityError, List<FederalEntityImportWarning>> {

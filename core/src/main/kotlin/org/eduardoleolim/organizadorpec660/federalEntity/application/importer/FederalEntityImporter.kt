@@ -22,17 +22,22 @@ class FederalEntityImporter<I : FederalEntityImportInput>(
             try {
                 val keyCode = federalEntityData.keyCode()
                 val name = federalEntityData.name()
-                val federalEntity = searchFederalEntityByKeyCode(keyCode)
+                val federalEntity = searchFederalEntity(keyCode)
 
-                if (federalEntity != null && overrideIfExists) {
-                    federalEntity.apply {
-                        changeName(name)
-                        changeKeyCode(keyCode)
+                when {
+                    federalEntity != null && overrideIfExists -> {
+                        federalEntity.apply {
+                            changeName(name)
+                            changeKeyCode(keyCode)
+                        }.let {
+                            repository.save(it)
+                        }
                     }
-                    repository.save(federalEntity)
-                } else {
-                    FederalEntity.create(keyCode, name).let {
-                        repository.save(it)
+
+                    federalEntity == null -> {
+                        FederalEntity.create(keyCode, name).let {
+                            repository.save(it)
+                        }
                     }
                 }
             } catch (e: Throwable) {
@@ -47,7 +52,7 @@ class FederalEntityImporter<I : FederalEntityImportInput>(
         return Right(warnings)
     }
 
-    private fun searchFederalEntityByKeyCode(keyCode: String) = FederalEntityCriteria.keyCodeCriteria(keyCode).let {
+    private fun searchFederalEntity(keyCode: String) = FederalEntityCriteria.keyCodeCriteria(keyCode).let {
         repository.matching(it).firstOrNull()
     }
 }
