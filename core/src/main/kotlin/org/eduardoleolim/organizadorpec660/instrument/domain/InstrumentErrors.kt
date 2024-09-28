@@ -3,15 +3,21 @@ package org.eduardoleolim.organizadorpec660.instrument.domain
 sealed class InstrumentError(override val message: String, override val cause: Throwable? = null) :
     Error(message, cause)
 
-class InstrumentNotFoundError(id: String) : InstrumentError("The instrument with id <$id> was not found")
+class InstrumentNotFoundError(key: String) : InstrumentError("The instrument with identifier <$key> was not found")
 
-class InstrumentFileNotFoundError(id: String) : InstrumentError("The instrument file with id <$id> was not found")
+class InstrumentFileNotFoundError(key: String) :
+    InstrumentError("The instrument file with identifier <$key> was not found")
 
-class AgencyNotFoundError(val id: String) : InstrumentError("The agency with id <$id> was not found")
+class AgencyNotFoundError(val key: String) : InstrumentError("The agency with identifier <$key> was not found")
 
-class StatisticTypeNotFoundError(val id: String) : InstrumentError("The statistic type with id <$id> was not found")
+class StatisticTypeNotFoundError(val key: String) :
+    InstrumentError("The statistic type with identifier <$key> was not found")
 
-class MunicipalityNotFoundError(val id: String) : InstrumentError("The municipality with id <$id> was not found")
+class MunicipalityNotFoundError(val key: String) :
+    InstrumentError("The municipality with identifier <$key> was not found")
+
+class FederalEntityNotFoundError(val key: String) :
+    InstrumentError("The federal entity with identifier <$key> was not found")
 
 class InstrumentFileRequiredError : InstrumentError("A new instrument must be saved with a instrument file")
 
@@ -28,3 +34,5 @@ class InstrumentAlreadyExistsError(
 
 class CanNotDeleteSavedInstrumentError :
     InstrumentError("The instrument can not be deleted because its status is saved in SIRESO")
+
+class CanNotImportInstrumentsError : InstrumentError("The instruments can not be imported")
