@@ -255,7 +255,7 @@ class SaveInstrumentScreenModel(
             formState = try {
                 val document = File(documentPath).readBytes()
                 val command = CreateInstrumentCommand(year, month, agencyId, statisticTypeId, municipalityId, document)
-                commandBus.dispatch(command).foldAsync(
+                commandBus.dispatch(command).fold(
                     ifRight = {
                         filePickerInteractionSource.emit(ResetFilePickerInteraction)
                         instrument = instrument.copy(

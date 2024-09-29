@@ -1,11 +1,9 @@
 package org.eduardoleolim.organizadorpec660.agency.application.update
 
+import arrow.core.Either
 import org.eduardoleolim.organizadorpec660.agency.domain.*
 import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityCriteria
 import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityRepository
-import org.eduardoleolim.organizadorpec660.shared.domain.Either
-import org.eduardoleolim.organizadorpec660.shared.domain.Left
-import org.eduardoleolim.organizadorpec660.shared.domain.Right
 import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeCriteria
 import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeRepository
 
@@ -22,21 +20,21 @@ class AgencyUpdater(
         statisticTypeIds: List<String>
     ): Either<AgencyError, Unit> {
         try {
-            val agency = searchAgency(agencyId) ?: return Left(AgencyNotFoundError(agencyId))
+            val agency = searchAgency(agencyId) ?: return Either.Left(AgencyNotFoundError(agencyId))
 
             if (statisticTypeIds.isEmpty())
-                return Left(AgencyHasNoStatisticTypesError())
+                return Either.Left(AgencyHasNoStatisticTypesError())
 
             if (existsMunicipality(municipalityId).not())
-                return Left(MunicipalityNotFoundError(municipalityId))
+                return Either.Left(MunicipalityNotFoundError(municipalityId))
 
             statisticTypeIds.forEach { statisticTypeId ->
                 if (existsStatisticType(statisticTypeId).not())
-                    return Left(StatisticTypeNotFoundError(statisticTypeId))
+                    return Either.Left(StatisticTypeNotFoundError(statisticTypeId))
             }
 
             if (existsAnotherAgencySameConsecutive(agencyId, consecutive, municipalityId))
-                return Left(AgencyAlreadyExistsError(consecutive))
+                return Either.Left(AgencyAlreadyExistsError(consecutive))
 
             agency.apply {
                 changeName(name)
@@ -45,10 +43,10 @@ class AgencyUpdater(
                 replaceStatisticTypeIds(statisticTypeIds)
             }.let {
                 agencyRepository.save(agency)
-                return Right(Unit)
+                return Either.Right(Unit)
             }
         } catch (e: InvalidArgumentAgencyException) {
-            return Left(CanNotSaveAgencyError(e))
+            return Either.Left(CanNotSaveAgencyError(e))
         }
     }
 

@@ -1,8 +1,6 @@
 package org.eduardoleolim.organizadorpec660.statisticType.application.create
 
-import org.eduardoleolim.organizadorpec660.shared.domain.Either
-import org.eduardoleolim.organizadorpec660.shared.domain.Left
-import org.eduardoleolim.organizadorpec660.shared.domain.Right
+import arrow.core.Either
 import org.eduardoleolim.organizadorpec660.statisticType.domain.*
 import java.util.*
 
@@ -10,14 +8,14 @@ class StatisticTypeCreator(private val statisticTypeRepository: StatisticTypeRep
     fun create(keyCode: String, name: String): Either<StatisticTypeError, UUID> {
         try {
             if (existsStatisticType(keyCode))
-                return Left(StatisticTypeAlreadyExistsError(keyCode))
+                return Either.Left(StatisticTypeAlreadyExistsError(keyCode))
 
             StatisticType.create(keyCode, name).let {
                 statisticTypeRepository.save(it)
-                return Right(it.id())
+                return Either.Right(it.id())
             }
         } catch (e: InvalidArgumentStatisticTypeException) {
-            return Left(CanNotSaveStatisticTypeError(e))
+            return Either.Left(CanNotSaveStatisticTypeError(e))
         }
     }
 

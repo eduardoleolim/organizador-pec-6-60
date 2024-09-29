@@ -1,7 +1,7 @@
 package org.eduardoleolim.organizadorpec660.federalEntity.application.update
 
+import arrow.core.Either
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityError
-import org.eduardoleolim.organizadorpec660.shared.domain.Either
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandHandler
 
 class UpdateFederalEntityCommandHandler(private val updater: FederalEntityUpdater) :

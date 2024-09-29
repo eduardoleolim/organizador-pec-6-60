@@ -1,13 +1,11 @@
 package org.eduardoleolim.organizadorpec660.instrument.application.create
 
+import arrow.core.Either
 import org.eduardoleolim.organizadorpec660.agency.domain.AgencyCriteria
 import org.eduardoleolim.organizadorpec660.agency.domain.AgencyRepository
 import org.eduardoleolim.organizadorpec660.instrument.domain.*
 import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityCriteria
 import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityRepository
-import org.eduardoleolim.organizadorpec660.shared.domain.Either
-import org.eduardoleolim.organizadorpec660.shared.domain.Left
-import org.eduardoleolim.organizadorpec660.shared.domain.Right
 import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeCriteria
 import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeRepository
 import java.util.*
@@ -27,13 +25,13 @@ class InstrumentCreator(
         file: ByteArray
     ): Either<InstrumentError, UUID> {
         if (existsAgency(agencyId).not())
-            return Left(AgencyNotFoundError(agencyId))
+            return Either.Left(AgencyNotFoundError(agencyId))
 
         if (existsStatisticType(statisticTypeId).not())
-            return Left(StatisticTypeNotFoundError(statisticTypeId))
+            return Either.Left(StatisticTypeNotFoundError(statisticTypeId))
 
         if (existsMunicipality(municipalityId).not())
-            return Left(MunicipalityNotFoundError(municipalityId))
+            return Either.Left(MunicipalityNotFoundError(municipalityId))
 
         val existsInstrument = existsInstrument(
             statisticYear,
@@ -44,7 +42,7 @@ class InstrumentCreator(
         )
 
         if (existsInstrument)
-            return Left(
+            return Either.Left(
                 InstrumentAlreadyExistsError(
                     statisticYear,
                     statisticMonth,
@@ -65,7 +63,7 @@ class InstrumentCreator(
         )
 
         instrumentRepository.save(instrument, instrumentFile)
-        return Right(instrument.id())
+        return Either.Right(instrument.id())
     }
 
     private fun existsAgency(agencyId: String) = AgencyCriteria.idCriteria(agencyId).let {

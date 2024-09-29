@@ -1,8 +1,8 @@
 package org.eduardoleolim.organizadorpec660.federalEntity.application.importer
 
+import arrow.core.Either
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.CsvFederalEntityImportInput
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityError
-import org.eduardoleolim.organizadorpec660.shared.domain.Either
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandHandler
 
 class CsvImportFederalEntitiesCommandHandler<I : CsvFederalEntityImportInput>(private val importer: FederalEntityImporter<I>) :

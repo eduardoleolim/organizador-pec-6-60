@@ -1,11 +1,9 @@
 package org.eduardoleolim.organizadorpec660.federalEntity.application.delete
 
+import arrow.core.Either
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.*
 import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityCriteria
 import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityRepository
-import org.eduardoleolim.organizadorpec660.shared.domain.Either
-import org.eduardoleolim.organizadorpec660.shared.domain.Left
-import org.eduardoleolim.organizadorpec660.shared.domain.Right
 
 class FederalEntityDeleter(
     private val federalEntityRepository: FederalEntityRepository,
@@ -14,15 +12,15 @@ class FederalEntityDeleter(
     fun delete(id: String): Either<FederalEntityError, Unit> {
         try {
             if (exists(id).not())
-                return Left(FederalEntityNotFoundError(id))
+                return Either.Left(FederalEntityNotFoundError(id))
 
             if (hasMunicipalities(id))
-                return Left(FederalEntityHasMunicipalitiesError())
+                return Either.Left(FederalEntityHasMunicipalitiesError())
 
             federalEntityRepository.delete(id)
-            return Right(Unit)
+            return Either.Right(Unit)
         } catch (e: InvalidArgumentFederalEntityException) {
-            return Left(CanNotDeleteFederalEntityError(e))
+            return Either.Left(CanNotDeleteFederalEntityError(e))
         }
     }
 

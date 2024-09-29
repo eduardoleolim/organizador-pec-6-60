@@ -1,9 +1,8 @@
 package org.eduardoleolim.organizadorpec660.shared.infrastructure.bus
 
-import org.eduardoleolim.organizadorpec660.shared.domain.Either
+import arrow.core.Either
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.Command
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandHandler
-import org.eduardoleolim.organizadorpec660.shared.domain.onLeft
 import org.ktorm.database.Database
 
 class KtormCommandHandlerDecorator<L, R, T : Command<L, R>>(

@@ -1,6 +1,6 @@
 package org.eduardoleolim.organizadorpec660.statisticType.application.delete
 
-import org.eduardoleolim.organizadorpec660.shared.domain.Either
+import arrow.core.Either
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandHandler
 import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeError
 

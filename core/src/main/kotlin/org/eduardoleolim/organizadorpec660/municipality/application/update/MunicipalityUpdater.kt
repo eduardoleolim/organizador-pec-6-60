@@ -1,11 +1,9 @@
 package org.eduardoleolim.organizadorpec660.municipality.application.update
 
+import arrow.core.Either
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityCriteria
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityRepository
 import org.eduardoleolim.organizadorpec660.municipality.domain.*
-import org.eduardoleolim.organizadorpec660.shared.domain.Either
-import org.eduardoleolim.organizadorpec660.shared.domain.Left
-import org.eduardoleolim.organizadorpec660.shared.domain.Right
 
 class MunicipalityUpdater(
     private val municipalityRepository: MunicipalityRepository,
@@ -19,13 +17,13 @@ class MunicipalityUpdater(
     ): Either<MunicipalityError, Unit> {
         try {
             val municipality =
-                searchMunicipality(municipalityId) ?: return Left(MunicipalityNotFoundError(municipalityId))
+                searchMunicipality(municipalityId) ?: return Either.Left(MunicipalityNotFoundError(municipalityId))
 
             if (existsFederalEntity(federalEntityId).not())
-                return Left(FederalEntityNotFoundError(federalEntityId))
+                return Either.Left(FederalEntityNotFoundError(federalEntityId))
 
             if (existsAnotherSameKeyCode(municipalityId, keyCode, federalEntityId))
-                return Left(MunicipalityAlreadyExistsError(keyCode))
+                return Either.Left(MunicipalityAlreadyExistsError(keyCode))
 
             municipality.apply {
                 changeKeyCode(keyCode)
@@ -33,10 +31,10 @@ class MunicipalityUpdater(
                 changeFederalEntityId(federalEntityId)
             }.let {
                 municipalityRepository.save(it)
-                return Right(Unit)
+                return Either.Right(Unit)
             }
         } catch (e: InvalidArgumentMunicipalityException) {
-            return Left(CanNotSaveMunicipalityError(e))
+            return Either.Left(CanNotSaveMunicipalityError(e))
         }
     }
 

@@ -1,10 +1,8 @@
 package org.eduardoleolim.organizadorpec660.statisticType.application.delete
 
+import arrow.core.Either
 import org.eduardoleolim.organizadorpec660.agency.domain.AgencyCriteria
 import org.eduardoleolim.organizadorpec660.agency.domain.AgencyRepository
-import org.eduardoleolim.organizadorpec660.shared.domain.Either
-import org.eduardoleolim.organizadorpec660.shared.domain.Left
-import org.eduardoleolim.organizadorpec660.shared.domain.Right
 import org.eduardoleolim.organizadorpec660.statisticType.domain.*
 
 class StatisticTypeDeleter(
@@ -14,15 +12,15 @@ class StatisticTypeDeleter(
     fun delete(id: String): Either<StatisticTypeError, Unit> {
         try {
             if (exists(id).not())
-                return Left(StatisticTypeNotFoundError(id))
+                return Either.Left(StatisticTypeNotFoundError(id))
 
             if (usedInAgencies(id))
-                return Left(StatisticTypeUsedInAgency())
+                return Either.Left(StatisticTypeUsedInAgency())
 
             statisticTypeRepository.delete(id)
-            return Right(Unit)
+            return Either.Right(Unit)
         } catch (e: InvalidArgumentStatisticTypeException) {
-            return Left(CanNotDeleteStatisticTypeError(e))
+            return Either.Left(CanNotDeleteStatisticTypeError(e))
         }
     }
 

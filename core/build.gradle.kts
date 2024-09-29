@@ -9,6 +9,8 @@ dependencies {
     api(libs.slf4j.simple)
     api(libs.koin.core)
     api(libs.kotlin.csv.jvm)
+    api(libs.arrow.core)
+    // api("com.healthmarketscience.jackcess:jackcess:4.0.7")
 
     testImplementation(libs.junit.jupiter)
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")

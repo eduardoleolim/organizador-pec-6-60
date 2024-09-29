@@ -7,6 +7,7 @@ compose = "1.7.0-beta02"
 material3-datatable = "0.9.1"
 voyager = "1.0.0"
 jSystemThemeDetector = "3.9.1"
+arrow = "1.2.4"
 pdfbox = "3.0.3"
 kotlinx-coroutines = "1.9.0"
 ktorm = "4.1.1"
@@ -29,6 +30,7 @@ voyager-screenmodel = { module = "cafe.adriel.voyager:voyager-screenmodel", vers
 voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
 pdfbox = { module = "org.apache.pdfbox:pdfbox", version.ref = "pdfbox" }
 jSystemThemeDetector = { module = "com.github.Dansoftowner:jSystemThemeDetector", version.ref = "jSystemThemeDetector" }
+arrow-core = { module = "io.arrow-kt:arrow-core", version.ref = "arrow" }
 ktorm-core = { module = "org.ktorm:ktorm-core", version.ref = "ktorm" }
 ktorm-sqlite = { module = "org.ktorm:ktorm-support-sqlite", version.ref = "ktorm" }
 jdbc-sqlite = { module = "io.github.willena:sqlite-jdbc", version.ref = "sqlite" }

@@ -1,11 +1,9 @@
 package org.eduardoleolim.organizadorpec660.municipality.application.create
 
+import arrow.core.Either
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityCriteria
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityRepository
 import org.eduardoleolim.organizadorpec660.municipality.domain.*
-import org.eduardoleolim.organizadorpec660.shared.domain.Either
-import org.eduardoleolim.organizadorpec660.shared.domain.Left
-import org.eduardoleolim.organizadorpec660.shared.domain.Right
 import java.util.*
 
 class MunicipalityCreator(
@@ -15,17 +13,17 @@ class MunicipalityCreator(
     fun create(keyCode: String, name: String, federalEntityId: String): Either<MunicipalityError, UUID> {
         try {
             if (existsFederalEntity(federalEntityId).not())
-                return Left(FederalEntityNotFoundError(federalEntityId))
+                return Either.Left(FederalEntityNotFoundError(federalEntityId))
 
             if (existsMunicipality(keyCode, federalEntityId))
-                return Left(MunicipalityAlreadyExistsError(keyCode))
+                return Either.Left(MunicipalityAlreadyExistsError(keyCode))
 
             Municipality.create(keyCode, name, federalEntityId).let {
                 municipalityRepository.save(it)
-                return Right(it.id())
+                return Either.Right(it.id())
             }
         } catch (e: InvalidArgumentMunicipalityException) {
-            return Left(CanNotSaveMunicipalityError(e))
+            return Either.Left(CanNotSaveMunicipalityError(e))
         }
     }
 

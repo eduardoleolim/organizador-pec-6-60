@@ -1,7 +1,7 @@
 package org.eduardoleolim.organizadorpec660.municipality.application.create
 
+import arrow.core.Either
 import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityError
-import org.eduardoleolim.organizadorpec660.shared.domain.Either
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandHandler
 import java.util.*
 

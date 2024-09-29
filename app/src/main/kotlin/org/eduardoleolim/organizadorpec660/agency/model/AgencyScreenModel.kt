@@ -320,7 +320,7 @@ class AgencyScreenModel(
 
             deleteState = try {
                 val command = DeleteAgencyCommand(agencyId)
-                commandBus.dispatch(command).foldAsync(
+                commandBus.dispatch(command).fold(
                     ifRight = {
                         AgencyDeleteState.Success
                     },

@@ -201,7 +201,7 @@ class StatisticTypeScreenModel(
             delay(500)
 
             deleteState = try {
-                commandBus.dispatch(DeleteStatisticTypeCommand(statisticTypeId)).foldAsync(
+                commandBus.dispatch(DeleteStatisticTypeCommand(statisticTypeId)).fold(
                     ifRight = {
                         StatisticTypeDeleteState.Success
                     },

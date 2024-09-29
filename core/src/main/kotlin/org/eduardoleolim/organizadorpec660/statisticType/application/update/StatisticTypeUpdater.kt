@@ -1,27 +1,25 @@
 package org.eduardoleolim.organizadorpec660.statisticType.application.update
 
-import org.eduardoleolim.organizadorpec660.shared.domain.Either
-import org.eduardoleolim.organizadorpec660.shared.domain.Left
-import org.eduardoleolim.organizadorpec660.shared.domain.Right
+import arrow.core.Either
 import org.eduardoleolim.organizadorpec660.statisticType.domain.*
 
 class StatisticTypeUpdater(private val statisticTypeRepository: StatisticTypeRepository) {
     fun update(id: String, keyCode: String, name: String): Either<StatisticTypeError, Unit> {
         try {
-            val statisticType = searchStatisticType(id) ?: return Left(StatisticTypeNotFoundError(id))
+            val statisticType = searchStatisticType(id) ?: return Either.Left(StatisticTypeNotFoundError(id))
 
             if (existsAnotherSameKeyCode(id, keyCode))
-                return Left(StatisticTypeAlreadyExistsError(keyCode))
+                return Either.Left(StatisticTypeAlreadyExistsError(keyCode))
 
             statisticType.apply {
                 changeKeyCode(keyCode)
                 changeName(name)
             }.let {
                 statisticTypeRepository.save(it)
-                return Right(Unit)
+                return Either.Right(Unit)
             }
         } catch (e: InvalidArgumentStatisticTypeException) {
-            return Left(CanNotSaveStatisticTypeError(e))
+            return Either.Left(CanNotSaveStatisticTypeError(e))
         }
     }
 

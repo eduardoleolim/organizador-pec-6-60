@@ -1,9 +1,7 @@
 package org.eduardoleolim.organizadorpec660.federalEntity.application.importer
 
+import arrow.core.Either
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.*
-import org.eduardoleolim.organizadorpec660.shared.domain.Either
-import org.eduardoleolim.organizadorpec660.shared.domain.Left
-import org.eduardoleolim.organizadorpec660.shared.domain.Right
 
 data class FederalEntityImportWarning(val index: Int, val error: Throwable)
 
@@ -46,10 +44,10 @@ class FederalEntityImporter<I : FederalEntityImportInput>(
         }
 
         if (warnings.size == federalEntities.size) {
-            return Left(CanNotImportFederalEntitiesError())
+            return Either.Left(CanNotImportFederalEntitiesError())
         }
 
-        return Right(warnings)
+        return Either.Right(warnings)
     }
 
     private fun searchFederalEntity(keyCode: String) = FederalEntityCriteria.keyCodeCriteria(keyCode).let {

@@ -1,11 +1,9 @@
 package org.eduardoleolim.organizadorpec660.instrument.application.update
 
+import arrow.core.Either
 import org.eduardoleolim.organizadorpec660.instrument.domain.*
 import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityCriteria
 import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityRepository
-import org.eduardoleolim.organizadorpec660.shared.domain.Either
-import org.eduardoleolim.organizadorpec660.shared.domain.Left
-import org.eduardoleolim.organizadorpec660.shared.domain.Right
 import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeCriteria
 import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeRepository
 
@@ -23,10 +21,10 @@ class InstrumentUpdater(
         municipalityId: String,
         file: ByteArray
     ): Either<InstrumentError, Unit> {
-        val instrument = searchInstrument(instrumentId) ?: return Left(InstrumentNotFoundError(instrumentId))
+        val instrument = searchInstrument(instrumentId) ?: return Either.Left(InstrumentNotFoundError(instrumentId))
         val instrumentFileId = instrument.instrumentFileId().toString()
         val instrumentFile =
-            searchInstrumentFile(instrumentFileId) ?: return Left(InstrumentFileNotFoundError(instrumentFileId))
+            searchInstrumentFile(instrumentFileId) ?: return Either.Left(InstrumentFileNotFoundError(instrumentFileId))
 
         val existsAnotherInstrument = existsAnotherInstrumentSameData(
             instrumentId,
@@ -38,7 +36,7 @@ class InstrumentUpdater(
         )
 
         if (existsAnotherInstrument)
-            return Left(
+            return Either.Left(
                 InstrumentAlreadyExistsError(
                     statisticYear,
                     statisticMonth,
@@ -49,10 +47,10 @@ class InstrumentUpdater(
             )
 
         if (existsStatisticType(statisticTypeId).not())
-            return Left(StatisticTypeNotFoundError(statisticTypeId))
+            return Either.Left(StatisticTypeNotFoundError(statisticTypeId))
 
         if (existsMunicipality(municipalityId).not())
-            return Left(MunicipalityNotFoundError(municipalityId))
+            return Either.Left(MunicipalityNotFoundError(municipalityId))
 
         instrument.apply {
             changeStatisticYear(statisticYear)
@@ -67,7 +65,7 @@ class InstrumentUpdater(
 
         instrumentRepository.save(instrument, instrumentFile)
 
-        return Right(Unit)
+        return Either.Right(Unit)
     }
 
     private fun searchInstrument(instrumentId: String) =

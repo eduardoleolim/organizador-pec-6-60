@@ -253,7 +253,7 @@ class FederalEntityScreenModel(
             deleteState = try {
                 val command = DeleteFederalEntityCommand(federalEntityId)
                 commandBus.dispatch(command)
-                    .foldAsync(
+                    .fold(
                         ifRight = {
                             FederalEntityDeleteState.Success
                         },

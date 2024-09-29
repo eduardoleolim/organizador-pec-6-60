@@ -1,11 +1,9 @@
 package org.eduardoleolim.organizadorpec660.agency.application.delete
 
+import arrow.core.Either
 import org.eduardoleolim.organizadorpec660.agency.domain.*
 import org.eduardoleolim.organizadorpec660.instrument.domain.InstrumentCriteria
 import org.eduardoleolim.organizadorpec660.instrument.domain.InstrumentRepository
-import org.eduardoleolim.organizadorpec660.shared.domain.Either
-import org.eduardoleolim.organizadorpec660.shared.domain.Left
-import org.eduardoleolim.organizadorpec660.shared.domain.Right
 
 class AgencyDeleter(
     private val agencyRepository: AgencyRepository,
@@ -14,15 +12,15 @@ class AgencyDeleter(
     fun delete(id: String): Either<AgencyError, Unit> {
         try {
             if (exists(id).not())
-                return Left(AgencyNotFoundError(id))
+                return Either.Left(AgencyNotFoundError(id))
 
             if (hasInstruments(id))
-                return Left(AgencyHasInstrumentsError())
+                return Either.Left(AgencyHasInstrumentsError())
 
             agencyRepository.delete(id)
-            return Right(Unit)
+            return Either.Right(Unit)
         } catch (e: InvalidArgumentAgencyException) {
-            return Left(CanNotDeleteAgencyError(e))
+            return Either.Left(CanNotDeleteAgencyError(e))
         }
     }
 

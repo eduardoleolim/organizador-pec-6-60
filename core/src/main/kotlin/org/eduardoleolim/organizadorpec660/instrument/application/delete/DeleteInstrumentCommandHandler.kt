@@ -1,7 +1,7 @@
 package org.eduardoleolim.organizadorpec660.instrument.application.delete
 
+import arrow.core.Either
 import org.eduardoleolim.organizadorpec660.instrument.domain.InstrumentError
-import org.eduardoleolim.organizadorpec660.shared.domain.Either
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandHandler
 
 class DeleteInstrumentCommandHandler(private val deleter: InstrumentDeleter) :
