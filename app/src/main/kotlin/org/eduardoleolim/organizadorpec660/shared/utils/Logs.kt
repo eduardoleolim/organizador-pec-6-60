@@ -16,8 +16,8 @@ fun generateErrorsLog(scope: String = "", error: Throwable) {
         append("_$formattedDateTime.log")
     }
 
-    File(AppConfig.getLogsDirectory()).resolve(logFileName).apply {
-        parentFile.mkdirs() // Asegurar que los directorios existen.
-        writeText(error.stackTraceToString()) // Escribir el stack trace del error.
+    File(AppConfig.logsDirectory).resolve(logFileName).apply {
+        parentFile.mkdirs()
+        writeText(error.stackTraceToString())
     }
 }

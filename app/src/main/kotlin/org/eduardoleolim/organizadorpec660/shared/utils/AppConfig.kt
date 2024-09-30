@@ -11,16 +11,12 @@ import java.math.BigInteger
 import java.util.*
 
 object AppConfig {
-    val name = System.getProperty("app.name")!!
-    val version = System.getProperty("app.version")!!
-
     private val appDirs = AppDirsFactory.getInstance()
     private val resourcesDirectory = System.getProperty("compose.application.resources.dir")
     private val propertiesFile: File by lazy {
-        val configDirectory = File(getConfigDirectory())
-        val configFile = configDirectory.resolve("app.properties")
+        val configFile = File(configDirectory).resolve("app.properties")
 
-        if (!configFile.exists()) {
+        if (configFile.exists().not()) {
             val defaultConfigFile = File(resourcesDirectory).resolve("app.properties")
             try {
                 defaultConfigFile.copyTo(configFile, overwrite = true)
@@ -33,25 +29,27 @@ object AppConfig {
     }
 
     private var properties = Properlty.builder().add(SystemPropertiesReader()).add(propertiesFile.path).build()
+    val name get() = properties["app.name"]!!
+    val version get() = properties["app.version"]!!
 
-    fun getConfigDirectory(): String =
-        System.getenv("DEVELOPMENT_CONFIG_DIR") ?: appDirs.getSiteConfigDir(name, null, null)
+    val configDirectory: String
+        get() = System.getenv("DEVELOPMENT_CONFIG_DIR") ?: appDirs.getSiteConfigDir(name, null, null)
 
-    fun getDataDirectory(): String = System.getenv("DEVELOPMENT_DATA_DIR") ?: appDirs.getSiteDataDir(name, null, null)
+    val dataDirectory: String
+        get() = System.getenv("DEVELOPMENT_DATA_DIR") ?: appDirs.getSiteDataDir(name, null, null)
 
-    fun getLogsDirectory(): String = appDirs.getUserLogDir(name, null, null)
+    val logsDirectory: String get() = appDirs.getUserLogDir(name, null, null)
 
     operator fun get(key: String): String? = properties[key]
 
     operator fun set(key: String, value: String) {
-        if (System.getProperty(key) != null) {
-            System.setProperty(key, value)
+        val appProperties = propertiesFile.inputStream().use { Properties().apply { load(it) } }
+
+        if (key.startsWith("app.") && appProperties.containsKey(key)) {
+            appProperties.setProperty(key, value)
+            propertiesFile.outputStream().use { appProperties.store(it, null) }
         } else {
-            Properties().also { ppt ->
-                propertiesFile.inputStream().use { ppt.load(it) }
-                ppt.setProperty(key, value)
-                propertiesFile.outputStream().use { ppt.store(it, null) }
-            }
+            System.setProperty(key, value)
         }
 
         properties = Properlty.builder()

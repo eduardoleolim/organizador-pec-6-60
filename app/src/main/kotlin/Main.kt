@@ -5,8 +5,7 @@ import java.io.File
 
 fun main() {
     try {
-        val dataDir = File(AppConfig.getDataDirectory())
-
+        val dataDir = File(AppConfig.dataDirectory)
         val databaseDir = AppConfig["app.database.dir"] ?: error("Database directory is not defined")
         val databasePassword = AppConfig["app.database.password"] ?: error("Database password is not defined")
         val databaseExtensionsDir =
