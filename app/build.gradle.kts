@@ -10,6 +10,8 @@ plugins {
     alias(libs.plugins.compose)
 }
 
+val env: String? by project
+
 dependencies {
     implementation(project(":core"))
     implementation(project(":decorated-window"))
@@ -43,6 +45,10 @@ compose.desktop {
     application {
         mainClass = "MainKt"
         jvmArgs("-Dfile.encoding=UTF-8", "-Dapp.name=${rootProject.name}", "-Dapp.version=${rootProject.version}")
+
+        if (env != "production") {
+            jvmArgs("-Dapp.data.dir=./debug", "-Dapp.logs.dir=./debug", "-Dapp.config.dir=./debug/config")
+        }
 
         if (OperatingSystem.current().isMacOsX) {
             jvmArgs("-Dskiko.renderApi=METAL")
