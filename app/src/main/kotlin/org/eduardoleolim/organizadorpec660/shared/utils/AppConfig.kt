@@ -12,42 +12,44 @@ import java.util.*
 
 object AppConfig {
     private val appDirs = AppDirsFactory.getInstance()
-    private val resourcesDirectory = System.getProperty("compose.application.resources.dir")
-    private val propertiesFile: File by lazy {
-        val configFile = File(configDirectory).resolve("app.properties")
 
-        if (configFile.exists().not()) {
+    private val resourcesDirectory = System.getProperty("compose.application.resources.dir")
+
+    val name: String = System.getProperty("app.name")
+
+    val version: String = System.getProperty("app.version")
+
+    val configDirectory: String
+        get() = System.getProperty("app.config.dir") ?: appDirs.getSiteConfigDir(name, null, null)
+
+    private val propertiesFile = File(configDirectory, "app.properties").also {
+        if (it.exists().not()) {
             val defaultConfigFile = File(resourcesDirectory).resolve("app.properties")
             try {
-                defaultConfigFile.copyTo(configFile, overwrite = true)
+                defaultConfigFile.copyTo(it, overwrite = true)
             } catch (e: IOException) {
                 throw RuntimeException("Error copying default properties file to config directory", e)
             }
         }
-
-        configFile
     }
 
     private var properties = Properlty.builder().add(SystemPropertiesReader()).add(propertiesFile.path).build()
-    val name get() = properties["app.name"]!!
-    val version get() = properties["app.version"]!!
-
-    val configDirectory: String
-        get() = System.getenv("DEVELOPMENT_CONFIG_DIR") ?: appDirs.getSiteConfigDir(name, null, null)
 
     val dataDirectory: String
-        get() = System.getenv("DEVELOPMENT_DATA_DIR") ?: appDirs.getSiteDataDir(name, null, null)
+        get() = properties["app.data.dir"] ?: appDirs.getSiteDataDir(name, null, null)
 
-    val logsDirectory: String get() = appDirs.getUserLogDir(name, null, null)
+    val logsDirectory: String
+        get() = properties["app.logs.dir"] ?: appDirs.getUserLogDir(name, null, null)
 
     operator fun get(key: String): String? = properties[key]
 
     operator fun set(key: String, value: String) {
-        val appProperties = propertiesFile.inputStream().use { Properties().apply { load(it) } }
-
-        if (key.startsWith("app.") && appProperties.containsKey(key)) {
-            appProperties.setProperty(key, value)
-            propertiesFile.outputStream().use { appProperties.store(it, null) }
+        if (key.startsWith("app.")) {
+            propertiesFile.let { pptFile ->
+                val appProperties = pptFile.inputStream().use { Properties().apply { load(it) } }
+                appProperties.setProperty(key, value)
+                pptFile.outputStream().use { appProperties.store(it, null) }
+            }
         } else {
             System.setProperty(key, value)
         }
