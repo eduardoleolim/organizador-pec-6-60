@@ -47,7 +47,7 @@ compose.desktop {
         jvmArgs("-Dfile.encoding=UTF-8", "-Dapp.name=${rootProject.name}", "-Dapp.version=${rootProject.version}")
 
         if (env != "production") {
-            jvmArgs("-Dapp.data.dir=./debug", "-Dapp.logs.dir=./debug", "-Dapp.config.dir=./debug/config")
+            jvmArgs("-Dapp.data.dir=./debug", "-Dapp.logs.dir=./debug/logs", "-Dapp.config.dir=./debug/config")
         }
 
         if (OperatingSystem.current().isMacOsX) {
