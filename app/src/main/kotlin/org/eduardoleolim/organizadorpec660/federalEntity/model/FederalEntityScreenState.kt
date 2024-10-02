@@ -9,7 +9,7 @@ data class FederalEntityScreenState(
     val selectedFederalEntity: FederalEntityResponse? = null,
     val showFormModal: Boolean = false,
     val showDeleteModal: Boolean = false,
-    val showImportExportModal: Boolean = false,
+    val showImportExportSelector: Boolean = false,
     val showImportModal: Boolean = false,
     val showExportModal: Boolean = false
 )

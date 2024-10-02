@@ -4,24 +4,21 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ImportExport
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SmallFloatingActionButton
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import kotlinx.coroutines.Dispatchers
 import org.eduardoleolim.organizadorpec660.federalEntity.model.FederalEntityScreenModel
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
-import org.eduardoleolim.organizadorpec660.shared.resources.Res
-import org.eduardoleolim.organizadorpec660.shared.resources.federal_entities
+import org.eduardoleolim.organizadorpec660.shared.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus: CommandBus) : Screen {
@@ -35,7 +32,7 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
         val selectedFederalEntity = screenState.selectedFederalEntity
         val showFormModal = screenState.showFormModal
         val showDeleteModal = screenState.showDeleteModal
-        val showImportExportModal = screenState.showImportExportModal
+        val showImportExportSelector = screenState.showImportExportSelector
         val showImportModal = screenState.showImportModal
         val showExportModal = screenState.showExportModal
         val pageSizes = screenState.pageSizes
@@ -46,7 +43,7 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
         ) {
             FederalEntityScreenHeader(
                 onSaveRequest = { screenModel.showFormModal(null) },
-                onImportExportRequest = { screenModel.showImportExportModal() }
+                onImportExportRequest = { screenModel.showImportExportSelector() }
             )
 
             FederalEntitiesTable(
@@ -91,10 +88,10 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
                     )
                 }
 
-                showImportExportModal -> {
-                    FederalEntityImportExportModal(
-                        onImportClick = { screenModel.showImportModal() },
-                        onExportClick = { screenModel.showExportModal() },
+                showImportExportSelector -> {
+                    FederalEntityImportExportSelector(
+                        onImportRequest = { screenModel.showImportModal() },
+                        onExportRequest = { screenModel.showExportModal() },
                         onDismissRequest = { screenModel.resetScreen() }
                     )
                 }
@@ -150,5 +147,37 @@ class FederalEntityScreen(private val queryBus: QueryBus, private val commandBus
                 )
             }
         }
+    }
+
+    @Composable
+    fun FederalEntityImportExportSelector(
+        onExportRequest: () -> Unit,
+        onImportRequest: () -> Unit,
+        onDismissRequest: () -> Unit
+    ) {
+        AlertDialog(
+            properties = DialogProperties(usePlatformDefaultWidth = false),
+            onDismissRequest = onDismissRequest,
+            title = {
+                Text(stringResource(Res.string.fe_catalog_title))
+            },
+            text = {
+                Text(stringResource(Res.string.fe_catalog_content))
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = onExportRequest
+                ) {
+                    Text(stringResource(Res.string.fe_catalog_export))
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = onImportRequest
+                ) {
+                    Text(stringResource(Res.string.fe_catalog_import))
+                }
+            }
+        )
     }
 }

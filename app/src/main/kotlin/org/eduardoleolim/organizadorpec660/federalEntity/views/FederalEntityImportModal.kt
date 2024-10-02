@@ -27,34 +27,6 @@ import javax.swing.JFileChooser
 import javax.swing.filechooser.FileNameExtensionFilter
 
 @Composable
-fun FederalEntityScreen.FederalEntityImportExportModal(
-    onExportClick: () -> Unit,
-    onImportClick: () -> Unit,
-    onDismissRequest: () -> Unit
-) {
-    AlertDialog(
-        properties = DialogProperties(usePlatformDefaultWidth = false),
-        onDismissRequest = onDismissRequest,
-        title = {
-            Text(stringResource(Res.string.fe_catalog_title))
-        },
-        text = {
-            Text(stringResource(Res.string.fe_catalog_content))
-        },
-        confirmButton = {
-            TextButton(onClick = onExportClick) {
-                Text(stringResource(Res.string.fe_catalog_export))
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onImportClick) {
-                Text(stringResource(Res.string.fe_catalog_import))
-            }
-        }
-    )
-}
-
-@Composable
 fun FederalEntityScreen.FederalEntityImportModal(
     screenModel: FederalEntityScreenModel,
     onSuccessImport: () -> Unit,

@@ -74,7 +74,7 @@ class FederalEntityScreenModel(
             selectedFederalEntity = federalEntity,
             showFormModal = true,
             showDeleteModal = false,
-            showImportExportModal = false,
+            showImportExportSelector = false,
             showImportModal = false,
             showExportModal = false
         )
@@ -85,18 +85,18 @@ class FederalEntityScreenModel(
             selectedFederalEntity = federalEntity,
             showFormModal = false,
             showDeleteModal = true,
-            showImportExportModal = false,
+            showImportExportSelector = false,
             showImportModal = false,
             showExportModal = false
         )
     }
 
-    fun showImportExportModal() {
+    fun showImportExportSelector() {
         screenState = screenState.copy(
             selectedFederalEntity = null,
             showFormModal = false,
             showDeleteModal = false,
-            showImportExportModal = true,
+            showImportExportSelector = true,
             showImportModal = false,
             showExportModal = false
         )
@@ -107,7 +107,7 @@ class FederalEntityScreenModel(
             selectedFederalEntity = null,
             showFormModal = false,
             showDeleteModal = false,
-            showImportExportModal = false,
+            showImportExportSelector = false,
             showImportModal = true,
             showExportModal = false
         )
@@ -118,7 +118,7 @@ class FederalEntityScreenModel(
             selectedFederalEntity = null,
             showFormModal = false,
             showDeleteModal = false,
-            showImportExportModal = false,
+            showImportExportSelector = false,
             showImportModal = false,
             showExportModal = true
         )
