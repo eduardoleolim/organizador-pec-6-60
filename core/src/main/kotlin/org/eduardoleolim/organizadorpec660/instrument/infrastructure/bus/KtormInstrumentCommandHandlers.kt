@@ -6,10 +6,14 @@ import org.eduardoleolim.organizadorpec660.instrument.application.create.Instrum
 import org.eduardoleolim.organizadorpec660.instrument.application.delete.DeleteInstrumentCommand
 import org.eduardoleolim.organizadorpec660.instrument.application.delete.DeleteInstrumentCommandHandler
 import org.eduardoleolim.organizadorpec660.instrument.application.delete.InstrumentDeleter
+import org.eduardoleolim.organizadorpec660.instrument.application.importer.ImportInstrumentsFromV1Command
+import org.eduardoleolim.organizadorpec660.instrument.application.importer.ImportInstrumentsFromV1CommandHandler
+import org.eduardoleolim.organizadorpec660.instrument.application.importer.InstrumentFromV1Importer
 import org.eduardoleolim.organizadorpec660.instrument.application.save.*
 import org.eduardoleolim.organizadorpec660.instrument.application.update.InstrumentUpdater
 import org.eduardoleolim.organizadorpec660.instrument.application.update.UpdateInstrumentCommand
 import org.eduardoleolim.organizadorpec660.instrument.application.update.UpdateInstrumentCommandHandler
+import org.eduardoleolim.organizadorpec660.instrument.domain.AccdbInstrumentImportInput
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.Command
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandHandler
 import org.eduardoleolim.organizadorpec660.shared.infrastructure.bus.KtormCommandHandlerDecorator
@@ -27,7 +31,8 @@ class KtormInstrumentCommandHandlers(context: KtormAppKoinContext) : KtormAppKoi
         UpdateInstrumentCommand::class to updateCommandHandler(),
         UpdateInstrumentAsSavedCommand::class to updateAsSavedCommandHandler(),
         UpdateInstrumentAsNotSavedCommand::class to updateAsNotSavedCommandHandler(),
-        DeleteInstrumentCommand::class to deleteCommandHandler()
+        DeleteInstrumentCommand::class to deleteCommandHandler(),
+        ImportInstrumentsFromV1Command::class to importFromV1CommandHandler()
     )
 
     private fun createCommandHandler(): CommandHandler<*, *, out Command<*, *>> {
@@ -61,6 +66,13 @@ class KtormInstrumentCommandHandlers(context: KtormAppKoinContext) : KtormAppKoi
     private fun deleteCommandHandler(): CommandHandler<*, *, out Command<*, *>> {
         val deleter: InstrumentDeleter by inject()
         val commandHandler = DeleteInstrumentCommandHandler(deleter)
+
+        return KtormCommandHandlerDecorator(database, commandHandler)
+    }
+
+    private fun importFromV1CommandHandler(): CommandHandler<*, *, out Command<*, *>> {
+        val importer: InstrumentFromV1Importer<AccdbInstrumentImportInput> by inject()
+        val commandHandler = ImportInstrumentsFromV1CommandHandler(importer)
 
         return KtormCommandHandlerDecorator(database, commandHandler)
     }

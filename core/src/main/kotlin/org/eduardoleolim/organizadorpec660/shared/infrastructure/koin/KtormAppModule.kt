@@ -21,11 +21,15 @@ import org.eduardoleolim.organizadorpec660.federalEntity.infrastructure.persiste
 import org.eduardoleolim.organizadorpec660.federalEntity.infrastructure.services.CsvFederalEntityImportReader
 import org.eduardoleolim.organizadorpec660.instrument.application.create.InstrumentCreator
 import org.eduardoleolim.organizadorpec660.instrument.application.delete.InstrumentDeleter
+import org.eduardoleolim.organizadorpec660.instrument.application.importer.InstrumentFromV1Importer
 import org.eduardoleolim.organizadorpec660.instrument.application.save.InstrumentSiresoSaver
 import org.eduardoleolim.organizadorpec660.instrument.application.search.InstrumentSearcher
 import org.eduardoleolim.organizadorpec660.instrument.application.update.InstrumentUpdater
+import org.eduardoleolim.organizadorpec660.instrument.domain.AccdbInstrumentImportInput
+import org.eduardoleolim.organizadorpec660.instrument.domain.InstrumentImportReader
 import org.eduardoleolim.organizadorpec660.instrument.domain.InstrumentRepository
 import org.eduardoleolim.organizadorpec660.instrument.infrastructure.persistence.KtormInstrumentRepository
+import org.eduardoleolim.organizadorpec660.instrument.infrastructure.services.AccdbInstrumentImportReader
 import org.eduardoleolim.organizadorpec660.municipality.application.create.MunicipalityCreator
 import org.eduardoleolim.organizadorpec660.municipality.application.delete.MunicipalityDeleter
 import org.eduardoleolim.organizadorpec660.municipality.application.search.MunicipalitySearcher
@@ -81,6 +85,17 @@ object KtormAppModule {
         single { InstrumentSiresoSaver(get()) }
         single { InstrumentSearcher(get()) }
         single { InstrumentDeleter(get()) }
+        single<InstrumentImportReader<AccdbInstrumentImportInput>> { AccdbInstrumentImportReader() }
+        single<InstrumentFromV1Importer<AccdbInstrumentImportInput>> {
+            InstrumentFromV1Importer(
+                get(),
+                get(),
+                get(),
+                get(),
+                get(),
+                get()
+            )
+        }
 
         // Municipality services
         single { MunicipalityCreator(get(), get()) }

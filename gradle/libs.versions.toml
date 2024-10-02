@@ -19,6 +19,7 @@ jasypt = "1.9.3"
 properlty = "1.9.0"
 jna = "5.15.0"
 appdirs = "1.2.2"
+jackcess = "4.0.7"
 
 [libraries]
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
@@ -42,6 +43,7 @@ jna-core = { module = "net.java.dev.jna:jna", version.ref = "jna" }
 jna-platform = { module = "net.java.dev.jna:jna-platform", version.ref = "jna" }
 appdirs = { module = "net.harawata:appdirs", version.ref = "appdirs" }
 jasypt = { module = "org.jasypt:jasypt", version.ref = "jasypt" }
+jackcess = { module = "com.healthmarketscience.jackcess:jackcess", version.ref = "jackcess" }
 
 [plugins]
 

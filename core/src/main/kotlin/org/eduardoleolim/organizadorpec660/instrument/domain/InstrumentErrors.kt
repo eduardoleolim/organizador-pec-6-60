@@ -36,3 +36,6 @@ class CanNotDeleteSavedInstrumentError :
     InstrumentError("The instrument can not be deleted because its status is saved in SIRESO")
 
 class CanNotImportInstrumentsError : InstrumentError("The instruments can not be imported")
+
+class InstrumentImportFieldNotFound(val instrumentName: String, val field: InstrumentImportDataFields) :
+    InstrumentError("The instrument <$instrumentName> has a missing field: ${field.value}")
