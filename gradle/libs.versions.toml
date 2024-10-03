@@ -3,7 +3,7 @@
 [versions]
 kotlin = "2.0.20"
 junit-jupiter = "5.11.1"
-compose = "1.7.0-beta02"
+compose = "1.7.0-rc01"
 material3-datatable = "0.9.1"
 voyager = "1.0.0"
 jSystemThemeDetector = "3.9.1"
