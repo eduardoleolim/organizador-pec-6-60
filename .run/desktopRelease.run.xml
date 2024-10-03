@@ -1,16 +1,10 @@
 <component name="ProjectRunConfigurationManager">
     <configuration default="false" name="desktopRelease" type="GradleRunConfiguration" factoryName="Gradle">
         <ExternalSystemSettings>
-            <option name="env">
-                <map>
-                    <entry key="DEVELOPMENT_CONFIG_DIR" value="./debug/config"/>
-                    <entry key="DEVELOPMENT_DATA_DIR" value="./debug/"/>
-                </map>
-            </option>
             <option name="executionName"/>
             <option name="externalProjectPath" value="$PROJECT_DIR$"/>
             <option name="externalSystemIdString" value="GRADLE"/>
-            <option name="scriptParameters" value=""/>
+            <option name="scriptParameters" value="--stacktrace"/>
             <option name="taskDescriptions">
                 <list/>
             </option>
