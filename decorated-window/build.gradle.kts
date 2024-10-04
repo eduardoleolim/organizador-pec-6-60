@@ -5,6 +5,8 @@ plugins {
 }
 
 dependencies {
+    // https://github.com/JetBrains/JetBrainsRuntimeApi
+    implementation(files("./libs/jbr-api-1.0.2.jar"))
     implementation(compose.desktop.currentOs)
     implementation(compose.materialIconsExtended)
     implementation(compose.material3)

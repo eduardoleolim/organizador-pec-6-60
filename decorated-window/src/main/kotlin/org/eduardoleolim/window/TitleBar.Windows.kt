@@ -25,7 +25,7 @@ internal fun DecoratedWindowScope.TitleBarOnWindows(
     gradientStartColor: Color = Color.Unspecified,
     content: @Composable TitleBarScope.(DecoratedWindowState) -> Unit,
 ) {
-    val titleBar = remember { JBR.windowDecorations!!.createCustomTitleBar()!! }
+    val titleBar = remember { JBR.getWindowDecorations().createCustomTitleBar()!! }
     val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5
     val foreground = LocalContentColor.current
 
@@ -44,7 +44,7 @@ internal fun DecoratedWindowScope.TitleBarOnWindows(
                 putProperty("controls.foreground.inactive", foreground.toAwt(alpha = 0.5f))
             }
 
-            JBR.windowDecorations!!.setCustomTitleBar(window, titleBar)
+            JBR.getWindowDecorations().setCustomTitleBar(window, titleBar)
             PaddingValues(start = titleBar.leftInset.dp, end = titleBar.rightInset.dp)
         },
         content = content,
@@ -57,7 +57,7 @@ internal fun DecoratedDialogWindowScope.TitleBarOnWindows(
     gradientStartColor: Color = Color.Unspecified,
     content: @Composable TitleBarScope.(DecoratedDialogWindowState) -> Unit,
 ) {
-    val titleBar = remember { JBR.windowDecorations!!.createCustomTitleBar()!! }
+    val titleBar = remember { JBR.getWindowDecorations().createCustomTitleBar()!! }
     val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5
     val foreground = LocalContentColor.current
 
@@ -76,7 +76,7 @@ internal fun DecoratedDialogWindowScope.TitleBarOnWindows(
                 putProperty("controls.foreground.inactive", foreground.toAwt(alpha = 0.5f))
             }
 
-            JBR.windowDecorations!!.setCustomTitleBar(window, titleBar)
+            JBR.getWindowDecorations().setCustomTitleBar(window, titleBar)
             PaddingValues(start = titleBar.leftInset.dp, end = titleBar.rightInset.dp)
         },
         content = content,

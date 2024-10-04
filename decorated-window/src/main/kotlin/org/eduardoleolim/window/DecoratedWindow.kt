@@ -39,7 +39,7 @@ fun DecoratedWindow(
     content: @Composable DecoratedWindowScope.() -> Unit,
 ) {
     remember {
-        if (JBR.isAvailable.not()) {
+        if (JBR.isAvailable().not()) {
             error("DecoratedWindow can only be used on JetBrainsRuntime(JBR) platform")
         }
     }

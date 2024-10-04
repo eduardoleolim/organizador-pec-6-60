@@ -39,7 +39,7 @@ fun DecoratedDialogWindow(
     content: @Composable (DecoratedDialogWindowScope.() -> Unit)
 ) {
     remember {
-        if (JBR.isAvailable.not()) {
+        if (JBR.isAvailable().not()) {
             error("DecoratedDialogWindow can only be used on JetBrainsRuntime(JBR) platform")
         }
     }

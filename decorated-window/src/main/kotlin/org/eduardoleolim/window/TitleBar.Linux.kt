@@ -45,7 +45,7 @@ internal fun DecoratedWindowScope.TitleBarOnLinux(
                     }
                 },
                 onPress = {
-                    JBR.windowMove?.startMovingTogetherWithMouse(window, MouseEvent.BUTTON1)
+                    JBR.getWindowMove().startMovingTogetherWithMouse(window, MouseEvent.BUTTON1)
                 }
             )
         },
@@ -99,7 +99,7 @@ internal fun DecoratedDialogWindowScope.TitleBarOnLinux(
         modifier = modifier.pointerInput(Unit) {
             detectTapGestures(
                 onPress = {
-                    JBR.windowMove?.startMovingTogetherWithMouse(window, MouseEvent.BUTTON1)
+                    JBR.getWindowMove().startMovingTogetherWithMouse(window, MouseEvent.BUTTON1)
                 }
             )
         },

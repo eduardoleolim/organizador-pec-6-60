@@ -80,7 +80,7 @@ internal fun DecoratedWindowScope.TitleBarOnMacOs(
         System.clearProperty("apple.awt.newFullScreeControls.background")
     }
 
-    val titleBar = remember { JBR.windowDecorations!!.createCustomTitleBar()!! }
+    val titleBar = remember { JBR.getWindowDecorations().createCustomTitleBar() }
 
     TitleBarImpl(
         modifier = modifier.customTitleBarMouseEventHandler(titleBar),
@@ -90,7 +90,7 @@ internal fun DecoratedWindowScope.TitleBarOnMacOs(
                 MacUtil.updateFullScreenButtons(window)
             }
             titleBar.height = height.value
-            JBR.windowDecorations!!.setCustomTitleBar(window, titleBar)
+            JBR.getWindowDecorations().setCustomTitleBar(window, titleBar)
 
             if (state.isFullscreen && newFullscreenControls) {
                 PaddingValues(start = 80.dp)
@@ -130,7 +130,7 @@ internal fun DecoratedDialogWindowScope.TitleBarOnMacOs(
         System.clearProperty("apple.awt.newFullScreeControls.background")
     }
 
-    val titleBar = remember { JBR.windowDecorations!!.createCustomTitleBar()!! }
+    val titleBar = remember { JBR.getWindowDecorations().createCustomTitleBar()!! }
 
     TitleBarImpl(
         minHeight = 30.dp,
@@ -138,7 +138,7 @@ internal fun DecoratedDialogWindowScope.TitleBarOnMacOs(
         gradientStartColor = gradientStartColor,
         applyTitleBar = { height, state ->
             titleBar.height = height.value
-            JBR.windowDecorations!!.setCustomTitleBar(window, titleBar)
+            JBR.getWindowDecorations().setCustomTitleBar(window, titleBar)
 
             PaddingValues(start = titleBar.leftInset.dp, end = titleBar.rightInset.dp)
         },

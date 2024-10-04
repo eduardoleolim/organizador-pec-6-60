@@ -1,0 +1,5 @@
+# Ignorar todos los archivos sources.jar
+*-sources.jar
+
+# Ignorar todos los archivos javadoc.jar
+*-javadoc.jar
