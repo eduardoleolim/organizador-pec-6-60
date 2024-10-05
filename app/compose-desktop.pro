@@ -10,6 +10,7 @@
 -dontwarn org.bouncycastle.**
 -dontwarn org.ktorm.database.**
 -dontwarn org.slf4j.**
+-dontwarn com.jetbrains.**
 
 -keep class org.eduardoleolim.** { *; }
 -keep class androidx.compose.runtime.** { *; }
