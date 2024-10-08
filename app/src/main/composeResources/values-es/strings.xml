@@ -80,6 +80,10 @@
     <string name="inst_form_error_instrument_already_exists">Ya se encuentra registrado un instrumento con los datos seleccionados</string>
     <string name="inst_form_error_instrument_file_required">Los nuevos registros requieren incluir el instrumento PDF</string>
     <string name="inst_form_error_instrument_file_save_error">Ocurrió un error al intentar guardar el instrumento PDF</string>
+    <string name="inst_catalog_title">Catálogo de instrumentos</string>
+    <string name="inst_catalog_content">Selecciona una opción:</string>
+    <string name="inst_catalog_import">Importar</string>
+    <string name="inst_catalog_export">Exportar</string>
 
     <!-- Federal entity -->
     <string name="federal_entities">Entidades federativas</string>

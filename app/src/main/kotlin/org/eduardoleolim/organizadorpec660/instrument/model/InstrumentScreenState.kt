@@ -9,5 +9,8 @@ data class InstrumentScreenState(
     val tableState: PaginatedDataTableState = PaginatedDataTableState(pageSizes.first(), 0),
     val statisticYears: List<Int> = (LocalDate.now().year downTo 1983).toList(),
     val statisticMonths: List<Pair<Int, String>> = DateFormatSymbols().months.take(12)
-        .mapIndexed { index, month -> index + 1 to month.uppercase() }
+        .mapIndexed { index, month -> index + 1 to month.uppercase() },
+    val showImportExportSelector: Boolean = false,
+    val showImportModal: Boolean = false,
+    val showExportModal: Boolean = false
 )

@@ -4,10 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ImportExport
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SmallFloatingActionButton
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -15,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -24,8 +22,7 @@ import org.eduardoleolim.organizadorpec660.instrument.model.InstrumentScreenMode
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
 import org.eduardoleolim.organizadorpec660.shared.notification.LocalTrayState
-import org.eduardoleolim.organizadorpec660.shared.resources.Res
-import org.eduardoleolim.organizadorpec660.shared.resources.instruments
+import org.eduardoleolim.organizadorpec660.shared.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 class InstrumentScreen(
@@ -56,11 +53,14 @@ class InstrumentScreen(
         val screenState = screenModel.screenState
         val statisticYears = screenState.statisticYears
         val statisticMonths = screenState.statisticMonths
+        val showImportExportSelector = screenState.showImportExportSelector
+        val showImportModal = screenState.showImportModal
+        val showExportModal = screenState.showExportModal
         val pageSizes = screenState.pageSizes
         val tableState = screenState.tableState
 
         LaunchedEffect(Unit) {
-            screenModel.initializeScreen()
+            screenModel.setInitialMode()
         }
 
         LaunchedEffect(federalEntityFilter) {
@@ -76,7 +76,7 @@ class InstrumentScreen(
         ) {
             InstrumentScreenHeader(
                 onSaveRequest = { screenModel.navigateToSaveInstrumentView(null) },
-                onImportExportRequest = { }
+                onImportExportRequest = { screenModel.showImportExportSelector() }
             )
 
             InstrumentsTable(
@@ -138,6 +138,24 @@ class InstrumentScreen(
                 }
             )
         }
+
+        when {
+            showImportExportSelector -> {
+                InstrumentImportExportSelector(
+                    onExportRequest = { screenModel.showExportModal() },
+                    onImportRequest = { screenModel.showImportModal() },
+                    onDismissRequest = { screenModel.setInitialMode() }
+                )
+            }
+
+            showImportModal -> {
+
+            }
+
+            showExportModal -> {
+
+            }
+        }
     }
 
     @Composable
@@ -178,5 +196,37 @@ class InstrumentScreen(
                 )
             }
         }
+    }
+
+    @Composable
+    private fun InstrumentImportExportSelector(
+        onExportRequest: () -> Unit,
+        onImportRequest: () -> Unit,
+        onDismissRequest: () -> Unit
+    ) {
+        AlertDialog(
+            properties = DialogProperties(usePlatformDefaultWidth = false),
+            onDismissRequest = onDismissRequest,
+            title = {
+                Text(stringResource(Res.string.inst_catalog_title))
+            },
+            text = {
+                Text(stringResource(Res.string.inst_catalog_content))
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = onExportRequest
+                ) {
+                    Text(stringResource(Res.string.inst_catalog_export))
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = onImportRequest
+                ) {
+                    Text(stringResource(Res.string.inst_catalog_import))
+                }
+            }
+        )
     }
 }

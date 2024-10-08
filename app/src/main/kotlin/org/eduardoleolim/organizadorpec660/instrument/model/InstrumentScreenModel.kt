@@ -95,7 +95,7 @@ class InstrumentScreenModel(
         }
     }
 
-    fun initializeScreen() {
+    fun setInitialMode() {
         screenModelScope.launch(dispatcher) {
             screenState = InstrumentScreenState()
             val limit = screenState.tableState.pageSize
@@ -107,6 +107,30 @@ class InstrumentScreenModel(
             municipalities = emptyList()
             agencies = emptyList()
         }
+    }
+
+    fun showImportExportSelector() {
+        screenState = screenState.copy(
+            showImportExportSelector = true,
+            showImportModal = false,
+            showExportModal = false
+        )
+    }
+
+    fun showImportModal() {
+        screenState = screenState.copy(
+            showImportExportSelector = false,
+            showImportModal = true,
+            showExportModal = false
+        )
+    }
+
+    fun showExportModal() {
+        screenState = screenState.copy(
+            showImportExportSelector = false,
+            showImportModal = false,
+            showExportModal = true
+        )
     }
 
     fun searchAllFederalEntities() {
