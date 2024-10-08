@@ -28,7 +28,7 @@ fun DecoratedDialogWindow(
     onCloseRequest: () -> Unit,
     state: DialogState = rememberDialogState(),
     visible: Boolean = true,
-    title: String = "",
+    title: String = "Untitled",
     icon: Painter? = null,
     resizable: Boolean = true,
     enabled: Boolean = true,
@@ -119,17 +119,17 @@ fun DecoratedDialogWindow(
         ) {
             Layout(
                 content = {
-                    val scope =
-                        object : DecoratedDialogWindowScope {
-                            override val state: DecoratedDialogWindowState
-                                get() = decoratedDialogWindowState
+                    val scope = object : DecoratedDialogWindowScope {
+                        override val state: DecoratedDialogWindowState
+                            get() = decoratedDialogWindowState
 
-                            override val window: ComposeDialog
-                                get() = this@DialogWindow.window
-                        }
+                        override val window: ComposeDialog
+                            get() = this@DialogWindow.window
+                    }
                     scope.content()
                 },
-                modifier = Modifier.border(1.dp, MaterialTheme.colorScheme.primaryContainer, RectangleShape)
+                modifier = Modifier
+                    .border(1.dp, MaterialTheme.colorScheme.primaryContainer, RectangleShape)
                     .padding(1.dp)
                     .trackWindowActivation(window),
                 measurePolicy = DecoratedDialogWindowMeasurePolicy,

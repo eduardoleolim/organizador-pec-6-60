@@ -28,7 +28,7 @@ fun DecoratedWindow(
     onCloseRequest: () -> Unit,
     state: WindowState = rememberWindowState(),
     visible: Boolean = true,
-    title: String = "",
+    title: String = "Untitled",
     icon: Painter? = null,
     resizable: Boolean = true,
     enabled: Boolean = true,
@@ -127,14 +127,13 @@ fun DecoratedWindow(
         ) {
             Layout(
                 content = {
-                    val scope =
-                        object : DecoratedWindowScope {
-                            override val state: DecoratedWindowState
-                                get() = decoratedWindowState
+                    val scope = object : DecoratedWindowScope {
+                        override val state: DecoratedWindowState
+                            get() = decoratedWindowState
 
-                            override val window: ComposeWindow
-                                get() = this@Window.window
-                        }
+                        override val window: ComposeWindow
+                            get() = this@Window.window
+                    }
                     scope.content()
                 },
                 modifier = undecoratedWindowBorder.trackWindowActivation(window),
