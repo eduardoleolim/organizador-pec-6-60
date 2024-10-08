@@ -11,6 +11,7 @@
 -dontwarn org.ktorm.database.**
 -dontwarn org.slf4j.**
 -dontwarn com.jetbrains.**
+-dontwarn com.healthmarketscience.jackcess.**
 
 -keep class org.eduardoleolim.** { *; }
 -keep class androidx.compose.runtime.** { *; }
@@ -34,3 +35,4 @@
 -keep class org.apache.avalon.framework.logger.** { *; }
 -keep class * implements org.apache.avalon.framework.logger.** { *; }
 -keep class com.jetbrains.** { *; }
+-keep class com.healthmarketscience.jackcess.** { *; }
