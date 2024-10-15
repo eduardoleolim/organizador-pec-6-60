@@ -1,7 +1,7 @@
 # https://docs.gradle.org/current/userguide/platforms.html#sub::toml-dependencies-format
 
 [versions]
-kotlin = "2.0.20"
+kotlin = "2.0.21"
 junit-jupiter = "5.11.1"
 compose = "1.7.0-rc01"
 material3-datatable = "0.9.1"
