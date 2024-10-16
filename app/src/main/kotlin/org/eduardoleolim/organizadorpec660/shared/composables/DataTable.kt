@@ -20,6 +20,8 @@ package org.eduardoleolim.organizadorpec660.shared.composables
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.v2.ScrollbarAdapter
+import androidx.compose.foundation.v2.maxScrollOffset
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.LastPage
 import androidx.compose.material.icons.filled.*
@@ -35,9 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
-import com.seanproctor.datatable.BasicDataTable
-import com.seanproctor.datatable.DataColumn
-import com.seanproctor.datatable.DataTableScope
+import com.seanproctor.datatable.*
 import com.seanproctor.datatable.material3.Material3CellContentProvider
 import com.seanproctor.datatable.paging.PaginatedDataTableState
 import com.seanproctor.datatable.paging.rememberPaginatedDataTableState
@@ -45,9 +45,9 @@ import org.eduardoleolim.organizadorpec660.shared.resources.Res
 import org.eduardoleolim.organizadorpec660.shared.resources.table_pagination
 import org.eduardoleolim.organizadorpec660.shared.resources.table_search
 import org.eduardoleolim.organizadorpec660.shared.resources.table_show_items
-import org.eduardoleolim.organizadorpec660.shared.utils.conditional
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.min
+import kotlin.math.roundToInt
 
 var PaginatedDataTableState.sortColumnIndex by mutableStateOf<Int?>(null)
 
@@ -61,20 +61,21 @@ fun PaginatedDataTable(
     pageSizes: List<Int> = listOf(10, 25, 50, 100),
     columns: List<DataColumn>,
     modifier: Modifier = Modifier,
-    separator: @Composable (rowIndex: Int) -> Unit = { HorizontalDivider() },
+    separator: @Composable () -> Unit = { HorizontalDivider() },
     header: @Composable RowScope.() -> Unit = {},
-    headerHeight: Dp = 56.dp,
+    headerHeight: Dp = 58.dp,
     rowHeight: Dp = 52.dp,
-    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp),
+    contentPadding: PaddingValues = PaddingValues(horizontal = 18.dp),
     onSearch: (search: String, pageIndex: Int, pageSize: Int, sortBy: Int?, isAscending: Boolean) -> Unit,
     state: PaginatedDataTableState = rememberPaginatedDataTableState(pageSizes.first()),
     content: DataTableScope.() -> Unit
 ) {
     var size by remember { mutableStateOf(Size.Zero) }
+    val tableState = rememberDataTableState()
+    val horizontalScrollBarAdapter = rememberScrollbarAdapter(tableState.horizontalScrollState)
+    val verticalScrollBarAdapter = rememberScrollbarAdapter(tableState.verticalScrollState)
 
     LaunchedEffect(state.pageIndex, state.pageSize, state.sortColumnIndex, state.sortAscending) {
-        if (state.pageIndex < 0) state.pageIndex = 0
-
         onSearch(value, state.pageIndex, state.pageSize, state.sortColumnIndex, state.sortAscending)
     }
 
@@ -86,7 +87,7 @@ fun PaginatedDataTable(
         PaginatedDataTableHeader(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(18.dp),
             value = value,
             onValueChange = onValueChange,
             state = state,
@@ -94,17 +95,19 @@ fun PaginatedDataTable(
             content = header
         )
 
-        val stateVertical = rememberScrollState(0)
-        val stateHorizontal = rememberScrollState(0)
-
         Box(
             modifier = Modifier
                 .weight(1.0f)
                 .padding(8.dp)
-                .verticalScroll(stateVertical)
         ) {
             BasicDataTable(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(
+                        end = if (verticalScrollBarAdapter.maxScrollOffset > 0) 8.dp else 0.dp,
+                        bottom = if (horizontalScrollBarAdapter.maxScrollOffset > 0) 8.dp else 0.dp
+                    ),
+                state = tableState,
                 columns = columns,
                 separator = separator,
                 headerHeight = headerHeight,
@@ -117,14 +120,34 @@ fun PaginatedDataTable(
                     content()
                 }
             )
+
+            HorizontalScrollbar(
+                adapter = horizontalScrollBarAdapter,
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .fillMaxWidth()
+                    .padding(
+                        end = if (verticalScrollBarAdapter.maxScrollOffset > 0) 8.dp else 0.dp
+                    )
+            )
+
+            VerticalScrollbar(
+                adapter = verticalScrollBarAdapter,
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .fillMaxHeight()
+                    .padding(
+                        bottom = if (horizontalScrollBarAdapter.maxScrollOffset > 0) 8.dp else 0.dp
+                    )
+            )
         }
 
         Row(
             modifier = Modifier
                 .height(rowHeight)
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 18.dp)
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.End),
+            horizontalArrangement = Arrangement.spacedBy(18.dp, alignment = Alignment.End),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             val start = with(state) { min(pageIndex * pageSize + 1, count) }
@@ -185,9 +208,8 @@ private fun PaginatedDataTableHeader(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier
                     .horizontalScroll(horizontalScrollState)
-                    .conditional(
-                        condition = horizontalScrollbarAdapter.contentSize > horizontalScrollbarAdapter.viewportSize,
-                        ifTrue = { padding(bottom = 6.dp) }
+                    .padding(
+                        bottom = if (horizontalScrollbarAdapter.maxScrollOffset > 0) 8.dp else 0.dp
                     )
             ) {
                 SelectPageSize(
@@ -278,4 +300,25 @@ private fun SelectPageSize(state: PaginatedDataTableState, pageSizes: List<Int>)
             }
         }
     }
+}
+
+@Composable
+fun rememberScrollbarAdapter(scrollState: DataTableScrollState): ScrollbarAdapter {
+    return remember(scrollState) { DataTableScrollbarAdapter(scrollState) }
+}
+
+internal class DataTableScrollbarAdapter(
+    private val scrollState: DataTableScrollState
+) : ScrollbarAdapter {
+    override val scrollOffset: Double get() = scrollState.offset.toDouble()
+
+    override suspend fun scrollTo(scrollOffset: Double) {
+        scrollState.scrollTo(scrollOffset.roundToInt())
+    }
+
+    override val contentSize: Double
+        get() = scrollState.totalSize.toDouble()
+
+    override val viewportSize: Double
+        get() = scrollState.viewportSize.toDouble()
 }

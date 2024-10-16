@@ -18,12 +18,19 @@
 
 package org.eduardoleolim.organizadorpec660.agency.model
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.seanproctor.datatable.paging.PaginatedDataTableState
 import org.eduardoleolim.organizadorpec660.agency.application.AgencyResponse
 
 data class AgencyScreenState(
     val pageSizes: List<Int> = listOf(10, 25, 50, 100),
-    val tableState: PaginatedDataTableState = PaginatedDataTableState(pageSizes.first(), 0),
+    val tableState: PaginatedDataTableState = object : PaginatedDataTableState {
+        override var pageSize by mutableStateOf(10)
+        override var pageIndex by mutableStateOf(0)
+        override var count by mutableStateOf(0)
+    },
     val selectedAgency: AgencyResponse? = null,
     val showFormModal: Boolean = false,
     val showDeleteModal: Boolean = false
