@@ -100,7 +100,7 @@ fun InstrumentScreen.InstrumentsTable(
         listOf(
             DataColumn(
                 alignment = Alignment.Center,
-                width = TableColumnWidth.Fixed(140.dp),
+                width = TableColumnWidth.MinIntrinsic,
                 header = {
                     Text(
                         text = siresoColumnName,
@@ -133,7 +133,7 @@ fun InstrumentScreen.InstrumentsTable(
             DataColumn(
                 onSort = ::onSort,
                 alignment = Alignment.CenterStart,
-                width = TableColumnWidth.Fraction(0.18f),
+                width = TableColumnWidth.Fraction(0.2f),
                 header = {
                     Text(
                         text = statisticTypeColumnName,
@@ -144,13 +144,13 @@ fun InstrumentScreen.InstrumentsTable(
             DataColumn(
                 onSort = ::onSort,
                 alignment = Alignment.CenterStart,
-                width = TableColumnWidth.Fixed(180.dp),
+                width = TableColumnWidth.Fixed(200.dp),
                 header = { Text(federalEntityColumnName) }
             ),
             DataColumn(
                 onSort = ::onSort,
                 alignment = Alignment.CenterStart,
-                width = TableColumnWidth.Fixed(180.dp),
+                width = TableColumnWidth.Fixed(200.dp),
                 header = { Text(municipalityColumnName) }
             ),
             DataColumn(

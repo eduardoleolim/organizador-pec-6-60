@@ -106,7 +106,7 @@ fun FederalEntityScreen.FederalEntitiesTable(
             ),
             DataColumn(
                 alignment = Alignment.Center,
-                width = TableColumnWidth.Fraction(0.18f),
+                width = TableColumnWidth.Fraction(0.2f),
                 header = { Text(actionsColumnName) }
             )
         )

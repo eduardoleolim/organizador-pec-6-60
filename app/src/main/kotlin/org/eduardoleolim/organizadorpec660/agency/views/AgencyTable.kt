@@ -113,7 +113,7 @@ fun AgencyScreen.AgenciesTable(
             ),
             DataColumn(
                 alignment = Alignment.Center,
-                width = TableColumnWidth.Fraction(0.16f),
+                width = TableColumnWidth.Fraction(0.2f),
                 header = { Text(actionsColumnName) }
             )
         )

@@ -93,6 +93,7 @@ fun MunicipalityScreen.MunicipalitiesTable(
             ),
             DataColumn(
                 onSort = ::onSort,
+                width = TableColumnWidth.Fraction(0.2f),
                 header = {
                     Text(
                         text = federalEntityColumnName,
@@ -103,7 +104,7 @@ fun MunicipalityScreen.MunicipalitiesTable(
             DataColumn(
                 onSort = ::onSort,
                 alignment = Alignment.Center,
-                width = TableColumnWidth.Fraction(0.18f),
+                width = TableColumnWidth.Fraction(0.2f),
                 header = {
                     Text(
                         text = createdAtColumnName,
@@ -114,7 +115,7 @@ fun MunicipalityScreen.MunicipalitiesTable(
             DataColumn(
                 onSort = ::onSort,
                 alignment = Alignment.Center,
-                width = TableColumnWidth.Fraction(0.18f),
+                width = TableColumnWidth.Fraction(0.2f),
                 header = {
                     Text(
                         text = updatedAtColumnName,
