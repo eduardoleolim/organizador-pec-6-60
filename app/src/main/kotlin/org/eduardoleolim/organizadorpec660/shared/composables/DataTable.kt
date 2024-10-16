@@ -29,14 +29,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.toSize
 import com.seanproctor.datatable.*
 import com.seanproctor.datatable.material3.Material3CellContentProvider
 import com.seanproctor.datatable.paging.PaginatedDataTableState
@@ -70,7 +67,6 @@ fun PaginatedDataTable(
     state: PaginatedDataTableState = rememberPaginatedDataTableState(pageSizes.first()),
     content: DataTableScope.() -> Unit
 ) {
-    var size by remember { mutableStateOf(Size.Zero) }
     val tableState = rememberDataTableState()
     val horizontalScrollBarAdapter = rememberScrollbarAdapter(tableState.horizontalScrollState)
     val verticalScrollBarAdapter = rememberScrollbarAdapter(tableState.verticalScrollState)
@@ -79,10 +75,20 @@ fun PaginatedDataTable(
         onSearch(value, state.pageIndex, state.pageSize, state.sortColumnIndex, state.sortAscending)
     }
 
+    LaunchedEffect(horizontalScrollBarAdapter.maxScrollOffset) {
+        if (horizontalScrollBarAdapter.maxScrollOffset == 0.0) {
+            horizontalScrollBarAdapter.scrollTo(0.0)
+        }
+    }
+
+    LaunchedEffect(verticalScrollBarAdapter.maxScrollOffset) {
+        if (verticalScrollBarAdapter.maxScrollOffset == 0.0) {
+            verticalScrollBarAdapter.scrollTo(0.0)
+        }
+    }
+
     Column(
-        modifier = Modifier
-            .onGloballyPositioned { size = it.size.toSize() }
-            .then(modifier)
+        modifier = Modifier.then(modifier)
     ) {
         PaginatedDataTableHeader(
             modifier = Modifier
