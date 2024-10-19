@@ -30,8 +30,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import org.eduardoleolim.organizadorpec660.federalEntity.data.FederalEntityImportException
 import org.eduardoleolim.organizadorpec660.federalEntity.model.FederalEntityImportState
 import org.eduardoleolim.organizadorpec660.federalEntity.model.FederalEntityScreenModel
@@ -194,24 +192,20 @@ fun FederalEntityScreen.FederalEntityImportModal(
     if (showReplaceDialog && replaceTemplate != null) {
         val response = Dialogs.ConfirmDialog("The file exists, overwrite?", "Existing file", Option.YES_NO_CANCEL)
 
-        LaunchedEffect(response) {
-            withContext(Dispatchers.IO) {
-                if (response == Dialogs.Response.YES) {
-                    screenModel.saveTemplate(replaceTemplate!!)
-                    replaceTemplate = null
-                    showReplaceDialog = false
-                }
-            }
+        if (response == Dialogs.Response.YES) {
+            screenModel.saveTemplate(replaceTemplate!!)
+            replaceTemplate = null
+            showReplaceDialog = false
         }
     }
 
     if (showWarningDialog) {
         ErrorDialog(
-            onDismissRequest = {
-                if (screenModel.importState is FederalEntityImportState.Success) {
-                    onSuccessImport()
-                } else {
-                    screenModel.resetImportModal()
+            text = {
+                LazyColumn {
+                    items(warnings) { warning ->
+                        Text(warning)
+                    }
                 }
             },
             onConfirmRequest = {
@@ -221,16 +215,13 @@ fun FederalEntityScreen.FederalEntityImportModal(
                     screenModel.resetImportModal()
                 }
             },
-            title = {
-                LazyColumn {
-                    items(warnings) { warning ->
-                        Text(warning)
-                    }
+            onDismissRequest = {
+                if (screenModel.importState is FederalEntityImportState.Success) {
+                    onSuccessImport()
+                } else {
+                    screenModel.resetImportModal()
                 }
             },
-            text = {
-                Text("Error")
-            }
         )
     }
 }
