@@ -20,6 +20,7 @@ package org.eduardoleolim.organizadorpec660.instrument.application.importer
 
 import org.eduardoleolim.organizadorpec660.instrument.domain.AccdbInstrumentImportInput
 import org.eduardoleolim.organizadorpec660.instrument.domain.InstrumentError
+import org.eduardoleolim.organizadorpec660.instrument.domain.InstrumentImportWarning
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.Command
 
 class ImportInstrumentsFromV1Command<I : AccdbInstrumentImportInput>(

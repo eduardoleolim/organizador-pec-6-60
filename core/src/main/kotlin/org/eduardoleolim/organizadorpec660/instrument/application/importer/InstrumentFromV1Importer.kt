@@ -34,8 +34,6 @@ import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeCri
 import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeRepository
 import java.util.*
 
-data class InstrumentImportWarning(val index: Int, val error: Throwable)
-
 class InstrumentFromV1Importer<I : InstrumentImportInput>(
     private val instrumentRepository: InstrumentRepository,
     private val federalEntityRepository: FederalEntityRepository,
@@ -166,7 +164,7 @@ class InstrumentFromV1Importer<I : InstrumentImportInput>(
         statisticTypesCache.clear()
 
         if (warnings.size == instruments.size) {
-            return Either.Left(CanNotImportInstrumentsError())
+            return Either.Left(CanNotImportInstrumentsError(warnings))
         }
 
         return Either.Right(warnings)

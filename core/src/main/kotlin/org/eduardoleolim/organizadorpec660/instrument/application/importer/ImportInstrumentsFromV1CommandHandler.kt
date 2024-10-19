@@ -21,6 +21,7 @@ package org.eduardoleolim.organizadorpec660.instrument.application.importer
 import arrow.core.Either
 import org.eduardoleolim.organizadorpec660.instrument.domain.AccdbInstrumentImportInput
 import org.eduardoleolim.organizadorpec660.instrument.domain.InstrumentError
+import org.eduardoleolim.organizadorpec660.instrument.domain.InstrumentImportWarning
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandHandler
 
 class ImportInstrumentsFromV1CommandHandler<I : AccdbInstrumentImportInput>(private val importer: InstrumentFromV1Importer<I>) :
