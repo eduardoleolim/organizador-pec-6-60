@@ -83,6 +83,18 @@
     <string name="inst_catalog_title">Catálogo de instrumentos</string>
     <string name="inst_catalog_content">Selecciona una opción:</string>
     <string name="inst_catalog_import">Importar</string>
+    <string name="inst_catalog_import_title">Importar instrumentos</string>
+    <string name="inst_catalog_import_content_csv">Por favor, descargue la plantilla, llénela con los datos necesarios y luego seleccione el archivo para importar.</string>
+    <string name="inst_catalog_import_content_accdb">Por favor, seleccione el archivo de la base de datos para importar.</string>
+    <string name="inst_catalog_import_download_template">Descargar plantilla CSV</string>
+    <string name="inst_catalog_import_select_file_csv">Seleccionar archivo CSV</string>
+    <string name="inst_catalog_import_select_file_accdb">Seleccionar base de datos</string>
+    <string name="inst_catalog_import_select_template">plantilla-entidades-federativas.csv</string>
+    <string name="inst_catalog_import_select_chooser_csv">Documentos CSV (*.csv)</string>
+    <string name="inst_catalog_import_select_chooser_accdb">Base de datos Access (*.accdb)</string>
+    <string name="inst_catalog_import_from_template">Plantilla</string>
+    <string name="inst_catalog_import_from_v1">Versión 1.0</string>
+
     <string name="inst_catalog_export">Exportar</string>
 
     <!-- Federal entity -->
@@ -106,10 +118,10 @@
     <string name="fe_catalog_title">Catálogo de entidades federativas</string>
     <string name="fe_catalog_content">Selecciona una opción:</string>
     <string name="fe_catalog_import">Importar</string>
-    <string name="fe_catalog_import_title">Importar Entidades Federativas</string>
+    <string name="fe_catalog_import_title">Importar entidades federativas</string>
     <string name="fe_catalog_import_content">Por favor, descargue la plantilla, llénela con los datos necesarios y luego seleccione el archivo para importar.</string>
-    <string name="fe_catalog_import_download_template">Descargar Plantilla CSV</string>
-    <string name="fe_catalog_import_select_file">Seleccionar Archivo CSV</string>
+    <string name="fe_catalog_import_download_template">Descargar plantilla CSV</string>
+    <string name="fe_catalog_import_select_file">Seleccionar archivo CSV</string>
     <string name="fe_catalog_import_select_template">plantilla-entidades-federativas.csv</string>
     <string name="fe_catalog_import_select_chooser">Documentos CSV (*.csv)</string>
 

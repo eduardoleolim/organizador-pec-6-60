@@ -41,10 +41,12 @@ import org.eduardoleolim.organizadorpec660.federalEntity.application.searchByTer
 import org.eduardoleolim.organizadorpec660.instrument.application.DetailedInstrumentResponse
 import org.eduardoleolim.organizadorpec660.instrument.application.InstrumentsResponse
 import org.eduardoleolim.organizadorpec660.instrument.application.delete.DeleteInstrumentCommand
+import org.eduardoleolim.organizadorpec660.instrument.application.importer.ImportInstrumentsFromV1Command
 import org.eduardoleolim.organizadorpec660.instrument.application.save.UpdateInstrumentAsNotSavedCommand
 import org.eduardoleolim.organizadorpec660.instrument.application.save.UpdateInstrumentAsSavedCommand
 import org.eduardoleolim.organizadorpec660.instrument.application.searchById.SearchInstrumentByIdQuery
 import org.eduardoleolim.organizadorpec660.instrument.application.searchByTerm.SearchInstrumentsByTermQuery
+import org.eduardoleolim.organizadorpec660.instrument.infrastructure.services.V1AccdbInstrumentImportInput
 import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalitiesResponse
 import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorpec660.municipality.application.searchByTerm.SearchMunicipalitiesByTermQuery
@@ -103,6 +105,12 @@ class InstrumentScreenModel(
     var statisticTypes by mutableStateOf(emptyList<StatisticTypeResponse>())
         private set
 
+    var deleteState by mutableStateOf<InstrumentDeleteState>(InstrumentDeleteState.Idle)
+        private set
+
+    var importState by mutableStateOf<InstrumentImportState>(InstrumentImportState.Idle)
+        private set
+
     init {
         screenModelScope.launch(dispatcher) {
             _searchParameters
@@ -149,6 +157,10 @@ class InstrumentScreenModel(
             showImportModal = false,
             showExportModal = true
         )
+    }
+
+    fun resetImportModal() {
+        importState = InstrumentImportState.Idle
     }
 
     fun searchAllFederalEntities() {
@@ -302,6 +314,31 @@ class InstrumentScreenModel(
         screenModelScope.launch(dispatcher) {
             commandBus.dispatch(DeleteInstrumentCommand(instrumentId))
             fetchInstruments(_searchParameters.value)
+        }
+    }
+
+    fun saveTemplate(file: File) {
+
+    }
+
+    fun importInstruments(file: File) {
+
+    }
+
+    fun importInstrumentsFromV1(file: File) {
+        screenModelScope.launch(dispatcher) {
+            val input = V1AccdbInstrumentImportInput(file.toPath())
+            val command = ImportInstrumentsFromV1Command(input, true)
+
+            importState = commandBus.dispatch(command)
+                .fold(
+                    ifRight = { warnings ->
+                        InstrumentImportState.Success(warnings.map { it.error })
+                    },
+                    ifLeft = {
+                        InstrumentImportState.Error(it)
+                    }
+                )
         }
     }
 }

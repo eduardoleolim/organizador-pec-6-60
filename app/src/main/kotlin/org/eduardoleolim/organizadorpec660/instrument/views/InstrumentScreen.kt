@@ -167,7 +167,11 @@ class InstrumentScreen(
             }
 
             showImportModal -> {
-
+                InstrumentImportModal(
+                    screenModel = screenModel,
+                    onSuccessImport = { screenModel.setInitialMode() },
+                    onDismissRequest = { screenModel.setInitialMode() }
+                )
             }
 
             showExportModal -> {

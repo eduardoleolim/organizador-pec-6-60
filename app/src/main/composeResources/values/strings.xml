@@ -83,6 +83,18 @@
     <string name="inst_catalog_title">Instruments catalog</string>
     <string name="inst_catalog_content">Select an option:</string>
     <string name="inst_catalog_import">Import</string>
+    <string name="inst_catalog_import_title">Import instruments</string>
+    <string name="inst_catalog_import_content_csv">Please download the template, fill it with the necessary data, and then select the file to import.</string>
+    <string name="inst_catalog_import_content_accdb">Please select the database file to import.</string>
+    <string name="inst_catalog_import_download_template">Download CSV template</string>
+    <string name="inst_catalog_import_select_file_csv">Select CSV file</string>
+    <string name="inst_catalog_import_select_file_accdb">Select database file</string>
+    <string name="inst_catalog_import_select_template">instruments-template.csv</string>
+    <string name="inst_catalog_import_select_chooser_csv">CSV documents (*.csv)</string>
+    <string name="inst_catalog_import_select_chooser_accdb">Base de datos de Access (*.accdb)</string>
+    <string name="inst_catalog_import_from_template">Template</string>
+    <string name="inst_catalog_import_from_v1">Version 1.0</string>
+
     <string name="inst_catalog_export">Export</string>
 
     <!-- Federal entity -->
@@ -106,9 +118,9 @@
     <string name="fe_catalog_title">Federal entities catalog</string>
     <string name="fe_catalog_content">Select an option:</string>
     <string name="fe_catalog_import">Import</string>
-    <string name="fe_catalog_import_title">Import Federal Entities</string>
+    <string name="fe_catalog_import_title">Import federal entities</string>
     <string name="fe_catalog_import_content">Please download the template, fill it with the necessary data, and then select the file to import.</string>
-    <string name="fe_catalog_import_download_template">Download CSV Template</string>
+    <string name="fe_catalog_import_download_template">Download CSV template</string>
     <string name="fe_catalog_import_select_file">Select CSV File</string>
     <string name="fe_catalog_import_select_template">template-federal-entities.csv</string>
     <string name="fe_catalog_import_select_chooser">CSV documents (*.csv)</string>
