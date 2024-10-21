@@ -20,6 +20,7 @@ package org.eduardoleolim.organizadorpec660.municipality.views
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
@@ -95,6 +96,7 @@ fun MunicipalityScreen.MunicipalityDeleteModal(
     }
 
     QuestionDialog(
+        modifier = Modifier.widthIn(max = 400.dp),
         icon = {
             Icon(
                 imageVector = Icons.Default.Delete,
@@ -114,6 +116,7 @@ fun MunicipalityScreen.MunicipalityDeleteModal(
 
     if (errorOccurred) {
         ErrorDialog(
+            modifier = Modifier.widthIn(max = 400.dp),
             text = {
                 errorText?.let {
                     Column(

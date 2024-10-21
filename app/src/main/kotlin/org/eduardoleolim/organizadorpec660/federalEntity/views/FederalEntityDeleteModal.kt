@@ -20,6 +20,7 @@ package org.eduardoleolim.organizadorpec660.federalEntity.views
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
@@ -76,6 +77,7 @@ fun FederalEntityScreen.FederalEntityDeleteModal(
     }
 
     QuestionDialog(
+        modifier = Modifier.widthIn(max = 400.dp),
         icon = {
             Icon(
                 imageVector = Icons.Default.Delete,
@@ -99,6 +101,7 @@ fun FederalEntityScreen.FederalEntityDeleteModal(
 
     if (errorOccurred) {
         ErrorDialog(
+            modifier = Modifier.widthIn(max = 400.dp),
             text = {
                 errorText?.let {
                     Column(
