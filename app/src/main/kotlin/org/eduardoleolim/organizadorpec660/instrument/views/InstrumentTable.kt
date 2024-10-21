@@ -133,7 +133,7 @@ fun InstrumentScreen.InstrumentsTable(
             DataColumn(
                 onSort = ::onSort,
                 alignment = Alignment.CenterStart,
-                width = TableColumnWidth.Fraction(0.2f),
+                width = TableColumnWidth.Fraction(0.22f),
                 header = {
                     Text(
                         text = statisticTypeColumnName,
@@ -144,13 +144,13 @@ fun InstrumentScreen.InstrumentsTable(
             DataColumn(
                 onSort = ::onSort,
                 alignment = Alignment.CenterStart,
-                width = TableColumnWidth.Fixed(200.dp),
+                width = TableColumnWidth.Fraction(0.22f),
                 header = { Text(federalEntityColumnName) }
             ),
             DataColumn(
                 onSort = ::onSort,
                 alignment = Alignment.CenterStart,
-                width = TableColumnWidth.Fixed(200.dp),
+                width = TableColumnWidth.Fraction(0.22f),
                 header = { Text(municipalityColumnName) }
             ),
             DataColumn(
