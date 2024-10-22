@@ -51,7 +51,7 @@ import org.eduardoleolim.window.LocalWindow
 import org.jetbrains.compose.resources.stringResource
 import java.awt.Dimension
 
-enum class MenuTab {
+enum class AppDestinations {
     INSTRUMENTS,
     FEDERAL_ENTITIES,
     MUNICIPALITIES,
@@ -59,42 +59,65 @@ enum class MenuTab {
     AGENCIES
 }
 
+sealed class NotificationBadgeType {
+    data object None : NotificationBadgeType()
+    data class Count(val count: Int = 0) : NotificationBadgeType()
+}
+
+data class NavigationItem(
+    val tab: AppDestinations,
+    val title: String,
+    val unselectedIcon: ImageVector,
+    val selectedIcon: ImageVector,
+    val notificationBadge: NotificationBadgeType = NotificationBadgeType.None,
+)
+
 class HomeScreen(private val user: AuthUserResponse) : Screen {
-    private val items: List<Triple<String, Pair<ImageVector, ImageVector>, MenuTab>>
+    private val items: List<NavigationItem>
         @Composable get() = listOf(
-            Triple(
+            NavigationItem(
+                AppDestinations.INSTRUMENTS,
                 stringResource(Res.string.instruments),
-                Pair(Icons.Filled.Description, Icons.Outlined.Description),
-                MenuTab.INSTRUMENTS
+                Icons.Outlined.Description,
+                Icons.Filled.Description,
+                NotificationBadgeType.None
             ),
-            Triple(
+            NavigationItem(
+                AppDestinations.FEDERAL_ENTITIES,
                 stringResource(Res.string.federal_entities),
-                Pair(Icons.AutoMirrored.Filled.ListAlt, Icons.AutoMirrored.Outlined.ListAlt),
-                MenuTab.FEDERAL_ENTITIES
+                Icons.AutoMirrored.Outlined.ListAlt,
+                Icons.AutoMirrored.Filled.ListAlt,
+                NotificationBadgeType.None
             ),
-            Triple(
+            NavigationItem(
+                AppDestinations.MUNICIPALITIES,
                 stringResource(Res.string.municipalities),
-                Pair(Icons.AutoMirrored.Filled.ListAlt, Icons.AutoMirrored.Outlined.ListAlt),
-                MenuTab.MUNICIPALITIES
+                Icons.AutoMirrored.Outlined.ListAlt,
+                Icons.AutoMirrored.Filled.ListAlt,
+                NotificationBadgeType.None
             ),
-            Triple(
+            NavigationItem(
+                AppDestinations.STATISTIC_TYPES,
                 stringResource(Res.string.statistic_types),
-                Pair(Icons.Filled.BarChart, Icons.Outlined.BarChart),
-                MenuTab.STATISTIC_TYPES
+                Icons.Outlined.BarChart,
+                Icons.Filled.BarChart,
+                NotificationBadgeType.None
             ),
-            Triple(
+            NavigationItem(
+                AppDestinations.AGENCIES,
                 stringResource(Res.string.agencies),
-                Pair(Icons.Filled.Apartment, Icons.Outlined.Apartment),
-                MenuTab.AGENCIES
+                Icons.Outlined.Apartment,
+                Icons.Filled.Apartment,
+                NotificationBadgeType.None
             )
         )
 
     @Composable
     private fun ModalNavigationDrawerContent(
-        items: List<Triple<String, Pair<ImageVector, ImageVector>, MenuTab>>,
+        items: List<NavigationItem>,
         screenModel: HomeScreenModel,
-        selectedTab: MenuTab,
-        onChangeSelectedTab: (MenuTab) -> Unit
+        selectedTab: AppDestinations,
+        onChangeSelectedTab: (AppDestinations) -> Unit
     ) {
         ModalDrawerSheet {
             Row(
@@ -119,17 +142,25 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
 
             HorizontalDivider()
 
-            items.forEach {
-                val (label, icon, tab) = it
+            items.forEach { item ->
+                val (tab, label, unselectedIcon, selectedIcon, notificationBadge) = item
+
                 NavigationDrawerItem(
                     icon = {
                         Icon(
-                            imageVector = if (selectedTab == tab) icon.first else icon.second,
+                            imageVector = if (selectedTab == tab) selectedIcon else unselectedIcon,
                             contentDescription = label
                         )
                     },
                     label = {
                         Text(label)
+                    },
+                    badge = when {
+                        notificationBadge is NotificationBadgeType.Count && notificationBadge.count > 0 -> {
+                            { Text(notificationBadge.count.toString()) }
+                        }
+
+                        else -> null
                     },
                     selected = selectedTab == tab,
                     onClick = { onChangeSelectedTab(tab) },
@@ -160,19 +191,32 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
 
     @Composable
     private fun NavigationRailContent(
-        items: List<Triple<String, Pair<ImageVector, ImageVector>, MenuTab>>,
+        items: List<NavigationItem>,
         screenModel: HomeScreenModel,
-        selectedTab: MenuTab,
-        onChangeSelectedTab: (MenuTab) -> Unit
+        selectedTab: AppDestinations,
+        onChangeSelectedTab: (AppDestinations) -> Unit
     ) {
         items.forEach { item ->
-            val (label, icon, tab) = item
+            val (tab, label, unselectedIcon, selectedIcon, notificationBadge) = item
+
             NavigationRailItem(
                 icon = {
-                    Icon(
-                        imageVector = if (selectedTab == tab) icon.first else icon.second,
-                        contentDescription = label
-                    )
+                    BadgedBox(
+                        badge = {
+                            if (notificationBadge is NotificationBadgeType.Count) {
+                                Badge(
+                                    content = notificationBadge.takeIf { it.count > 0 }?.let {
+                                        { Text(it.count.toString()) }
+                                    }
+                                )
+                            }
+                        }
+                    ) {
+                        Icon(
+                            imageVector = if (selectedTab == tab) selectedIcon else unselectedIcon,
+                            contentDescription = label
+                        )
+                    }
                 },
                 label = {
                     Text(
@@ -210,7 +254,7 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
         val compositionContext = rememberCompositionContext()
         val drawerState = rememberDrawerState(DrawerValue.Closed)
         val screenModel = rememberScreenModel { HomeScreenModel(navigator, drawerState, compositionContext) }
-        var selectedTab by remember { mutableStateOf(MenuTab.INSTRUMENTS) }
+        var selectedTab by remember { mutableStateOf(AppDestinations.INSTRUMENTS) }
         val density = LocalDensity.current
 
         LaunchedEffect(Unit) {
@@ -276,11 +320,11 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
                 ) {
                     AnimatedContent(targetState = selectedTab) { state ->
                         when (state) {
-                            MenuTab.INSTRUMENTS -> screenModel.navigateToInstrumentView()
-                            MenuTab.FEDERAL_ENTITIES -> screenModel.navigateToFederalEntityView()
-                            MenuTab.MUNICIPALITIES -> screenModel.navigateToMunicipalityView()
-                            MenuTab.STATISTIC_TYPES -> screenModel.navigateToStatisticTypeView()
-                            MenuTab.AGENCIES -> screenModel.navigateToAgencyScreen()
+                            AppDestinations.INSTRUMENTS -> screenModel.navigateToInstrumentView()
+                            AppDestinations.FEDERAL_ENTITIES -> screenModel.navigateToFederalEntityView()
+                            AppDestinations.MUNICIPALITIES -> screenModel.navigateToMunicipalityView()
+                            AppDestinations.STATISTIC_TYPES -> screenModel.navigateToStatisticTypeView()
+                            AppDestinations.AGENCIES -> screenModel.navigateToAgencyScreen()
                         }
                     }
                 }
