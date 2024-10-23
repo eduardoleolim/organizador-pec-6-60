@@ -156,8 +156,12 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
                         Text(label)
                     },
                     badge = when {
-                        notificationBadge is NotificationBadgeType.Count && notificationBadge.count > 0 -> {
-                            { Text(notificationBadge.count.toString()) }
+                        notificationBadge is NotificationBadgeType.Count -> {
+                            if (notificationBadge.count > 0) {
+                                { Text(notificationBadge.count.toString()) }
+                            } else {
+                                { Badge() }
+                            }
                         }
 
                         else -> null
