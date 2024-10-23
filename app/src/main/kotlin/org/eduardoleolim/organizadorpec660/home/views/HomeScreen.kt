@@ -117,7 +117,7 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
         items: List<NavigationItem>,
         screenModel: HomeScreenModel,
         selectedTab: AppDestinations,
-        onChangeSelectedTab: (AppDestinations) -> Unit
+        onSelectedTabChange: (AppDestinations) -> Unit
     ) {
         ModalDrawerSheet {
             Row(
@@ -167,7 +167,7 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
                         else -> null
                     },
                     selected = selectedTab == tab,
-                    onClick = { onChangeSelectedTab(tab) },
+                    onClick = { onSelectedTabChange(tab) },
                     shape = MaterialTheme.shapes.medium
                 )
             }
@@ -278,7 +278,7 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
                     items = items,
                     screenModel = screenModel,
                     selectedTab = selectedTab,
-                    onChangeSelectedTab = {
+                    onSelectedTabChange = {
                         screenModel.closeNavigationDrawer(
                             onClosed = { selectedTab = it }
                         )
