@@ -30,7 +30,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import org.eduardoleolim.organizadorpec660.federalEntity.data.FederalEntityImportException
 import org.eduardoleolim.organizadorpec660.federalEntity.model.FederalEntityImportState
 import org.eduardoleolim.organizadorpec660.federalEntity.model.FederalEntityScreenModel
 import org.eduardoleolim.organizadorpec660.shared.composables.ErrorDialog
@@ -95,10 +94,6 @@ fun FederalEntityScreen.FederalEntityImportModal(
             showWarningDialog = true
 
             warnings = when (val error = importState.error) {
-                is FederalEntityImportException -> {
-                    error.warnings.mapNotNull { it.message }
-                }
-
                 else -> {
                     listOf("error")
                 }

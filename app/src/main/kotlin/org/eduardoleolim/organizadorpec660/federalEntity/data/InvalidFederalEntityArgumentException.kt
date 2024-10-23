@@ -23,12 +23,9 @@ sealed class InvalidFederalEntityArgumentException(message: String?) : IllegalAr
 class EmptyFederalEntityDataException(val isKeyCodeEmpty: Boolean, val isNameEmpty: Boolean) :
     InvalidFederalEntityArgumentException(
         when {
-            isKeyCodeEmpty && isNameEmpty -> "La clave y el nombre son requeridos"
-            isKeyCodeEmpty -> "La clave es requerida"
-            isNameEmpty -> "El nombre es requerido"
+            isKeyCodeEmpty && isNameEmpty -> "The key and name are required"
+            isKeyCodeEmpty -> "The key is required"
+            isNameEmpty -> "The name is required"
             else -> null
         }
     )
-
-class FederalEntityImportException(val warnings: List<Throwable>) :
-    InvalidFederalEntityArgumentException("An error occurred during export of federal entities")
