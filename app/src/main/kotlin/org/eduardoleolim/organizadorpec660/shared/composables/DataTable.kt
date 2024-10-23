@@ -240,7 +240,7 @@ private fun PaginatedDataTableHeader(
             label = {
                 Text(
                     text = stringResource(Res.string.table_search),
-                    minLines = 1
+                    maxLines = 1
                 )
             },
             textStyle = MaterialTheme.typography.bodyMedium,
@@ -251,7 +251,7 @@ private fun PaginatedDataTableHeader(
                 )
             },
             singleLine = true,
-            modifier = Modifier.widthIn(min = 250.dp),
+            modifier = Modifier.widthIn(max = 250.dp),
             shape = MaterialTheme.shapes.extraLarge,
             trailingIcon = {
                 if (value.isNotEmpty()) {
