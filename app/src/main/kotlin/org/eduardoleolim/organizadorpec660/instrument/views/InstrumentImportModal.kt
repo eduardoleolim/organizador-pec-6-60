@@ -18,9 +18,13 @@
 
 package org.eduardoleolim.organizadorpec660.instrument.views
 
+import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollbarAdapter
+import androidx.compose.foundation.v2.maxScrollOffset
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -28,8 +32,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import org.eduardoleolim.organizadorpec660.instrument.data.IsntrumentImportException
 import org.eduardoleolim.organizadorpec660.instrument.domain.CanNotImportInstrumentsError
+import org.eduardoleolim.organizadorpec660.instrument.domain.InstrumentImportDataFields
 import org.eduardoleolim.organizadorpec660.instrument.domain.InstrumentImportFieldNotFound
 import org.eduardoleolim.organizadorpec660.instrument.model.InstrumentImportState
 import org.eduardoleolim.organizadorpec660.instrument.model.InstrumentScreenModel
@@ -91,21 +95,36 @@ fun InstrumentScreen.InstrumentImportModal(
             showWarningDialog = true
 
             warnings = when (val error = importState.error) {
-                is IsntrumentImportException -> {
-                    error.warnings.mapNotNull { it.message }
-                }
-
                 is CanNotImportInstrumentsError -> {
                     error.warnings.map {
                         when (val warningError = it.error) {
-                            is InstrumentImportFieldNotFound -> "${warningError.instrumentName}: The field ${warningError.field.value} is missing"
-                            else -> it.error.message
+                            is InstrumentImportFieldNotFound -> {
+                                val field = when (warningError.field) {
+                                    InstrumentImportDataFields.STATISTIC_YEAR -> stringResource(Res.string.inst_year)
+                                    InstrumentImportDataFields.STATISTIC_MONTH -> stringResource(Res.string.inst_month)
+                                    InstrumentImportDataFields.FEDERAL_ENTITY_KEY_CODE -> stringResource(Res.string.inst_federal_entity)
+                                    InstrumentImportDataFields.MUNICIPALITY_KEY_CODE -> stringResource(Res.string.inst_municipality)
+                                    InstrumentImportDataFields.AGENCY_CONSECUTIVE -> stringResource(Res.string.inst_agency)
+                                    InstrumentImportDataFields.STATISTIC_TYPE_KEY_CODE -> stringResource(Res.string.inst_statistic_type)
+                                    InstrumentImportDataFields.SAVED_IN_SIRESO -> stringResource(Res.string.inst_in_sireso)
+                                    InstrumentImportDataFields.CREATED_AT -> stringResource(Res.string.inst_created_at)
+                                    InstrumentImportDataFields.INSTRUMENT_FILE_CONTENT -> stringResource(Res.string.inst_document)
+                                }
+
+                                stringResource(
+                                    Res.string.inst_catalog_import_missing_field_error_message,
+                                    warningError.instrumentName,
+                                    field
+                                )
+                            }
+
+                            else -> stringResource(Res.string.inst_catalog_import_default_error_message)
                         }
                     }
                 }
 
                 else -> {
-                    listOf("error")
+                    listOf(stringResource(Res.string.inst_catalog_import_default_error_message))
                 }
             }
         }
@@ -176,17 +195,34 @@ fun InstrumentScreen.InstrumentImportModal(
                 }
             }
         }
-
-
     )
 
     if (showWarningDialog) {
+        val lazyListState = rememberLazyListState()
+        val scrollState = rememberScrollbarAdapter(lazyListState)
+
         ErrorDialog(
+            modifier = Modifier.widthIn(max = 500.dp).heightIn(max = 500.dp),
             text = {
-                LazyColumn {
-                    items(warnings) { warning ->
-                        Text(warning)
+                Box(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    LazyColumn(
+                        modifier = Modifier.padding(end = if (scrollState.maxScrollOffset > 0) 8.dp else 0.dp),
+                        state = lazyListState
+                    ) {
+                        items(warnings) { warning ->
+                            Text(
+                                text = warning,
+                                modifier = Modifier.padding(8.dp)
+                            )
+                        }
                     }
+
+                    VerticalScrollbar(
+                        adapter = scrollState,
+                        modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight()
+                    )
                 }
             },
             onConfirmRequest = {

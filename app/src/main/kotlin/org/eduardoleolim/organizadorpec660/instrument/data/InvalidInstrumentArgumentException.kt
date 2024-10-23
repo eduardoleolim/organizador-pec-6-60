@@ -44,6 +44,3 @@ class EmptyInstrumentDataException(
         else -> "No data is missing"
     }
 )
-
-class IsntrumentImportException(val warnings: List<Throwable>) :
-    InvalidInstrumentArgumentException("An error occurred during export of federal entities")

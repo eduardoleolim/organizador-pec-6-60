@@ -53,6 +53,7 @@
     <string name="inst_statistic_type">Tipo de estadística</string>
     <string name="inst_year">Año</string>
     <string name="inst_month">Mes</string>
+    <string name="inst_created_at">Fecha de registro</string>
     <string name="inst_document">Documento</string>
     <string name="inst_select_all_years">Todos los años</string>
     <string name="inst_select_all_months">Todos los meses</string>
@@ -94,6 +95,8 @@
     <string name="inst_catalog_import_select_chooser_accdb">Base de datos Access (*.accdb)</string>
     <string name="inst_catalog_import_from_template">Plantilla</string>
     <string name="inst_catalog_import_from_v1">Versión 1.0</string>
+    <string name="inst_catalog_import_missing_field_error_message">El instrumento %1$s no tiene el campo %2$s.</string>
+    <string name="inst_catalog_import_default_error_message">Un error ocurrió mientras se trataba de importar los instrumentos.</string>
 
     <string name="inst_catalog_export">Exportar</string>
 
