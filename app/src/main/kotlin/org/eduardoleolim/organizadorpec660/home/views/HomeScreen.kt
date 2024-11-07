@@ -41,12 +41,16 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
+import cafe.adriel.voyager.core.registry.ScreenRegistry
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import cafe.adriel.voyager.transitions.FadeTransition
 import org.eduardoleolim.organizadorpec660.auth.application.AuthUserResponse
 import org.eduardoleolim.organizadorpec660.home.model.HomeScreenModel
 import org.eduardoleolim.organizadorpec660.shared.resources.*
+import org.eduardoleolim.organizadorpec660.shared.router.HomeProvider
 import org.eduardoleolim.window.LocalWindow
 import org.jetbrains.compose.resources.stringResource
 import java.awt.Dimension
@@ -69,7 +73,7 @@ data class NavigationItem(
     val title: String,
     val unselectedIcon: ImageVector,
     val selectedIcon: ImageVector,
-    val notificationBadge: NotificationBadgeType = NotificationBadgeType.None,
+    var notificationBadge: NotificationBadgeType = NotificationBadgeType.None,
 )
 
 class HomeScreen(private val user: AuthUserResponse) : Screen {
@@ -288,9 +292,7 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
         ) {
             Row {
                 NavigationRail(
-                    modifier = Modifier
-                        .width(110.dp)
-                        .padding(horizontal = 12.dp),
+                    modifier = Modifier.width(110.dp),
                     containerColor = MaterialTheme.colorScheme.surfaceContainer,
                     header = {
                         Spacer(Modifier.height(24.dp))
@@ -315,20 +317,26 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
                     )
                 }
 
-                Surface(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(end = 24.dp, top = 24.dp, bottom = 24.dp),
-                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                    shape = MaterialTheme.shapes.large,
+                Box(
+                    modifier = Modifier.padding(start = 0.dp, end = 24.dp, top = 24.dp, bottom = 24.dp)
                 ) {
-                    AnimatedContent(targetState = selectedTab) { state ->
-                        when (state) {
-                            AppDestinations.INSTRUMENTS -> screenModel.navigateToInstrumentView()
-                            AppDestinations.FEDERAL_ENTITIES -> screenModel.navigateToFederalEntityView()
-                            AppDestinations.MUNICIPALITIES -> screenModel.navigateToMunicipalityView()
-                            AppDestinations.STATISTIC_TYPES -> screenModel.navigateToStatisticTypeView()
-                            AppDestinations.AGENCIES -> screenModel.navigateToAgencyScreen()
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                        shape = MaterialTheme.shapes.large,
+                    ) {
+                        AnimatedContent(targetState = selectedTab) { state ->
+                            val screenProvider = when (state) {
+                                AppDestinations.INSTRUMENTS -> HomeProvider.InstrumentScreen
+                                AppDestinations.FEDERAL_ENTITIES -> HomeProvider.FederalEntityScreen
+                                AppDestinations.MUNICIPALITIES -> HomeProvider.MunicipalityScreen
+                                AppDestinations.STATISTIC_TYPES -> HomeProvider.StatisticTypeScreen
+                                AppDestinations.AGENCIES -> HomeProvider.AgencyScreen
+                            }
+
+                            Navigator(ScreenRegistry.get(screenProvider)) { navigator ->
+                                FadeTransition(navigator)
+                            }
                         }
                     }
                 }
