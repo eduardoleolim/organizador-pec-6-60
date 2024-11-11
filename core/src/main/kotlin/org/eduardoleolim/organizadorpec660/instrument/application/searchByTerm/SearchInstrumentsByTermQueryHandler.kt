@@ -18,6 +18,7 @@
 
 package org.eduardoleolim.organizadorpec660.instrument.application.searchByTerm
 
+import arrow.core.Either
 import org.eduardoleolim.organizadorpec660.agency.application.search.AgencySearcher
 import org.eduardoleolim.organizadorpec660.agency.domain.Agency
 import org.eduardoleolim.organizadorpec660.agency.domain.AgencyCriteria
@@ -28,6 +29,7 @@ import org.eduardoleolim.organizadorpec660.instrument.application.InstrumentResp
 import org.eduardoleolim.organizadorpec660.instrument.application.InstrumentsResponse
 import org.eduardoleolim.organizadorpec660.instrument.application.search.InstrumentSearcher
 import org.eduardoleolim.organizadorpec660.instrument.domain.InstrumentCriteria
+import org.eduardoleolim.organizadorpec660.instrument.domain.InstrumentError
 import org.eduardoleolim.organizadorpec660.municipality.application.search.MunicipalitySearcher
 import org.eduardoleolim.organizadorpec660.municipality.domain.Municipality
 import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityCriteria
@@ -42,13 +44,13 @@ class SearchInstrumentsByTermQueryHandler(
     private val statisticTypeSearcher: StatisticTypeSearcher,
     private val federalEntitySearcher: FederalEntitySearcher,
     private val municipalitySearcher: MunicipalitySearcher
-) : QueryHandler<SearchInstrumentsByTermQuery, InstrumentsResponse> {
+) : QueryHandler<InstrumentError, InstrumentsResponse, SearchInstrumentsByTermQuery> {
     private val agenciesCache = mutableMapOf<String, Agency>()
     private val statisticTypesCache = mutableMapOf<String, StatisticType>()
     private val federalEntitiesCache = mutableMapOf<String, FederalEntity>()
     private val municipalitiesCache = mutableMapOf<String, Municipality>()
 
-    override fun handle(query: SearchInstrumentsByTermQuery): InstrumentsResponse {
+    override fun handle(query: SearchInstrumentsByTermQuery): Either<InstrumentError, InstrumentsResponse> {
         val instruments = searchInstruments(
             query.agencyId(),
             query.statisticTypeId(),
@@ -99,7 +101,7 @@ class SearchInstrumentsByTermQueryHandler(
             federalEntitiesCache.clear()
             municipalitiesCache.clear()
 
-            InstrumentsResponse(it, totalInstruments, query.limit(), query.offset())
+            Either.Right(InstrumentsResponse(it, totalInstruments, query.limit(), query.offset()))
         }
     }
 

@@ -18,11 +18,11 @@
 
 package org.eduardoleolim.organizadorpec660.instrument.application.searchById
 
+import arrow.core.Either
 import org.eduardoleolim.organizadorpec660.agency.application.search.AgencySearcher
 import org.eduardoleolim.organizadorpec660.agency.domain.AgencyCriteria
 import org.eduardoleolim.organizadorpec660.federalEntity.application.search.FederalEntitySearcher
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityCriteria
-import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityNotFoundError
 import org.eduardoleolim.organizadorpec660.instrument.application.DetailedInstrumentResponse
 import org.eduardoleolim.organizadorpec660.instrument.application.search.InstrumentSearcher
 import org.eduardoleolim.organizadorpec660.instrument.domain.*
@@ -31,7 +31,6 @@ import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityCrite
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryHandler
 import org.eduardoleolim.organizadorpec660.statisticType.application.search.StatisticTypeSearcher
 import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeCriteria
-import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeNotFoundError
 
 class SearchInstrumentByIdQueryHandler(
     private val instrumentSearcher: InstrumentSearcher,
@@ -39,34 +38,41 @@ class SearchInstrumentByIdQueryHandler(
     private val federalEntitySearcher: FederalEntitySearcher,
     private val agencySearcher: AgencySearcher,
     private val statisticTypeSearcher: StatisticTypeSearcher
-) :
-    QueryHandler<SearchInstrumentByIdQuery, DetailedInstrumentResponse> {
-    override fun handle(query: SearchInstrumentByIdQuery): DetailedInstrumentResponse {
+) : QueryHandler<InstrumentError, DetailedInstrumentResponse, SearchInstrumentByIdQuery> {
+    override fun handle(query: SearchInstrumentByIdQuery): Either<InstrumentError, DetailedInstrumentResponse> {
         val instrumentId = query.id()
-        val instrument = searchInstrument(instrumentId) ?: throw InstrumentNotFoundError(instrumentId)
+        val instrument = searchInstrument(instrumentId)
+            ?: return Either.Left(InstrumentNotFoundError(instrumentId))
 
         val fileId = instrument.instrumentFileId().toString()
-        val file = searchInstrumentFile(fileId) ?: throw InstrumentFileNotFoundError(fileId)
+        val file = searchInstrumentFile(fileId)
+            ?: return Either.Left(InstrumentFileNotFoundError(fileId))
 
         val municipalityId = instrument.municipalityId().toString()
-        val municipality = searchMunicipality(municipalityId) ?: throw MunicipalityNotFoundError(municipalityId)
+        val municipality = searchMunicipality(municipalityId)
+            ?: return Either.Left(MunicipalityNotFoundError(municipalityId))
 
         val federalEntityId = municipality.federalEntityId().toString()
-        val federalEntity = searhcFederalEntity(federalEntityId) ?: throw FederalEntityNotFoundError(federalEntityId)
+        val federalEntity = searhcFederalEntity(federalEntityId)
+            ?: return Either.Left(FederalEntityNotFoundError(federalEntityId))
 
         val agencyId = instrument.agencyId().toString()
-        val agency = searchAgency(agencyId) ?: throw AgencyNotFoundError(agencyId)
+        val agency = searchAgency(agencyId)
+            ?: return Either.Left(AgencyNotFoundError(agencyId))
 
         val statisticTypeId = instrument.statisticTypeId().toString()
-        val statisticType = searhcStatisticType(statisticTypeId) ?: throw StatisticTypeNotFoundError(statisticTypeId)
+        val statisticType = searhcStatisticType(statisticTypeId)
+            ?: return Either.Left(StatisticTypeNotFoundError(statisticTypeId))
 
-        return DetailedInstrumentResponse.fromAggregate(
-            instrument,
-            file,
-            municipality,
-            federalEntity,
-            agency,
-            statisticType
+        return Either.Right(
+            DetailedInstrumentResponse.fromAggregate(
+                instrument,
+                file,
+                municipality,
+                federalEntity,
+                agency,
+                statisticType
+            )
         )
     }
 

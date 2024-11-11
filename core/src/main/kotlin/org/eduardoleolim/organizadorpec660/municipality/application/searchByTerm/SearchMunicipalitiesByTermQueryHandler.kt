@@ -18,6 +18,7 @@
 
 package org.eduardoleolim.organizadorpec660.municipality.application.searchByTerm
 
+import arrow.core.Either
 import org.eduardoleolim.organizadorpec660.federalEntity.application.search.FederalEntitySearcher
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntity
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityCriteria
@@ -25,15 +26,16 @@ import org.eduardoleolim.organizadorpec660.municipality.application.Municipaliti
 import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorpec660.municipality.application.search.MunicipalitySearcher
 import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityCriteria
+import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityError
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryHandler
 
 class SearchMunicipalitiesByTermQueryHandler(
     private val municipalitySearcher: MunicipalitySearcher,
     private val federalEntitySearcher: FederalEntitySearcher
-) : QueryHandler<SearchMunicipalitiesByTermQuery, MunicipalitiesResponse> {
+) : QueryHandler<MunicipalityError, MunicipalitiesResponse, SearchMunicipalitiesByTermQuery> {
     private val federalEntityCache = mutableMapOf<String, FederalEntity>()
 
-    override fun handle(query: SearchMunicipalitiesByTermQuery): MunicipalitiesResponse {
+    override fun handle(query: SearchMunicipalitiesByTermQuery): Either<MunicipalityError, MunicipalitiesResponse> {
         val municipalities = searchMunicipalities(
             query.federalEntityId(),
             query.search(),
@@ -53,7 +55,7 @@ class SearchMunicipalitiesByTermQueryHandler(
         }.let {
             federalEntityCache.clear()
 
-            MunicipalitiesResponse(it, totalMunicipalities, query.limit(), query.offset())
+            Either.Right(MunicipalitiesResponse(it, totalMunicipalities, query.limit(), query.offset()))
         }
     }
 

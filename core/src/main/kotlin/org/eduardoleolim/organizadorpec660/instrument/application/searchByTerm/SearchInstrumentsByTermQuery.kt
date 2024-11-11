@@ -18,6 +18,8 @@
 
 package org.eduardoleolim.organizadorpec660.instrument.application.searchByTerm
 
+import org.eduardoleolim.organizadorpec660.instrument.application.InstrumentsResponse
+import org.eduardoleolim.organizadorpec660.instrument.domain.InstrumentError
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Query
 
 class SearchInstrumentsByTermQuery(
@@ -31,7 +33,7 @@ class SearchInstrumentsByTermQuery(
     private val orders: Array<HashMap<String, String>>? = null,
     private val limit: Int? = null,
     private val offset: Int? = null
-) : Query {
+) : Query<InstrumentError, InstrumentsResponse> {
     private val federalEntityId = federalEntityId?.trim()
     private val municipalityId = municipalityId?.trim()
     private val agencyId = agencyId?.trim()

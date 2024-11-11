@@ -18,6 +18,8 @@
 
 package org.eduardoleolim.organizadorpec660.federalEntity.application.searchByTerm
 
+import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntitiesResponse
+import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityError
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Query
 
 class SearchFederalEntitiesByTermQuery(
@@ -25,7 +27,7 @@ class SearchFederalEntitiesByTermQuery(
     private val orders: Array<HashMap<String, String>>? = null,
     private val limit: Int? = null,
     private val offset: Int? = null
-) : Query {
+) : Query<FederalEntityError, FederalEntitiesResponse> {
     private val search = search?.trim()?.uppercase()
 
     fun search(): String? {

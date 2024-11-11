@@ -25,7 +25,6 @@ import org.eduardoleolim.organizadorpec660.federalEntity.application.searchByTer
 import org.eduardoleolim.organizadorpec660.federalEntity.application.searchByTerm.SearchFederalEntitiesByTermQueryHandler
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Query
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryHandler
-import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Response
 import org.eduardoleolim.organizadorpec660.shared.infrastructure.bus.KtormQueryHandlerDecorator
 import org.eduardoleolim.organizadorpec660.shared.infrastructure.koin.KtormAppKoinComponent
 import org.eduardoleolim.organizadorpec660.shared.infrastructure.koin.KtormAppKoinContext
@@ -36,19 +35,19 @@ import kotlin.reflect.KClass
 class KtormFederalEntityQueryHandlers(context: KtormAppKoinContext) : KtormAppKoinComponent(context) {
     private val database: Database by inject()
 
-    val handlers: Map<KClass<out Query>, QueryHandler<out Query, out Response>> = mapOf(
+    val handlers: Map<KClass<out Query<*, *>>, QueryHandler<*, *, out Query<*, *>>> = mapOf(
         SearchFederalEntityByIdQuery::class to searchByIdQueryHandler(),
         SearchFederalEntitiesByTermQuery::class to searchByTermQueryHandler()
     )
 
-    private fun searchByIdQueryHandler(): KtormQueryHandlerDecorator<out Query, out Response> {
+    private fun searchByIdQueryHandler(): QueryHandler<*, *, out Query<*, *>> {
         val searcher: FederalEntitySearcher by inject()
         val queryHandler = SearchFederalEntityByIdQueryHandler(searcher)
 
         return KtormQueryHandlerDecorator(database, queryHandler)
     }
 
-    private fun searchByTermQueryHandler(): KtormQueryHandlerDecorator<out Query, out Response> {
+    private fun searchByTermQueryHandler(): QueryHandler<*, *, out Query<*, *>> {
         val searcher: FederalEntitySearcher by inject()
         val queryHandler = SearchFederalEntitiesByTermQueryHandler(searcher)
 

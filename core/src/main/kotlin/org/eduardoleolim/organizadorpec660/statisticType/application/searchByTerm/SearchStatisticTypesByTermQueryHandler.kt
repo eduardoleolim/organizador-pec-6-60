@@ -18,18 +18,27 @@
 
 package org.eduardoleolim.organizadorpec660.statisticType.application.searchByTerm
 
+import arrow.core.Either
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryHandler
 import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypesResponse
 import org.eduardoleolim.organizadorpec660.statisticType.application.search.StatisticTypeSearcher
 import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeCriteria
+import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeError
 
 class SearchStatisticTypesByTermQueryHandler(private val searcher: StatisticTypeSearcher) :
-    QueryHandler<SearchStatisticTypesByTermQuery, StatisticTypesResponse> {
-    override fun handle(query: SearchStatisticTypesByTermQuery): StatisticTypesResponse {
+    QueryHandler<StatisticTypeError, StatisticTypesResponse, SearchStatisticTypesByTermQuery> {
+    override fun handle(query: SearchStatisticTypesByTermQuery): Either<StatisticTypeError, StatisticTypesResponse> {
         val statisticTypes = searchStatisticTypes(query.search(), query.orders(), query.limit(), query.offset())
         val totalStatisticTypes = countStatisticTypes(query.search())
 
-        return StatisticTypesResponse.fromAggregate(statisticTypes, totalStatisticTypes, query.limit(), query.offset())
+        return Either.Right(
+            StatisticTypesResponse.fromAggregate(
+                statisticTypes,
+                totalStatisticTypes,
+                query.limit(),
+                query.offset()
+            )
+        )
     }
 
     private fun searchStatisticTypes(

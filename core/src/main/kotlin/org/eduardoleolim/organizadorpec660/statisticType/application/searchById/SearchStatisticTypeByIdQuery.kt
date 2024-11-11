@@ -19,8 +19,10 @@
 package org.eduardoleolim.organizadorpec660.statisticType.application.searchById
 
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Query
+import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypeResponse
+import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeError
 
-class SearchStatisticTypeByIdQuery(id: String) : Query {
+class SearchStatisticTypeByIdQuery(id: String) : Query<StatisticTypeError, StatisticTypeResponse> {
     private val id: String = id.trim()
 
     fun id(): String {

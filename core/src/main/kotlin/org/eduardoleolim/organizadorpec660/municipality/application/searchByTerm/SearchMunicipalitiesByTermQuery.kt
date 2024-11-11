@@ -18,6 +18,8 @@
 
 package org.eduardoleolim.organizadorpec660.municipality.application.searchByTerm
 
+import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalitiesResponse
+import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityError
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Query
 
 class SearchMunicipalitiesByTermQuery(
@@ -26,7 +28,7 @@ class SearchMunicipalitiesByTermQuery(
     private val orders: Array<HashMap<String, String>>? = null,
     private val limit: Int? = null,
     private val offset: Int? = null
-) : Query {
+) : Query<MunicipalityError, MunicipalitiesResponse> {
     private val federalEntityId = federalEntityId?.trim()
     private val search = search?.trim()
 

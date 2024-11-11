@@ -28,7 +28,6 @@ import org.eduardoleolim.organizadorpec660.agency.application.searchByTerm.Searc
 import org.eduardoleolim.organizadorpec660.municipality.application.search.MunicipalitySearcher
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Query
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryHandler
-import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Response
 import org.eduardoleolim.organizadorpec660.shared.infrastructure.bus.KtormQueryHandlerDecorator
 import org.eduardoleolim.organizadorpec660.shared.infrastructure.koin.KtormAppKoinComponent
 import org.eduardoleolim.organizadorpec660.shared.infrastructure.koin.KtormAppKoinContext
@@ -40,13 +39,13 @@ import kotlin.reflect.KClass
 class KtormAgencyQueryHandlers(context: KtormAppKoinContext) : KtormAppKoinComponent(context) {
     private val database: Database by inject()
 
-    val handlers: Map<KClass<out Query>, QueryHandler<out Query, out Response>> = mapOf(
+    val handlers: Map<KClass<out Query<*, *>>, QueryHandler<*, *, out Query<*, *>>> = mapOf(
         SearchAgencyByIdQuery::class to searchByIdQueryHandler(),
         SearchAgenciesByTermQuery::class to searchByTermQueryHandler(),
         SearchAgenciesByMunicipalityIdQuery::class to searchByMunicipalityIdQueryHandler()
     )
 
-    private fun searchByIdQueryHandler(): KtormQueryHandlerDecorator<out Query, out Response> {
+    private fun searchByIdQueryHandler(): QueryHandler<*, *, out Query<*, *>> {
         val agencySearcher: AgencySearcher by inject()
         val municipalitySearcher: MunicipalitySearcher by inject()
         val statisticTypeSearcher: StatisticTypeSearcher by inject()
@@ -59,7 +58,7 @@ class KtormAgencyQueryHandlers(context: KtormAppKoinContext) : KtormAppKoinCompo
         return KtormQueryHandlerDecorator(database, queryHandler)
     }
 
-    private fun searchByTermQueryHandler(): KtormQueryHandlerDecorator<out Query, out Response> {
+    private fun searchByTermQueryHandler(): QueryHandler<*, *, out Query<*, *>> {
         val agencySearcher: AgencySearcher by inject()
         val municipalitySearcher: MunicipalitySearcher by inject()
         val statisticTypeSearcher: StatisticTypeSearcher by inject()
@@ -72,7 +71,7 @@ class KtormAgencyQueryHandlers(context: KtormAppKoinContext) : KtormAppKoinCompo
         return KtormQueryHandlerDecorator(database, queryHandler)
     }
 
-    private fun searchByMunicipalityIdQueryHandler(): KtormQueryHandlerDecorator<out Query, out Response> {
+    private fun searchByMunicipalityIdQueryHandler(): QueryHandler<*, *, out Query<*, *>> {
         val agencySearcher: AgencySearcher by inject()
         val municipalitySearcher: MunicipalitySearcher by inject()
         val statisticTypeSearcher: StatisticTypeSearcher by inject()

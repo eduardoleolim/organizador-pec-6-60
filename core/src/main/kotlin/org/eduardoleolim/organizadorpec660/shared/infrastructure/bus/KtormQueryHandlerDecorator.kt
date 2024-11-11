@@ -18,16 +18,17 @@
 
 package org.eduardoleolim.organizadorpec660.shared.infrastructure.bus
 
+import arrow.core.Either
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Query
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryHandler
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Response
 import org.ktorm.database.Database
 
-class KtormQueryHandlerDecorator<Q : Query, R : Response>(
+class KtormQueryHandlerDecorator<L, R : Response, Q : Query<L, R>>(
     private val database: Database,
-    private val queryHandler: QueryHandler<Q, R>
-) : QueryHandler<Q, R> {
-    override fun handle(query: Q): R {
+    private val queryHandler: QueryHandler<L, R, Q>
+) : QueryHandler<L, R, Q> {
+    override fun handle(query: Q): Either<L, R> {
         database.useConnection {
             return queryHandler.handle(query)
         }

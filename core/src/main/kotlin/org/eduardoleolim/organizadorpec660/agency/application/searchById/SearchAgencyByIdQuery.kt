@@ -18,9 +18,11 @@
 
 package org.eduardoleolim.organizadorpec660.agency.application.searchById
 
+import org.eduardoleolim.organizadorpec660.agency.application.AgencyResponse
+import org.eduardoleolim.organizadorpec660.agency.domain.AgencyError
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Query
 
-class SearchAgencyByIdQuery(id: String) : Query {
+class SearchAgencyByIdQuery(id: String) : Query<AgencyError, AgencyResponse> {
     private val id: String = id.trim()
 
     fun id(): String {

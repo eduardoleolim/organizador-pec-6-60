@@ -18,22 +18,26 @@
 
 package org.eduardoleolim.organizadorpec660.federalEntity.application.searchByTerm
 
+import arrow.core.Either
 import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntitiesResponse
 import org.eduardoleolim.organizadorpec660.federalEntity.application.search.FederalEntitySearcher
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityCriteria
+import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityError
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryHandler
 
 class SearchFederalEntitiesByTermQueryHandler(private val searcher: FederalEntitySearcher) :
-    QueryHandler<SearchFederalEntitiesByTermQuery, FederalEntitiesResponse> {
-    override fun handle(query: SearchFederalEntitiesByTermQuery): FederalEntitiesResponse {
+    QueryHandler<FederalEntityError, FederalEntitiesResponse, SearchFederalEntitiesByTermQuery> {
+    override fun handle(query: SearchFederalEntitiesByTermQuery): Either<FederalEntityError, FederalEntitiesResponse> {
         val federalEntities = searchFederalEntities(query.search(), query.orders(), query.limit(), query.offset())
         val totalFederalEntities = countTotalFederalEntities(query.search())
 
-        return FederalEntitiesResponse.fromAggregate(
-            federalEntities,
-            totalFederalEntities,
-            query.limit(),
-            query.offset()
+        return Either.Right(
+            FederalEntitiesResponse.fromAggregate(
+                federalEntities,
+                totalFederalEntities,
+                query.limit(),
+                query.offset()
+            )
         )
     }
 

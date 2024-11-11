@@ -18,18 +18,20 @@
 
 package org.eduardoleolim.organizadorpec660.statisticType.application.searchById
 
+import arrow.core.Either
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryHandler
 import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypeResponse
 import org.eduardoleolim.organizadorpec660.statisticType.application.search.StatisticTypeSearcher
 import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeCriteria
+import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeError
 import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeNotFoundError
 
 class SearchStatisticTypeByIdQueryHandler(private val searcher: StatisticTypeSearcher) :
-    QueryHandler<SearchStatisticTypeByIdQuery, StatisticTypeResponse> {
-    override fun handle(query: SearchStatisticTypeByIdQuery): StatisticTypeResponse {
+    QueryHandler<StatisticTypeError, StatisticTypeResponse, SearchStatisticTypeByIdQuery> {
+    override fun handle(query: SearchStatisticTypeByIdQuery): Either<StatisticTypeError, StatisticTypeResponse> {
         val statisticType = searchStatisticType(query.id()) ?: throw StatisticTypeNotFoundError(query.id())
 
-        return StatisticTypeResponse.fromAggregate(statisticType)
+        return Either.Right(StatisticTypeResponse.fromAggregate(statisticType))
     }
 
     private fun searchStatisticType(id: String) = StatisticTypeCriteria.idCriteria(id).let {

@@ -18,23 +18,25 @@
 
 package org.eduardoleolim.organizadorpec660.municipality.application.searchById
 
+import arrow.core.Either
 import org.eduardoleolim.organizadorpec660.federalEntity.application.search.FederalEntitySearcher
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityCriteria
 import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorpec660.municipality.application.search.MunicipalitySearcher
 import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityCriteria
+import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityError
 import org.eduardoleolim.organizadorpec660.municipality.domain.MunicipalityNotFoundError
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryHandler
 
 class SearchMunicipalityByIdQueryHandler(
     private val municipalitySearcher: MunicipalitySearcher,
     private val federalEntitySearcher: FederalEntitySearcher
-) : QueryHandler<SearchMunicipalityByIdQuery, MunicipalityResponse> {
-    override fun handle(query: SearchMunicipalityByIdQuery): MunicipalityResponse {
+) : QueryHandler<MunicipalityError, MunicipalityResponse, SearchMunicipalityByIdQuery> {
+    override fun handle(query: SearchMunicipalityByIdQuery): Either<MunicipalityError, MunicipalityResponse> {
         val municipality = searchMunicipality(query.id()) ?: throw MunicipalityNotFoundError(query.id())
         val federalEntity = searchFederalEntity(municipality.federalEntityId().toString())
 
-        return MunicipalityResponse.fromAggregate(municipality, federalEntity)
+        return Either.Right(MunicipalityResponse.fromAggregate(municipality, federalEntity))
     }
 
     private fun searchMunicipality(id: String) = MunicipalityCriteria.idCriteria(id).let {

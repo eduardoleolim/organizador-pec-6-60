@@ -18,6 +18,8 @@
 
 package org.eduardoleolim.organizadorpec660.agency.application.searchByTerm
 
+import org.eduardoleolim.organizadorpec660.agency.application.AgenciesResponse
+import org.eduardoleolim.organizadorpec660.agency.domain.AgencyError
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Query
 
 class SearchAgenciesByTermQuery(
@@ -25,7 +27,7 @@ class SearchAgenciesByTermQuery(
     private val orders: Array<HashMap<String, String>>? = null,
     private val limit: Int? = null,
     private val offset: Int? = null
-) : Query {
+) : Query<AgencyError, AgenciesResponse> {
     private val search = search?.trim()?.uppercase()
 
     fun search(): String? {

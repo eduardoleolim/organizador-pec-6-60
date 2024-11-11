@@ -23,7 +23,6 @@ import org.eduardoleolim.organizadorpec660.auth.application.authenticate.Authent
 import org.eduardoleolim.organizadorpec660.auth.application.authenticate.UserAuthenticator
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Query
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryHandler
-import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Response
 import org.eduardoleolim.organizadorpec660.shared.infrastructure.bus.KtormQueryHandlerDecorator
 import org.eduardoleolim.organizadorpec660.shared.infrastructure.koin.KtormAppKoinComponent
 import org.eduardoleolim.organizadorpec660.shared.infrastructure.koin.KtormAppKoinContext
@@ -35,11 +34,11 @@ import kotlin.reflect.KClass
 class KtormAuthQueryHandlers(context: KtormAppKoinContext) : KtormAppKoinComponent(context) {
     private val database: Database by inject()
 
-    val handlers: Map<KClass<out Query>, QueryHandler<out Query, out Response>> = mapOf(
+    val handlers: Map<KClass<out Query<*, *>>, QueryHandler<*, *, out Query<*, *>>> = mapOf(
         AuthenticateUserQuery::class to authQueryHandler()
     )
 
-    private fun authQueryHandler(): KtormQueryHandlerDecorator<out Query, out Response> {
+    private fun authQueryHandler(): QueryHandler<*, *, out Query<*, *>> {
         val authenticator: UserAuthenticator by inject()
         val searcher: UserSearcher by inject()
         val queryHandler = AuthenticateUserQueryHandler(authenticator, searcher)

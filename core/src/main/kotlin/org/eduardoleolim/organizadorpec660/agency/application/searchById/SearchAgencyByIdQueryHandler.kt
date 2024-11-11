@@ -18,9 +18,11 @@
 
 package org.eduardoleolim.organizadorpec660.agency.application.searchById
 
+import arrow.core.Either
 import org.eduardoleolim.organizadorpec660.agency.application.AgencyResponse
 import org.eduardoleolim.organizadorpec660.agency.application.search.AgencySearcher
 import org.eduardoleolim.organizadorpec660.agency.domain.AgencyCriteria
+import org.eduardoleolim.organizadorpec660.agency.domain.AgencyError
 import org.eduardoleolim.organizadorpec660.agency.domain.AgencyNotFoundError
 import org.eduardoleolim.organizadorpec660.municipality.application.search.MunicipalitySearcher
 import org.eduardoleolim.organizadorpec660.municipality.domain.Municipality
@@ -34,9 +36,9 @@ class SearchAgencyByIdQueryHandler(
     private val agencySearcher: AgencySearcher,
     private val municipalitySearcher: MunicipalitySearcher,
     private val statisticTypeSearcher: StatisticTypeSearcher
-) : QueryHandler<SearchAgencyByIdQuery, AgencyResponse> {
-    override fun handle(query: SearchAgencyByIdQuery): AgencyResponse {
-        val agency = searchAgency(query.id()) ?: throw AgencyNotFoundError(query.id())
+) : QueryHandler<AgencyError, AgencyResponse, SearchAgencyByIdQuery> {
+    override fun handle(query: SearchAgencyByIdQuery): Either<AgencyError, AgencyResponse> {
+        val agency = searchAgency(query.id()) ?: return Either.Left(AgencyNotFoundError(query.id()))
 
         val municipalities = searchMunicipality(agency.municipalityId().toString())
 
@@ -44,7 +46,7 @@ class SearchAgencyByIdQueryHandler(
             searchStatisticType(statisticTypeId.value.toString())
         }
 
-        return AgencyResponse.fromAggregate(agency, municipalities, statisticTypesAndInstrumentTypes)
+        return Either.Right(AgencyResponse.fromAggregate(agency, municipalities, statisticTypesAndInstrumentTypes))
     }
 
     private fun searchAgency(id: String) = AgencyCriteria.idCriteria(id).let {

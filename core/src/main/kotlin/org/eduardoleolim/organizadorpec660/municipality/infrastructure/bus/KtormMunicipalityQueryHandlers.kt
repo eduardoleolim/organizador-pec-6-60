@@ -26,7 +26,6 @@ import org.eduardoleolim.organizadorpec660.municipality.application.searchByTerm
 import org.eduardoleolim.organizadorpec660.municipality.application.searchByTerm.SearchMunicipalitiesByTermQueryHandler
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Query
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryHandler
-import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Response
 import org.eduardoleolim.organizadorpec660.shared.infrastructure.bus.KtormQueryHandlerDecorator
 import org.eduardoleolim.organizadorpec660.shared.infrastructure.koin.KtormAppKoinComponent
 import org.eduardoleolim.organizadorpec660.shared.infrastructure.koin.KtormAppKoinContext
@@ -37,12 +36,12 @@ import kotlin.reflect.KClass
 class KtormMunicipalityQueryHandlers(context: KtormAppKoinContext) : KtormAppKoinComponent(context) {
     private val database: Database by inject()
 
-    val handlers: Map<KClass<out Query>, QueryHandler<out Query, out Response>> = mapOf(
+    val handlers: Map<KClass<out Query<*, *>>, QueryHandler<*, *, out Query<*, *>>> = mapOf(
         SearchMunicipalitiesByTermQuery::class to searchByTermQueryHandler(),
         SearchMunicipalityByIdQuery::class to searchByIdQueryHandler()
     )
 
-    private fun searchByTermQueryHandler(): QueryHandler<out Query, out Response> {
+    private fun searchByTermQueryHandler(): QueryHandler<*, *, out Query<*, *>> {
         val municipalitySearcher: MunicipalitySearcher by inject()
         val federalEntitySearcher: FederalEntitySearcher by inject()
         val queryHandler = SearchMunicipalitiesByTermQueryHandler(municipalitySearcher, federalEntitySearcher)
@@ -50,7 +49,7 @@ class KtormMunicipalityQueryHandlers(context: KtormAppKoinContext) : KtormAppKoi
         return KtormQueryHandlerDecorator(database, queryHandler)
     }
 
-    private fun searchByIdQueryHandler(): QueryHandler<out Query, out Response> {
+    private fun searchByIdQueryHandler(): QueryHandler<*, *, out Query<*, *>> {
         val municipalitySearcher: MunicipalitySearcher by inject()
         val federalEntitySearcher: FederalEntitySearcher by inject()
         val queryHandler = SearchMunicipalityByIdQueryHandler(municipalitySearcher, federalEntitySearcher)

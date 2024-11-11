@@ -18,18 +18,21 @@
 
 package org.eduardoleolim.organizadorpec660.federalEntity.application.searchById
 
+import arrow.core.Either
 import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorpec660.federalEntity.application.search.FederalEntitySearcher
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityCriteria
+import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityError
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityNotFoundError
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryHandler
 
 class SearchFederalEntityByIdQueryHandler(private val searcher: FederalEntitySearcher) :
-    QueryHandler<SearchFederalEntityByIdQuery, FederalEntityResponse> {
-    override fun handle(query: SearchFederalEntityByIdQuery): FederalEntityResponse {
-        val federalEntity = searchFederalEntity(query.id()) ?: throw FederalEntityNotFoundError(query.id())
+    QueryHandler<FederalEntityError, FederalEntityResponse, SearchFederalEntityByIdQuery> {
+    override fun handle(query: SearchFederalEntityByIdQuery): Either<FederalEntityError, FederalEntityResponse> {
+        val federalEntity = searchFederalEntity(query.id())
+            ?: return Either.Left(FederalEntityNotFoundError(query.id()))
 
-        return FederalEntityResponse.fromAggregate(federalEntity)
+        return Either.Right(FederalEntityResponse.fromAggregate(federalEntity))
     }
 
     private fun searchFederalEntity(id: String) = FederalEntityCriteria.idCriteria(id).let {

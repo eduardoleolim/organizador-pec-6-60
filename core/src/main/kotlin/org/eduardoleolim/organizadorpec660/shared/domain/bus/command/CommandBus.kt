@@ -19,7 +19,9 @@
 package org.eduardoleolim.organizadorpec660.shared.domain.bus.command
 
 import arrow.core.Either
+import kotlin.jvm.Throws
 
 interface CommandBus {
+    @Throws(CommandNotRegisteredError::class)
     fun <L, R> dispatch(command: Command<L, R>): Either<L, R>
 }

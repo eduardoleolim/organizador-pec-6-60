@@ -41,14 +41,15 @@ class KtormCommandBus(database: Database, instrumentsPath: String) : CommandBus 
     }
 
     override fun <L, R> dispatch(command: Command<L, R>): Either<L, R> {
-        try {
-            commandHandlers[command::class]?.let {
-                @Suppress("UNCHECKED_CAST")
-                it as CommandHandler<L, R, Command<L, R>>
-                return it.handle(command)
-            } ?: throw CommandNotRegisteredError(command::class)
-        } catch (e: Exception) {
-            throw CommandHandlerExecutionError(e)
+        val commandHandler = commandHandlers[command::class]
+
+        if (commandHandler != null) {
+            @Suppress("UNCHECKED_CAST")
+            commandHandler as CommandHandler<L, R, Command<L, R>>
+
+            return commandHandler.handle(command)
+        } else {
+            throw CommandNotRegisteredError(command::class)
         }
     }
 }

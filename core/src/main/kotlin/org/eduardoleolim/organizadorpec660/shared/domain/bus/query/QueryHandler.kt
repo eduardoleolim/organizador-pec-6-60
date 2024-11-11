@@ -18,6 +18,8 @@
 
 package org.eduardoleolim.organizadorpec660.shared.domain.bus.query
 
-interface QueryHandler<Q : Query, R : Response> {
-    fun handle(query: Q): R
+import arrow.core.Either
+
+interface QueryHandler<L, R : Response, Q : Query<L, R>> {
+    fun handle(query: Q): Either<L, R>
 }

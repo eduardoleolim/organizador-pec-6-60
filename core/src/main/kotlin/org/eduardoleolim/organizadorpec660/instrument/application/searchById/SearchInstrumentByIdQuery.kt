@@ -18,9 +18,11 @@
 
 package org.eduardoleolim.organizadorpec660.instrument.application.searchById
 
+import org.eduardoleolim.organizadorpec660.instrument.application.DetailedInstrumentResponse
+import org.eduardoleolim.organizadorpec660.instrument.domain.InstrumentError
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Query
 
-class SearchInstrumentByIdQuery(id: String) : Query {
+class SearchInstrumentByIdQuery(id: String) : Query<InstrumentError, DetailedInstrumentResponse> {
     private val id: String = id.trim()
 
     fun id(): String {

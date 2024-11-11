@@ -28,7 +28,6 @@ import org.eduardoleolim.organizadorpec660.instrument.application.searchByTerm.S
 import org.eduardoleolim.organizadorpec660.municipality.application.search.MunicipalitySearcher
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Query
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryHandler
-import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Response
 import org.eduardoleolim.organizadorpec660.shared.infrastructure.bus.KtormQueryHandlerDecorator
 import org.eduardoleolim.organizadorpec660.shared.infrastructure.koin.KtormAppKoinComponent
 import org.eduardoleolim.organizadorpec660.shared.infrastructure.koin.KtormAppKoinContext
@@ -40,12 +39,12 @@ import kotlin.reflect.KClass
 class KtormInstrumentQueryHandlers(context: KtormAppKoinContext) : KtormAppKoinComponent(context) {
     private val database: Database by inject()
 
-    val handlers: Map<KClass<out Query>, QueryHandler<out Query, out Response>> = mapOf(
+    val handlers: Map<KClass<out Query<*, *>>, QueryHandler<*, *, out Query<*, *>>> = mapOf(
         SearchInstrumentByIdQuery::class to searchByIdQueryHandler(),
         SearchInstrumentsByTermQuery::class to searchByTermQueryHandler()
     )
 
-    private fun searchByIdQueryHandler(): KtormQueryHandlerDecorator<out Query, out Response> {
+    private fun searchByIdQueryHandler(): QueryHandler<*, *, out Query<*, *>> {
         val instrumentSearcher: InstrumentSearcher by inject()
         val municipalitySearcher: MunicipalitySearcher by inject()
         val federalEntitySearcher: FederalEntitySearcher by inject()
@@ -62,7 +61,7 @@ class KtormInstrumentQueryHandlers(context: KtormAppKoinContext) : KtormAppKoinC
         return KtormQueryHandlerDecorator(database, queryHandler)
     }
 
-    private fun searchByTermQueryHandler(): KtormQueryHandlerDecorator<out Query, out Response> {
+    private fun searchByTermQueryHandler(): QueryHandler<*, *, out Query<*, *>> {
         val instrumentSearcher: InstrumentSearcher by inject()
         val agencySearcher: AgencySearcher by inject()
         val statisticTypeSearcher: StatisticTypeSearcher by inject()

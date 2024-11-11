@@ -18,7 +18,9 @@
 
 package org.eduardoleolim.organizadorpec660.shared.domain.bus.query
 
+import arrow.core.Either
+
 interface QueryBus {
-    @Throws(QueryHandlerExecutionError::class)
-    fun <R> ask(query: Query): R
+    @Throws(QueryNotRegisteredError::class)
+    fun <L, R> ask(query: Query<L, R>): Either<L, R>
 }

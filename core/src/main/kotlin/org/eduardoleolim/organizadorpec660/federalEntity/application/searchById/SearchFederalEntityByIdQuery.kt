@@ -18,9 +18,11 @@
 
 package org.eduardoleolim.organizadorpec660.federalEntity.application.searchById
 
+import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntityResponse
+import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityError
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Query
 
-class SearchFederalEntityByIdQuery(id: String) : Query {
+class SearchFederalEntityByIdQuery(id: String) : Query<FederalEntityError, FederalEntityResponse> {
     private val id: String = id.trim()
 
     fun id(): String {

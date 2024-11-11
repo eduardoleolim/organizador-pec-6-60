@@ -18,9 +18,11 @@
 
 package org.eduardoleolim.organizadorpec660.agency.application.searchByMunicipalityId
 
+import org.eduardoleolim.organizadorpec660.agency.application.MunicipalityAgenciesResponse
+import org.eduardoleolim.organizadorpec660.agency.domain.AgencyError
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Query
 
-class SearchAgenciesByMunicipalityIdQuery(municipalityId: String) : Query {
+class SearchAgenciesByMunicipalityIdQuery(municipalityId: String) : Query<AgencyError, MunicipalityAgenciesResponse> {
     private val municipalityId = municipalityId.trim()
 
     fun municipalityId(): String {

@@ -19,13 +19,15 @@
 package org.eduardoleolim.organizadorpec660.statisticType.application.searchByTerm
 
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Query
+import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypesResponse
+import org.eduardoleolim.organizadorpec660.statisticType.domain.StatisticTypeError
 
 class SearchStatisticTypesByTermQuery(
     search: String? = null,
     private val orders: Array<HashMap<String, String>>? = null,
     private val limit: Int? = null,
     private val offset: Int? = null
-) : Query {
+) : Query<StatisticTypeError, StatisticTypesResponse> {
     private val search = search?.trim()?.uppercase()
 
     fun search(): String? {
