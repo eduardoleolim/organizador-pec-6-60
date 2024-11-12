@@ -21,6 +21,7 @@ package org.eduardoleolim.organizadorpec660.municipality.model
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import arrow.core.getOrElse
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.*
@@ -28,7 +29,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
-import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntitiesResponse
 import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorpec660.federalEntity.application.searchByTerm.SearchFederalEntitiesByTermQuery
 import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalitiesResponse
@@ -41,6 +41,7 @@ import org.eduardoleolim.organizadorpec660.municipality.application.update.Updat
 import org.eduardoleolim.organizadorpec660.municipality.data.EmptyMunicipalityDataException
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryNotRegisteredError
 
 @OptIn(FlowPreview::class)
 class MunicipalityScreenModel(
@@ -97,17 +98,27 @@ class MunicipalityScreenModel(
 
     fun searchMunicipality(municipalityId: String?) {
         screenModelScope.launch(dispatcher) {
-            municipality = if (municipalityId == null) {
-                MunicipalityFormData()
+            municipality = if (municipalityId != null) {
+                try {
+                    val query = SearchMunicipalityByIdQuery(municipalityId)
+                    queryBus.ask(query).fold(
+                        ifRight = { municipalityResponse ->
+                            MunicipalityFormData(
+                                municipalityResponse.id,
+                                municipalityResponse.name,
+                                municipalityResponse.keyCode,
+                                municipalityResponse.federalEntity
+                            )
+                        },
+                        ifLeft = {
+                            MunicipalityFormData()
+                        }
+                    )
+                } catch (_: QueryNotRegisteredError) {
+                    MunicipalityFormData()
+                }
             } else {
-                val municipality = queryBus.ask<MunicipalityResponse>(SearchMunicipalityByIdQuery(municipalityId))
-
-                MunicipalityFormData(
-                    municipality.id,
-                    municipality.name,
-                    municipality.keyCode,
-                    municipality.federalEntity
-                )
+                MunicipalityFormData()
             }
         }
     }
@@ -157,12 +168,12 @@ class MunicipalityScreenModel(
         withContext(dispatcher) {
             val (search, federalEntity, orders, limit, offset) = parameters
             screenModelScope.launch(dispatcher) {
-                try {
+                municipalities = try {
                     val query =
                         SearchMunicipalitiesByTermQuery(federalEntity?.id, search, orders.toTypedArray(), limit, offset)
-                    municipalities = queryBus.ask(query)
-                } catch (e: Exception) {
-                    municipalities = MunicipalitiesResponse(emptyList(), 0, null, null)
+                    queryBus.ask(query).getOrElse { MunicipalitiesResponse(emptyList(), 0, null, null) }
+                } catch (_: QueryNotRegisteredError) {
+                    MunicipalitiesResponse(emptyList(), 0, null, null)
                 }
             }
         }
@@ -176,11 +187,11 @@ class MunicipalityScreenModel(
 
     private suspend fun fetchAllFederalEntities() {
         withContext(dispatcher) {
-            try {
+            federalEntities = try {
                 val query = SearchFederalEntitiesByTermQuery()
-                federalEntities = queryBus.ask<FederalEntitiesResponse>(query).federalEntities
-            } catch (e: Exception) {
-                federalEntities = emptyList()
+                queryBus.ask(query).map { it.federalEntities }.getOrElse { emptyList() }
+            } catch (_: QueryNotRegisteredError) {
+                emptyList()
             }
         }
     }
@@ -207,9 +218,9 @@ class MunicipalityScreenModel(
             }
 
             if (id == null) {
-                createMunicipality(keyCode, name, federalEntity!!.id)
+                createMunicipality(keyCode, name, federalEntity.id)
             } else {
-                updateMunicipality(id, keyCode, name, federalEntity!!.id)
+                updateMunicipality(id, keyCode, name, federalEntity.id)
             }
         }
     }

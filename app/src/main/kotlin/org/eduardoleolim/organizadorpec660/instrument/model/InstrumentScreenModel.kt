@@ -23,6 +23,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.window.Notification
 import androidx.compose.ui.window.TrayState
+import arrow.core.getOrElse
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import cafe.adriel.voyager.core.registry.ScreenRegistry
@@ -33,12 +34,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import org.eduardoleolim.organizadorpec660.agency.application.AgencyResponse
-import org.eduardoleolim.organizadorpec660.agency.application.MunicipalityAgenciesResponse
 import org.eduardoleolim.organizadorpec660.agency.application.searchByMunicipalityId.SearchAgenciesByMunicipalityIdQuery
-import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntitiesResponse
 import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorpec660.federalEntity.application.searchByTerm.SearchFederalEntitiesByTermQuery
-import org.eduardoleolim.organizadorpec660.instrument.application.DetailedInstrumentResponse
 import org.eduardoleolim.organizadorpec660.instrument.application.InstrumentsResponse
 import org.eduardoleolim.organizadorpec660.instrument.application.delete.DeleteInstrumentCommand
 import org.eduardoleolim.organizadorpec660.instrument.application.importer.ImportInstrumentsFromV1Command
@@ -47,17 +45,16 @@ import org.eduardoleolim.organizadorpec660.instrument.application.save.UpdateIns
 import org.eduardoleolim.organizadorpec660.instrument.application.searchById.SearchInstrumentByIdQuery
 import org.eduardoleolim.organizadorpec660.instrument.application.searchByTerm.SearchInstrumentsByTermQuery
 import org.eduardoleolim.organizadorpec660.instrument.infrastructure.services.V1AccdbInstrumentImportInput
-import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalitiesResponse
 import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorpec660.municipality.application.searchByTerm.SearchMunicipalitiesByTermQuery
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryNotRegisteredError
 import org.eduardoleolim.organizadorpec660.shared.resources.Res
 import org.eduardoleolim.organizadorpec660.shared.resources.inst_copy_notification_message
 import org.eduardoleolim.organizadorpec660.shared.resources.inst_copy_notification_title
 import org.eduardoleolim.organizadorpec660.shared.router.HomeProvider
 import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypeResponse
-import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypesResponse
 import org.eduardoleolim.organizadorpec660.statisticType.application.searchByTerm.SearchStatisticTypesByTermQuery
 import org.jetbrains.compose.resources.getString
 import java.awt.Toolkit
@@ -171,38 +168,42 @@ class InstrumentScreenModel(
 
     private suspend fun fetchAllFederalEntities() {
         withContext(dispatcher) {
-            try {
+            federalEntities = try {
                 val query = SearchFederalEntitiesByTermQuery()
-                federalEntities = queryBus.ask<FederalEntitiesResponse>(query).federalEntities
-            } catch (e: Exception) {
-                federalEntities = emptyList()
+                queryBus.ask(query).map { it.federalEntities }.getOrElse { emptyList() }
+            } catch (_: QueryNotRegisteredError) {
+                emptyList()
             }
         }
     }
 
     fun searchMunicipalities(federalEntityId: String?) {
         screenModelScope.launch(dispatcher) {
-            municipalities = federalEntityId?.let { id ->
+            municipalities = if (federalEntityId != null) {
                 try {
-                    val query = SearchMunicipalitiesByTermQuery(id)
-                    queryBus.ask<MunicipalitiesResponse>(query).municipalities
-                } catch (e: Exception) {
+                    val query = SearchMunicipalitiesByTermQuery(federalEntityId)
+                    queryBus.ask(query).map { it.municipalities }.getOrElse { emptyList() }
+                } catch (_: QueryNotRegisteredError) {
                     emptyList()
                 }
-            } ?: emptyList()
+            } else {
+                emptyList()
+            }
         }
     }
 
     fun searchAgencies(municipalityId: String?) {
         screenModelScope.launch(dispatcher) {
-            agencies = municipalityId?.let {
+            agencies = if (municipalityId != null) {
                 try {
                     val query = SearchAgenciesByMunicipalityIdQuery(municipalityId)
-                    queryBus.ask<MunicipalityAgenciesResponse>(query).agencies
-                } catch (e: Exception) {
+                    queryBus.ask(query).map { it.agencies }.getOrElse { emptyList() }
+                } catch (_: QueryNotRegisteredError) {
                     emptyList()
                 }
-            } ?: emptyList()
+            } else {
+                emptyList()
+            }
         }
     }
 
@@ -215,8 +216,8 @@ class InstrumentScreenModel(
     private suspend fun fetchAllStatisticTypes() {
         withContext(dispatcher) {
             statisticTypes = try {
-                queryBus.ask<StatisticTypesResponse>(SearchStatisticTypesByTermQuery()).statisticTypes
-            } catch (e: Exception) {
+                queryBus.ask(SearchStatisticTypesByTermQuery()).map { it.statisticTypes }.getOrElse { emptyList() }
+            } catch (_: QueryNotRegisteredError) {
                 emptyList()
             }
         }
@@ -272,8 +273,8 @@ class InstrumentScreenModel(
                     limit,
                     offset
                 )
-                queryBus.ask(query)
-            } catch (e: Exception) {
+                queryBus.ask(query).getOrElse { InstrumentsResponse(emptyList(), 0, null, null) }
+            } catch (_: QueryNotRegisteredError) {
                 InstrumentsResponse(emptyList(), 0, null, null)
             }
         }
@@ -295,18 +296,23 @@ class InstrumentScreenModel(
 
     fun copyInstrumentToClipboard(instrumentId: String) {
         screenModelScope.launch(dispatcher) {
-            val instrument = queryBus.ask<DetailedInstrumentResponse>(SearchInstrumentByIdQuery(instrumentId))
-            val file = File(tempDirectory).resolve("${instrument.filename}.pdf").apply {
-                parentFile.mkdirs()
-                writeBytes(instrument.instrumentFile.content)
-            }
-            clipboard.setContents(StringSelection(file.absolutePath), null)
+            try {
+                val query = SearchInstrumentByIdQuery(instrumentId)
+                queryBus.ask(query).onRight { instrument ->
+                    val file = File(tempDirectory).resolve("${instrument.filename}.pdf").apply {
+                        parentFile.mkdirs()
+                        writeBytes(instrument.instrumentFile.content)
+                    }
+                    clipboard.setContents(StringSelection(file.absolutePath), null)
 
-            val notification = Notification(
-                getString(Res.string.inst_copy_notification_title),
-                getString(Res.string.inst_copy_notification_message, file.absolutePath)
-            )
-            trayState.sendNotification(notification)
+                    val notification = Notification(
+                        getString(Res.string.inst_copy_notification_title),
+                        getString(Res.string.inst_copy_notification_message, file.absolutePath)
+                    )
+                    trayState.sendNotification(notification)
+                }
+            } catch (_: QueryNotRegisteredError) {
+            }
         }
     }
 

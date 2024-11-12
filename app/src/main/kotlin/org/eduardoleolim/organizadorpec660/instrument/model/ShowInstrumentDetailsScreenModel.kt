@@ -34,6 +34,7 @@ import org.eduardoleolim.organizadorpec660.instrument.application.DetailedInstru
 import org.eduardoleolim.organizadorpec660.instrument.application.searchById.SearchInstrumentByIdQuery
 import org.eduardoleolim.organizadorpec660.instrument.views.InstrumentScreen
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryNotRegisteredError
 import java.io.File
 
 class ShowInstrumentDetailsScreenModel(
@@ -54,11 +55,17 @@ class ShowInstrumentDetailsScreenModel(
     fun searchInstrument(instrumentId: String) {
         screenModelScope.launch(dispatcher) {
             delay(1000)
-            instrument = queryBus.ask<DetailedInstrumentResponse>(SearchInstrumentByIdQuery(instrumentId)).also {
-                tempInstrumentFile = File(tempDirectory).resolve("edit/${it.filename}.pdf").apply {
-                    parentFile.mkdirs()
-                    writeBytes(it.instrumentFile.content)
-                }
+
+            instrument = try {
+                val query = SearchInstrumentByIdQuery(instrumentId)
+                queryBus.ask(query).onRight {
+                    tempInstrumentFile = File(tempDirectory).resolve("edit/${it.filename}.pdf").apply {
+                        parentFile.mkdirs()
+                        writeBytes(it.instrumentFile.content)
+                    }
+                }.getOrNull()
+            } catch (_: QueryNotRegisteredError) {
+                null
             }
         }
     }

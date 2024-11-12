@@ -21,6 +21,8 @@ package org.eduardoleolim.organizadorpec660.agency.model
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import arrow.core.flatMap
+import arrow.core.getOrElse
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.*
@@ -39,22 +41,21 @@ import org.eduardoleolim.organizadorpec660.agency.data.EmptyAgencyDataException
 import org.eduardoleolim.organizadorpec660.agency.domain.AgencyHasInstrumentsError
 import org.eduardoleolim.organizadorpec660.agency.domain.AgencyNotFoundError
 import org.eduardoleolim.organizadorpec660.agency.domain.CanNotDeleteAgencyError
-import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntitiesResponse
 import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorpec660.federalEntity.application.searchById.SearchFederalEntityByIdQuery
 import org.eduardoleolim.organizadorpec660.federalEntity.application.searchByTerm.SearchFederalEntitiesByTermQuery
-import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalitiesResponse
 import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorpec660.municipality.application.SimpleMunicipalityResponse
 import org.eduardoleolim.organizadorpec660.municipality.application.searchByTerm.SearchMunicipalitiesByTermQuery
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandNotRegisteredError
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryNotRegisteredError
 import org.eduardoleolim.organizadorpec660.shared.resources.Res
 import org.eduardoleolim.organizadorpec660.shared.resources.ag_delete_error_default
 import org.eduardoleolim.organizadorpec660.shared.resources.ag_delete_error_has_instruments
 import org.eduardoleolim.organizadorpec660.shared.resources.ag_delete_error_not_found
 import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypeResponse
-import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypesResponse
 import org.eduardoleolim.organizadorpec660.statisticType.application.searchByTerm.SearchStatisticTypesByTermQuery
 import org.jetbrains.compose.resources.getString
 
@@ -120,21 +121,30 @@ class AgencyScreenModel(
 
     fun searchAgency(agencyId: String?) {
         screenModelScope.launch(dispatcher) {
-            agency = if (agencyId == null) {
+            agency = try {
+                if (agencyId == null) {
+                    AgencyFormData()
+                } else {
+                    val agencyQuery = SearchAgencyByIdQuery(agencyId)
+                    queryBus.ask(agencyQuery).flatMap { agencyResponse ->
+                        val federalEntityQuery =
+                            SearchFederalEntityByIdQuery(agencyResponse.municipality.federalEntityId)
+                        queryBus.ask(federalEntityQuery).map { federalEntityResponse ->
+                            AgencyFormData(
+                                agencyResponse.id,
+                                agencyResponse.name,
+                                agencyResponse.consecutive,
+                                federalEntityResponse,
+                                agencyResponse.municipality,
+                                agencyResponse.statisticTypes
+                            )
+                        }
+                    }.getOrElse {
+                        AgencyFormData()
+                    }
+                }
+            } catch (_: QueryNotRegisteredError) {
                 AgencyFormData()
-            } else {
-                val agencyResponse = queryBus.ask<AgencyResponse>(SearchAgencyByIdQuery(agencyId))
-                val federalEntityResponse =
-                    queryBus.ask<FederalEntityResponse>(SearchFederalEntityByIdQuery(agencyResponse.municipality.federalEntityId))
-
-                AgencyFormData(
-                    agencyResponse.id,
-                    agencyResponse.name,
-                    agencyResponse.consecutive,
-                    federalEntityResponse,
-                    agencyResponse.municipality,
-                    agencyResponse.statisticTypes
-                )
             }
         }
     }
@@ -212,8 +222,8 @@ class AgencyScreenModel(
             val (search, orders, limit, offset) = parameters
             try {
                 val query = SearchAgenciesByTermQuery(search, orders.toTypedArray(), limit, offset)
-                agencies = queryBus.ask(query)
-            } catch (e: Exception) {
+                agencies = queryBus.ask(query).getOrElse { AgenciesResponse(emptyList(), 0, null, null) }
+            } catch (_: QueryNotRegisteredError) {
                 agencies = AgenciesResponse(emptyList(), 0, null, null)
             }
         }
@@ -221,35 +231,37 @@ class AgencyScreenModel(
 
     fun searchMunicipalities(federalEntityId: String?) {
         screenModelScope.launch(dispatcher) {
-            municipalities = federalEntityId?.let {
+            municipalities = if (federalEntityId != null) {
                 try {
                     val query = SearchMunicipalitiesByTermQuery(federalEntityId)
-                    queryBus.ask<MunicipalitiesResponse>(query).municipalities
-                } catch (e: Exception) {
+                    queryBus.ask(query).map { it.municipalities }.getOrElse { emptyList() }
+                } catch (_: QueryNotRegisteredError) {
                     emptyList()
                 }
-            } ?: emptyList()
+            } else {
+                emptyList()
+            }
         }
     }
 
     fun searchAllFederalEntities() {
         screenModelScope.launch(dispatcher) {
-            try {
+            federalEntities = try {
                 val query = SearchFederalEntitiesByTermQuery()
-                federalEntities = queryBus.ask<FederalEntitiesResponse>(query).federalEntities
-            } catch (e: Exception) {
-                federalEntities = emptyList()
+                queryBus.ask(query).map { it.federalEntities }.getOrElse { emptyList() }
+            } catch (_: QueryNotRegisteredError) {
+                emptyList()
             }
         }
     }
 
     fun searchAllStatisticTypes() {
         screenModelScope.launch(dispatcher) {
-            try {
+            statisticTypes = try {
                 val query = SearchStatisticTypesByTermQuery()
-                statisticTypes = queryBus.ask<StatisticTypesResponse>(query).statisticTypes
-            } catch (e: Exception) {
-                statisticTypes = emptyList()
+                queryBus.ask(query).map { it.statisticTypes }.getOrElse { emptyList() }
+            } catch (_: QueryNotRegisteredError) {
+                emptyList()
             }
         }
     }
@@ -279,9 +291,9 @@ class AgencyScreenModel(
             }
 
             if (agency.id == null) {
-                createAgency(name, consecutive, municipality!!, statisticTypes)
+                createAgency(name, consecutive, municipality, statisticTypes)
             } else {
-                updateAgency(id!!, name, consecutive, municipality!!, statisticTypes)
+                updateAgency(id!!, name, consecutive, municipality, statisticTypes)
             }
         }
     }
@@ -303,8 +315,8 @@ class AgencyScreenModel(
                     AgencyFormState.Error(it)
                 }
             )
-        } catch (e: Exception) {
-            AgencyFormState.Error(e.cause!!)
+        } catch (e: CommandNotRegisteredError) {
+            AgencyFormState.Error(e)
         }
     }
 
@@ -326,8 +338,8 @@ class AgencyScreenModel(
                     AgencyFormState.Error(it)
                 }
             )
-        } catch (e: Exception) {
-            AgencyFormState.Error(e.cause!!)
+        } catch (e: CommandNotRegisteredError) {
+            AgencyFormState.Error(e)
         }
     }
 
@@ -353,7 +365,7 @@ class AgencyScreenModel(
                         AgencyDeleteState.Error(message)
                     }
                 )
-            } catch (e: Exception) {
+            } catch (_: CommandNotRegisteredError) {
                 AgencyDeleteState.Error(getString(Res.string.ag_delete_error_default))
             }
         }

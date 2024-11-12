@@ -22,6 +22,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import arrow.core.getOrElse
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import cafe.adriel.voyager.core.screen.Screen
@@ -29,25 +30,22 @@ import cafe.adriel.voyager.core.stack.popUntil
 import cafe.adriel.voyager.navigator.Navigator
 import kotlinx.coroutines.*
 import org.eduardoleolim.organizadorpec660.agency.application.AgencyResponse
-import org.eduardoleolim.organizadorpec660.agency.application.MunicipalityAgenciesResponse
 import org.eduardoleolim.organizadorpec660.agency.application.SimpleAgencyResponse
 import org.eduardoleolim.organizadorpec660.agency.application.searchByMunicipalityId.SearchAgenciesByMunicipalityIdQuery
-import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntitiesResponse
 import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntityResponse
 import org.eduardoleolim.organizadorpec660.federalEntity.application.searchByTerm.SearchFederalEntitiesByTermQuery
-import org.eduardoleolim.organizadorpec660.instrument.application.DetailedInstrumentResponse
 import org.eduardoleolim.organizadorpec660.instrument.application.create.CreateInstrumentCommand
 import org.eduardoleolim.organizadorpec660.instrument.application.searchById.SearchInstrumentByIdQuery
 import org.eduardoleolim.organizadorpec660.instrument.application.update.UpdateInstrumentCommand
 import org.eduardoleolim.organizadorpec660.instrument.data.EmptyInstrumentDataException
 import org.eduardoleolim.organizadorpec660.instrument.views.InstrumentScreen
-import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalitiesResponse
 import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorpec660.municipality.application.SimpleMunicipalityResponse
 import org.eduardoleolim.organizadorpec660.municipality.application.searchByTerm.SearchMunicipalitiesByTermQuery
 import org.eduardoleolim.organizadorpec660.shared.composables.ResetFilePickerInteraction
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryNotRegisteredError
 import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypeResponse
 import java.io.File
 import java.text.DateFormatSymbols
@@ -95,28 +93,38 @@ class SaveInstrumentScreenModel(
 
     fun searchInstrument(instrumentId: String?) {
         screenModelScope.launch(dispatcher) {
-            instrument = if (instrumentId == null) {
-                InstrumentFormData()
-            } else {
-                val instrumentResponse =
-                    queryBus.ask<DetailedInstrumentResponse>(SearchInstrumentByIdQuery(instrumentId))
-                val instrumentFile = File(tempDirectory).resolve("edit/${instrumentResponse.filename}.pdf").also {
-                    it.parentFile.mkdirs()
-                    it.writeBytes(instrumentResponse.instrumentFile.content)
-                }
+            instrument = if (instrumentId != null) {
+                try {
+                    val query = SearchInstrumentByIdQuery(instrumentId)
+                    queryBus.ask(query).fold(
+                        ifRight = { instrumentResponse ->
+                            val instrumentFile = File(tempDirectory, "edit/${instrumentResponse.filename}.pdf").also {
+                                it.parentFile.mkdirs()
+                                it.writeBytes(instrumentResponse.instrumentFile.content)
+                            }
 
-                with(instrumentResponse) {
-                    InstrumentFormData(
-                        id = id,
-                        statisticYear = statisticYear,
-                        statisticMonth = statisticMonths.first { it.first == statisticMonth },
-                        statisticType = statisticType,
-                        federalEntity = federalEntity,
-                        municipality = municipality,
-                        agency = agency,
-                        instrumentFilePath = instrumentFile.absolutePath
+                            with(instrumentResponse) {
+                                InstrumentFormData(
+                                    id = id,
+                                    statisticYear = statisticYear,
+                                    statisticMonth = statisticMonths.first { it.first == statisticMonth },
+                                    statisticType = statisticType,
+                                    federalEntity = federalEntity,
+                                    municipality = municipality,
+                                    agency = agency,
+                                    instrumentFilePath = instrumentFile.absolutePath
+                                )
+                            }
+                        },
+                        ifLeft = {
+                            InstrumentFormData()
+                        }
                     )
+                } catch (_: QueryNotRegisteredError) {
+                    InstrumentFormData()
                 }
+            } else {
+                InstrumentFormData()
             }
         }
     }
@@ -168,45 +176,49 @@ class SaveInstrumentScreenModel(
 
     fun searchAllFederalEntities() {
         screenModelScope.launch(dispatcher) {
-            try {
+            federalEntities = try {
                 val query = SearchFederalEntitiesByTermQuery()
-                federalEntities = queryBus.ask<FederalEntitiesResponse>(query).federalEntities
-            } catch (e: Exception) {
-                federalEntities = emptyList()
+                queryBus.ask(query).map { it.federalEntities }.getOrElse { emptyList() }
+            } catch (_: QueryNotRegisteredError) {
+                emptyList()
             }
         }
     }
 
     fun searchMunicipalities(federalEntityId: String?) {
         screenModelScope.launch(dispatcher) {
-            municipalities = federalEntityId?.let { id ->
+            municipalities = if (federalEntityId != null) {
                 try {
-                    val query = SearchMunicipalitiesByTermQuery(id)
-                    queryBus.ask<MunicipalitiesResponse>(query).municipalities
-                } catch (e: Exception) {
+                    val query = SearchMunicipalitiesByTermQuery(federalEntityId)
+                    queryBus.ask(query).map { it.municipalities }.getOrElse { emptyList() }
+                } catch (_: QueryNotRegisteredError) {
                     emptyList()
                 }
-            } ?: emptyList()
+            } else {
+                emptyList()
+            }
         }
     }
 
     fun searchAgencies(municipalityId: String?) {
         screenModelScope.launch(dispatcher) {
-            agencies = municipalityId?.let {
+            agencies = if (municipalityId != null) {
                 try {
                     val query = SearchAgenciesByMunicipalityIdQuery(municipalityId)
-                    queryBus.ask<MunicipalityAgenciesResponse>(query).agencies
-                } catch (e: Exception) {
+                    queryBus.ask(query).map { it.agencies }.getOrElse { emptyList() }
+                } catch (_: QueryNotRegisteredError) {
                     emptyList()
                 }
-            } ?: emptyList()
+            } else {
+                emptyList()
+            }
         }
     }
 
     fun searchStatisticTypes(agencyId: String?) {
         statisticTypes = try {
             agencies.first { it.id == agencyId }.statisticTypes
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             emptyList()
         }
     }
@@ -240,22 +252,22 @@ class SaveInstrumentScreenModel(
 
             if (id == null) {
                 createInstrument(
-                    statisticYear!!,
-                    statisticMonth!!.first,
-                    municipality!!.id,
-                    agency!!.id,
-                    statisticType!!.id,
-                    instrumentFilePath!!
+                    statisticYear,
+                    statisticMonth.first,
+                    municipality.id,
+                    agency.id,
+                    statisticType.id,
+                    instrumentFilePath
                 )
             } else {
                 updateInstrument(
                     id,
-                    statisticYear!!,
-                    statisticMonth!!.first,
-                    municipality!!.id,
-                    agency!!.id,
-                    statisticType!!.id,
-                    instrumentFilePath!!
+                    statisticYear,
+                    statisticMonth.first,
+                    municipality.id,
+                    agency.id,
+                    statisticType.id,
+                    instrumentFilePath
                 )
             }
         }

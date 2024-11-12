@@ -32,7 +32,7 @@ import kotlinx.coroutines.launch
 import org.eduardoleolim.organizadorpec660.auth.application.AuthUserResponse
 import org.eduardoleolim.organizadorpec660.auth.application.authenticate.AuthenticateUserQuery
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
-import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryHandlerExecutionError
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryNotRegisteredError
 import org.eduardoleolim.organizadorpec660.shared.router.MainProvider
 import org.eduardoleolim.organizadorpec660.shared.utils.AppConfig
 
@@ -71,11 +71,17 @@ class AuthScreenModel(
                 return@launch
             }
 
-            try {
-                val authUserResponse: AuthUserResponse = queryBus.ask(AuthenticateUserQuery(username, password))
-                authState = AuthState.Success(authUserResponse)
-            } catch (e: QueryHandlerExecutionError) {
-                authState = AuthState.Error(e.cause!!)
+            authState = try {
+                queryBus.ask(AuthenticateUserQuery(username, password)).fold(
+                    ifRight = { user ->
+                        AuthState.Success(user)
+                    },
+                    ifLeft = { error ->
+                        AuthState.Error(error)
+                    }
+                )
+            } catch (e: QueryNotRegisteredError) {
+                AuthState.Error(e)
             }
         }
     }

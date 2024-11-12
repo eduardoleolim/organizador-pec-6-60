@@ -21,6 +21,7 @@ package org.eduardoleolim.organizadorpec660.federalEntity.model
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import arrow.core.getOrElse
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
@@ -42,7 +43,9 @@ import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityHas
 import org.eduardoleolim.organizadorpec660.federalEntity.domain.FederalEntityNotFoundError
 import org.eduardoleolim.organizadorpec660.federalEntity.infrastructure.services.KotlinCsvFederalEntityImportInput
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandNotRegisteredError
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryNotRegisteredError
 import org.eduardoleolim.organizadorpec660.shared.resources.*
 import org.jetbrains.compose.resources.getString
 import java.io.File
@@ -144,11 +147,17 @@ class FederalEntityScreenModel(
 
     fun searchFederalEntity(federalEntityId: String?) {
         screenModelScope.launch(dispatcher) {
-            federalEntity = if (federalEntityId == null) {
-                FederalEntityFormData()
+            federalEntity = if (federalEntityId != null) {
+                try {
+                    val query = SearchFederalEntityByIdQuery(federalEntityId)
+                    queryBus.ask(query).map { federalEntity ->
+                        FederalEntityFormData(federalEntity.id, federalEntity.name, federalEntity.keyCode)
+                    }.getOrElse { FederalEntityFormData() }
+                } catch (_: QueryNotRegisteredError) {
+                    FederalEntityFormData()
+                }
             } else {
-                val federalEntity = queryBus.ask<FederalEntityResponse>(SearchFederalEntityByIdQuery(federalEntityId))
-                FederalEntityFormData(federalEntity.id, federalEntity.name, federalEntity.keyCode)
+                FederalEntityFormData()
             }
         }
     }
@@ -196,11 +205,11 @@ class FederalEntityScreenModel(
     private suspend fun fetchFederalEntities(parameters: FederalEntitySearchParameters) {
         withContext(dispatcher) {
             val (search, orders, limit, offset) = parameters
-            try {
+            federalEntities = try {
                 val query = SearchFederalEntitiesByTermQuery(search, orders.toTypedArray(), limit, offset)
-                federalEntities = queryBus.ask(query)
-            } catch (e: Exception) {
-                federalEntities = FederalEntitiesResponse(emptyList(), 0, null, null)
+                queryBus.ask(query).getOrElse { FederalEntitiesResponse(emptyList(), 0, null, null) }
+            } catch (_: QueryNotRegisteredError) {
+                FederalEntitiesResponse(emptyList(), 0, null, null)
             }
         }
     }
@@ -285,7 +294,7 @@ class FederalEntityScreenModel(
                             FederalEntityDeleteState.Error(message)
                         }
                     )
-            } catch (e: Exception) {
+            } catch (_: CommandNotRegisteredError) {
                 FederalEntityDeleteState.Error(getString(Res.string.fe_delete_error_default))
             }
         }

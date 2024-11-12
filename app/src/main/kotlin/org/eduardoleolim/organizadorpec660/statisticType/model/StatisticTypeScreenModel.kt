@@ -21,6 +21,7 @@ package org.eduardoleolim.organizadorpec660.statisticType.model
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import arrow.core.getOrElse
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.*
@@ -29,7 +30,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandNotRegisteredError
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryNotRegisteredError
 import org.eduardoleolim.organizadorpec660.shared.resources.Res
 import org.eduardoleolim.organizadorpec660.shared.resources.st_delete_error_default
 import org.eduardoleolim.organizadorpec660.shared.resources.st_delete_error_not_found
@@ -100,11 +103,26 @@ class StatisticTypeScreenModel(
 
     fun searchStatisticType(statisticTypeId: String?) {
         screenModelScope.launch(dispatcher) {
-            statisticType = if (statisticTypeId == null) {
-                StatisticTypeFormData()
+            statisticType = if (statisticTypeId != null) {
+                try {
+                    val query = SearchStatisticTypeByIdQuery(statisticTypeId)
+                    queryBus.ask(query).fold(
+                        ifRight = { statisticTypeResponse ->
+                            StatisticTypeFormData(
+                                statisticTypeResponse.id,
+                                statisticTypeResponse.name,
+                                statisticTypeResponse.keyCode
+                            )
+                        },
+                        ifLeft = {
+                            StatisticTypeFormData()
+                        }
+                    )
+                } catch (_: QueryNotRegisteredError) {
+                    StatisticTypeFormData()
+                }
             } else {
-                val statisticType = queryBus.ask<StatisticTypeResponse>(SearchStatisticTypeByIdQuery(statisticTypeId))
-                StatisticTypeFormData(statisticType.id, statisticType.name, statisticType.keyCode)
+                StatisticTypeFormData()
             }
         }
     }
@@ -147,11 +165,11 @@ class StatisticTypeScreenModel(
     private suspend fun fetchStatisticTypes(parameters: StatisticTypeSearchParameters) {
         withContext(dispatcher) {
             val (search, orders, limit, offset) = parameters
-            try {
+            statisticTypes = try {
                 val query = SearchStatisticTypesByTermQuery(search, orders.toTypedArray(), limit, offset)
-                statisticTypes = queryBus.ask(query)
-            } catch (e: Exception) {
-                statisticTypes = StatisticTypesResponse(emptyList(), 0, null, null)
+                queryBus.ask(query).getOrElse { StatisticTypesResponse(emptyList(), 0, null, null) }
+            } catch (_: QueryNotRegisteredError) {
+                StatisticTypesResponse(emptyList(), 0, null, null)
             }
         }
     }
@@ -234,7 +252,7 @@ class StatisticTypeScreenModel(
                         StatisticTypeDeleteState.Error(message)
                     }
                 )
-            } catch (e: Exception) {
+            } catch (_: CommandNotRegisteredError) {
                 StatisticTypeDeleteState.Error(getString(Res.string.st_delete_error_default))
             }
         }
