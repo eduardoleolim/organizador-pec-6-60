@@ -32,7 +32,12 @@ class FederalEntitiesResponse(
 
     companion object {
         fun fromAggregate(federalEntities: List<FederalEntity>, total: Int, limit: Int?, offset: Int?) =
-            FederalEntitiesResponse(federalEntities.map(FederalEntityResponse.Companion::fromAggregate), total, limit, offset)
+            FederalEntitiesResponse(
+                federalEntities.map(FederalEntityResponse.Companion::fromAggregate),
+                total,
+                limit,
+                offset
+            )
     }
 
 }

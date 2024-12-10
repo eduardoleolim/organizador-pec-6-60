@@ -24,7 +24,10 @@ import org.eduardoleolim.organizadorpec660.auth.infrastructure.bus.KtormAuthQuer
 import org.eduardoleolim.organizadorpec660.federalEntity.infrastructure.bus.KtormFederalEntityQueryHandlers
 import org.eduardoleolim.organizadorpec660.instrument.infrastructure.bus.KtormInstrumentQueryHandlers
 import org.eduardoleolim.organizadorpec660.municipality.infrastructure.bus.KtormMunicipalityQueryHandlers
-import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.*
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Query
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryHandler
+import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryNotRegisteredError
 import org.eduardoleolim.organizadorpec660.shared.infrastructure.koin.KtormAppKoinContext
 import org.eduardoleolim.organizadorpec660.statisticType.infrastructure.bus.KtormStatisticTypeQueryHandlers
 import org.ktorm.database.Database

@@ -32,6 +32,11 @@ class StatisticTypesResponse(
 
     companion object {
         fun fromAggregate(statisticTypes: List<StatisticType>, total: Int, limit: Int?, offset: Int?) =
-            StatisticTypesResponse(statisticTypes.map(StatisticTypeResponse.Companion::fromAggregate), total, limit, offset)
+            StatisticTypesResponse(
+                statisticTypes.map(StatisticTypeResponse.Companion::fromAggregate),
+                total,
+                limit,
+                offset
+            )
     }
 }
