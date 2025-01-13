@@ -57,7 +57,7 @@ compose.desktop {
         }
 
         nativeDistributions {
-            packageName = rootProject.name
+            packageName = if (OperatingSystem.current().isWindows) "OrganizadorPEC660" else "organizador-pec-6-60"
             description = "Organizador de formatos PEC-6-60"
             copyright = "Copyright © 2024 Angel Eduardo Martinez Leo Lim. All rights reserved."
             vendor = "Angel Eduardo Martinez Leo Lim"
