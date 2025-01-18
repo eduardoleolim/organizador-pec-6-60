@@ -108,7 +108,8 @@ fun InstrumentScreen.InstrumentImportModal(
                                     InstrumentImportDataFields.STATISTIC_TYPE_KEY_CODE -> stringResource(Res.string.inst_statistic_type)
                                     InstrumentImportDataFields.SAVED_IN_SIRESO -> stringResource(Res.string.inst_in_sireso)
                                     InstrumentImportDataFields.CREATED_AT -> stringResource(Res.string.inst_created_at)
-                                    InstrumentImportDataFields.INSTRUMENT_FILE_CONTENT -> stringResource(Res.string.inst_document)
+                                    InstrumentImportDataFields.INSTRUMENT_FILE_CONTENT -> stringResource(Res.string.inst_document_content)
+                                    InstrumentImportDataFields.INSTRUMENT_FILE_LOCATION -> stringResource(Res.string.inst_document)
                                 }
 
                                 stringResource(

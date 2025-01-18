@@ -62,7 +62,7 @@ class InstrumentFromV1Importer<I : InstrumentImportInput>(
                     val statisticTypeKeyCode = data.statisticTypeKeyCode()
                     val savedInSireso = data.saved()
                     val createdAt = data.createdAt()
-                    val instrumentFileContent = data.instrumentFileContent()
+                    val instrumentFileContent = data.instrumentFileContentReader.read()
 
                     val federalEntity = federalEntitiesCache[federalEntityKeyCode]
                         ?: searchFederalEntity(federalEntityKeyCode)?.also {

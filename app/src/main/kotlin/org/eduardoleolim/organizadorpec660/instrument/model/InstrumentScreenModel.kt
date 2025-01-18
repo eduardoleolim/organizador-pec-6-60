@@ -336,6 +336,9 @@ class InstrumentScreenModel(
             val input = V1AccdbInstrumentImportInput(file.toPath())
             val command = ImportInstrumentsFromV1Command(input, true)
 
+            importState = InstrumentImportState.InProgress
+            delay(500)
+
             importState = commandBus.dispatch(command)
                 .fold(
                     ifRight = { warnings ->

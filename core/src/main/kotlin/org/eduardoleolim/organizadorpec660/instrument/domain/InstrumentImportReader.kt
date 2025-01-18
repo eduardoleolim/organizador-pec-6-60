@@ -21,6 +21,10 @@ package org.eduardoleolim.organizadorpec660.instrument.domain
 import arrow.core.Either
 import java.util.*
 
+abstract class InstrumentFileContentReader {
+    abstract fun read(): ByteArray
+}
+
 class InstrumentImportData(
     private val statisticYear: Int,
     private val statisticMonth: Int,
@@ -30,7 +34,7 @@ class InstrumentImportData(
     statisticTypeKeyCode: String,
     private val saved: Boolean,
     private val createdAt: Date,
-    private val instrumentFileContent: ByteArray
+    val instrumentFileContentReader: InstrumentFileContentReader
 ) {
     private val federalEntityKeyCode: String = federalEntityKeyCode.trim()
     private val municipalityKeyCode: String = municipalityKeyCode.trim()
@@ -68,10 +72,6 @@ class InstrumentImportData(
     fun saved(): Boolean {
         return saved
     }
-
-    fun instrumentFileContent(): ByteArray {
-        return instrumentFileContent
-    }
 }
 
 enum class InstrumentImportDataFields(val value: String) {
@@ -83,6 +83,7 @@ enum class InstrumentImportDataFields(val value: String) {
     STATISTIC_TYPE_KEY_CODE("Statistic Type KeyCode"),
     SAVED_IN_SIRESO("Saved in SIRESO"),
     CREATED_AT("Created At"),
+    INSTRUMENT_FILE_LOCATION("Instrument File Location"),
     INSTRUMENT_FILE_CONTENT("Instrument File Content")
 }
 

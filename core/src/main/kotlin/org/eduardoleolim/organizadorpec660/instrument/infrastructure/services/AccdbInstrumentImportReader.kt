@@ -30,6 +30,12 @@ import java.util.*
 
 class V1AccdbInstrumentImportInput(val databaseDirectory: Path) : AccdbInstrumentImportInput()
 
+class FileSystemInstrumentFileContentReader(private val file: File) : InstrumentFileContentReader() {
+    override fun read(): ByteArray {
+        return file.readBytes()
+    }
+}
+
 class AccdbInstrumentImportReader : InstrumentImportReader<AccdbInstrumentImportInput> {
     override fun read(input: AccdbInstrumentImportInput): List<Either<InstrumentImportFieldNotFound, InstrumentImportData>> {
         return when (input) {
@@ -51,85 +57,111 @@ class AccdbInstrumentImportReader : InstrumentImportReader<AccdbInstrumentImport
 
             instrumentsTable.map { row ->
                 val instrumentName = row.getString("nombre")
-
-                val savedInSireso = row.getBoolean("guardado") ?: return@map Either.Left(
-                    InstrumentImportFieldNotFound(instrumentName, InstrumentImportDataFields.SAVED_IN_SIRESO)
-                )
-
-                val statisticYear = row.getString("añoEstadistico")?.toInt() ?: return@map Either.Left(
-                    InstrumentImportFieldNotFound(instrumentName, InstrumentImportDataFields.STATISTIC_YEAR)
-                )
-
-                val consecutive = row.getString("consecutivo")?.padStart(4, '0') ?: return@map Either.Left(
-                    InstrumentImportFieldNotFound(instrumentName, InstrumentImportDataFields.AGENCY_CONSECUTIVE)
-                )
-
-                val statisticMonth = row.getString("mesEstadistico") ?: return@map Either.Left(
-                    InstrumentImportFieldNotFound(instrumentName, InstrumentImportDataFields.STATISTIC_MONTH)
-                )
-
-
-                val statisticMonthNumber = getMonthNumber(statisticMonth, Locale.of("es")) ?: return@map Either.Left(
-                    InstrumentImportFieldNotFound(instrumentName, InstrumentImportDataFields.STATISTIC_MONTH)
-                )
-
-                val municipalityKeyCode = row["folioMunicipio"]?.toString() ?: return@map Either.Left(
-                    InstrumentImportFieldNotFound(instrumentName, InstrumentImportDataFields.MUNICIPALITY_KEY_CODE)
-                )
-
+                val savedInSireso = row.getBoolean("guardado")
+                val statisticYear = row.getString("añoEstadistico")?.toInt()
+                val consecutive = row.getString("consecutivo")?.padStart(4, '0')
+                val statisticMonth = row.getString("mesEstadistico")
+                val statisticMonthNumber = getMonthNumber(statisticMonth, Locale.of("es"))
+                val municipalityKeyCode = row["folioMunicipio"]?.toString()
                 val federalEntityKeyCode = federalEntityKeyCodes.firstOrNull { it.first == municipalityKeyCode }?.second
-                    ?: return@map Either.Left(
+                val statisticTypeKeyCode = row["folioTipoEstadistica"]?.toString()
+                val createdAt = row["fechaRegistro"] as? LocalDateTime
+                val instrumentFile = row["rutaArchivo"]?.toString()?.replace("\\data\\", "\\")?.let {
+                    input.databaseDirectory.parent.resolve(it.replace("\\", File.separator)).normalize().toFile()
+                }
+
+                when {
+                    savedInSireso == null -> Either.Left(
+                        InstrumentImportFieldNotFound(
+                            instrumentName,
+                            InstrumentImportDataFields.SAVED_IN_SIRESO
+                        )
+                    )
+
+                    statisticYear == null -> Either.Left(
+                        InstrumentImportFieldNotFound(
+                            instrumentName,
+                            InstrumentImportDataFields.STATISTIC_YEAR
+                        )
+                    )
+
+                    consecutive == null -> Either.Left(
+                        InstrumentImportFieldNotFound(
+                            instrumentName,
+                            InstrumentImportDataFields.AGENCY_CONSECUTIVE
+                        )
+                    )
+
+                    statisticMonth == null -> Either.Left(
+                        InstrumentImportFieldNotFound(
+                            instrumentName,
+                            InstrumentImportDataFields.STATISTIC_MONTH
+                        )
+                    )
+
+                    statisticMonthNumber == null -> Either.Left(
+                        InstrumentImportFieldNotFound(
+                            instrumentName,
+                            InstrumentImportDataFields.STATISTIC_MONTH
+                        )
+                    )
+
+                    municipalityKeyCode == null -> Either.Left(
+                        InstrumentImportFieldNotFound(
+                            instrumentName,
+                            InstrumentImportDataFields.MUNICIPALITY_KEY_CODE
+                        )
+                    )
+
+                    federalEntityKeyCode == null -> Either.Left(
                         InstrumentImportFieldNotFound(
                             instrumentName,
                             InstrumentImportDataFields.FEDERAL_ENTITY_KEY_CODE
                         )
                     )
 
-                val statisticTypeKeyCode = row["folioTipoEstadistica"]?.toString() ?: return@map Either.Left(
-                    InstrumentImportFieldNotFound(instrumentName, InstrumentImportDataFields.STATISTIC_TYPE_KEY_CODE)
-                )
+                    statisticTypeKeyCode == null -> Either.Left(
+                        InstrumentImportFieldNotFound(
+                            instrumentName,
+                            InstrumentImportDataFields.STATISTIC_TYPE_KEY_CODE
+                        )
+                    )
 
+                    createdAt == null -> Either.Left(
+                        InstrumentImportFieldNotFound(
+                            instrumentName,
+                            InstrumentImportDataFields.CREATED_AT
+                        )
+                    )
 
-                val createdAt = row["fechaRegistro"] as? LocalDateTime ?: return@map Either.Left(
-                    InstrumentImportFieldNotFound(instrumentName, InstrumentImportDataFields.CREATED_AT)
-                )
-
-                val instrumentFile = row["rutaArchivo"]?.toString()?.replace("\\data\\", "\\")?.let {
-                    input.databaseDirectory.parent.resolve(it.replace("\\", File.separator)).normalize().toFile()
-                }
-
-                if (instrumentFile == null) {
-                    return@map Either.Left(
+                    instrumentFile == null -> Either.Left(
                         InstrumentImportFieldNotFound(
                             instrumentName,
                             InstrumentImportDataFields.INSTRUMENT_FILE_CONTENT
                         )
                     )
-                }
 
-                if (!instrumentFile.exists()) {
-                    return@map Either.Left(
+                    !instrumentFile.exists() -> Either.Left(
                         InstrumentImportFieldNotFound(
                             instrumentName,
-                            InstrumentImportDataFields.INSTRUMENT_FILE_CONTENT
+                            InstrumentImportDataFields.INSTRUMENT_FILE_LOCATION
+                        )
+                    )
+
+                    else -> Either.Right(
+                        InstrumentImportData(
+                            statisticYear,
+                            statisticMonthNumber,
+                            federalEntityKeyCode,
+                            municipalityKeyCode,
+                            consecutive,
+                            statisticTypeKeyCode,
+                            savedInSireso,
+                            createdAt.toDate(),
+                            FileSystemInstrumentFileContentReader(instrumentFile)
                         )
                     )
                 }
-
-
-                Either.Right(
-                    InstrumentImportData(
-                        statisticYear,
-                        statisticMonthNumber,
-                        federalEntityKeyCode,
-                        municipalityKeyCode,
-                        consecutive,
-                        statisticTypeKeyCode,
-                        savedInSireso,
-                        createdAt.toDate(),
-                        instrumentFile.readBytes()
-                    )
-                )
             }
         }
     }
