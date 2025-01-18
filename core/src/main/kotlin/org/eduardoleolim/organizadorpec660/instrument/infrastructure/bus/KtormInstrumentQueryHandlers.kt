@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Ángel Eduardo Martínez Leo Lim
+ * Copyright (C) 2025 Ángel Eduardo Martínez Leo Lim
  * This file is part of organizador-pec-6-60.
  *
  * This program is free software: you can redistribute it and/or modify
