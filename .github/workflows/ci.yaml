@@ -1,6 +1,32 @@
 name: CI
 
-on: [ push, pull_request ]
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '**/*'
+      - '!README.md'
+      - '!LICENSE.txt'
+      - '!.CHANGELOG.md'
+      - '!.editorconfig'
+      - '!**/.gitattributes'
+      - '!**/.gitignore'
+      - '!.idea/**'
+      - '!.run/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '**/*'
+      - '!README.md'
+      - '!LICENSE.txt'
+      - '!.CHANGELOG.md'
+      - '!.editorconfig'
+      - '!**/.gitattributes'
+      - '!**/.gitignore'
+      - '!.idea/**'
+      - '!.run/**'
 
 jobs:
   test:
