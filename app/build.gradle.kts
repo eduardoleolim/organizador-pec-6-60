@@ -60,7 +60,7 @@ compose.desktop {
         nativeDistributions {
             packageName = if (OperatingSystem.current().isWindows) "OrganizadorPEC660" else "organizador-pec-6-60"
             description = "Organizador de formatos PEC-6-60"
-            copyright = "Copyright © 2024 Angel Eduardo Martinez Leo Lim. All rights reserved."
+            copyright = "Copyright © 2024-2025 Angel Eduardo Martinez Leo Lim. Licensed under the GNU GPL v3."
             vendor = "Angel Eduardo Martinez Leo Lim"
             licenseFile.set(file("../LICENSE.txt"))
 
