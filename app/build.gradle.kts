@@ -43,17 +43,18 @@ compose.resources {
 
 compose.desktop {
     application {
+        val skikoApi = if (OperatingSystem.current().isMacOsX) "METAL" else "OPENGL"
+
         mainClass = "MainKt"
-        jvmArgs("-Dfile.encoding=UTF-8", "-Dapp.name=${rootProject.name}", "-Dapp.version=${rootProject.version}")
+        jvmArgs(
+            "-Dskiko.renderApi=$skikoApi",
+            "-Dfile.encoding=UTF-8",
+            "-Dapp.name=${rootProject.name}",
+            "-Dapp.version=${rootProject.version}"
+        )
 
         if (env != "production") {
             jvmArgs("-Dapp.data.dir=./debug", "-Dapp.logs.dir=./debug/logs", "-Dapp.config.dir=./debug/config")
-        }
-
-        if (OperatingSystem.current().isMacOsX) {
-            jvmArgs("-Dskiko.renderApi=METAL")
-        } else {
-            jvmArgs("-Dskiko.renderApi=OPENGL")
         }
 
         nativeDistributions {
