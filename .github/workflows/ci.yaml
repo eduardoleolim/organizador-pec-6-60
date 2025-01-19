@@ -47,7 +47,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'jetbrains'
-          java-version: 21.0.5
+          java-version: 21.0.4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -131,7 +131,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'jetbrains'
-          java-version: 21.0.5
+          java-version: 21.0.4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -144,7 +144,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: 📦 Package
-        run: ./gradlew packageReleaseDistributionForCurrentOS --stacktrace -Penv=production
+        run: ./gradlew packageReleaseDistributionForCurrentOS -Penv=production
 
       - name: 📁 Upload artifact
         uses: actions/upload-artifact@v4
