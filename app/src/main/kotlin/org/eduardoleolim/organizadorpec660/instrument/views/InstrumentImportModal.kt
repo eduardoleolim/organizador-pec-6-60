@@ -38,6 +38,7 @@ import org.eduardoleolim.organizadorpec660.instrument.domain.InstrumentImportFie
 import org.eduardoleolim.organizadorpec660.instrument.model.InstrumentImportState
 import org.eduardoleolim.organizadorpec660.instrument.model.InstrumentScreenModel
 import org.eduardoleolim.organizadorpec660.shared.composables.ErrorDialog
+import org.eduardoleolim.organizadorpec660.shared.composables.WarningDialog
 import org.eduardoleolim.organizadorpec660.shared.dialogs.Dialogs
 import org.eduardoleolim.organizadorpec660.shared.dialogs.Dialogs.Option
 import org.eduardoleolim.organizadorpec660.shared.resources.*
@@ -63,6 +64,7 @@ fun InstrumentScreen.InstrumentImportModal(
 
     var enable by remember { mutableStateOf(true) }
     var showWarningDialog by remember { mutableStateOf(false) }
+    var showErrorDialog by remember { mutableStateOf(false) }
 
     DisposableEffect(Unit) {
         onDispose {
@@ -74,11 +76,13 @@ fun InstrumentScreen.InstrumentImportModal(
         InstrumentImportState.Idle -> {
             enable = true
             showWarningDialog = false
+            showErrorDialog = false
         }
 
         InstrumentImportState.InProgress -> {
             enable = false
             showWarningDialog = false
+            showErrorDialog = false
         }
 
         is InstrumentImportState.Success -> {
@@ -87,12 +91,14 @@ fun InstrumentScreen.InstrumentImportModal(
             } else {
                 warnings = importState.warnings.mapNotNull { it.message }
                 showWarningDialog = true
+                showErrorDialog = false
             }
         }
 
         is InstrumentImportState.Error -> {
             enable = true
-            showWarningDialog = true
+            showWarningDialog = false
+            showErrorDialog = true
 
             warnings = when (val error = importState.error) {
                 is CanNotImportInstrumentsError -> {
@@ -159,6 +165,7 @@ fun InstrumentScreen.InstrumentImportModal(
                     ) {
                         Row {
                             FilterChip(
+                                enabled = enable,
                                 selected = importType == ImportType.FROM_TEMPLATE,
                                 onClick = { importType = ImportType.FROM_TEMPLATE },
                                 label = { Text(stringResource(Res.string.inst_catalog_import_from_template)) }
@@ -167,6 +174,7 @@ fun InstrumentScreen.InstrumentImportModal(
                             Spacer(Modifier.width(8.dp))
 
                             FilterChip(
+                                enabled = enable,
                                 selected = importType == ImportType.FROM_V1,
                                 onClick = { importType = ImportType.FROM_V1 },
                                 label = { Text(stringResource(Res.string.inst_catalog_import_from_v1)) }
@@ -198,49 +206,63 @@ fun InstrumentScreen.InstrumentImportModal(
         }
     )
 
-    if (showWarningDialog) {
+    if (showErrorDialog || showWarningDialog) {
         val lazyListState = rememberLazyListState()
         val scrollState = rememberScrollbarAdapter(lazyListState)
-
-        ErrorDialog(
-            modifier = Modifier.widthIn(max = 500.dp).heightIn(max = 500.dp),
-            text = {
-                Box(
-                    modifier = Modifier.fillMaxSize()
+        val dialogModifier = Modifier.widthIn(max = 500.dp).heightIn(max = 500.dp)
+        val onDialogConfirmRequest = {
+            if (screenModel.importState is InstrumentImportState.Success) {
+                onSuccessImport()
+            } else {
+                screenModel.resetImportModal()
+            }
+        }
+        val onDialogDimissRequest = {
+            if (screenModel.importState is InstrumentImportState.Success) {
+                onSuccessImport()
+            } else {
+                screenModel.resetImportModal()
+            }
+        }
+        val dialogContent: @Composable () -> Unit = {
+            Box(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                LazyColumn(
+                    modifier = Modifier.padding(end = if (scrollState.maxScrollOffset > 0) 8.dp else 0.dp),
+                    state = lazyListState
                 ) {
-                    LazyColumn(
-                        modifier = Modifier.padding(end = if (scrollState.maxScrollOffset > 0) 8.dp else 0.dp),
-                        state = lazyListState
-                    ) {
-                        items(warnings) { warning ->
-                            Text(
-                                text = warning,
-                                modifier = Modifier.padding(8.dp)
-                            )
-                        }
+                    items(warnings) { warning ->
+                        Text(
+                            text = warning,
+                            modifier = Modifier.padding(8.dp)
+                        )
                     }
+                }
 
-                    VerticalScrollbar(
-                        adapter = scrollState,
-                        modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight()
-                    )
-                }
-            },
-            onConfirmRequest = {
-                if (screenModel.importState is InstrumentImportState.Success) {
-                    onSuccessImport()
-                } else {
-                    screenModel.resetImportModal()
-                }
-            },
-            onDismissRequest = {
-                if (screenModel.importState is InstrumentImportState.Success) {
-                    onSuccessImport()
-                } else {
-                    screenModel.resetImportModal()
-                }
-            },
-        )
+                VerticalScrollbar(
+                    adapter = scrollState,
+                    modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight()
+                )
+            }
+        }
+
+
+        if (showErrorDialog) {
+            ErrorDialog(
+                modifier = dialogModifier,
+                text = dialogContent,
+                onConfirmRequest = onDialogConfirmRequest,
+                onDismissRequest = onDialogDimissRequest
+            )
+        } else {
+            WarningDialog(
+                modifier = dialogModifier,
+                text = dialogContent,
+                onConfirmRequest = onDialogConfirmRequest,
+                onDismissRequest = onDialogDimissRequest
+            )
+        }
     }
 }
 
@@ -354,6 +376,7 @@ private fun ImportFromV1ContentDialog(
     onDismissRequest: () -> Unit
 ) {
     var selectedImportFile by remember { mutableStateOf<File?>(null) }
+    var overrideInstruments by remember { mutableStateOf(false) }
     val fileChooserAccdbExtensionDescription = stringResource(Res.string.inst_catalog_import_select_chooser_accdb)
     val fileChooser = remember {
         JFileChooser().apply {
@@ -365,6 +388,20 @@ private fun ImportFromV1ContentDialog(
     Text(stringResource(Res.string.inst_catalog_import_content_accdb))
 
     Spacer(Modifier.height(16.dp))
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Checkbox(
+            enabled = enable,
+            checked = overrideInstruments,
+            onCheckedChange = { overrideInstruments = it }
+        )
+
+        Text(stringResource(Res.string.inst_catalog_import_replace))
+    }
+
+    Spacer(Modifier.height(8.dp))
 
     Row(
         verticalAlignment = Alignment.CenterVertically
@@ -404,7 +441,7 @@ private fun ImportFromV1ContentDialog(
         TextButton(
             enabled = enable && selectedImportFile != null,
             onClick = {
-                screenModel.importInstrumentsFromV1(selectedImportFile!!)
+                screenModel.importInstrumentsFromV1(selectedImportFile!!, overrideInstruments)
             }
         ) {
             Text(stringResource(Res.string.inst_catalog_import))

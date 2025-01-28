@@ -96,6 +96,7 @@
     <string name="inst_catalog_import_select_chooser_accdb">Base de datos de Access (*.accdb)</string>
     <string name="inst_catalog_import_from_template">Template</string>
     <string name="inst_catalog_import_from_v1">Version 1.0</string>
+    <string name="inst_catalog_import_replace">Replace registered instruments?</string>
     <string name="inst_catalog_import_missing_field_error_message">The instrument %1$s has a missing field: %2$s.</string>
     <string name="inst_catalog_import_default_error_message">An error occurred while trying to import the instruments.</string>
 

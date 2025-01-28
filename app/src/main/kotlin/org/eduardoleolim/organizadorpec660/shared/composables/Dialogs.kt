@@ -21,6 +21,7 @@ package org.eduardoleolim.organizadorpec660.shared.composables
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -30,6 +31,45 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.eduardoleolim.organizadorpec660.shared.resources.*
 import org.jetbrains.compose.resources.stringResource
+
+@Composable
+fun WarningDialog(
+    modifier: Modifier = Modifier,
+    title: @Composable () -> Unit = {
+        Text(stringResource(Res.string.dialog_error_title))
+    },
+    text: @Composable () -> Unit,
+    onDismissRequest: () -> Unit,
+    onConfirmRequest: () -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        modifier = modifier,
+        icon = {
+            Icon(
+                imageVector = Icons.Default.Warning,
+                contentDescription = "Warning",
+                modifier = Modifier.width(32.dp)
+            )
+        },
+        title = title,
+        text = text,
+        confirmButton = {
+            TextButton(
+                onClick = onConfirmRequest
+            ) {
+                Text(stringResource(Res.string.accept))
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = onDismissRequest
+            ) {
+                Text(stringResource(Res.string.cancel))
+            }
+        }
+    )
+}
 
 @Composable
 fun ErrorDialog(
