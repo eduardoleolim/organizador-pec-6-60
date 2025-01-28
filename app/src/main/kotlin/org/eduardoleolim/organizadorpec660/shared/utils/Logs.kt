@@ -39,3 +39,21 @@ fun generateErrorsLog(scope: String = "", error: Throwable) {
         writeText(error.stackTraceToString())
     }
 }
+
+fun generateErrorsLog(scope: String = "", errors: List<Throwable>) {
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss")
+    val formattedDateTime = LocalDateTime.now().format(formatter)
+
+    val logFileName = buildString {
+        append("error_log")
+        if (scope.isNotBlank()) {
+            append("_${scope.lowercase()}")
+        }
+        append("_$formattedDateTime.log")
+    }
+
+    File(AppConfig.logsDirectory).resolve(logFileName).apply {
+        parentFile.mkdirs()
+        errors.forEach { writeText(it.stackTraceToString()) }
+    }
+}

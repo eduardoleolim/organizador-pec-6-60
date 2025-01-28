@@ -54,6 +54,7 @@ import org.eduardoleolim.organizadorpec660.shared.resources.Res
 import org.eduardoleolim.organizadorpec660.shared.resources.inst_copy_notification_message
 import org.eduardoleolim.organizadorpec660.shared.resources.inst_copy_notification_title
 import org.eduardoleolim.organizadorpec660.shared.router.HomeProvider
+import org.eduardoleolim.organizadorpec660.shared.utils.generateErrorsLog
 import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypeResponse
 import org.eduardoleolim.organizadorpec660.statisticType.application.searchByTerm.SearchStatisticTypesByTermQuery
 import org.jetbrains.compose.resources.getString
@@ -331,10 +332,10 @@ class InstrumentScreenModel(
 
     }
 
-    fun importInstrumentsFromV1(file: File) {
+    fun importInstrumentsFromV1(file: File, override: Boolean) {
         screenModelScope.launch(dispatcher) {
             val input = V1AccdbInstrumentImportInput(file.toPath())
-            val command = ImportInstrumentsFromV1Command(input, true)
+            val command = ImportInstrumentsFromV1Command(input, override)
 
             importState = InstrumentImportState.InProgress
             delay(500)
@@ -342,10 +343,16 @@ class InstrumentScreenModel(
             importState = commandBus.dispatch(command)
                 .fold(
                     ifRight = { warnings ->
-                        InstrumentImportState.Success(warnings.map { it.error })
+                        val errors = warnings.map { it.error }.also {
+                            if (it.isNotEmpty()) {
+                                generateErrorsLog("instruments", it)
+                            }
+                        }
+                        InstrumentImportState.Success(errors)
                     },
-                    ifLeft = {
-                        InstrumentImportState.Error(it)
+                    ifLeft = { error ->
+                        generateErrorsLog("instruments", error)
+                        InstrumentImportState.Error(error)
                     }
                 )
         }
