@@ -1,3 +1,43 @@
+## [2.3.1](https://github.com/eduardoleolim/organizador-pec-6-60/compare/v2.3.0...v2.3.1) (2025-01-19)
+
+### Bug Fixes
+
+* **instrument:** read instrument file content only during
+  registration ([1f92c81](https://github.com/eduardoleolim/organizador-pec-6-60/commit/1f92c810394a6984328cf44756ccc87d774f6cdf))
+
+## [2.3.0](https://github.com/eduardoleolim/organizador-pec-6-60/compare/v2.2.1...v2.3.0) (2024-11-12)
+
+### Features
+
+* allow showing notification badge in navigation
+  drawer ([e9c1492](https://github.com/eduardoleolim/organizador-pec-6-60/commit/e9c14929ce8f56bc9a248dc51358b64838e61958))
+* **datatable:** implement horizontal
+  scrolling ([200d09d](https://github.com/eduardoleolim/organizador-pec-6-60/commit/200d09db9196ef7878cc5f1101e64a3c72d6b37e))
+* **home:** allow notification badge in sidebar
+  items ([f206073](https://github.com/eduardoleolim/organizador-pec-6-60/commit/f206073d5b230f6b497935b2382a8949b906fef7))
+* **instrument:** add error used in saving operations when federal entity does not
+  exist ([3fa14dd](https://github.com/eduardoleolim/organizador-pec-6-60/commit/3fa14dd7ba9d3c4f3dd530d7f365551805ad5867))
+* **instrument:** add import/export selector
+  composable ([93ec260](https://github.com/eduardoleolim/organizador-pec-6-60/commit/93ec260785a3b84c66564e589fed4ead5b70249d))
+* **instrument:** add warnings property in
+  CanNotImportInstrumentsError ([a9acb70](https://github.com/eduardoleolim/organizador-pec-6-60/commit/a9acb70b1b28154b92828d888eee95320ea717dd))
+* **instrument:** format error messages with compose
+  resources ([c1b0fae](https://github.com/eduardoleolim/organizador-pec-6-60/commit/c1b0fae6ccd1066e79941151936ddfb382579369))
+* **instrument:** implement command for importing records from
+  v1 ([a28343e](https://github.com/eduardoleolim/organizador-pec-6-60/commit/a28343e31f9e468c55b6a6da067dbf97a0679b4d))
+* **instrument:** implement modal for importing from version
+  1.0 ([2250baa](https://github.com/eduardoleolim/organizador-pec-6-60/commit/2250baaba8c00e16eb549b4baa84fdac4d6b4ba3))
+* **window:** show "Untitled" as default
+  title ([360ed3b](https://github.com/eduardoleolim/organizador-pec-6-60/commit/360ed3b8c76166fdec1901b196279c00035bb2e6))
+
+### Bug Fixes
+
+* **datatable:** reset scroll if scrollbar is not
+  visible ([6a3fd24](https://github.com/eduardoleolim/organizador-pec-6-60/commit/6a3fd24514161275c6532624cd6a5a50696a1512))
+* **datatable:** set max width of searching
+  textfield ([b698345](https://github.com/eduardoleolim/organizador-pec-6-60/commit/b698345bba816ea663c79785ae93ed749961c232))
+* **federal-entity:** create record just if it does no exist in importing
+  operation ([d16291b](https://github.com/eduardoleolim/organizador-pec-6-60/commit/d16291b14992eb99e63be8b0cb4c392db1de87c5))
 ## [2.2.1](https://github.com/eduardoleolim/organizador-pec-6-60/compare/v2.2.0...v2.2.1) (2024-09-27)
 
 ### Bug Fixes
