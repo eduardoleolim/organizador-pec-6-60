@@ -52,7 +52,7 @@ class AccdbInstrumentImportReader : InstrumentImportReader<AccdbInstrumentImport
             val municipalityTable = db.getTable("Municipio") ?: error("Table Municipio not found")
 
             val federalEntityKeyCodes = municipalityTable.map { row ->
-                Pair(row["folio"]?.toString() ?: "", row["folioEntidad"]?.toString() ?: "")
+                Pair(row["folio"]?.toString()?.padStart(3, '0') ?: "", row["folioEntidad"]?.toString() ?: "")
             }
 
             instrumentsTable.map { row ->
