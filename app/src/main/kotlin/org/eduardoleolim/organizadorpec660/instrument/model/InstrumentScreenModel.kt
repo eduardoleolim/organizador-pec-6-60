@@ -44,6 +44,7 @@ import org.eduardoleolim.organizadorpec660.instrument.application.save.UpdateIns
 import org.eduardoleolim.organizadorpec660.instrument.application.save.UpdateInstrumentAsSavedCommand
 import org.eduardoleolim.organizadorpec660.instrument.application.searchById.SearchInstrumentByIdQuery
 import org.eduardoleolim.organizadorpec660.instrument.application.searchByTerm.SearchInstrumentsByTermQuery
+import org.eduardoleolim.organizadorpec660.instrument.domain.CanNotImportInstrumentsError
 import org.eduardoleolim.organizadorpec660.instrument.infrastructure.services.V1AccdbInstrumentImportInput
 import org.eduardoleolim.organizadorpec660.municipality.application.MunicipalityResponse
 import org.eduardoleolim.organizadorpec660.municipality.application.searchByTerm.SearchMunicipalitiesByTermQuery
@@ -351,7 +352,16 @@ class InstrumentScreenModel(
                         InstrumentImportState.Success(errors)
                     },
                     ifLeft = { error ->
-                        generateErrorsLog("instruments", error)
+                        when (error) {
+                            is CanNotImportInstrumentsError -> {
+                                val errors = error.warnings.map { it.error }
+                                generateErrorsLog("instruments", errors)
+                            }
+
+                            else -> generateErrorsLog("instruments", error)
+                        }
+
+
                         InstrumentImportState.Error(error)
                     }
                 )
