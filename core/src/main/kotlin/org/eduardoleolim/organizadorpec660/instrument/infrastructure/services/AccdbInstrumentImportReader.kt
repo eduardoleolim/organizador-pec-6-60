@@ -62,9 +62,10 @@ class AccdbInstrumentImportReader : InstrumentImportReader<AccdbInstrumentImport
                 val consecutive = row.getString("consecutivo")?.padStart(4, '0')
                 val statisticMonth = row.getString("mesEstadistico")
                 val statisticMonthNumber = getMonthNumber(statisticMonth, Locale.of("es"))
-                val municipalityKeyCode = row["folioMunicipio"]?.toString()
-                val federalEntityKeyCode = federalEntityKeyCodes.firstOrNull { it.first == municipalityKeyCode }?.second
-                val statisticTypeKeyCode = row["folioTipoEstadistica"]?.toString()
+                val municipalityKeyCode = row["folioMunicipio"]?.toString()?.padStart(3, '0')
+                val federalEntityKeyCode =
+                    federalEntityKeyCodes.firstOrNull { it.first == municipalityKeyCode }?.second?.padStart(2, '0')
+                val statisticTypeKeyCode = row["folioTipoEstadistica"]?.toString()?.padStart(3, '0')
                 val createdAt = row["fechaRegistro"] as? LocalDateTime
                 val instrumentFile = row["rutaArchivo"]?.toString()?.replace("\\data\\", "\\")?.let {
                     input.databaseDirectory.parent.resolve(it.replace("\\", File.separator)).normalize().toFile()
