@@ -84,6 +84,7 @@ object InstrumentCriteria {
     )
 
     fun searchCriteria(
+        savedInSIRESO: Boolean?,
         agencyId: String? = null,
         statisticTypeId: String? = null,
         federalEntityId: String? = null,
@@ -97,6 +98,8 @@ object InstrumentCriteria {
     ) = Criteria(
         AndFilters(
             AndFilters(
+                savedInSIRESO?.let { SingleFilter.equal(InstrumentFields.Saved.value, true.toString()) }
+                    ?: EmptyFilters(),
                 agencyId?.let { SingleFilter.equal(InstrumentFields.AgencyId.value, it) } ?: EmptyFilters(),
                 statisticTypeId?.let { SingleFilter.equal(InstrumentFields.StatisticTypeId.value, it) }
                     ?: EmptyFilters(),

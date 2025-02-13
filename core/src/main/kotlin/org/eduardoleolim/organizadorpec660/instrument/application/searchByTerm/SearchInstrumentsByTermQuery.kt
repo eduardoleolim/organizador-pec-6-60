@@ -23,6 +23,7 @@ import org.eduardoleolim.organizadorpec660.instrument.domain.InstrumentError
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.Query
 
 class SearchInstrumentsByTermQuery(
+    private val savedInSIRESO: Boolean? = null,
     federalEntityId: String? = null,
     municipalityId: String? = null,
     agencyId: String? = null,
@@ -39,6 +40,10 @@ class SearchInstrumentsByTermQuery(
     private val agencyId = agencyId?.trim()
     private val statisticTypeId = statisticTypeId?.trim()
     private val search = search?.trim()?.uppercase()
+
+    fun savedInSIRESO(): Boolean? {
+        return savedInSIRESO
+    }
 
     fun federalEntityId(): String? {
         return federalEntityId

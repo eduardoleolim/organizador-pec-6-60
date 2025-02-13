@@ -52,6 +52,7 @@ class SearchInstrumentsByTermQueryHandler(
 
     override fun handle(query: SearchInstrumentsByTermQuery): Either<InstrumentError, InstrumentsResponse> {
         val instruments = searchInstruments(
+            query.savedInSIRESO(),
             query.agencyId(),
             query.statisticTypeId(),
             query.federalEntityId(),
@@ -64,6 +65,7 @@ class SearchInstrumentsByTermQueryHandler(
             query.offset()
         )
         val totalInstruments = countTotalInstruments(
+            query.savedInSIRESO(),
             query.agencyId(),
             query.statisticTypeId(),
             query.federalEntityId(),
@@ -106,6 +108,7 @@ class SearchInstrumentsByTermQueryHandler(
     }
 
     private fun searchInstruments(
+        savedInSIRESO: Boolean?,
         agencyId: String?,
         statisticTypeId: String?,
         federalEntityId: String?,
@@ -117,6 +120,7 @@ class SearchInstrumentsByTermQueryHandler(
         limit: Int?,
         offset: Int?
     ) = InstrumentCriteria.searchCriteria(
+        savedInSIRESO = savedInSIRESO,
         agencyId = agencyId,
         statisticTypeId = statisticTypeId,
         federalEntityId = federalEntityId,
@@ -132,6 +136,7 @@ class SearchInstrumentsByTermQueryHandler(
     }
 
     private fun countTotalInstruments(
+        savedInSIRESO: Boolean?,
         agencyId: String?,
         statisticTypeId: String?,
         federalEntityId: String?,
@@ -140,6 +145,7 @@ class SearchInstrumentsByTermQueryHandler(
         month: Int?,
         search: String?
     ) = InstrumentCriteria.searchCriteria(
+        savedInSIRESO = savedInSIRESO,
         agencyId = agencyId,
         statisticTypeId = statisticTypeId,
         federalEntityId = federalEntityId,
