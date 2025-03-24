@@ -23,11 +23,6 @@ dependencies {
     implementation(compose.material3)
     implementation(libs.material3.windowSizeClass)
     implementation(libs.kotlinx.coroutines.swing)
-    // implementation("org.jetbrains.androidx.navigation:navigation-compose:2.8.0-alpha10")
-    // implementation("org.jetbrains.compose.material3.adaptive:adaptive:1.0.0-alpha03")
-    // implementation("org.jetbrains.compose.material3.adaptive:adaptive-layout:1.0.0-alpha03")
-    // implementation("org.jetbrains.compose.material3.adaptive:adaptive-navigation:1.0.0-alpha03")
-    // implementation("org.jetbrains.compose.material3:material3-adaptive-navigation-suite:1.7.0-beta02")
     implementation(libs.material3.datatable)
     implementation(libs.voyager.navigator)
     implementation(libs.voyager.screenmodel)
@@ -44,12 +39,14 @@ compose.resources {
 compose.desktop {
     application {
         val skikoApi = if (OperatingSystem.current().isMacOsX) "METAL" else "OPENGL"
+        val applicationName =
+            if (OperatingSystem.current().isWindows) "Organizador PEC-6-60" else "organizador-pec-6-60"
 
         mainClass = "MainKt"
         jvmArgs(
             "-Dskiko.renderApi=$skikoApi",
             "-Dfile.encoding=UTF-8",
-            "-Dapp.name=${rootProject.name}",
+            "-Dapp.name=${applicationName}",
             "-Dapp.version=${rootProject.version}"
         )
 
@@ -58,7 +55,7 @@ compose.desktop {
         }
 
         nativeDistributions {
-            packageName = if (OperatingSystem.current().isWindows) "Organizador PEC-6-60" else "organizador-pec-6-60"
+            packageName = applicationName
             description = "Organizador de formatos PEC-6-60"
             copyright = "Copyright © 2024-2025 Angel Eduardo Martinez Leo Lim. Licensed under the GNU GPL v3."
             vendor = "Angel Eduardo Martinez Leo Lim"
