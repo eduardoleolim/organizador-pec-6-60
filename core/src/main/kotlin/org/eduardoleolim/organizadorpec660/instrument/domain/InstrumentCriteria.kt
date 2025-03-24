@@ -98,7 +98,7 @@ object InstrumentCriteria {
     ) = Criteria(
         AndFilters(
             AndFilters(
-                savedInSIRESO?.let { SingleFilter.equal(InstrumentFields.Saved.value, true.toString()) }
+                savedInSIRESO?.let { SingleFilter.equal(InstrumentFields.Saved.value, it.toString()) }
                     ?: EmptyFilters(),
                 agencyId?.let { SingleFilter.equal(InstrumentFields.AgencyId.value, it) } ?: EmptyFilters(),
                 statisticTypeId?.let { SingleFilter.equal(InstrumentFields.StatisticTypeId.value, it) }
