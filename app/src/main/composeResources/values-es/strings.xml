@@ -56,6 +56,9 @@
     <string name="inst_created_at">Fecha de registro</string>
     <string name="inst_document">Documento</string>
     <string name="inst_document_content">Contenido de documento</string>
+    <string name="inst_select_all_saved">Todos los estatus</string>
+    <string name="inst_select_saved">Guardado en SIRESO</string>
+    <string name="inst_select_not_saved">No guardado en SIRESO</string>
     <string name="inst_select_all_years">Todos los años</string>
     <string name="inst_select_all_months">Todos los meses</string>
     <string name="inst_select_all_statistic_types">Todos los tipos de estadística</string>

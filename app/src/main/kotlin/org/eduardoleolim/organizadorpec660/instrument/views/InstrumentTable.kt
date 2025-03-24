@@ -20,15 +20,16 @@ package org.eduardoleolim.organizadorpec660.instrument.views
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -49,11 +50,14 @@ import org.eduardoleolim.organizadorpec660.shared.resources.*
 import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypeResponse
 import org.jetbrains.compose.resources.stringResource
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalLayoutApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun InstrumentScreen.InstrumentsTable(
     value: String,
     onValueChange: (String) -> Unit,
+    savedSiresoStatus: Pair<Boolean, String>?,
+    savedSiresoStatuses: List<Pair<Boolean, String>>,
+    onSavedSiresoStatusSelected: (Pair<Boolean, String>?) -> Unit,
     statisticYears: List<Int>,
     statisticYear: Int?,
     onStatisticYearSelected: (Int?) -> Unit,
@@ -83,6 +87,8 @@ fun InstrumentScreen.InstrumentsTable(
     onChangeSiresoStatusRequest: (InstrumentResponse, Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val windowInfo = LocalWindowInfo.current
+    val windowSize = windowInfo.containerSize
     val siresoColumnName = stringResource(Res.string.inst_in_sireso)
     val yearColumnName = stringResource(Res.string.inst_year)
     val monthColumnName = stringResource(Res.string.inst_month)
@@ -186,59 +192,93 @@ fun InstrumentScreen.InstrumentsTable(
                 onSearch(search, pageIndex, pageSize, orderBy, isAscending)
             },
             header = {
-                SelectStatisticYear(
-                    statisticYears = statisticYears,
-                    statisticYear = statisticYear,
-                    onStatisticYearSelected = {
-                        state.pageIndex = 0
-                        onStatisticYearSelected(it)
-                    }
-                )
+                var showFiltersMenu by remember { mutableStateOf(false) }
+                val dropdownMenuWidth = windowSize.width * 0.6
 
-                SelectStatisticMonth(
-                    statisticMonth = statisticMonth,
-                    statisticMonths = statisticMonths,
-                    onStatisticMonthSelected = {
-                        state.pageIndex = 0
-                        onStatisticMonthSelected(it)
+                Box {
+                    IconButton(
+                        onClick = { showFiltersMenu = true },
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                            .padding(16.dp)
+                    ) {
+                        Icon(Icons.Default.MoreVert, contentDescription = "Filter")
                     }
-                )
 
-                SelectStatisticType(
-                    statisticType = statisticType,
-                    statisticTypes = statisticTypes,
-                    onStatisticTypeSelected = {
-                        state.pageIndex = 0
-                        onStatisticTypeSelected(it)
-                    }
-                )
+                    DropdownMenu(
+                        expanded = showFiltersMenu,
+                        onDismissRequest = { showFiltersMenu = false },
+                        shape = RoundedCornerShape(8.dp),
+                        modifier = Modifier.widthIn(max = dropdownMenuWidth.dp)
+                    ) {
+                        FlowRow(
+                            modifier = Modifier.padding(16.dp)
+                        ) {
+                            SelectSavedStatus(
+                                savedSiresoStatuses = savedSiresoStatuses,
+                                savedSiresoStatus = savedSiresoStatus,
+                                onSavedSiresoStatusSelected = {
+                                    state.pageIndex = 0
+                                    onSavedSiresoStatusSelected(it)
+                                }
+                            )
 
-                SelectFederalEntity(
-                    federalEntities = federalEntities,
-                    federalEntity = federalEntity,
-                    onFederalEntitySelected = {
-                        state.pageIndex = 0
-                        onFederalEntitySelected(it)
-                    }
-                )
+                            SelectStatisticYear(
+                                statisticYears = statisticYears,
+                                statisticYear = statisticYear,
+                                onStatisticYearSelected = {
+                                    state.pageIndex = 0
+                                    onStatisticYearSelected(it)
+                                }
+                            )
 
-                SelectMunicipality(
-                    municipalities = municipalities,
-                    municipality = municipality,
-                    onMunicipalitySelected = {
-                        state.pageIndex = 0
-                        onMunicipalitySelected(it)
-                    }
-                )
+                            SelectStatisticMonth(
+                                statisticMonth = statisticMonth,
+                                statisticMonths = statisticMonths,
+                                onStatisticMonthSelected = {
+                                    state.pageIndex = 0
+                                    onStatisticMonthSelected(it)
+                                }
+                            )
 
-                SelectAgency(
-                    agencies = agencies,
-                    agency = agency,
-                    onAgencySelected = {
-                        state.pageIndex = 0
-                        onAgencySelected(it)
+                            SelectStatisticType(
+                                statisticType = statisticType,
+                                statisticTypes = statisticTypes,
+                                onStatisticTypeSelected = {
+                                    state.pageIndex = 0
+                                    onStatisticTypeSelected(it)
+                                }
+                            )
+
+                            SelectFederalEntity(
+                                federalEntities = federalEntities,
+                                federalEntity = federalEntity,
+                                onFederalEntitySelected = {
+                                    state.pageIndex = 0
+                                    onFederalEntitySelected(it)
+                                }
+                            )
+
+                            SelectMunicipality(
+                                municipalities = municipalities,
+                                municipality = municipality,
+                                onMunicipalitySelected = {
+                                    state.pageIndex = 0
+                                    onMunicipalitySelected(it)
+                                }
+                            )
+
+                            SelectAgency(
+                                agencies = agencies,
+                                agency = agency,
+                                onAgencySelected = {
+                                    state.pageIndex = 0
+                                    onAgencySelected(it)
+                                }
+                            )
+                        }
                     }
-                )
+                }
             }
         ) {
             data.instruments.forEach { instrument ->
@@ -358,6 +398,68 @@ fun InstrumentScreen.InstrumentsTable(
         }
     }
 }
+
+@Composable
+private fun SelectSavedStatus(
+    savedSiresoStatuses: List<Pair<Boolean, String>>,
+    savedSiresoStatus: Pair<Boolean, String>?,
+    onSavedSiresoStatusSelected: (Pair<Boolean, String>?) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Box {
+        TextButton(
+            onClick = { expanded = true },
+        ) {
+            Text(
+                text = savedSiresoStatus?.second ?: stringResource(Res.string.inst_select_all_saved),
+                fontWeight = FontWeight.Normal,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            Icon(
+                imageVector = if (expanded) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
+                contentDescription = "Expand"
+            )
+        }
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier
+                .heightIn(0.dp, 300.dp)
+                .background(MaterialTheme.colorScheme.surface)
+        ) {
+            DropdownMenuItem(
+                text = {
+                    Text(
+                        text = stringResource(Res.string.inst_select_all_saved),
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                },
+                onClick = {
+                    expanded = false
+                    onSavedSiresoStatusSelected(null)
+                }
+            )
+
+            savedSiresoStatuses.forEach { status ->
+                DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = status.second,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    },
+                    onClick = {
+                        expanded = false
+                        onSavedSiresoStatusSelected(status)
+                    }
+                )
+            }
+        }
+    }
+}
+
 
 @Composable
 private fun SelectStatisticYear(

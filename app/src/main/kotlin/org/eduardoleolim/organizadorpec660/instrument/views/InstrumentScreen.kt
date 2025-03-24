@@ -55,6 +55,7 @@ class InstrumentScreen(
         val screenModel = rememberScreenModel {
             InstrumentScreenModel(navigator, trayState, queryBus, commandBus, tempDirectory, Dispatchers.IO)
         }
+        val siresoStatuses = screenModel.siresoStatuses
         val instruments = screenModel.instruments
         val statisticTypes = screenModel.statisticTypes
         val federalEntities = screenModel.federalEntities
@@ -62,6 +63,7 @@ class InstrumentScreen(
         val agencies = screenModel.agencies
         val searchParameters by screenModel.searchParameters.collectAsState()
         val search = searchParameters.search
+        val savedSiresoStatusFilter = searchParameters.savedInSIRESO
         val statisticYearFilter = searchParameters.statisticYear
         val statisticMonthFilter = searchParameters.statisticMonth
         val statisticTypeFilter = searchParameters.statisticType
@@ -102,6 +104,9 @@ class InstrumentScreen(
                 data = instruments,
                 value = search,
                 onValueChange = { screenModel.searchInstruments(search = it) },
+                savedSiresoStatuses = siresoStatuses,
+                savedSiresoStatus = savedSiresoStatusFilter,
+                onSavedSiresoStatusSelected = { screenModel.searchInstruments(savedInSIRESO = it) },
                 statisticYears = statisticYears,
                 statisticYear = statisticYearFilter,
                 onStatisticYearSelected = { screenModel.searchInstruments(statisticYear = it) },

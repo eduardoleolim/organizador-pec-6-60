@@ -29,10 +29,7 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import cafe.adriel.voyager.core.registry.ScreenRegistry
 import cafe.adriel.voyager.navigator.Navigator
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.*
 import org.eduardoleolim.organizadorpec660.agency.application.AgencyResponse
 import org.eduardoleolim.organizadorpec660.agency.application.searchByMunicipalityId.SearchAgenciesByMunicipalityIdQuery
 import org.eduardoleolim.organizadorpec660.federalEntity.application.FederalEntityResponse
@@ -51,9 +48,7 @@ import org.eduardoleolim.organizadorpec660.municipality.application.searchByTerm
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.command.CommandBus
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryBus
 import org.eduardoleolim.organizadorpec660.shared.domain.bus.query.QueryNotRegisteredError
-import org.eduardoleolim.organizadorpec660.shared.resources.Res
-import org.eduardoleolim.organizadorpec660.shared.resources.inst_copy_notification_message
-import org.eduardoleolim.organizadorpec660.shared.resources.inst_copy_notification_title
+import org.eduardoleolim.organizadorpec660.shared.resources.*
 import org.eduardoleolim.organizadorpec660.shared.router.HomeProvider
 import org.eduardoleolim.organizadorpec660.shared.utils.generateErrorsLog
 import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTypeResponse
@@ -110,8 +105,15 @@ class InstrumentScreenModel(
     var importState by mutableStateOf<InstrumentImportState>(InstrumentImportState.Idle)
         private set
 
+    val siresoStatuses: MutableList<Pair<Boolean, String>> = mutableListOf()
+
     init {
         screenModelScope.launch(dispatcher) {
+            siresoStatuses.apply {
+                add(0, Pair(true, getString(Res.string.inst_select_saved)))
+                add(1, Pair(false, getString(Res.string.inst_select_not_saved)))
+            }
+
             _searchParameters
                 .debounce(500)
                 .collectLatest {
@@ -125,7 +127,7 @@ class InstrumentScreenModel(
             screenState = InstrumentScreenState()
             val limit = screenState.tableState.pageSize
             val offset = screenState.tableState.pageIndex * limit
-            _searchParameters.value = InstrumentSearchParameters(limit = limit, offset = offset)
+            _searchParameters.update { InstrumentSearchParameters(limit = limit, offset = offset) }
             fetchInstruments(_searchParameters.value)
             fetchAllFederalEntities()
             fetchAllStatisticTypes()
@@ -235,6 +237,7 @@ class InstrumentScreenModel(
 
     fun searchInstruments(
         search: String = searchParameters.value.search,
+        savedInSIRESO: Pair<Boolean, String>? = searchParameters.value.savedInSIRESO,
         federalEntity: FederalEntityResponse? = searchParameters.value.federalEntity,
         municipality: MunicipalityResponse? = searchParameters.value.municipality,
         agency: AgencyResponse? = searchParameters.value.agency,
@@ -245,25 +248,29 @@ class InstrumentScreenModel(
         limit: Int? = searchParameters.value.limit,
         offset: Int? = searchParameters.value.offset,
     ) {
-        _searchParameters.value = InstrumentSearchParameters(
-            search,
-            statisticYear,
-            statisticMonth,
-            statisticType,
-            federalEntity,
-            municipality,
-            agency,
-            orders,
-            limit,
-            offset
-        )
+        _searchParameters.update {
+            InstrumentSearchParameters(
+                search,
+                savedInSIRESO,
+                statisticYear,
+                statisticMonth,
+                statisticType,
+                federalEntity,
+                municipality,
+                agency,
+                orders,
+                limit,
+                offset
+            )
+        }
     }
 
     private suspend fun fetchInstruments(parameters: InstrumentSearchParameters) {
         withContext(dispatcher) {
-            val (search, statisticYear, statisticMonth, statisticType, federalEntity, municipality, agency, orders, limit, offset) = parameters
+            val (search, savedInSIRESO, statisticYear, statisticMonth, statisticType, federalEntity, municipality, agency, orders, limit, offset) = parameters
             instruments = try {
                 val query = SearchInstrumentsByTermQuery(
+                    savedInSIRESO?.first,
                     federalEntity?.id,
                     municipality?.id,
                     agency?.id,

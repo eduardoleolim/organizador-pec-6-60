@@ -25,6 +25,7 @@ import org.eduardoleolim.organizadorpec660.statisticType.application.StatisticTy
 
 data class InstrumentSearchParameters(
     val search: String = "",
+    val savedInSIRESO: Pair<Boolean, String>? = null,
     val statisticYear: Int? = null,
     val statisticMonth: Pair<Int, String>? = null,
     val statisticType: StatisticTypeResponse? = null,

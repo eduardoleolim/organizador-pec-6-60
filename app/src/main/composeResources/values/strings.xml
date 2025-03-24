@@ -56,6 +56,9 @@
     <string name="inst_created_at">Created at</string>
     <string name="inst_document">Document</string>
     <string name="inst_document_content">Document's content</string>
+    <string name="inst_select_all_saved">All status</string>
+    <string name="inst_select_saved">Saved in SIRESO</string>
+    <string name="inst_select_not_saved">Not saved in SIRESO</string>
     <string name="inst_select_all_years">All years</string>
     <string name="inst_select_all_months">All months</string>
     <string name="inst_select_all_statistic_types">All statistic types</string>
