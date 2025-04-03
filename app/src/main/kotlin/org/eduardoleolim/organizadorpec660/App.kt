@@ -20,21 +20,24 @@ package org.eduardoleolim.organizadorpec660
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Contrast
-import androidx.compose.material.icons.filled.DarkMode
-import androidx.compose.material.icons.filled.LightMode
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -136,6 +139,11 @@ class App(
                 icon = icon
             ) {
                 val density = LocalDensity.current
+                var isPasswordVisible by remember { mutableStateOf(false) }
+                val visualTransformation =
+                    if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation()
+                val trailingIcon = if (isPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+
                 LaunchedEffect(Unit) {
                     window.apply {
                         isResizable = false
@@ -209,6 +217,17 @@ class App(
                             singleLine = true,
                             label = {
                                 Text(stringResource(Res.string.password))
+                            },
+                            visualTransformation = visualTransformation,
+                            trailingIcon = {
+                                IconButton(
+                                    onClick = { isPasswordVisible = !isPasswordVisible },
+                                    modifier = Modifier
+                                        .focusable(false)
+                                        .pointerHoverIcon(PointerIcon.Default)
+                                ) {
+                                    Icon(imageVector = trailingIcon, contentDescription = "Password visibility")
+                                }
                             }
                         )
 
