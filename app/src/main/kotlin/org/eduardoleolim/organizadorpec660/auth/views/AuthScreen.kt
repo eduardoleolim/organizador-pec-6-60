@@ -21,6 +21,7 @@ package org.eduardoleolim.organizadorpec660.auth.views
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -248,7 +249,9 @@ class AuthScreen(private val queryBus: QueryBus) : Screen {
                 trailingIcon = {
                     IconButton(
                         onClick = { isPasswordVisible = !isPasswordVisible },
-                        modifier = Modifier.pointerHoverIcon(PointerIcon.Default)
+                        modifier = Modifier
+                            .focusable(false)
+                            .pointerHoverIcon(PointerIcon.Default)
                     ) {
                         Icon(imageVector = trailingIcon, contentDescription = "Password visibility")
                     }
