@@ -21,7 +21,6 @@ package org.eduardoleolim.organizadorpec660.auth.views
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -33,6 +32,7 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.layout.ContentScale
@@ -250,7 +250,7 @@ class AuthScreen(private val queryBus: QueryBus) : Screen {
                     IconButton(
                         onClick = { isPasswordVisible = !isPasswordVisible },
                         modifier = Modifier
-                            .focusable(false)
+                            .focusProperties { canFocus = false }
                             .pointerHoverIcon(PointerIcon.Default)
                     ) {
                         Icon(imageVector = trailingIcon, contentDescription = "Password visibility")
