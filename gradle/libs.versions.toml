@@ -1,31 +1,31 @@
 # https://docs.gradle.org/current/userguide/platforms.html#sub::toml-dependencies-format
 
 [versions]
-kotlin = "2.1.0"
+kotlin = "2.2.20"
 junit-jupiter = "5.11.1"
-compose = "1.7.3"
-material3-datatable = "0.10.0"
+compose = "1.9.0"
+material3-datatable = "0.11.6"
 voyager = "1.0.0"
 jSystemThemeDetector = "3.9.1"
-arrow = "1.2.4"
-pdfbox = "3.0.3"
-kotlinx-coroutines = "1.9.0"
+arrow = "2.1.2"
+pdfbox = "3.0.5"
+kotlinx-coroutines = "1.10.2"
 ktorm = "4.1.1"
-sqlite = "3.49.1.0"
-koin = "4.0.0"
-slf4j = "2.0.16"
+sqlite = "3.50.1.0"
+koin = "4.1.1"
+slf4j = "2.0.17"
 kotlin-csv = "1.10.0"
 jasypt = "1.9.3"
 properlty = "1.9.0"
-jna = "5.15.0"
-appdirs = "1.2.2"
-jackcess = "4.0.7"
+jna = "5.18.1"
+appdirs = "1.5.0"
+jackcess = "4.0.8"
 
 [libraries]
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
 kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 material3-windowSizeClass = { module = "org.jetbrains.compose.material3:material3-window-size-class", version.ref = "compose" }
-material3-datatable = { module = "com.seanproctor:data-table-material3", version.ref = "material3-datatable" }
+material3-datatable = { module = "com.seanproctor:datatable-material3", version.ref = "material3-datatable" }
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
 voyager-screenmodel = { module = "cafe.adriel.voyager:voyager-screenmodel", version.ref = "voyager" }
 voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
@@ -37,7 +37,7 @@ ktorm-sqlite = { module = "org.ktorm:ktorm-support-sqlite", version.ref = "ktorm
 jdbc-sqlite = { module = "io.github.willena:sqlite-jdbc", version.ref = "sqlite" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
-kotlin-csv-jvm = { module = "com.github.doyaaaaaken:kotlin-csv-jvm", version.ref = "kotlin-csv" }
+kotlin-csv-jvm = { module = "com.jsoizo:kotlin-csv-jvm", version.ref = "kotlin-csv" }
 properlty = { module = "com.ufoscout.properlty:properlty-kotlin", version.ref = "properlty" }
 jna-core = { module = "net.java.dev.jna:jna", version.ref = "jna" }
 jna-platform = { module = "net.java.dev.jna:jna-platform", version.ref = "jna" }
