@@ -318,7 +318,7 @@ class HomeScreen(private val user: AuthUserResponse) : Screen {
                 }
 
                 Box(
-                    modifier = Modifier.padding(start = 0.dp, end = 24.dp, top = 24.dp, bottom = 24.dp)
+                    modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 24.dp, bottom = 24.dp)
                 ) {
                     Surface(
                         modifier = Modifier.fillMaxSize(),
