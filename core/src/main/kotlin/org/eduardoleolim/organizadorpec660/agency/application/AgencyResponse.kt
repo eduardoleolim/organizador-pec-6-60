@@ -45,13 +45,13 @@ class AgencyResponse(
                 StatisticTypeResponse.fromAggregate(statisticType)
             }
 
-            val municipalitiesResponse = SimpleMunicipalityResponse.fromAggregate(municipality)
+            val municipalityResponse = SimpleMunicipalityResponse.fromAggregate(municipality)
 
             return AgencyResponse(
                 agency.id().toString(),
                 agency.name(),
                 agency.consecutive(),
-                municipalitiesResponse,
+                municipalityResponse,
                 statisticTypesResponse,
                 agency.createdAt(),
                 agency.updatedAt()
