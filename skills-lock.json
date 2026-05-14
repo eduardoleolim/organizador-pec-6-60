@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "skills": {
+    "SQLite Database Expert": {
+      "source": "martinholovsky/claude-skills-generator",
+      "sourceType": "github",
+      "skillPath": "skills/sqlite/SKILL.md",
+      "computedHash": "0e75baa1c3159dba4c6db79330634327039c9813410256b73357dcbb0ed9d0ea"
+    },
+    "compose-multiplatform-patterns": {
+      "source": "affaan-m/everything-claude-code",
+      "sourceType": "github",
+      "skillPath": "skills/compose-multiplatform-patterns/SKILL.md",
+      "computedHash": "bb1c2a3397b144a0a5ac4f6c4bcb44514ec52a7020becd794eeceb62eee69b0d"
+    },
+    "kotlin-coroutines-flows": {
+      "source": "affaan-m/everything-claude-code",
+      "sourceType": "github",
+      "skillPath": "skills/kotlin-coroutines-flows/SKILL.md",
+      "computedHash": "dc26f1f68010e6b79f0e18c71a3677f80da1c54dd0356e5e9c080ee2b6644910"
+    },
+    "kotlin-testing": {
+      "source": "affaan-m/everything-claude-code",
+      "sourceType": "github",
+      "skillPath": "skills/kotlin-testing/SKILL.md",
+      "computedHash": "31f2cfa8a8c6bd46b5a63a80310d0b4d5fc654f70aab5ff83fb1072a5966f632"
+    }
+  }
+}
