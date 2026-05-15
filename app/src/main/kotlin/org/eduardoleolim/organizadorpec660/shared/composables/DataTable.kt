@@ -77,18 +77,6 @@ fun PaginatedDataTable(
         onSearch(value, state.pageIndex, state.pageSize, state.sortColumnIndex, state.sortAscending)
     }
 
-    LaunchedEffect(horizontalScrollBarAdapter.maxScrollOffset) {
-        if (horizontalScrollBarAdapter.maxScrollOffset == 0.0) {
-            horizontalScrollBarAdapter.scrollTo(0.0)
-        }
-    }
-
-    LaunchedEffect(verticalScrollBarAdapter.maxScrollOffset) {
-        if (verticalScrollBarAdapter.maxScrollOffset == 0.0) {
-            verticalScrollBarAdapter.scrollTo(0.0)
-        }
-    }
-
     Column(
         modifier = Modifier.then(modifier)
     ) {

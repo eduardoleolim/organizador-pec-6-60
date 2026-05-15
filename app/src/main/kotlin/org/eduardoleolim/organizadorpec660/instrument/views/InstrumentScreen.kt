@@ -25,8 +25,10 @@ import androidx.compose.material.icons.filled.ImportExport
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -61,7 +63,7 @@ class InstrumentScreen(
         val federalEntities = screenModel.federalEntities
         val municipalities = screenModel.municipalities
         val agencies = screenModel.agencies
-        val searchParameters by screenModel.searchParameters.collectAsState()
+        var searchParameters by remember { mutableStateOf(screenModel.searchParameters.value) }
         val search = searchParameters.search
         val savedSiresoStatusFilter = searchParameters.savedInSIRESO
         val statisticYearFilter = searchParameters.statisticYear
@@ -78,6 +80,10 @@ class InstrumentScreen(
         val showExportModal = screenState.showExportModal
         val pageSizes = screenState.pageSizes
         val tableState = screenState.tableState
+
+        LaunchedEffect(screenModel.searchParameters) {
+            screenModel.searchParameters.collect { searchParameters = it }
+        }
 
         LaunchedEffect(Unit) {
             screenModel.setInitialMode()

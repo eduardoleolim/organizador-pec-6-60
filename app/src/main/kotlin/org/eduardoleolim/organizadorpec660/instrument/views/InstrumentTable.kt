@@ -97,7 +97,7 @@ fun InstrumentScreen.InstrumentsTable(
     val municipalityColumnName = stringResource(Res.string.inst_municipality)
     val actionsColumnName = stringResource(Res.string.table_col_actions)
 
-    val columns = remember {
+    val columns = remember(state) {
         fun onSort(index: Int, ascending: Boolean) {
             state.sortColumnIndex = index
             state.sortAscending = ascending

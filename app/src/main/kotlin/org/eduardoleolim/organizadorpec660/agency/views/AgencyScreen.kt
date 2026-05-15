@@ -27,8 +27,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -47,7 +50,7 @@ class AgencyScreen(private val queryBus: QueryBus, private val commandBus: Comma
     override fun Content() {
         val screenModel = rememberScreenModel { AgencyScreenModel(queryBus, commandBus, Dispatchers.IO) }
         val agencies = screenModel.agencies
-        val searchParameters by screenModel.searchParameters.collectAsState()
+        var searchParameters by remember { mutableStateOf(screenModel.searchParameters.value) }
         val search = searchParameters.search
         val screenState = screenModel.screenState
         val selectedAgency = screenState.selectedAgency
@@ -55,6 +58,10 @@ class AgencyScreen(private val queryBus: QueryBus, private val commandBus: Comma
         val showDeleteModal = screenState.showDeleteModal
         val pageSizes = screenState.pageSizes
         val tableState = screenState.tableState
+
+        LaunchedEffect(screenModel.searchParameters) {
+            screenModel.searchParameters.collect { searchParameters = it }
+        }
 
         Column(
             modifier = Modifier.padding(24.dp)
