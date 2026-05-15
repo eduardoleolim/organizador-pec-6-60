@@ -87,15 +87,15 @@ internal fun DecoratedWindowScope.TitleBarOnMacOs(
         }
 
     if (newFullscreenControls) {
-        System.setProperty("apple.awt.newFullScreeControls", true.toString())
+        System.setProperty("apple.awt.newFullScreenControls", true.toString())
         System.setProperty(
-            "apple.awt.newFullScreeControls.background",
+            "apple.awt.newFullScreenControls.background",
             "${MaterialTheme.colorScheme.primaryContainer.toArgb()}",
         )
         MacUtil.updateColors(window)
     } else {
-        System.clearProperty("apple.awt.newFullScreeControls")
-        System.clearProperty("apple.awt.newFullScreeControls.background")
+        System.clearProperty("apple.awt.newFullScreenControls")
+        System.clearProperty("apple.awt.newFullScreenControls.background")
     }
 
     val titleBar = remember { JBR.getWindowDecorations().createCustomTitleBar() }
@@ -137,15 +137,15 @@ internal fun DecoratedDialogWindowScope.TitleBarOnMacOs(
         }
 
     if (newFullscreenControls) {
-        System.setProperty("apple.awt.newFullScreeControls", true.toString())
+        System.setProperty("apple.awt.newFullScreenControls", true.toString())
         System.setProperty(
-            "apple.awt.newFullScreeControls.background",
+            "apple.awt.newFullScreenControls.background",
             "${MaterialTheme.colorScheme.primaryContainer.toArgb()}",
         )
         MacUtil.updateColors(window)
     } else {
-        System.clearProperty("apple.awt.newFullScreeControls")
-        System.clearProperty("apple.awt.newFullScreeControls.background")
+        System.clearProperty("apple.awt.newFullScreenControls")
+        System.clearProperty("apple.awt.newFullScreenControls.background")
     }
 
     val titleBar = remember { JBR.getWindowDecorations().createCustomTitleBar()!! }
