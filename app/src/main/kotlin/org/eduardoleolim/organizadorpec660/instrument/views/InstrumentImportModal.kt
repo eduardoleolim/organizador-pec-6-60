@@ -232,7 +232,7 @@ fun InstrumentScreen.InstrumentImportModal(
                     modifier = Modifier.padding(end = if (scrollState.maxScrollOffset > 0) 8.dp else 0.dp),
                     state = lazyListState
                 ) {
-                    items(warnings) { warning ->
+                    items(warnings, key = { it }) { warning ->
                         Text(
                             text = warning,
                             modifier = Modifier.padding(8.dp)

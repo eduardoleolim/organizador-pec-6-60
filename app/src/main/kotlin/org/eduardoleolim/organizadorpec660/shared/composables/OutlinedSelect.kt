@@ -59,13 +59,14 @@ fun <T> OutlinedSelect(
     shape: Shape = OutlinedTextFieldDefaults.shape,
     colors: TextFieldColors = OutlinedTextFieldDefaults.colors()
 ) {
+    val stableItems = remember(items) { items }
     var selectedIndex by remember(index) { mutableStateOf(index) }
-    val value = remember(selectedIndex) {
-        selectedIndex?.runCatching { visualTransformation(items[this]) }?.getOrNull() ?: ""
+    val value = remember(selectedIndex, stableItems) {
+        selectedIndex?.runCatching { visualTransformation(stableItems[this]) }?.getOrNull() ?: ""
     }
 
     LaunchedEffect(selectedIndex) {
-        selectedIndex?.runCatching { onValueSelected(this, items[this]) }
+        selectedIndex?.runCatching { onValueSelected(this, stableItems[this]) }
     }
 
     Box {
@@ -76,8 +77,8 @@ fun <T> OutlinedSelect(
         var supportingTextSize by remember(supportingText) { mutableStateOf(IntSize.Zero) }
         val itemHeights = remember { mutableStateMapOf<Int, Int>() }
         val baseHeight = remember { 330.dp }
-        val maxHeight = remember(itemHeights.toMap()) {
-            if (itemHeights.keys.toSet() != items.indices.toSet()) {
+        val maxHeight = remember(itemHeights.toMap(), stableItems) {
+            if (itemHeights.keys.toSet() != stableItems.indices.toSet()) {
                 return@remember baseHeight
             }
             val baseHeightInt = with(density) { baseHeight.toPx().toInt() }
@@ -102,14 +103,14 @@ fun <T> OutlinedSelect(
             modifier = modifier.onGloballyPositioned { textFieldSize = it.size }
                 .onPreviewKeyEvent { keyEvent ->
                     when {
-                        items.isEmpty() -> false
+                        stableItems.isEmpty() -> false
 
                         (keyEvent.key == Key.DirectionDown && keyEvent.type == KeyEventType.KeyDown) -> {
                             if (selectedIndex == null) {
                                 selectedIndex = 0
 
                                 true
-                            } else if (selectedIndex!! + 1 < items.size) {
+                            } else if (selectedIndex!! + 1 < stableItems.size) {
                                 selectedIndex = selectedIndex!! + 1
 
                                 true
@@ -179,7 +180,7 @@ fun <T> OutlinedSelect(
                 .requiredSizeIn(maxHeight = maxHeight),
             offset = DpOffset(0.dp, (0 - supportingTextSize.height).dp)
         ) {
-            items.forEachIndexed { index, item ->
+            stableItems.forEachIndexed { index, item ->
                 DropdownMenuItem(
                     text = {
                         Text(visualTransformation(item))

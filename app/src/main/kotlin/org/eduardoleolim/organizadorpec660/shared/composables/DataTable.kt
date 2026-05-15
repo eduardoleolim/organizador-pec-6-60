@@ -67,6 +67,8 @@ fun PaginatedDataTable(
     state: PaginatedDataTableState = rememberPaginatedDataTableState(pageSizes.first()),
     content: DataTableScope.() -> Unit
 ) {
+    val stablePageSizes = remember(pageSizes) { pageSizes }
+    val stableColumns = remember(columns) { columns }
     val tableState = rememberDataTableState()
     val horizontalScrollBarAdapter = rememberScrollbarAdapter(tableState.horizontalScrollState)
     val verticalScrollBarAdapter = rememberScrollbarAdapter(tableState.verticalScrollState)
@@ -97,7 +99,7 @@ fun PaginatedDataTable(
             value = value,
             onValueChange = onValueChange,
             state = state,
-            pageSizes = pageSizes,
+            pageSizes = stablePageSizes,
             content = header
         )
 
@@ -114,7 +116,7 @@ fun PaginatedDataTable(
                         bottom = if (horizontalScrollBarAdapter.maxScrollOffset > 0) 8.dp else 0.dp
                     ),
                 state = tableState,
-                columns = columns,
+                columns = stableColumns,
                 separator = separator,
                 headerHeight = headerHeight,
                 contentPadding = contentPadding,

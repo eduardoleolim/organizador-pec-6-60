@@ -54,10 +54,11 @@ fun <T> SearchList(
     contentType: (item: T) -> Any? = { null },
     itemContent: @Composable LazyItemScope.(item: T) -> Unit
 ) {
+    val stableItems = remember(items) { items }
     val lazyListState = rememberLazyListState(0, 0)
-    val paginatedRequest = remember {
+    val paginatedRequest = remember(stableItems) {
         derivedStateOf {
-            (lazyListState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -2) == items.size - 1
+            (lazyListState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -2) == stableItems.size - 1
         }
     }
 

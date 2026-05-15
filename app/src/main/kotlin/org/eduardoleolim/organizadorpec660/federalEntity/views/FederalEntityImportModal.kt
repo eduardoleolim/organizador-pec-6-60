@@ -198,7 +198,7 @@ fun FederalEntityScreen.FederalEntityImportModal(
         ErrorDialog(
             text = {
                 LazyColumn {
-                    items(warnings) { warning ->
+                    items(warnings, key = { it }) { warning ->
                         Text(warning)
                     }
                 }
