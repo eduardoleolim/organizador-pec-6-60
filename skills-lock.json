@@ -7,11 +7,41 @@
       "skillPath": "skills/sqlite/SKILL.md",
       "computedHash": "0e75baa1c3159dba4c6db79330634327039c9813410256b73357dcbb0ed9d0ea"
     },
+    "choosing-derivedstateof": {
+      "source": "skydoves/compose-performance-skills",
+      "sourceType": "github",
+      "skillPath": "recomposition/choosing-derivedstateof/SKILL.md",
+      "computedHash": "d058e76d21c9e874a8c97997e900a7ca4bc731cf930786990c69eff1ae93ff72"
+    },
+    "collecting-flows-safely": {
+      "source": "skydoves/compose-performance-skills",
+      "sourceType": "github",
+      "skillPath": "side-effects/collecting-flows-safely/SKILL.md",
+      "computedHash": "80f79a094f45f3c6df6db04b86928aa03022780761827980153f9db1a204c304"
+    },
     "compose-multiplatform-patterns": {
       "source": "affaan-m/everything-claude-code",
       "sourceType": "github",
       "skillPath": "skills/compose-multiplatform-patterns/SKILL.md",
       "computedHash": "bb1c2a3397b144a0a5ac4f6c4bcb44514ec52a7020becd794eeceb62eee69b0d"
+    },
+    "debugging-recompositions": {
+      "source": "skydoves/compose-performance-skills",
+      "sourceType": "github",
+      "skillPath": "recomposition/debugging-recompositions/SKILL.md",
+      "computedHash": "c8312628a608bd62e38e1db15da30914128adb619c1ac2068425b83c68de41d8"
+    },
+    "deferring-state-reads": {
+      "source": "skydoves/compose-performance-skills",
+      "sourceType": "github",
+      "skillPath": "recomposition/deferring-state-reads/SKILL.md",
+      "computedHash": "ad9512c9219dfdcc31f5b397264ca663225b603b3dfcfd042ba869bdb7e35bd1"
+    },
+    "diagnosing-compose-stability": {
+      "source": "skydoves/compose-performance-skills",
+      "sourceType": "github",
+      "skillPath": "stability/diagnosing-compose-stability/SKILL.md",
+      "computedHash": "e46baca620d0a234cefb774f34c5d089326796e0d956d5f8d6c6493f68a9a714"
     },
     "kotlin-coroutines-flows": {
       "source": "affaan-m/everything-claude-code",
@@ -24,6 +54,24 @@
       "sourceType": "github",
       "skillPath": "skills/kotlin-testing/SKILL.md",
       "computedHash": "31f2cfa8a8c6bd46b5a63a80310d0b4d5fc654f70aab5ff83fb1072a5966f632"
+    },
+    "optimizing-lazy-layouts": {
+      "source": "skydoves/compose-performance-skills",
+      "sourceType": "github",
+      "skillPath": "lists/optimizing-lazy-layouts/SKILL.md",
+      "computedHash": "684714cece7b0b8ca1e326f38a18b2689883185bcc754ced68d465b62aa5cbc5"
+    },
+    "stabilizing-compose-types": {
+      "source": "skydoves/compose-performance-skills",
+      "sourceType": "github",
+      "skillPath": "stability/stabilizing-compose-types/SKILL.md",
+      "computedHash": "4c4217b602be891b1eafa7bf0a6b960b6dedc488c74140ed31ac6dbdfb671467"
+    },
+    "understanding-stability-inference": {
+      "source": "skydoves/compose-performance-skills",
+      "sourceType": "github",
+      "skillPath": "stability/understanding-stability-inference/SKILL.md",
+      "computedHash": "a48b31d84d23810af6fc0e42447a775f32b8390e16a2fcd31a990cd011172e36"
     }
   }
 }
